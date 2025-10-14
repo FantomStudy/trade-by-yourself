@@ -1,0 +1,10 @@
+.banner {
+  display: flex;
+  justify-content: center;
+  background-color: #cbd8e4;
+  height: 200px;
+}
+.image {
+  height: 100%;
+  object-fit: contain;
+}

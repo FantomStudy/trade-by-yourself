@@ -1,0 +1,17 @@
+.input[type="text"],
+.input[type="password"],
+.input[type="email"] {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+  background-color: #f7f7f7;
+}
+
+.input::placeholder {
+  font-size: 16px;
+  font-weight: 500;
+  color: #a8a8a8;
+}

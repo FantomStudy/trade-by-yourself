@@ -1,0 +1,24 @@
+.button {
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-weight: 500;
+  transition: 0.3s background-color cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.blue {
+  background-color: var(--blue);
+  &:hover {
+    background-color: color-mix(in oklab, var(--blue), black 5%);
+  }
+}
+
+.green {
+  background-color: var(--green);
+  &:hover {
+    background-color: color-mix(in oklab, var(--green), black 5%);
+  }
+}
