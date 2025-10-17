@@ -1,0 +1,133 @@
+.container {
+  width: 100%;
+  max-width: 100%;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #10b981;
+  margin-bottom: 20px;
+}
+
+.imagesRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.imageContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.imageContainer:hover {
+  border-color: #3b82f6;
+}
+
+.mainImageMarker {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.image {
+  border-radius: 12px;
+}
+
+.addImageContainer {
+  width: 200px;
+  height: 200px;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  gap: 8px;
+}
+
+.addImageContainer:hover {
+  border-color: #9ca3af;
+  background-color: #f3f4f6;
+}
+
+.placeholderIcon {
+  font-size: 48px;
+  color: #9ca3af;
+}
+
+.addText {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: center;
+}
+
+.removeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s ease;
+  z-index: 10;
+}
+
+.removeButton:hover {
+  background: rgba(220, 38, 38, 0.9);
+}
+
+.mainImageBadge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(16, 185, 129, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .imageContainer,
+  .addImageContainer {
+    width: 150px;
+    height: 150px;
+  }
+
+  .imagesRow {
+    gap: 12px;
+  }
+
+  .placeholderIcon {
+    font-size: 36px;
+  }
+
+  .addText {
+    font-size: 12px;
+  }
+}
