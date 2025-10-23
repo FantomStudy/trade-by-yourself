@@ -15,7 +15,7 @@
 }
 .price {
   font-weight: 600;
-  color: #f21957;
+  color: var(--pink);
 }
 .meta {
   overflow: hidden;

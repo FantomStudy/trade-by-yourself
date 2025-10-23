@@ -10,22 +10,9 @@
   box-sizing: border-box;
 }
 
-.card > button {
+.buttons {
   width: 100%;
-}
-
-.stats {
   display: flex;
-  gap: 50px;
-  align-items: center;
-}
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.name {
-  font-size: 24px;
-  font-weight: 600;
+  flex-direction: column;
+  gap: 16px;
 }

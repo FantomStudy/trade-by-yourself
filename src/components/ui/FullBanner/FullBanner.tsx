@@ -10,7 +10,6 @@ export const FullBanner = () => {
         width={1440}
         height={200}
         className={styles.image}
-
       />
     </div>
   );
