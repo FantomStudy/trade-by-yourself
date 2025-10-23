@@ -13,6 +13,7 @@
   gap: 15px;
   font-size: 24px;
 }
+
 .logo img {
   width: 68px;
   height: 49px;
@@ -22,12 +23,4 @@
   display: flex;
   align-items: center;
   gap: 30px;
-}
-
-.link {
-  background-color: transparent;
-  color: var(--blue);
-  &:hover {
-    background-color: color-mix(in oklab, transparent, black 5%);
-  }
 }

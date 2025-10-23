@@ -1,7 +1,9 @@
-import styles from "./page.module.css";
-import { cn } from "@/utils";
+import { FullBanner, ProductCard, SellerCard } from "@/shared/ui";
+import { cn } from "@/shared/utils";
+
 import { mock } from "../mock";
-import { FullBanner, ProductCard, SellerCard } from "@/components/ui";
+
+import styles from "./page.module.css";
 
 const SellerPage = () => {
   return (
@@ -9,16 +11,16 @@ const SellerPage = () => {
       <SellerCard />
 
       <div className={styles.page}>
-        <h3 className={cn("pageTitle", styles.title)}>Активные объявления</h3>
+        <h3 className={cn("page-title", styles.title)}>Активные объявления</h3>
 
-        <div className="listingGrid">
+        <div className="grid-listing">
           {mock.map((listing) => (
             <ProductCard
               key={listing.id}
-              title={listing.title}
+              imageUrl={listing.imageUrl}
               meta={listing.meta}
               price={listing.price}
-              imageUrl={listing.imageUrl}
+              title={listing.title}
             />
           ))}
         </div>

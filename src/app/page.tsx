@@ -1,19 +1,21 @@
-import styles from "./page.module.css";
+import { FullBanner, ProductCard } from "@/shared/ui";
+
 import { mock } from "../app/mock";
-import { FullBanner, ProductCard } from "@/components/ui";
+
+import styles from "./page.module.css";
 
 const Home = () => {
   return (
     <>
-      <h3 className="pageTitle">Рекомендованные объявления</h3>
+      <h3 className="page-title">Рекомендованные объявления</h3>
       <div className={styles.grid}>
         {mock.map((listing) => (
           <ProductCard
             key={listing.id}
             imageUrl={listing.imageUrl}
-            title={listing.title}
             meta={listing.meta}
             price={listing.price}
+            title={listing.title}
           />
         ))}
       </div>

@@ -1,6 +1,8 @@
-import { Button, Logo } from "@/components/ui";
-import styles from "./Footer.module.css";
 import Link from "next/link";
+
+import { Button, Logo } from "@/shared/ui";
+
+import styles from "./Footer.module.css";
 
 export const Footer = () => {
   return (

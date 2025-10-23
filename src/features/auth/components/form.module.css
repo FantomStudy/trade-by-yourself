@@ -1,0 +1,27 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.register {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formContainer p {
+  color: #a8a8a8;
+}
