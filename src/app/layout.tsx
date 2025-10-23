@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
+import type { PropsWithChildren } from "react";
+
 import { Montserrat } from "next/font/google";
-import "./globals.css";
-import { PropsWithChildren } from "react";
+
+import { ModalProvider } from "@/shared/providers";
+
 import { Footer, Header, HeroBanner, SearchBar } from "./_components";
+
+import "./_styles/globals.css";
+import "./_styles/utils.css";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -19,15 +25,15 @@ const RootLayout = ({ children }: Readonly<PropsWithChildren>) => {
   return (
     <html lang="ru">
       <body className={montserrat.variable}>
-        <Header />
-        <HeroBanner />
-        <SearchBar />
-
-        <main>
-          <div className="container">{children}</div>
-        </main>
-
-        <Footer />
+        <ModalProvider>
+          <Header />
+          <HeroBanner />
+          <SearchBar />
+          <main>
+            <div className="container">{children}</div>
+          </main>
+          <Footer />
+        </ModalProvider>
       </body>
     </html>
   );

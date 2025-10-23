@@ -1,0 +1,50 @@
+.button {
+  padding: 15px 30px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-weight: 500;
+  transition: 0.3s background-color cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.button.icon {
+  display: flex;
+  padding: 8px;
+}
+
+.link {
+  background-color: transparent;
+  padding: 0;
+}
+
+.ghost {
+  background-color: transparent;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+.blue:is(.ghost, .link) {
+  color: var(--blue);
+}
+.green:is(.ghost, .link) {
+  color: var(--green);
+}
+
+.primary {
+  color: white;
+}
+
+.primary.blue {
+  background-color: var(--blue);
+  &:hover {
+    background-color: color-mix(in oklab, var(--blue), black 5%);
+  }
+}
+
+.primary.green {
+  background-color: var(--green);
+  &:hover {
+    background-color: color-mix(in oklab, var(--green), black 5%);
+  }
+}

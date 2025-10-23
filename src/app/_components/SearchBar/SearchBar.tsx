@@ -1,4 +1,5 @@
-import { Button, Input } from "@/components/ui";
+import { Button, Input } from "@/shared/ui";
+
 import styles from "./SearchBar.module.css";
 
 export const SearchBar = () => {
@@ -15,8 +16,8 @@ export const SearchBar = () => {
               <option value="">г. Оренбург</option>
             </select>
             <Input
-              placeholder="Поиск по объявлениям"
               className={styles.input}
+              placeholder="Поиск по объявлениям"
             />
             <Button className={styles.button}>Найти</Button>
           </div>
