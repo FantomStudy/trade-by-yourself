@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: center;
+}
+
+.actionWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.checkboxGroup {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  accent-color: var(--blue);
+}
+
+.codeInput {
+  display: flex;
+  gap: 12px;
+  & > input {
+    flex: 1;
+  }
+}
