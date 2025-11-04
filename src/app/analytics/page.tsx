@@ -7,19 +7,25 @@ import styles from "./page.module.css";
 
 const Analytics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("year");
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    number | undefined
+  >(undefined);
 
   // Загружаем категории
-  const { categories, isLoading: categoriesLoading, error: categoriesError } = useCategories();
-  
+  const {
+    categories,
+    isLoading: categoriesLoading,
+    error: categoriesError,
+  } = useCategories();
+
   // Загружаем аналитику
-  const { 
-    data: analyticsData, 
-    isLoading: analyticsLoading, 
-    error: analyticsError 
-  } = useAnalytics({ 
-    period: selectedPeriod, 
-    categoryId: selectedCategoryId 
+  const {
+    data: analyticsData,
+    isLoading: analyticsLoading,
+    error: analyticsError,
+  } = useAnalytics({
+    period: selectedPeriod,
+    categoryId: selectedCategoryId,
   });
 
   const isLoading = categoriesLoading || analyticsLoading;
@@ -29,7 +35,9 @@ const Analytics = () => {
     setSelectedPeriod(event.target.value);
   };
 
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const value = event.target.value;
     setSelectedCategoryId(value === "" ? undefined : parseInt(value));
   };
@@ -51,7 +59,10 @@ const Analytics = () => {
         <div className={styles.error}>
           <h2>Ошибка</h2>
           <p>{error}</p>
-          <button onClick={() => window.location.reload()} className={styles.retryButton}>
+          <button
+            onClick={() => window.location.reload()}
+            className={styles.retryButton}
+          >
             Попробовать снова
           </button>
         </div>
@@ -65,7 +76,7 @@ const Analytics = () => {
         <h1 className={styles.title}>Аналитика</h1>
         <div className={styles.filtersRow}>
           <div className={styles.filterGroup}>
-            <select 
+            <select
               className={styles.filterSelect}
               value={selectedPeriod}
               onChange={handlePeriodChange}
@@ -77,7 +88,7 @@ const Analytics = () => {
               <option value="half-year">Полгода</option>
               <option value="year">Год</option>
             </select>
-            <select 
+            <select
               className={styles.filterSelect}
               value={selectedCategoryId || ""}
               onChange={handleCategoryChange}
