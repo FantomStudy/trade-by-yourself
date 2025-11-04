@@ -68,9 +68,33 @@
   background: linear-gradient(135deg, #fef3c7, #fde68a);
 }
 
+.pink {
+  border-left-color: #ec4899;
+}
+
+.pink .icon {
+  background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+}
+
+.light-blue {
+  border-left-color: #06b6d4;
+}
+
+.light-blue .icon {
+  background: linear-gradient(135deg, #cffafe, #a5f3fc);
+}
+
+.yellow {
+  border-left-color: #eab308;
+}
+
+.yellow .icon {
+  background: linear-gradient(135deg, #fefce8, #fef08a);
+}
+
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
   margin-bottom: 16px;
 }

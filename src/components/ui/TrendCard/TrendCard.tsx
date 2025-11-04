@@ -9,7 +9,14 @@ interface TrendCardProps {
   trend: number;
   trendPeriod: string;
   icon: string;
-  color?: "blue" | "green" | "purple" | "orange";
+  color?:
+    | "blue"
+    | "green"
+    | "purple"
+    | "orange"
+    | "pink"
+    | "light-blue"
+    | "yellow";
 }
 
 export const TrendCard: React.FC<TrendCardProps> = ({
@@ -37,12 +44,6 @@ export const TrendCard: React.FC<TrendCardProps> = ({
     <div className={`${styles.card} ${styles[color]}`}>
       <div className={styles.header}>
         <div className={styles.icon}>{icon}</div>
-        <div className={styles.trend}>
-          <span className={styles.trendIcon}>{getTrendIcon(trend)}</span>
-          <span className={`${styles.trendValue} ${getTrendColor(trend)}`}>
-            {formatTrend(trend)}
-          </span>
-        </div>
       </div>
 
       <div className={styles.content}>
