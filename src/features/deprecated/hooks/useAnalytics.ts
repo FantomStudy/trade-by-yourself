@@ -1,23 +1,23 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface AnalyticsParams {
-  period: string;
   categoryId?: number;
+  period: string;
 }
 
 interface AnalyticsData {
-  views: number;
   contacts: number;
+  conversion: number;
   favorites: number;
   phone: number;
   rating: number;
-  conversion: number;
+  views: number;
 }
 
 interface UseAnalyticsReturn {
   data: AnalyticsData | null;
-  isLoading: boolean;
   error: string | null;
+  isLoading: boolean;
   refetch: () => void;
 }
 
@@ -29,7 +29,7 @@ export const useAnalytics = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -42,7 +42,14 @@ export const useAnalytics = ({
       }
 
       const response = await fetch(
-        `http://localhost:3000/statistics/analytic?${params.toString()}`
+        `http://localhost:3000/statistics/analytic?${params.toString()}`,
+        {
+          method: "GET",
+          credentials: "include", // Это обеспечит передачу куки
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (!response.ok) {
@@ -59,11 +66,11 @@ export const useAnalytics = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [period, categoryId]);
 
   useEffect(() => {
     fetchAnalytics();
-  }, [period, categoryId]);
+  }, [fetchAnalytics]);
 
   const refetch = () => {
     fetchAnalytics();

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Category {
   id: number;
@@ -7,8 +7,8 @@ interface Category {
 
 interface UseCategoriesReturn {
   categories: Category[];
-  isLoading: boolean;
   error: string | null;
+  isLoading: boolean;
 }
 
 export const useCategories = (): UseCategoriesReturn => {
@@ -23,7 +23,14 @@ export const useCategories = (): UseCategoriesReturn => {
         setError(null);
 
         const response = await fetch(
-          "http://localhost:3000/category/all-categories"
+          "http://localhost:3000/category/all-categories",
+          {
+            method: "GET",
+            credentials: "include", // Это обеспечит передачу куки
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
 
         if (!response.ok) {

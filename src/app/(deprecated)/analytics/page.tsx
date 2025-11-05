@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { TrendCard } from "@/components/ui";
-import { useAnalytics, useCategories } from "@/hooks";
+
+import { TrendCard } from "../../../features/deprecated/components/TrendCard/TrendCard";
+import { useAnalytics, useCategories } from "../../../features/deprecated/hooks/index";
+
 import styles from "./page.module.css";
 
 const Analytics = () => {
@@ -39,7 +41,7 @@ const Analytics = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const value = event.target.value;
-    setSelectedCategoryId(value === "" ? undefined : parseInt(value));
+    setSelectedCategoryId(value === "" ? undefined : Number.parseInt(value));
   };
 
   if (isLoading) {
@@ -60,8 +62,8 @@ const Analytics = () => {
           <h2>Ошибка</h2>
           <p>{error}</p>
           <button
-            onClick={() => window.location.reload()}
             className={styles.retryButton}
+            onClick={() => window.location.reload()}
           >
             Попробовать снова
           </button>
@@ -108,56 +110,56 @@ const Analytics = () => {
       <div className={styles.metricsGrid}>
         <TrendCard
           title="Просмотры"
-          value={analyticsData?.views?.toString() || "0"}
           trend={0}
-          trendPeriod="за выбранный период"
-          icon="👁️"
+          value={analyticsData?.views?.toString() || "0"}
           color="blue"
+          icon="👁️"
+          trendPeriod="за выбранный период"
         />
 
         <TrendCard
           title="Контакты / Чаты"
-          value={analyticsData?.contacts?.toString() || "0"}
           trend={0}
-          trendPeriod="за выбранный период"
-          icon="👁️"
+          value={analyticsData?.contacts?.toString() || "0"}
           color="green"
+          icon="👁️"
+          trendPeriod="за выбранный период"
         />
 
         <TrendCard
           title="Избранное"
-          value={analyticsData?.favorites?.toString() || "0"}
           trend={0}
-          trendPeriod="за выбранный период"
-          icon="👁️"
+          value={analyticsData?.favorites?.toString() || "0"}
           color="pink"
+          icon="👁️"
+          trendPeriod="за выбранный период"
         />
 
         <TrendCard
           title="Телефон"
-          value={analyticsData?.phone?.toString() || "0"}
           trend={0}
-          trendPeriod="за выбранный период"
-          icon="👁️"
+          value={analyticsData?.phone?.toString() || "0"}
           color="light-blue"
+          icon="👁️"
+          trendPeriod="за выбранный период"
         />
 
         <TrendCard
           title="Рейтинг"
-          value={analyticsData?.rating?.toString() || "0"}
           trend={0}
-          trendPeriod="за выбранный период"
-          icon="👁️"
+          value={analyticsData?.rating?.toString() || "0"}
           color="yellow"
+          icon="👁️"
+          trendPeriod="за выбранный период"
         />
 
         <TrendCard
           title="Конверсия"
-          value={analyticsData?.conversion?.toString() || "0"}
           trend={0}
-          trendPeriod="за выбранный период"
-          icon="👁️"
+          value={analyticsData?.conversion?.toString() || "0"}
           color="orange"
+          icon="👁️"
+          trendPeriod="за выбранный период"
         />
       </div>
     </div>

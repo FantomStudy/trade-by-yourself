@@ -1,6 +1,5 @@
-import { Button } from "@/shared/ui";
-
-import { UserInfo } from "../UserInfo/UserInfo";
+import { UserInfo } from "@/components/layout";
+import { Button } from "@/components/ui";
 
 import styles from "./SellerCard.module.css";
 

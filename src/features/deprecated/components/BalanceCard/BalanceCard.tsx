@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { getUserBalance } from "@/utils";
+import React, { useCallback, useEffect, useState } from "react";
+
+import { getUserBalance } from "../../utils";
+
 import styles from "./BalanceCard.module.css";
 
 interface BalanceCardProps {
@@ -49,7 +51,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
   const formatCurrency = (amount: number, currency: string = "RUB") => {
     return new Intl.NumberFormat("ru-RU", {
       style: "currency",
-      currency: currency,
+      currency,
       minimumFractionDigits: 0,
     }).format(amount);
   };
@@ -81,7 +83,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
         <div className={styles.errorContainer}>
           <span className={styles.errorIcon}>⚠️</span>
           <span className={styles.errorText}>{error}</span>
-          <button onClick={fetchBalance} className={styles.retryButton}>
+          <button className={styles.retryButton} onClick={fetchBalance}>
             Повторить
           </button>
         </div>
@@ -95,7 +97,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
     <div className={styles.balanceCard}>
       <div className={styles.balanceHeader}>
         <h3 className={styles.balanceTitle}>Текущий баланс</h3>
-        <button onClick={fetchBalance} className={styles.refreshButton}>
+        <button className={styles.refreshButton} onClick={fetchBalance}>
           🔄
         </button>
       </div>

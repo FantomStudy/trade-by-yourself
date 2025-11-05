@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { exportAnalyticsData } from "@/utils";
+
+import { exportAnalyticsData } from "../../utils";
+
 import styles from "./ExportButton.module.css";
 
 interface ExportButtonProps {
-  period: string;
   className?: string;
+  period: string;
 }
 
 export const ExportButton: React.FC<ExportButtonProps> = ({
@@ -43,9 +45,9 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
   return (
     <button
-      onClick={handleExport}
-      disabled={isExporting}
       className={`${styles.exportButton} ${className}`}
+      disabled={isExporting}
+      onClick={handleExport}
     >
       {isExporting ? (
         <>

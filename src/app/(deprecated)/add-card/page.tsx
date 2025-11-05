@@ -1,56 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import { Input, ImageUpload, TextArea, Select, Button } from "@/components/ui";
-import { createProduct } from "@/utils/api";
+import { useEffect, useState } from "react";
+
+import { Input } from "@/components/ui/input/Input";
+import { api } from "@/lib/api/instance";
+
+import { Button } from "../../../components/ui/button/Button";
+import {
+  ImageUpload,
+  Select,
+  TextArea,
+} from "../../../features/deprecated/components/index";
+import { createProduct } from "../../../lib/api/utils/api";
+
 import styles from "./page.module.css";
 
-const categories = [
-  { value: "1", label: "Электроника" },
-  { value: "2", label: "Одежда" },
-  { value: "3", label: "Мебель" },
-  { value: "4", label: "Спорт и отдых" },
-  { value: "5", label: "Детские товары" },
-  { value: "6", label: "Для дома" },
-];
-
-const subcategories: Record<string, Array<{ value: string; label: string }>> = {
-  "1": [
-    { value: "1", label: "Телефоны" },
-    { value: "2", label: "Компьютеры" },
-    { value: "3", label: "Телевизоры" },
-    { value: "4", label: "Аудиотехника" },
-  ],
-  "2": [
-    { value: "5", label: "Мужская одежда" },
-    { value: "6", label: "Женская одежда" },
-    { value: "7", label: "Обувь" },
-    { value: "8", label: "Аксессуары" },
-  ],
-  "3": [
-    { value: "9", label: "Для спальни" },
-    { value: "10", label: "Для кухни" },
-    { value: "11", label: "Для гостиной" },
-    { value: "12", label: "Для офиса" },
-  ],
-  "4": [
-    { value: "13", label: "Фитнес" },
-    { value: "14", label: "Активный отдых" },
-    { value: "15", label: "Велосипеды" },
-  ],
-  "5": [
-    { value: "16", label: "Игрушки" },
-    { value: "17", label: "Детская одежда" },
-    { value: "18", label: "Коляски" },
-  ],
-  "6": [
-    { value: "19", label: "Кухонная утварь" },
-    { value: "20", label: "Декор" },
-    { value: "21", label: "Инструменты" },
-  ],
-};
-
 const AddCard = () => {
+  const [categories, setCategories] = useState<
+    Array<{ label: string; value: string }>
+  >([]);
+  const [subcategories, setSubcategories] = useState<
+    Array<{ id: number; name: string; categoryId: number }>
+  >([]);
+
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -66,6 +38,19 @@ const AddCard = () => {
   const [images, setImages] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    api.get<Array<{ id: number; name: string }>>("/category/all-categories")
+      .then((response) => {
+        setCategories(
+          response.data.map((cat) => ({ label: cat.name, value: String(cat.id) }))
+        );
+      });
+    api.get<Array<{ id: number; name: string; categoryId: number }>>("/category/all-subcategories")
+      .then((response) => {
+        setSubcategories(response.data);
+      });
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -87,7 +72,6 @@ const AddCard = () => {
   const handleStateChange = (state: string) => {
     setFormData((prev) => ({ ...prev, state }));
   };
-
   const handleImagesChange = (newImages: File[]) => {
     setImages(newImages);
   };
@@ -121,13 +105,14 @@ const AddCard = () => {
         brand: formData.brand,
         model: formData.model,
         address: formData.address,
-        images: images,
+        images,
       });
 
       console.log("Объявление создано:", result);
 
       // Успешно создано - можно перенаправить пользователя
-      alert("Объявление успешно создано!");
+      // Можно добавить уведомление через ваш UI, например, через toast
+      // alert("Объявление успешно создано!");
 
       // Очистить форму
       setFormData({
@@ -150,33 +135,35 @@ const AddCard = () => {
   };
 
   const availableSubcategories = formData.categoryId
-    ? subcategories[formData.categoryId] || []
+    ? subcategories
+        .filter((sub) => String(sub.categoryId) === formData.categoryId)
+        .map((sub) => ({ value: String(sub.id), label: sub.name }))
     : [];
 
   return (
-    <form className={styles.container} onSubmit={handleSubmit}>
+    <form className="container" onSubmit={handleSubmit}>
       <div className={styles.wrapper}>
         <h1 className={styles.purple}>Создание объявления</h1>
         <Input
+          required
           name="name"
-          placeholder="Название объявления"
           value={formData.name}
           onChange={handleInputChange}
-          required
+          placeholder="Название объявления"
         />
         <Input
+          required
           name="price"
-          placeholder="Цена"
           value={formData.price}
           onChange={handleInputChange}
-          required
+          placeholder="Цена"
         />
         <TextArea
           name="description"
-          placeholder="Описание товара"
-          rows={5}
           value={formData.description}
           onChange={handleInputChange}
+          placeholder="Описание товара"
+          rows={5}
         />
 
         <p>Выберите тип товара *</p>
@@ -184,22 +171,22 @@ const AddCard = () => {
           <div className={styles.box}>
             <input
               type="radio"
+              checked={formData.state === "NEW"}
+              className={styles.checkbox}
               id="new"
               name="state"
-              className={styles.checkbox}
-              checked={formData.state === "new"}
-              onChange={() => handleStateChange("new")}
+              onChange={() => handleStateChange("NEW")}
             />
             <label htmlFor="new">Новое</label>
           </div>
           <div className={styles.box}>
             <input
               type="radio"
+              checked={formData.state === "USED"}
+              className={styles.checkbox}
               id="used"
               name="state"
-              className={styles.checkbox}
-              checked={formData.state === "used"}
-              onChange={() => handleStateChange("used")}
+              onChange={() => handleStateChange("USED")}
             />
             <label htmlFor="used">Б/У</label>
           </div>
@@ -207,35 +194,35 @@ const AddCard = () => {
 
         <h1 className={styles.blue}>Категория</h1>
         <Select
+          required
           name="categoryId"
-          placeholder="Выберите категорию"
-          options={categories}
           value={formData.categoryId}
           onChange={handleSelectChange}
-          required
+          options={categories}
+          placeholder="Выберите категорию"
         />
         <Select
+          required
+          disabled={!formData.categoryId}
           name="subcategoryId"
-          placeholder="Выберите подкатегорию"
-          options={availableSubcategories}
           value={formData.subcategoryId}
           onChange={handleSelectChange}
-          disabled={!formData.categoryId}
-          required
+          options={availableSubcategories}
+          placeholder="Выберите подкатегорию"
         />
 
         <h1 className={styles.blue}>Дополнительная информация</h1>
         <Input
           name="brand"
-          placeholder="Бренд"
           value={formData.brand}
           onChange={handleInputChange}
+          placeholder="Бренд"
         />
         <Input
           name="model"
-          placeholder="Модель"
           value={formData.model}
           onChange={handleInputChange}
+          placeholder="Модель"
         />
 
         <h1 className={styles.green}>Подробности</h1>
@@ -246,9 +233,9 @@ const AddCard = () => {
         <h1 className={styles.orange}>Местоположение</h1>
         <Input
           name="address"
-          placeholder="Введите адрес"
           value={formData.address}
           onChange={handleInputChange}
+          placeholder="Введите адрес"
         />
       </div>
 

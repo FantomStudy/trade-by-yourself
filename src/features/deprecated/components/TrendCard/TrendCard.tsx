@@ -1,15 +1,23 @@
 "use client";
 
 import React from "react";
+
 import styles from "./TrendCard.module.css";
 
 interface TrendCardProps {
+  icon: string;
   title: string;
-  value: string | number;
   trend: number;
   trendPeriod: string;
-  icon: string;
-  color?: "blue" | "green" | "purple" | "orange";
+  value: number | string;
+  color?:
+    | "blue"
+    | "green"
+    | "light-blue"
+    | "orange"
+    | "pink"
+    | "purple"
+    | "yellow";
 }
 
 export const TrendCard: React.FC<TrendCardProps> = ({
