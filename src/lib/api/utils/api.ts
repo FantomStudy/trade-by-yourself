@@ -33,7 +33,7 @@ interface CreateProductData {
  */
 export const createProduct = async (data: CreateProductData) => {
   console.log("Creating product with data:", data);
-  
+
   const formData = new FormData();
 
   formData.append("name", data.name);
@@ -56,7 +56,7 @@ export const createProduct = async (data: CreateProductData) => {
 
   console.log("FormData prepared, making request...");
   console.log("Document.cookie:", document.cookie); // Проверим куки
-  
+
   try {
     // Попробуем сначала с обычным fetch для отладки
     const response = await fetch("http://localhost:3000/product/create", {
@@ -64,16 +64,19 @@ export const createProduct = async (data: CreateProductData) => {
       credentials: "include",
       body: formData,
     });
-    
+
     console.log("Response status:", response.status);
-    console.log("Response headers:", Object.fromEntries(response.headers.entries()));
-    
+    console.log(
+      "Response headers:",
+      Object.fromEntries(response.headers.entries())
+    );
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error response:", errorText);
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
-    
+
     const result = await response.json();
     console.log("Product creation successful:", result);
     return result;

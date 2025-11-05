@@ -40,13 +40,20 @@ const AddCard = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.get<Array<{ id: number; name: string }>>("/category/all-categories")
+    api
+      .get<Array<{ id: number; name: string }>>("/category/all-categories")
       .then((response) => {
         setCategories(
-          response.data.map((cat) => ({ label: cat.name, value: String(cat.id) }))
+          response.data.map((cat) => ({
+            label: cat.name,
+            value: String(cat.id),
+          }))
         );
       });
-    api.get<Array<{ id: number; name: string; categoryId: number }>>("/category/all-subcategories")
+    api
+      .get<Array<{ id: number; name: string; categoryId: number }>>(
+        "/category/all-subcategories"
+      )
       .then((response) => {
         setSubcategories(response.data);
       });
