@@ -1,0 +1,13 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: center;
+  width: 400px;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

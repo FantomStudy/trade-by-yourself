@@ -1,14 +1,17 @@
-import { LoginForm } from "@/features/auth/components/LoginForm";
-import { RecoverForm } from "@/features/auth/components/RecoverForm";
-import { RegisterForm } from "@/features/auth/components/RegisterForm";
+import { Suspense } from "react";
 
-const Home = () => {
+import { ProductsFeed } from "@/features/products";
+
+const HomePage = () => {
   return (
     <main>
-      <LoginForm />
-      {/* <RecoverForm /> */}
+      <div className="container">
+        <Suspense fallback={<div>Загрузка...</div>}>
+          <ProductsFeed />
+        </Suspense>
+      </div>
     </main>
   );
 };
 
-export default Home;
+export default HomePage;

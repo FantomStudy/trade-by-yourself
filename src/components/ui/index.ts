@@ -1,5 +1,6 @@
 export { Avatar } from "./avatar/Avatar";
 export { Button } from "./button/Button";
+export { FormField } from "./form-field/FormField";
 export * from "./icons";
 export { Input } from "./input/Input";
-export { Modal } from "./modal/Modal";
+export * from "./modal";

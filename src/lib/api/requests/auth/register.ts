@@ -1,3 +1,5 @@
+import { api } from "../../instance";
+
 export interface RegisterRequest {
   email: string;
   fullName: string;
@@ -6,14 +8,12 @@ export interface RegisterRequest {
   profileType: string;
 }
 
-export const register = async (data: RegisterRequest) => {
-  const response = await fetch("http://localhost:3000/auth/sign-up", {
-    body: JSON.stringify(data),
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-  });
+export interface RegisterResponse {
+  message: string;
+}
 
-  return response.json();
+export const register = async (data: RegisterRequest) => {
+  const response = await api.post<RegisterResponse>("/auth/sign-up", data);
+
+  return response.data;
 };

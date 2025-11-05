@@ -6,24 +6,25 @@
   align-items: center;
   justify-content: center;
 }
+
 .backdrop {
   position: absolute;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
   animation: fadeIn 0.2s ease-out forwards;
 }
+
 .content {
   position: relative;
-  z-index: 10;
-  width: 100%;
-  max-width: 600px;
+  min-width: 380px;
+  min-height: 230px;
   border-radius: var(--border-radius);
   background-color: var(--bg-light);
   padding: 36px;
   box-sizing: border-box;
   animation: fadeZoomIn 0.2s ease-out forwards;
 }
+
 .closeButton {
   position: absolute;
   right: 24px;

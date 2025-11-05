@@ -1,6 +1,7 @@
 .input[type="text"],
 .input[type="password"],
-.input[type="email"] {
+.input[type="email"],
+.input[type="tel"] {
   background-color: #f7f7f7;
   font-size: 16px;
   font-weight: 500;

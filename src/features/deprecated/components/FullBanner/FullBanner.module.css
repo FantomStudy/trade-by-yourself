@@ -1,0 +1,10 @@
+.banner {
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+}

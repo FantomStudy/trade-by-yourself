@@ -3,7 +3,9 @@ import type { PropsWithChildren } from "react";
 
 import { Montserrat } from "next/font/google";
 
-import { MainLayout } from "@/components/layouts";
+import { MainLayout } from "@/components/layout";
+
+import Providers from "./providers";
 
 import "./globals.css";
 
@@ -22,7 +24,9 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-        <MainLayout>{children}</MainLayout>
+        <Providers>
+          <MainLayout>{children}</MainLayout>
+        </Providers>
       </body>
     </html>
   );

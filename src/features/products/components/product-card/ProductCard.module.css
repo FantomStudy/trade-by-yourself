@@ -1,0 +1,40 @@
+.card {
+  background-color: var(--bg-light);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  position: relative;
+}
+.info {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.info p:not(.price) {
+  font-size: 12px;
+}
+.price {
+  font-weight: 600;
+  color: var(--pink);
+}
+.meta p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.image {
+  width: 100%;
+  height: auto;
+  /* min-height: 277px ; */
+  /* aspect-ratio: 320/250; */
+  /* object-fit: cover; */
+  object-position: center;
+}
+
+.link {
+  position: absolute;
+  inset: 0;
+}

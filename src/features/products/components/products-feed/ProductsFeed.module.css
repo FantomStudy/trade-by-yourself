@@ -1,0 +1,13 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.skeleton {
+  width: 100%;
+  aspect-ratio: 278/386;
+  border-radius: var(--border-radius);
+  background-color: var(--bg-dark);
+}

@@ -1,4 +1,5 @@
 import antfu from "@antfu/eslint-config";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 import pluginReact from "eslint-plugin-react";
 
 const eslintConfig = antfu(
@@ -43,6 +44,7 @@ const eslintConfig = antfu(
       },
     },
   },
+  ...pluginQuery.configs["flat/recommended"],
   {
     name: "fantomstudy/perfectionist",
     rules: {

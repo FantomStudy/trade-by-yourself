@@ -48,7 +48,6 @@ export interface FetchesParams {
   baseURL: string;
   cache?: RequestCache;
   headers?: Record<string, string>;
-  mode?: RequestMode;
   parse?: ResponseParse;
   withCredentials?: boolean;
 }
@@ -107,7 +106,7 @@ export class ResponseError extends Error {
 // Основной класс Fetches
 class Fetches {
   readonly baseURL: string;
-  readonly options: Pick<RequestOptions, "cache" | "credentials" | "mode">;
+  readonly options: Pick<RequestOptions, "cache" | "credentials">;
 
   public headers: Record<string, string>;
   public parse?: ResponseParse;
@@ -138,7 +137,6 @@ class Fetches {
       parse,
       withCredentials = false,
       cache = "default",
-      mode = "same-origin",
     } = params ?? {};
 
     this.baseURL = baseURL;
@@ -148,7 +146,6 @@ class Fetches {
     this.options = {
       credentials: withCredentials ? "include" : "same-origin",
       cache,
-      mode,
     };
 
     // this.interceptorHandlers = { request: [], response: [] };

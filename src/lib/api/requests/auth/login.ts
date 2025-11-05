@@ -1,3 +1,5 @@
+import type { User } from "@/types/user.type";
+
 import { api } from "../../instance";
 
 export interface LoginRequest {
@@ -7,13 +9,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   message: string;
-  user: {
-    id: number;
-    email: string;
-    fullName: string;
-    phoneNumber: string;
-    profileType: string;
-  };
+  user: User;
 }
 
 export const login = async (data: LoginRequest) => {
