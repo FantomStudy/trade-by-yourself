@@ -1,21 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button, Input, TextArea } from "@/components/ui";
+import { useEffect, useState } from "react";
+
+import { Button, Input } from "@/components/ui";
+import { TextArea } from "@/features/deprecated/components";
+
 import styles from "./page.module.css";
 
 interface SupportTicket {
   id: string;
-  subject: string;
-  description: string;
-  status: "resolved" | "pending" | "closed";
   date: string;
+  description: string;
+  status: "closed" | "pending" | "resolved";
+  subject: string;
   time: string;
 }
 
 interface NewTicketData {
-  subject: string;
   description: string;
+  subject: string;
 }
 
 const Support = () => {
@@ -182,8 +185,8 @@ const Support = () => {
       <div className={styles.header}>
         <h1 className={styles.title}>Техническая поддержка</h1>
         <Button
-          onClick={() => setShowCreateForm(!showCreateForm)}
           className={styles.createButton}
+          onClick={() => setShowCreateForm(!showCreateForm)}
         >
           {showCreateForm ? "Отменить" : "Создать обращение"}
         </Button>
@@ -194,7 +197,7 @@ const Support = () => {
           <h2 className={styles.formTitle}>Новое обращение</h2>
           <div className={styles.formFields}>
             <Input
-              placeholder="Тема обращения"
+              className={styles.subjectInput}
               value={newTicket.subject}
               onChange={(e) =>
                 setNewTicket((prev) => ({
@@ -202,10 +205,10 @@ const Support = () => {
                   subject: e.target.value,
                 }))
               }
-              className={styles.subjectInput}
+              placeholder="Тема обращения"
             />
             <TextArea
-              placeholder="Опишите вашу проблему подробно..."
+              className={styles.descriptionInput}
               value={newTicket.description}
               onChange={(e) =>
                 setNewTicket((prev) => ({
@@ -213,14 +216,14 @@ const Support = () => {
                   description: e.target.value,
                 }))
               }
+              placeholder="Опишите вашу проблему подробно..."
               rows={4}
-              className={styles.descriptionInput}
             />
             <div className={styles.formActions}>
               <Button
-                onClick={handleCreateTicket}
-                disabled={isSubmitting}
                 className={styles.submitButton}
+                disabled={isSubmitting}
+                onClick={handleCreateTicket}
               >
                 {isSubmitting ? "Отправка..." : "Отправить обращение"}
               </Button>
@@ -234,8 +237,8 @@ const Support = () => {
           <div className={styles.emptyState}>
             <p>У вас пока нет обращений в техподдержку</p>
             <Button
-              onClick={() => setShowCreateForm(true)}
               className={styles.createFirstButton}
+              onClick={() => setShowCreateForm(true)}
             >
               Создать первое обращение
             </Button>

@@ -1,7 +1,7 @@
+import { WalletIcon } from "lucide-react";
 import Link from "next/link";
 
-import { WalletIcon } from "@/shared/icons";
-import { UserInfo } from "@/shared/ui";
+import { UserInfo } from "@/components/layout";
 
 import { links } from "./links";
 

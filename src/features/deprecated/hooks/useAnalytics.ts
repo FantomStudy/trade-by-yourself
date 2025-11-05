@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { api } from "@/lib/api/instance";
+
 interface AnalyticsParams {
   categoryId?: number;
   period: string;
@@ -41,23 +43,11 @@ export const useAnalytics = ({
         params.append("categoryId", categoryId.toString());
       }
 
-      const response = await fetch(
-        `http://localhost:3000/statistics/analytic?${params.toString()}`,
-        {
-          method: "GET",
-          credentials: "include", // Это обеспечит передачу куки
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      const response = await api.get<AnalyticsData>(
+        `/statistics/analytic?${params.toString()}`
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const analyticsData: AnalyticsData = await response.json();
-      setData(analyticsData);
+      setData(response.data);
     } catch (err) {
       console.error("Error fetching analytics:", err);
       setError(

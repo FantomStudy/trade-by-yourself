@@ -1,0 +1,272 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.productCard {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.productHeader {
+  padding: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.productTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.productPrice {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e74c3c;
+  margin: 0;
+}
+
+.favoriteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  color: #999;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.favoriteButton:hover {
+  background-color: #f0f0f0;
+}
+
+.favoriteButton.active {
+  color: #e74c3c;
+}
+
+.imageGallery {
+  position: relative;
+  height: 400px;
+  background: #f8f8f8;
+}
+
+.mainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.navigationButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.navigationButton:hover {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.prevButton {
+  left: 16px;
+}
+
+.nextButton {
+  right: 16px;
+}
+
+.thumbnails {
+  padding: 16px 20px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  object-fit: cover;
+  transition: border-color 0.2s;
+}
+
+.thumbnail.active {
+  border-color: #3498db;
+}
+
+.thumbnail:hover {
+  border-color: #bbb;
+}
+
+.infoSection {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.sectionHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.sectionContent {
+  padding: 20px;
+}
+
+.description {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.location {
+  color: #666;
+  margin: 0;
+}
+
+.characteristics {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.relatedProducts {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.relatedTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #9b59b6;
+  margin: 0 0 20px 0;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.productItem {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.productItem:hover {
+  transform: translateY(-2px);
+}
+
+.productImage {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.productInfo {
+  padding: 12px;
+}
+
+.productName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.productMeta {
+  font-size: 12px;
+  color: #999;
+  margin: 0 0 8px 0;
+}
+
+.productPrice2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e74c3c;
+  margin: 0;
+}
+
+.heart {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e74c3c;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.priceAndFavorite {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .productTitle {
+    font-size: 20px;
+  }
+
+  .productPrice {
+    font-size: 18px;
+  }
+
+  .imageGallery {
+    height: 300px;
+  }
+
+  .productGrid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+}

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { api } from "@/lib/api/instance";
+
 interface Category {
   id: number;
   name: string;
@@ -22,23 +24,8 @@ export const useCategories = (): UseCategoriesReturn => {
         setIsLoading(true);
         setError(null);
 
-        const response = await fetch(
-          "http://localhost:3000/category/all-categories",
-          {
-            method: "GET",
-            credentials: "include", // Это обеспечит передачу куки
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data: Category[] = await response.json();
-        setCategories(data);
+        const response = await api.get<Category[]>("/category/all-categories");
+        setCategories(response.data);
       } catch (err) {
         console.error("Error fetching categories:", err);
         setError(err instanceof Error ? err.message : "Неизвестная ошибка");

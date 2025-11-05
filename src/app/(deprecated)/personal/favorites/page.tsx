@@ -1,5 +1,5 @@
 import { mock } from "@/app/mock";
-import { ProductCard } from "@/shared/ui";
+import { ProductCard } from "@/features/products";
 
 const FavoritesPage = () => {
   return (
@@ -13,7 +13,7 @@ const FavoritesPage = () => {
             imageUrl={listing.imageUrl}
             meta={listing.meta}
             price={listing.price}
-            title={listing.title}
+            title={listing.name}
           />
         ))}
       </div>
