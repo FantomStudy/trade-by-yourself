@@ -4,12 +4,12 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
   typedRoutes: true,
-  logging: {
-    fetches: {
-      fullUrl: true,
-      hmrRefreshes: true,
-    },
-  },
+  // logging: {
+  //   fetches: {
+  //     fullUrl: true,
+  //     hmrRefreshes: true,
+  //   },
+  // },
   images: {
     unoptimized: true,
     remotePatterns: [

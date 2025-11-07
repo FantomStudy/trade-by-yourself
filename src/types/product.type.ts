@@ -8,10 +8,12 @@ export interface Product {
 }
 
 export interface ExtendedProduct extends Product {
-  brand: string;
+  brand?: string;
   categoryId: number;
-  description: string;
-  model: string;
+  description?: string;
+  isFavorited?: boolean;
+  model?: string;
   state: string;
   subcategoryId: number;
+  userId: number;
 }

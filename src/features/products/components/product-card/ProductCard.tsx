@@ -12,22 +12,25 @@ interface ProductCardProps {
 export const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <div className={styles.card}>
-      <Image
-        alt={product.name}
-        className={styles.image}
-        height={300}
-        src={product.images[0]}
-        width={300}
-      />
+      <div className={styles.imageWrapper}>
+        <Image
+          fill
+          alt={product.name}
+          className={styles.image}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          src={product.images[0]}
+          style={{ objectFit: "cover" }}
+        />
+      </div>
       <div className={styles.info}>
-        <p>{product.name}</p>
+        <p className={styles.name}>{product.name}</p>
+        <p className={styles.price}>{product.price} ₽</p>
         <div className={styles.meta}>
           <p>{product.address}</p>
           <p>{product.createdAt}</p>
         </div>
-        <p className={styles.price}>{product.price} ₽</p>
       </div>
-      <Link href={`/products/${product.id}`} className={styles.link} />
+      <Link href={`/product/${product.id}`} className={styles.link} />
     </div>
   );
 };

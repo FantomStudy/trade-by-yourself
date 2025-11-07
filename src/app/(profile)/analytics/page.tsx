@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 
-import { TrendCard } from "../../features/deprecated/components/TrendCard/TrendCard";
+import { TrendCard } from "@/features/deprecated/components/TrendCard/TrendCard";
 import {
   useAnalytics,
   useCategories,
-} from "../../features/deprecated/hooks/index";
+} from "@/features/deprecated/hooks/index";
 
 import styles from "./page.module.css";
 

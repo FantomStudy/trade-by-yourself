@@ -1,3 +1,5 @@
+import { api } from "@/lib/api";
+
 interface CreateProductData {
   name: string;
   address?: string;
@@ -52,15 +54,7 @@ export const createProduct = async (data: CreateProductData) => {
     });
   }
 
-  const response = await fetch("http://localhost:3000/product/create", {
-    method: "POST",
-    body: formData,
-  });
+  const response = await api.post("/product/create", formData);
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "Ошибка при создании объявления");
-  }
-
-  return response.json();
+  return response;
 };

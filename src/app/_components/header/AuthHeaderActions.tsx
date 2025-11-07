@@ -14,7 +14,7 @@ export const AuthHeaderActions = () => {
 
   return (
     <div className={styles.actions}>
-      <Link href="/profile">
+      <Link href="/analytics">
         <Avatar className={styles.avatarLink} name={user.fullName} />
       </Link>
       <Link href="/new-product" passHref>

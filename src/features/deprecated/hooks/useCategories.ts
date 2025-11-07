@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getApiClient } from "@/lib/api/instance";
+import { api } from "@/lib/api/instance";
 
 interface Category {
   id: number;
@@ -23,7 +23,6 @@ export const useCategories = (): UseCategoriesReturn => {
       try {
         setIsLoading(true);
         setError(null);
-        const api = await getApiClient();
 
         const response = await api.get<Category[]>("/category/all-categories");
         setCategories(response.data);

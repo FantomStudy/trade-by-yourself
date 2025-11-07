@@ -1,234 +1,204 @@
-// "use client";
+"use client";
 
-// import Image from "next/image";
-// import { useState } from "react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
-// import styles from "./page.module.css";
+import type { ExtendedProduct } from "@/types";
 
-// interface Product {
-//   id: number;
-//   name: string;
-//   address: string;
-//   characteristics?: string;
-//   createdAt: string;
-//   description?: string;
-//   images: string[];
-//   price: number;
-// }
+import { getProduct } from "@/lib/api";
 
-const ProductPage = () => {
-  return <div>Hello</div>;
+import styles from "./page.module.css";
+
+interface ProductPageProps {
+  params: Promise<{ productId: string }>;
+}
+
+const ProductPage = ({ params }: ProductPageProps) => {
+  const [product, setProduct] = useState<ExtendedProduct | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        setIsLoading(true);
+        const resolvedParams = await params;
+        const productId = Number(resolvedParams.productId);
+        const data = await getProduct(productId);
+        setProduct(data);
+        setIsFavorite(data.isFavorited || false);
+      } catch (err) {
+        setError("Не удалось загрузить товар");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [params]);
+
+  const nextImage = () => {
+    if (!product) return;
+    setCurrentImageIndex((prev) =>
+      prev === product.images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = () => {
+    if (!product) return;
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? product.images.length - 1 : prev - 1
+    );
+  };
+
+  const formatPrice = (price: number) => {
+    return `${price.toLocaleString()} руб.`;
+  };
+
+  if (isLoading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>Загрузка...</div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.error}>{error || "Товар не найден"}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      {/* Основная карточка продукта */}
+      <div className={styles.productCard}>
+        {/* Заголовок с названием, ценой и кнопкой избранного */}
+        <div className={styles.productHeader}>
+          <div className={styles.headerTop}>
+            <div>
+              <h1 className={styles.productTitle}>{product.name}</h1>
+              <p className={styles.productPrice}>
+                {formatPrice(product.price)}
+              </p>
+            </div>
+            <button
+              type="button"
+              className={`${styles.favoriteButton} ${
+                isFavorite ? styles.active : ""
+              }`}
+              onClick={() => setIsFavorite(!isFavorite)}
+            >
+              {isFavorite ? "❤️" : "🤍"}
+            </button>
+          </div>
+        </div>
+
+        {/* Галерея изображений */}
+        <div className={styles.imageGallery}>
+          {/* Миниатюры слева */}
+          {product.images.length > 1 && (
+            <div className={styles.thumbnails}>
+              {product.images.map((image, index) => (
+                <button
+                  key={`${image}-${index}`}
+                  type="button"
+                  className={`${styles.thumbnail} ${
+                    index === currentImageIndex ? styles.active : ""
+                  }`}
+                  onClick={() => setCurrentImageIndex(index)}
+                >
+                  <Image
+                    fill
+                    alt={`${product.name} ${index + 1}`}
+                    src={image}
+                    style={{ objectFit: "cover" }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Главное изображение справа */}
+          <div className={styles.mainImageWrapper}>
+            <Image
+              fill
+              alt={product.name}
+              className={styles.mainImage}
+              src={product.images[currentImageIndex]}
+              style={{ objectFit: "contain" }}
+              priority
+            />
+
+            {product.images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  className={`${styles.navigationButton} ${styles.prevButton}`}
+                  onClick={prevImage}
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.navigationButton} ${styles.nextButton}`}
+                  onClick={nextImage}
+                >
+                  →
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Описание */}
+      {product.description && (
+        <div className={styles.infoSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle} style={{ color: "#3498db" }}>
+              Описание
+            </h2>
+          </div>
+          <div className={styles.sectionContent}>
+            <p className={styles.description}>{product.description}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Местоположение */}
+      <div className={styles.infoSection}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
+            Местоположение
+          </h2>
+        </div>
+        <div className={styles.sectionContent}>
+          <p className={styles.location}>{product.address}</p>
+        </div>
+      </div>
+
+      {/* Характеристики */}
+      {(product.brand || product.model) && (
+        <div className={styles.infoSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle} style={{ color: "#27ae60" }}>
+              Характеристики
+            </h2>
+          </div>
+          <div className={styles.sectionContent}>
+            {product.brand && <p>Бренд: {product.brand}</p>}
+            {product.model && <p>Модель: {product.model}</p>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ProductPage;
-// // Моковые данные для примера
-// const mockProduct: Product = {
-//   id: 1,
-//   name: "Коляска для дома",
-//   address: "Москва",
-//   createdAt: "2025-09-09T21:18:00Z",
-//   price: 25000,
-//   images: [
-//     "/bed.png", // Используем существующие изображения
-//     "/clothes.png",
-//     "/bed.png",
-//     "/clothes.png",
-//   ],
-//   description:
-//     "Продам коляску инвалидную комнатную, использовали пару раз в комнате. Так же есть в наличии прогулочная коляска абсолютно новая, в коробке, ни разу не использовалась. Торг уместен",
-//   characteristics:
-//     "Продам коляску инвалидную комнатную, использовали пару раз в комнате. Так же есть в наличии прогулочная коляска абсолютно новая, в коробке, ни разу не использовалась. Торг уместен",
-// };
-
-// const mockRelatedProducts = [
-//   {
-//     id: 2,
-//     name: "Одежда",
-//     meta: "Оренбургская обл., г. Оренбург\n09.09.25 в 21:18",
-//     price: "3000 рублей",
-//     imageUrl: "/clothes.png",
-//   },
-//   {
-//     id: 3,
-//     name: "Одежда",
-//     meta: "Оренбургская обл., г. Оренбург\n09.09.25 в 21:18",
-//     price: "3000 рублей",
-//     imageUrl: "/bed.png",
-//   },
-//   {
-//     id: 4,
-//     name: "Одежда",
-//     meta: "Оренбургская обл., г. Оренбург\n09.09.25 в 21:18",
-//     price: "3000 рублей",
-//     imageUrl: "/clothes.png",
-//   },
-// ];
-
-// const ProductPage = () => {
-//   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-//   const [isFavorite, setIsFavorite] = useState(false);
-
-//   const nextImage = () => {
-//     setCurrentImageIndex((prev) =>
-//       prev === mockProduct.images.length - 1 ? 0 : prev + 1
-//     );
-//   };
-
-//   const prevImage = () => {
-//     setCurrentImageIndex((prev) =>
-//       prev === 0 ? mockProduct.images.length - 1 : prev - 1
-//     );
-//   };
-
-//   const formatPrice = (price: number) => {
-//     return `${price.toLocaleString()} руб.`;
-//   };
-
-//   return (
-//     <div className={styles.container}>
-//       {/* Основная карточка продукта */}
-//       <div className={styles.productCard}>
-//         {/* Заголовок с названием, ценой и кнопкой избранного */}
-//         <div className={styles.productHeader}>
-//           <div className={styles.headerTop}>
-//             <div>
-//               <h1 className={styles.productTitle}>{mockProduct.name}</h1>
-//               <p className={styles.productPrice}>
-//                 {formatPrice(mockProduct.price)}
-//               </p>
-//             </div>
-//             <button
-//               type="button"
-//               className={`${styles.favoriteButton} ${
-//                 isFavorite ? styles.active : ""
-//               }`}
-//               onClick={() => setIsFavorite(!isFavorite)}
-//             ></button>
-//           </div>
-//         </div>
-
-//         {/* Галерея изображений */}
-//         <div className={styles.imageGallery}>
-//           <Image
-//             alt={mockProduct.name}
-//             className={styles.mainImage}
-//             height={400}
-//             src={mockProduct.images[currentImageIndex]}
-//             width={800}
-//             priority
-//           />
-
-//           {mockProduct.images.length > 1 && (
-//             <>
-//               <button
-//                 type="button"
-//                 className={`${styles.navigationButton} ${styles.prevButton}`}
-//                 onClick={prevImage}
-//               >
-//                 ←
-//               </button>
-//               <button
-//                 type="button"
-//                 className={`${styles.navigationButton} ${styles.nextButton}`}
-//                 onClick={nextImage}
-//               >
-//                 →
-//               </button>
-//             </>
-//           )}
-//         </div>
-
-//         {/* Миниатюры */}
-//         {mockProduct.images.length > 1 && (
-//           <div className={styles.thumbnails}>
-//             {mockProduct.images.map((image, index) => (
-//               <Image
-//                 key={`thumbnail-${image}`}
-//                 className={`${styles.thumbnail} ${
-//                   index === currentImageIndex ? styles.active : ""
-//                 }`}
-//                 alt={`${mockProduct.name} ${index + 1}`}
-//                 height={80}
-//                 src={image}
-//                 width={80}
-//                 onClick={() => setCurrentImageIndex(index)}
-//               />
-//             ))}
-//           </div>
-//         )}
-//       </div>
-
-//       {/* Описание */}
-//       {mockProduct.description && (
-//         <div className={styles.infoSection}>
-//           <div className={styles.sectionHeader}>
-//             <h2 className={styles.sectionTitle} style={{ color: "#3498db" }}>
-//               Описание
-//             </h2>
-//           </div>
-//           <div className={styles.sectionContent}>
-//             <p className={styles.description}>{mockProduct.description}</p>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Местоположение */}
-//       <div className={styles.infoSection}>
-//         <div className={styles.sectionHeader}>
-//           <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
-//             Местоположение
-//           </h2>
-//         </div>
-//         <div className={styles.sectionContent}>
-//           <p className={styles.location}>{mockProduct.address}</p>
-//         </div>
-//       </div>
-
-//       {/* Характеристики */}
-//       {mockProduct.characteristics && (
-//         <div className={styles.infoSection}>
-//           <div className={styles.sectionHeader}>
-//             <h2 className={styles.sectionTitle} style={{ color: "#27ae60" }}>
-//               Характеристики
-//             </h2>
-//           </div>
-//           <div className={styles.sectionContent}>
-//             <p className={styles.characteristics}>
-//               {mockProduct.characteristics}
-//             </p>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Другие объявления */}
-//       <div className={styles.relatedProducts}>
-//         <h2 className={styles.relatedTitle}>Другие объявления</h2>
-//         <div className={styles.productGrid}>
-//           {mockRelatedProducts.map((product) => (
-//             <div key={product.id} className={styles.productItem}>
-//               <div style={{ position: "relative" }}>
-//                 <Image
-//                   alt={product.name}
-//                   className={styles.productImage}
-//                   height={160}
-//                   src={product.imageUrl}
-//                   width={240}
-//                 />
-//                 <button type="button" className={styles.heart}>
-//                   ❤️
-//                 </button>
-//               </div>
-//               <div className={styles.productInfo}>
-//                 <h3 className={styles.productName}>{product.name}</h3>
-//                 <p className={styles.productMeta}>{product.meta}</p>
-//                 <p className={styles.productPrice2}>{product.price}</p>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductPage;
