@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 
 import { Button, FormField } from "@/components/ui";
 import { login, ResponseError } from "@/lib/api";
+import { useAuth } from "@/lib/contexts";
 
 import type { LoginData } from "../../schemas";
 import type { AuthFormProps } from "./types";
@@ -17,6 +18,7 @@ import { loginSchema } from "../../schemas";
 import styles from "./form.module.css";
 
 export const LoginForm = ({ onSuccess }: AuthFormProps) => {
+  const { setUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -28,7 +30,8 @@ export const LoginForm = ({ onSuccess }: AuthFormProps) => {
 
   const onSubmit: SubmitHandler<LoginData> = async (formData: LoginData) => {
     try {
-      await login(formData);
+      const response = await login(formData);
+      setUser(response.user);
       onSuccess?.();
       setError(undefined);
     } catch (err) {

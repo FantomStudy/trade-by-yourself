@@ -1,17 +1,18 @@
 "use client";
 
 import React from "react";
+
 import styles from "./Select.module.css";
 
 interface SelectOption {
-  value: string;
   label: string;
+  value: string;
 }
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  placeholder?: string;
-  options: SelectOption[];
   error?: string;
+  options: SelectOption[];
+  placeholder?: string;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -30,7 +31,7 @@ export const Select: React.FC<SelectProps> = ({
         {...props}
       >
         {placeholder && (
-          <option value="" disabled>
+          <option disabled value="">
             {placeholder}
           </option>
         )}

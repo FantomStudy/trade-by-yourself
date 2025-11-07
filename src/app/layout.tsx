@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import type { PropsWithChildren } from "react";
+import type { ReactNode } from "react";
 
 import { Montserrat } from "next/font/google";
 
-import { MainLayout } from "@/components/layout";
+import { getCurrentUser } from "@/lib/api";
 
-import Providers from "./providers";
+import { Footer, Header } from "./_components";
+import { Providers } from "./providers";
 
 import "./globals.css";
 
@@ -20,14 +21,24 @@ export const metadata: Metadata = {
   description: "",
 };
 
-export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+const RootLayout = async ({ children }: RootLayoutProps) => {
+  const user = await getCurrentUser();
+
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-        <Providers>
-          <MainLayout>{children}</MainLayout>
+        <Providers user={{ initialUser: user }}>
+          <Header />
+          {children}
+          <Footer />
         </Providers>
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

@@ -14,11 +14,7 @@ export interface AnalyticsResponse {
 }
 
 export const getAnalitics = async (query: AnalyticsQueryParams) => {
-  const response = await api.get<AnalyticsResponse>("/statistics/analytic", {
-    query: {
-      ...query,
-    },
-  });
-
-  return response.data;
+  return api
+    .get<AnalyticsResponse>("/statistics/analytic", { query: { ...query } })
+    .then((r) => r.data);
 };

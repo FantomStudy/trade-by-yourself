@@ -1,8 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  output: "standalone",
   typedRoutes: true,
+  logging: {
+    fetches: {
+      fullUrl: true,
+      hmrRefreshes: true,
+    },
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -14,6 +21,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // rewrites: () => [
+  //   {
+  //     source: "/api/:path*",
+  //     destination: `${BACKEND_API_URL}/api/:path*`,
+  //   },
+  // ],
 };
 
 export default nextConfig;

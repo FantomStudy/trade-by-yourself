@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useRef } from "react";
 import Image from "next/image";
+import React, { useRef, useState } from "react";
+
 import styles from "./ImageUpload.module.css";
 
 interface ImageUploadProps {
@@ -61,19 +62,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               onClick={() => setAsMainImage(index)}
             >
               <Image
-                src={URL.createObjectURL(image)}
+                fill
                 alt={`Фото ${index + 1}`}
                 className={styles.image}
-                fill
+                src={URL.createObjectURL(image)}
                 style={{ objectFit: "cover" }}
               />
               <button
+                type="button"
                 className={styles.removeButton}
                 onClick={(e) => {
                   e.stopPropagation();
                   removeImage(index);
                 }}
-                type="button"
               >
                 🗑️
               </button>
@@ -96,12 +97,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         </div>
 
         <input
+          multiple
           ref={fileInputRef}
           type="file"
           accept="image/*"
-          multiple
-          onChange={handleFileSelect}
           style={{ display: "none" }}
+          onChange={handleFileSelect}
         />
       </div>
     </div>

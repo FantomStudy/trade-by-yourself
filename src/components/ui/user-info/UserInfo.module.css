@@ -1,0 +1,23 @@
+.info {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  gap: 16px;
+}
+
+/* .stats {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+} */
+
+.name {
+  font-size: 24px;
+  font-weight: 600;
+}

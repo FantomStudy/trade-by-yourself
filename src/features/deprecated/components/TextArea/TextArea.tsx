@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
+
 import styles from "./TextArea.module.css";
 
 interface TextAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  placeholder?: string;
   error?: string;
+  placeholder?: string;
 }
 
 export const TextArea: React.FC<TextAreaProps> = ({

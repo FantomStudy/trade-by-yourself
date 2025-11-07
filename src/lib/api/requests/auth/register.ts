@@ -13,7 +13,5 @@ export interface RegisterResponse {
 }
 
 export const register = async (data: RegisterRequest) => {
-  const response = await api.post<RegisterResponse>("/auth/sign-up", data);
-
-  return response.data;
+  return api.post<RegisterResponse>("/auth/sign-up", data).then((r) => r.data);
 };

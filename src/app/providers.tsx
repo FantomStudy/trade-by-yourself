@@ -1,18 +1,16 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
+import type { ReactNode } from "react";
 
-import { QueryClientProvider } from "@tanstack/react-query";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
+import type { AuthProviderProps } from "@/lib/contexts";
 
-import { getQueryClient } from "@/lib/get-query-client";
+import { AuthProvider } from "@/lib/contexts";
 
-export default function Providers({ children }: PropsWithChildren) {
-  const queryClient = getQueryClient();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <NuqsAdapter>{children}</NuqsAdapter>
-    </QueryClientProvider>
-  );
+interface ProvidersProps {
+  children: ReactNode;
+  user: Omit<AuthProviderProps, "children">;
 }
+
+export const Providers = ({ children, user }: ProvidersProps) => {
+  return <AuthProvider {...user}>{children}</AuthProvider>;
+};

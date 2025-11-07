@@ -9,10 +9,7 @@ export interface ForgotPasswordResponse {
 }
 
 export const forgotPassword = async (data: ForgotPasswordRequest) => {
-  const response = await api.post<ForgotPasswordResponse>(
-    "/auth/forgot-password",
-    data
-  );
-
-  return response.data;
+  return api
+    .post<ForgotPasswordResponse>("/auth/forgot-password", data)
+    .then((r) => r.data);
 };

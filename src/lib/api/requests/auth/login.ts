@@ -13,8 +13,5 @@ export interface LoginResponse {
 }
 
 export const login = async (data: LoginRequest) => {
-  console.log("Logging in with data:", data);
-  const response = await api.post<LoginResponse>("/auth/sign-in", data);
-  console.log("Login successful, cookies after login:", document.cookie);
-  return response.data;
+  return api.post<LoginResponse>("/auth/sign-in", data).then((r) => r.data);
 };
