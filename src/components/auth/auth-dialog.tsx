@@ -1,0 +1,71 @@
+"use client";
+
+import type { ComponentProps } from "react";
+
+import { useCallback, useState } from "react";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui";
+
+import type { AuthScreen } from "./types";
+
+import { LoginScreen } from "./login-screen";
+import { RecoverScreen } from "./recover-screen";
+import { RegisterScreen } from "./register-screen";
+
+const AUTH_SCREENS = {
+  login: {
+    title: "Вход",
+    component: LoginScreen,
+  },
+  recover: {
+    title: "Восстановление",
+    component: RecoverScreen,
+  },
+  register: {
+    title: "Регистрация",
+    component: RegisterScreen,
+  },
+};
+
+export const AuthDialog = ({
+  open,
+  onOpenChange,
+}: ComponentProps<typeof Dialog>) => {
+  const [screen, setScreen] = useState<AuthScreen>("login");
+
+  const handleOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        setScreen("login");
+      }
+      onOpenChange?.(isOpen);
+    },
+    [onOpenChange],
+  );
+
+  const handleClose = useCallback(() => {
+    handleOpenChange(false);
+  }, [handleOpenChange]);
+
+  return (
+    <Dialog onOpenChange={handleOpenChange} open={open}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="text-center">
+            {AUTH_SCREENS[screen].title}
+          </DialogTitle>
+        </DialogHeader>
+
+        {AUTH_SCREENS[screen].component({
+          onChangeScreen: setScreen,
+          onClose: handleClose,
+        })}
+      </DialogContent>
+    </Dialog>
+  );
+};

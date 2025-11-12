@@ -1,0 +1,22 @@
+import { Button, Typography } from "@/components/ui";
+
+import type { AuthScreenProps } from "../types";
+
+import { RegisterForm } from "./register-form";
+
+export const RegisterScreen = ({
+  onClose,
+  onChangeScreen,
+}: AuthScreenProps) => {
+  return (
+    <>
+      <RegisterForm onSuccess={onClose} />
+
+      <div className="flex flex-col gap-4 text-center">
+        <Typography className="text-muted">Уже есть аккаунт?</Typography>
+
+        <Button onClick={() => onChangeScreen("login")}>Войти</Button>
+      </div>
+    </>
+  );
+};
