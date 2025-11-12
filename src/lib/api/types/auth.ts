@@ -2,6 +2,8 @@ import z from "zod";
 
 import type { User } from "@/types";
 
+import { isValidPhoneNumber } from "@/lib/phone";
+
 // Login Schema
 export const loginSchema = z.object({
   login: z.string().min(1, "Почта или номер телефона обязательны"),
@@ -22,7 +24,10 @@ export const registerSchema = z.object({
   phoneNumber: z
     .string()
     .min(1, "Номер телефона обязателен")
-    .regex(/^\+?\d{10,15}$/, "Введите корректный номер телефона"),
+    .refine(
+      (value) => isValidPhoneNumber(value),
+      "Введите корректный российский номер телефона в формате +7 (XXX) XXX-XX-XX",
+    ),
   password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
 });
 

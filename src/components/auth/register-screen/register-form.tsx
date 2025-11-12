@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 import type { RegisterData } from "@/lib/api";
 
-import { Button, Field } from "@/components/ui";
+import { Button, Field, PhoneField, usePhoneField } from "@/components/ui";
 import { registerSchema } from "@/lib/api";
 
 import type { AuthFormProps } from "../types";
@@ -20,11 +20,19 @@ export const RegisterForm = ({ onSuccess }: AuthFormProps) => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
   const [error, setError] = useState<string>();
+
+ 
+  const phoneField = usePhoneField({
+    control,
+    name: "phoneNumber",
+    storeCleanValue: true, 
+  });
 
   const onSubmit: SubmitHandler<RegisterData> = async (formData) => {
     registerMutation.mutate(formData, {
@@ -54,12 +62,7 @@ export const RegisterForm = ({ onSuccess }: AuthFormProps) => {
         {...register("email")}
       />
 
-      <Field
-        type="tel"
-        error={errors.phoneNumber?.message}
-        placeholder="Номер телефона"
-        {...register("phoneNumber")}
-      />
+      <PhoneField placeholder="Номер телефона" {...phoneField} />
 
       <Field
         type="password"
