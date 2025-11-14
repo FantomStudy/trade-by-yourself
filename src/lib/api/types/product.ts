@@ -7,9 +7,11 @@ export const createProductSchema = z.object({
   categoryId: z.number(),
   description: z.string().optional(),
   images: z.array(z.instanceof(File)).optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
   model: z.string().optional(),
   price: z.number().min(0, "Цена должна быть положительным числом"),
-  state: z.enum(["NEW", "USED"]),
+  state: z.enum(["new", "used"]),
   subcategoryId: z.number(),
 });
 
