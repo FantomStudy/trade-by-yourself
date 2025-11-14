@@ -63,9 +63,84 @@ export const AddressMap = ({
     null,
   );
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [_locationPermission, setLocationPermission] =
+    useState<PermissionState | null>(null);
 
-  const debounceTimeout = useRef<NodeJS.Timeout>();
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  // Функция для получения текущей геолокации пользователя
+  const getCurrentLocation = async () => {
+    if (!navigator.geolocation) {
+      console.error("Геолокация не поддерживается браузером");
+      return;
+    }
+
+    try {
+      setIsLoadingLocation(true);
+
+      const position = await new Promise<GeolocationPosition>(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000, // 5 минут
+          });
+        },
+      );
+
+      const { latitude, longitude } = position.coords;
+      console.log("Получены координаты:", latitude, longitude);
+
+      // Устанавливаем маркер на карте
+      setMarkerPosition([latitude, longitude]);
+      onCoordinatesChange?.(latitude, longitude);
+
+      // Получаем адрес по координатам
+      await getAddressFromCoordinates(latitude, longitude);
+    } catch (error: any) {
+      console.error("Ошибка получения геолокации:", error);
+
+      if (error.code === error.PERMISSION_DENIED) {
+        setLocationPermission("denied");
+        console.log("Пользователь запретил доступ к геолокации");
+      } else if (error.code === error.POSITION_UNAVAILABLE) {
+        console.log("Информация о местоположении недоступна");
+      } else if (error.code === error.TIMEOUT) {
+        console.log("Превышено время ожидания получения геолокации");
+      }
+    } finally {
+      setIsLoadingLocation(false);
+    }
+  };
+
+  // Проверяем разрешения на геолокацию и автоматически определяем местоположение при монтировании
+  useEffect(() => {
+    const initializeLocation = async () => {
+      if ("permissions" in navigator) {
+        const result = await navigator.permissions.query({
+          name: "geolocation",
+        });
+        setLocationPermission(result.state);
+        console.log("Статус разрешения геолокации:", result.state);
+
+        result.onchange = () => {
+          setLocationPermission(result.state);
+        };
+
+        // Автоматически определяем местоположение если разрешение есть или не установлено
+        if (result.state === "granted" || result.state === "prompt") {
+          await getCurrentLocation();
+        }
+      } else {
+        // Если API разрешений не поддерживается, пробуем сразу получить геолокацию
+        await getCurrentLocation();
+      }
+    };
+
+    initializeLocation();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Функция для получения адреса по координатам (обратное геокодирование)
   const getAddressFromCoordinates = async (lat: number, lng: number) => {
@@ -226,19 +301,25 @@ export const AddressMap = ({
     <div className="space-y-4">
       {/* Поле ввода адреса с автодополнением */}
       <div ref={suggestionsRef} className="relative">
-        <div className="relative">
-          <Input
-            className="bg-white pr-10"
-            value={address}
-            onChange={(e) => handleAddressChange(e.target.value)}
-            placeholder="Введите адрес или выберите на карте"
-          />
-          <div className="absolute top-1/2 right-3 -translate-y-1/2">
-            {isLoadingSuggestions || isLoadingAddress ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-500" />
-            ) : (
-              <Search className="h-4 w-4 text-gray-400" />
-            )}
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Input
+              className="bg-white pr-10"
+              value={address}
+              onChange={(e) => handleAddressChange(e.target.value)}
+              placeholder={
+                isLoadingLocation
+                  ? "Определяем ваше местоположение..."
+                  : "Введите адрес или выберите на карте"
+              }
+            />
+            <div className="absolute top-1/2 right-3 -translate-y-1/2">
+              {isLoadingSuggestions || isLoadingAddress || isLoadingLocation ? (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-500" />
+              ) : (
+                <Search className="h-4 w-4 text-gray-400" />
+              )}
+            </div>
           </div>
         </div>
 
