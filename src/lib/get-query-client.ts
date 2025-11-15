@@ -1,15 +1,19 @@
 import { isServer, QueryClient } from "@tanstack/react-query";
 
-function makeQueryClient() {
+const makeQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
         retry: false,
+        throwOnError: (error) => {
+          console.log("[QUERY_ERROR] Ошибка запроса:", error);
+          return false;
+        },
       },
     },
   });
-}
+};
 
 let browserQueryClient: QueryClient | undefined;
 

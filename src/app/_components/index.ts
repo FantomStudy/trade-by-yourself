@@ -1,2 +1,2 @@
-export * from "./footer";
-export * from "./header";
+export * from "./layout/main-layout";
+export * from "./dev-tools/dev-tools";

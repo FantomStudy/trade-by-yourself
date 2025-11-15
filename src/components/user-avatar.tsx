@@ -1,7 +1,7 @@
 import type { AvatarProps } from "@/components/ui/avatar";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui";
-import { getInitials } from "@/lib/format";
+import { formatFullName } from "@/lib/format";
 
 interface UserAvatarProps extends AvatarProps {
   fullName: string;
@@ -21,7 +21,7 @@ export function UserAvatar({
       ) : (
         <AvatarFallback size={size}>
           {fullName.charAt(0).toUpperCase()}
-          <span className="sr-only">{getInitials(fullName)}</span>
+          <span className="sr-only">{formatFullName(fullName)}</span>
         </AvatarFallback>
       )}
     </Avatar>

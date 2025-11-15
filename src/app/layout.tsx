@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 
 import { Montserrat } from "next/font/google";
 
+import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
+import { getCurrentUser } from "@/api/requests";
+import { getQueryClient } from "@/lib/get-query-client";
 import { cn } from "@/lib/utils";
 
-import { Footer, Header } from "./_components";
+import { MainLayout } from "./_components";
 import { Providers } from "./providers";
 
 import "./globals.css";
@@ -21,13 +24,18 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: CURRENT_USER_QUERY_KEY,
+    queryFn: getCurrentUser,
+  });
+
   return (
     <html lang="en">
       <body className={cn(montserrat.variable, "antialiased")}>
         <Providers>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <MainLayout>{children}</MainLayout>
         </Providers>
       </body>
     </html>

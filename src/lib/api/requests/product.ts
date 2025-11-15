@@ -1,4 +1,4 @@
-import type { Product } from "@/types";
+import type { ExtendedProduct, Product } from "@/types";
 
 import type { CreateProductData } from "../types";
 
@@ -6,18 +6,18 @@ import { api } from "../instance";
 
 //FIXME: ADD TYPES
 export const getAllProducts = async () =>
-  api.get<Product[]>("/product/all-products");
+  api<Product[]>("/product/all-products");
 
 export const getProductById = async (productId: number) =>
-  api.get<unknown>(`/product/product-card/${productId}`);
+  api<ExtendedProduct>(`/product/product-card/${productId}`);
 
 export const getCurrentUserProducts = async () =>
-  api.get<Product[]>("/product/my-products");
+  api<Product[]>("/product/my-products");
 
-// export const getSearchedProducts = async (query: unknown) =>
-//   api.get<unknown[]>(`/product/search`, {
-//     query: { query },
-//   });
+export const getSearchedProducts = async (query: unknown) =>
+  api<unknown[]>(`/product/search`, {
+    query: { query },
+  });
 
 /**
  * Создание нового объявления о продаже товара
@@ -64,7 +64,10 @@ export const createProduct = async (data: CreateProductData) => {
     });
   }
 
-  const response = await api.post("/product/create", formData);
+  const response = await api("/product/create", {
+    method: "POST",
+    body: formData,
+  });
 
   return response;
 };

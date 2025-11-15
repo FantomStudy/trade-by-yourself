@@ -1,14 +1,12 @@
 import { Suspense } from "react";
 
-import { FavoritesFeed } from "./_components";
+import { FavoritesFeed } from "./_components/favorites-feed";
 
 const FavoritesPage = () => {
   return (
-    <div>
-      <Suspense fallback={<div>Загрузка избранного...</div>}>
-        <FavoritesFeed />
-      </Suspense>
-    </div>
+    <Suspense fallback={<div>Загрузка избранного...</div>}>
+      <FavoritesFeed />
+    </Suspense>
   );
 };
 

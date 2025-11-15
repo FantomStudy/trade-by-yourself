@@ -135,6 +135,6 @@
     @apply text-destructive text-sm;
   }
   .sidebar-wrapper {
-    @apply mt-5 grid grid-cols-[320px_1fr] gap-4;
+    @apply mt-5 grid grid-cols-[320px_1fr] items-start gap-4;
   }
 }

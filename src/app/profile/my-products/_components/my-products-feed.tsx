@@ -1,12 +1,12 @@
-import { ProductFeed } from "@/components/product";
-import { getCurrentUserProducts, ok } from "@/lib/api";
+import { FeedWrapper } from "@/components/product";
+import { getCurrentUserProducts } from "@/lib/api";
 
 export const MyProductsFeed = async () => {
-  const products = await ok(getCurrentUserProducts());
+  const products = await getCurrentUserProducts();
 
-  if (!products.success) {
+  if (!products) {
     return <div>Ошибка загрузки товаров</div>;
   }
 
-  return <ProductFeed products={products.data} />;
+  return <FeedWrapper products={products} />;
 };

@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 
 import type { CurrentUser } from "@/types";
 
-import { getInitials } from "@/lib/format";
+import { formatFullName } from "@/lib/format";
 
 import { Typography } from "./ui";
 import { UserAvatar } from "./user-avatar";
@@ -15,7 +15,7 @@ export const UserInfo = ({ user }: UserInfoProps) => {
   return (
     <div className="flex flex-col items-center gap-4">
       <UserAvatar fullName={user.fullName} size="lg" src={""} />
-      <Typography variant="h2">{getInitials(user.fullName)}</Typography>
+      <Typography variant="h2">{formatFullName(user.fullName)}</Typography>
 
       {/* {Boolean(rating && reviewsCount) && (
         <div className={styles.stats}>

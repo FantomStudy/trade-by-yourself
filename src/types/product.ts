@@ -5,6 +5,7 @@ export interface Product {
   createdAt: string;
   images: string[];
   price: number;
+  isLiked: boolean;
 }
 
 // export interface ExtendedProduct extends Product {

@@ -66,23 +66,21 @@ const CreateProductPage = () => {
   });
 
   useEffect(() => {
-    api
-      .get<Array<{ id: number; name: string }>>("/category/all-categories")
-      .then((response) => {
+    api<Array<{ id: number; name: string }>>("/category/all-categories").then(
+      (response) => {
         setCategories(
-          response.data.map((cat) => ({
+          response.map((cat) => ({
             label: cat.name,
             value: String(cat.id),
           })),
         );
-      });
-    api
-      .get<
-        Array<{ id: number; name: string; categoryId: number }>
-      >("/category/all-subcategories")
-      .then((response) => {
-        setSubcategories(response.data);
-      });
+      },
+    );
+    api<Array<{ id: number; name: string; categoryId: number }>>(
+      "/category/all-subcategories",
+    ).then((response) => {
+      setSubcategories(response);
+    });
   }, []);
 
   const handleInputChange = (

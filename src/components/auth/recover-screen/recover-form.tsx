@@ -13,10 +13,10 @@ import { forgotPasswordSchema } from "@/lib/api";
 
 import type { AuthFormProps } from "../types";
 
-import { useRecover } from "./useRecover";
+import { useRecoverMutation } from "../../../lib/api/hooks/mutations/useRecoverMutation";
 
 export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
-  const recoverMutation = useRecover();
+  const recoverMutation = useRecoverMutation();
   const {
     register,
     handleSubmit,

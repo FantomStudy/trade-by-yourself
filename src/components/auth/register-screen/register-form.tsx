@@ -9,14 +9,12 @@ import { useForm } from "react-hook-form";
 import type { RegisterData } from "@/lib/api";
 
 import { Button, Field, PhoneField, usePhoneField } from "@/components/ui";
-import { registerSchema } from "@/lib/api";
+import { registerSchema, useRegisterMutation } from "@/lib/api";
 
 import type { AuthFormProps } from "../types";
 
-import { useRegister } from "./useRegister";
-
 export const RegisterForm = ({ onSuccess }: AuthFormProps) => {
-  const registerMutation = useRegister();
+  const registerMutation = useRegisterMutation();
   const {
     register,
     handleSubmit,
@@ -27,11 +25,10 @@ export const RegisterForm = ({ onSuccess }: AuthFormProps) => {
   });
   const [error, setError] = useState<string>();
 
- 
   const phoneField = usePhoneField({
     control,
     name: "phoneNumber",
-    storeCleanValue: true, 
+    storeCleanValue: true,
   });
 
   const onSubmit: SubmitHandler<RegisterData> = async (formData) => {

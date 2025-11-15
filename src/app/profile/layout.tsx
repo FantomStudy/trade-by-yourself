@@ -1,4 +1,4 @@
-import { Sidebar } from "./_components";
+import { Sidebar } from "./_components/sidebar";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -1,4 +1,4 @@
-export const getInitials = (fullName: string) => {
+export const formatFullName = (fullName: string) => {
   if (!fullName) return "";
 
   const parts = fullName.trim().split(/\s+/);
