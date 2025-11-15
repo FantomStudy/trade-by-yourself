@@ -1,12 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 
+// import type { CreateProductData } from "@/lib/api/types";
 import { createProduct } from "@/lib/api";
 
-import type { CreateProductData } from "@/lib/api/types";
-
 interface UseCreateProductOptions {
-  onSuccess?: (data: unknown) => void;
   onError?: (error: Error) => void;
+  onSuccess?: (data: unknown) => void;
 }
 
 /**

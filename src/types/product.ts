@@ -4,17 +4,17 @@ export interface Product {
   address: string;
   createdAt: string;
   images: string[];
-  price: number;
   isLiked: boolean;
+  price: number;
 }
 
-// export interface ExtendedProduct extends Product {
-//   brand?: string;
-//   categoryId: number;
-//   description?: string;
-//   isFavorited?: boolean;
-//   model?: string;
-//   state: string;
-//   subcategoryId: number;
-//   userId: number;
-// }
+export interface ExtendedProduct extends Product {
+  brand?: string;
+  categoryId: number;
+  description?: string;
+  isFavorited?: boolean;
+  model?: string;
+  state: string;
+  subcategoryId: number;
+  userId: number;
+}

@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+
 import { Feed } from "./_components/feed";
 
 const HomePage = () => {

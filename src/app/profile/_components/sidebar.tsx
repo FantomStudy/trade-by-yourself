@@ -28,7 +28,8 @@ const LINKS: SidebarLinkGroup[] = [
         label: "Мои обьявления",
       },
       {
-        href: "/profile/messages",
+        // href: "/profile/messages",
+        href: "/profile/my-products",
         label: "Сообщения",
       },
       {
@@ -36,7 +37,8 @@ const LINKS: SidebarLinkGroup[] = [
         label: "Избранное",
       },
       {
-        href: "/profile/settings",
+        // href: "/profile/settings",
+        href: "/profile/my-products",
         label: "Настройки",
       },
     ],
@@ -50,11 +52,13 @@ const LINKS: SidebarLinkGroup[] = [
         label: "Аналитика",
       },
       {
-        href: "/profile/support",
+        href: "/profile/my-products",
+        // href: "/profile/support",
         label: "Тех. поддержка",
       },
       {
-        href: "/profile/wallet",
+        // href: "/profile/wallet",
+        href: "/profile/my-products",
         label: "Пополнение личного кабинета",
       },
     ],
