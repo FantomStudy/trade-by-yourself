@@ -28,8 +28,7 @@ const LINKS: SidebarLinkGroup[] = [
         label: "Мои обьявления",
       },
       {
-        // href: "/profile/messages",
-        href: "/profile/my-products",
+        href: "/profile/messages",
         label: "Сообщения",
       },
       {

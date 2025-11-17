@@ -83,15 +83,18 @@ const ProductPage = ({ params }: ProductPageProps) => {
     <div className={styles.pageLayout}>
       {/* Сайдбар продавца слева */}
       <aside className={styles.sidebar}>
-        <SellerSidebar
-          seller={{
-            id: product.seller?.id || product.userId,
-            name: product.seller?.name || "Николай Петров",
-            avatar: product.seller?.avatar,
-            rating: product.seller?.rating || 4.5,
-            reviewsCount: product.seller?.reviewsCount || 245,
-          }}
-        />
+        {product.seller && (
+          <SellerSidebar
+            seller={{
+              id: product.seller.id,
+              fullName: product.seller.fullName,
+              phoneNumber: product.seller.phoneNumber,
+              profileType: product.seller.profileType,
+              rating: product.seller.rating,
+              reviewsCount: product.seller.reviewsCount,
+            }}
+          />
+        )}
       </aside>
 
       {/* Основной контент справа */}
