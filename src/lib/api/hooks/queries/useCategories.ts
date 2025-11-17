@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-
+import type { QueryHookOptions } from "./types";
 import type { Category } from "@/types";
 
-import type { QueryHookOptions } from "./types";
+import { useQuery } from "@tanstack/react-query";
 
 import { getAllCategories } from "../../requests";
 

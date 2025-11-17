@@ -1,10 +1,9 @@
-import type { ExtendedProduct, Product } from "@/types";
-
 import type { CreateProductData } from "../types";
+import type { ExtendedProduct, Product } from "@/types";
 
 import { api } from "../instance";
 
-//FIXME: ADD TYPES
+// FIXME: ADD TYPES
 export const getAllProducts = async () =>
   api<Product[]>("/product/all-products");
 

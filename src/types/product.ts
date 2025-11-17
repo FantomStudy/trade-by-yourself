@@ -14,15 +14,15 @@ export interface ExtendedProduct extends Product {
   description?: string;
   isFavorited?: boolean;
   model?: string;
+  state: string;
+  subcategoryId: number;
+  userId: number;
   seller?: {
-    fullName: string;
     id: number;
+    fullName: string;
     phoneNumber: string;
     profileType: string;
     rating: number;
     reviewsCount: number;
   };
-  state: string;
-  subcategoryId: number;
-  userId: number;
 }

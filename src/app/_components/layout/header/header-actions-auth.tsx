@@ -1,6 +1,6 @@
-import Link from "next/link";
-
 import type { CurrentUser } from "@/types";
+
+import Link from "next/link";
 
 import { UserAvatar } from "@/components";
 import { Button, HeartIcon, MessageSquareIcon } from "@/components/ui";

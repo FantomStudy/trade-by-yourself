@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-
+import type { QueryHookOptions } from "./types";
 import type { CurrentUser } from "@/types";
 
-import type { QueryHookOptions } from "./types";
+import { useQuery } from "@tanstack/react-query";
 
 import { getCurrentUser } from "../../requests";
 

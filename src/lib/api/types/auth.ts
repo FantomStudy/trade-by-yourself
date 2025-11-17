@@ -1,6 +1,6 @@
-import z from "zod";
-
 import type { User } from "@/types";
+
+import z from "zod";
 
 import { isValidPhoneNumber } from "@/lib/phone";
 

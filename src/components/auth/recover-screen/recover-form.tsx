@@ -2,16 +2,15 @@
 
 import type { SubmitHandler } from "react-hook-form";
 
+import type { AuthFormProps } from "../types";
+import type { ForgotPasswordData } from "@/lib/api";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import type { ForgotPasswordData } from "@/lib/api";
-
 import { Button, Field } from "@/components/ui";
 import { forgotPasswordSchema } from "@/lib/api";
-
-import type { AuthFormProps } from "../types";
 
 import { useRecoverMutation } from "../../../lib/api/hooks/mutations/useRecoverMutation";
 
@@ -42,8 +41,8 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
   return (
     <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
       <Field
-        type="email"
         disabled={codeSent}
+        type="email"
         error={errors.email?.message}
         placeholder="Email"
         {...register("email")}
@@ -70,7 +69,7 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
         </span>
       )}
 
-      <Button type="submit" disabled={isSubmitting || codeSent}>
+      <Button disabled={isSubmitting || codeSent} type="submit">
         {codeSent ? "Код отправлен" : "Восстановить пароль"}
       </Button>
     </form>

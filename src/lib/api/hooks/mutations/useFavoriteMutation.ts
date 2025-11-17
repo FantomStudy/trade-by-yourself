@@ -1,5 +1,6 @@
-import { addToFavorites, removeFromFavorites } from "@/api/requests";
 import { useMutation } from "@tanstack/react-query";
+
+import { addToFavorites, removeFromFavorites } from "@/api/requests";
 
 export const useFavoriteMutation = (productId: number) => {
   return useMutation({

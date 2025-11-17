@@ -1,9 +1,9 @@
 "use client";
 
+import type { ExtendedProduct } from "@/types";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
-import type { ExtendedProduct } from "@/types";
 
 import { getProductById } from "@/api/requests";
 import { LikeButton } from "@/components/product/product-card/like-button";
@@ -123,10 +123,10 @@ const ProductPage = ({ params }: ProductPageProps) => {
                 {product.images.map((image, index) => (
                   <button
                     key={`${image}-${index}`}
-                    type="button"
                     className={`${styles.thumbnail} ${
                       index === currentImageIndex ? styles.active : ""
                     }`}
+                    type="button"
                     onClick={() => setCurrentImageIndex(index)}
                   >
                     <Image
@@ -154,15 +154,15 @@ const ProductPage = ({ params }: ProductPageProps) => {
               {product.images.length > 1 && (
                 <>
                   <button
-                    type="button"
                     className={`${styles.navigationButton} ${styles.prevButton}`}
+                    type="button"
                     onClick={prevImage}
                   >
                     ←
                   </button>
                   <button
-                    type="button"
                     className={`${styles.navigationButton} ${styles.nextButton}`}
+                    type="button"
                     onClick={nextImage}
                   >
                     →
@@ -187,6 +187,18 @@ const ProductPage = ({ params }: ProductPageProps) => {
           </div>
         )}
 
+        {/* Местоположение */}
+        <div className={styles.infoSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
+              Местоположение
+            </h2>
+          </div>
+          <div className={styles.sectionContent}>
+            <p className={styles.location}>{product.address}</p>
+          </div>
+        </div>
+
         {/* Характеристики */}
         {(product.brand || product.model) && (
           <div className={styles.infoSection}>
@@ -196,8 +208,18 @@ const ProductPage = ({ params }: ProductPageProps) => {
               </h2>
             </div>
             <div className={styles.sectionContent}>
-              {product.brand && <p>Бренд: {product.brand}</p>}
-              {product.model && <p>Модель: {product.model}</p>}
+              {product.brand && (
+                <p>
+                  Бренд:
+                  {product.brand}
+                </p>
+              )}
+              {product.model && (
+                <p>
+                  Модель:
+                  {product.model}
+                </p>
+              )}
             </div>
           </div>
         )}

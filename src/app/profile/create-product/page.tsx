@@ -170,22 +170,22 @@ const CreateProductPage = () => {
         <div className={styles.checkboxes}>
           <div className={styles.box}>
             <input
-              type="radio"
               checked={formData.state === "NEW"}
               className={styles.checkbox}
               id="new"
               name="state"
+              type="radio"
               onChange={() => handleStateChange("NEW")}
             />
             <label htmlFor="new">Новое</label>
           </div>
           <div className={styles.box}>
             <input
-              type="radio"
               checked={formData.state === "USED"}
               className={styles.checkbox}
               id="used"
               name="state"
+              type="radio"
               onChange={() => handleStateChange("USED")}
             />
             <label htmlFor="used">Б/У</label>
@@ -263,9 +263,9 @@ const CreateProductPage = () => {
       {error && <div className={styles.error}>{error}</div>}
 
       <Button
-        type="submit"
         className={styles.button}
         disabled={createProductMutation.isPending}
+        type="submit"
       >
         {createProductMutation.isPending ? "Создание..." : "Создать объявление"}
       </Button>

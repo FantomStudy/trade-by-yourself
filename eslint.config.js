@@ -1,11 +1,9 @@
 import antfu from "@antfu/eslint-config";
-import pluginReact from "eslint-plugin-react";
 import pluginQuery from "@tanstack/eslint-plugin-query";
 
 const eslintConfig = antfu(
   {
     stylistic: false,
-    typescript: true,
     react: true,
     nextjs: true,
     jsx: {
@@ -21,27 +19,6 @@ const eslintConfig = antfu(
       "eslint-comments/no-unlimited-disable": "off",
       "node/prefer-global/process": "off",
       "react-refresh/only-export-components": "off",
-    },
-  },
-  {
-    name: "fantomstudy/react",
-    plugins: {
-      "fantomstudy-react": pluginReact,
-    },
-    rules: {
-      ...Object.entries(pluginReact.configs.recommended.rules).reduce(
-        (acc, [key, value]) => {
-          acc[key.replace("react", "fantomstudy-react")] = value;
-          return acc;
-        },
-        {},
-      ),
-      "fantomstudy-react/react-in-jsx-scope": "off",
-    },
-    settings: {
-      react: {
-        version: "detect",
-      },
     },
   },
   ...pluginQuery.configs["flat/recommended"],
@@ -60,10 +37,10 @@ const eslintConfig = antfu(
         {
           groups: [
             "type",
+            ["parent-type", "sibling-type", "index-type", "internal-type"],
+
             ["builtin", "external"],
-            "internal-type",
             ["internal"],
-            ["parent-type", "sibling-type", "index-type"],
             ["parent", "sibling", "index"],
             "object",
             "style",
@@ -111,7 +88,7 @@ const eslintConfig = antfu(
         {
           customGroups: {
             callback: "on*",
-            reserved: ["key", "ref", "type"],
+            reserved: ["key", "ref"],
           },
           groups: ["shorthand", "reserved", "multiline", "unknown", "callback"],
           order: "asc",
@@ -137,28 +114,6 @@ const eslintConfig = antfu(
           ],
           order: "asc",
           specialCharacters: "keep",
-          type: "alphabetical",
-        },
-      ],
-      "perfectionist/sort-intersection-types": [
-        "error",
-        {
-          groups: [
-            "conditional",
-            "function",
-            "import",
-            "intersection",
-            "keyword",
-            "literal",
-            "named",
-            "object",
-            "operator",
-            "tuple",
-            "union",
-            "nullish",
-          ],
-          specialCharacters: "keep",
-          order: "asc",
           type: "alphabetical",
         },
       ],

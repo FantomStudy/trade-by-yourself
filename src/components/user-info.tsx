@@ -14,7 +14,7 @@ interface UserInfoProps extends ComponentProps<"div"> {
 export const UserInfo = ({ user }: UserInfoProps) => {
   return (
     <div className="flex flex-col items-center gap-4">
-      <UserAvatar fullName={user.fullName} size="lg" src={""} />
+      <UserAvatar fullName={user.fullName} size="lg" src="" />
       <Typography variant="h2">{formatFullName(user.fullName)}</Typography>
 
       {/* {Boolean(rating && reviewsCount) && (

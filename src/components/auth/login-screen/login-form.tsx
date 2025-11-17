@@ -2,15 +2,16 @@
 
 import type { SubmitHandler } from "react-hook-form";
 
+import type { AuthFormProps } from "../types";
+import type { LoginData } from "@/api/types";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button, Field } from "@/components/ui";
-
-import type { AuthFormProps } from "../types";
-import { LoginData, loginSchema } from "@/api/types";
 import { useLoginMutation } from "@/api/hooks";
+import { loginSchema } from "@/api/types";
+import { Button, Field } from "@/components/ui";
 
 export const LoginForm = ({ onSuccess }: AuthFormProps) => {
   const loginMutation = useLoginMutation();
@@ -50,7 +51,7 @@ export const LoginForm = ({ onSuccess }: AuthFormProps) => {
 
       {error && <span className="form-error">{error}</span>}
 
-      <Button type="submit" disabled={isSubmitting}>
+      <Button disabled={isSubmitting} type="submit">
         Войти
       </Button>
     </form>
