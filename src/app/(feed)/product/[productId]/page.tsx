@@ -186,18 +186,6 @@ const ProductPage = ({ params }: ProductPageProps) => {
           </div>
         )}
 
-        {/* Местоположение */}
-        <div className={styles.infoSection}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
-              Местоположение
-            </h2>
-          </div>
-          <div className={styles.sectionContent}>
-            <p className={styles.location}>{product.address}</p>
-          </div>
-        </div>
-
         {/* Характеристики */}
         {(product.brand || product.model) && (
           <div className={styles.infoSection}>
@@ -212,6 +200,18 @@ const ProductPage = ({ params }: ProductPageProps) => {
             </div>
           </div>
         )}
+
+        {/* Местоположение */}
+        <div className={styles.infoSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
+              Местоположение
+            </h2>
+          </div>
+          <div className={styles.sectionContent}>
+            <p className={styles.location}>{product.address}</p>
+          </div>
+        </div>
       </main>
     </div>
   );
