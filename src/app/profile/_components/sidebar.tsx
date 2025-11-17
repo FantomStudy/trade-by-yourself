@@ -67,11 +67,38 @@ const LINKS: SidebarLinkGroup[] = [
 export const Sidebar = () => {
   const { user } = useAuth();
 
+  const getProfileTypeLabel = (type: string) => {
+    return type === "OOO" ? "Юридическое лицо" : "Физическое лицо";
+  };
+
+  const isLegalEntity = user?.profileType === "OOO";
+
   return (
     <div className="bg-background flex flex-col items-center gap-5 rounded-md px-6 py-8">
       {user && (
         <>
           <UserInfo user={user} />
+
+          {/* Бейдж типа профиля */}
+          <div
+            className={`flex items-center gap-2 rounded-full px-3 py-1 ${
+              isLegalEntity ? "bg-green-50" : "bg-blue-50"
+            }`}
+          >
+            <div
+              className={`h-2 w-2 rounded-full ${
+                isLegalEntity ? "bg-green-500" : "bg-blue-500"
+              }`}
+            ></div>
+            <span
+              className={`text-sm font-medium ${
+                isLegalEntity ? "text-green-700" : "text-blue-700"
+              }`}
+            >
+              {getProfileTypeLabel(user.profileType)}
+            </span>
+          </div>
+
           <span className="text-primary flex items-center gap-1">
             <WalletIcon color="var(--primary)" /> ₽
           </span>

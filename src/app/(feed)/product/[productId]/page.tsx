@@ -60,7 +60,7 @@ const ProductPage = ({ params }: ProductPageProps) => {
   };
 
   const formatPrice = (price: number) => {
-    return `${price.toLocaleString()} руб.`;
+    return `${price.toLocaleString()} ₽`;
   };
 
   if (isLoading) {
