@@ -5,6 +5,7 @@ import type { ComponentProps } from "react";
 import type { AuthScreen } from "./types";
 
 import { useCallback, useState } from "react";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -19,14 +20,17 @@ import { RegisterScreen } from "./register-screen";
 
 const AUTH_SCREENS = {
   login: {
+    id: "login",
     title: "Вход",
     component: LoginScreen,
   },
   recover: {
+    id: "recover",
     title: "Восстановление",
     component: RecoverScreen,
   },
   register: {
+    id: "register",
     title: "Регистрация",
     component: RegisterScreen,
   },
@@ -52,6 +56,11 @@ export const AuthDialog = ({
     handleOpenChange(false);
   }, [handleOpenChange]);
 
+  const handleRegisterSuccess = useCallback(() => {
+    toast("Регистрация прошла успешно!");
+    setScreen("login");
+  }, []);
+
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
       <DialogContent>
@@ -63,7 +72,10 @@ export const AuthDialog = ({
 
         {AUTH_SCREENS[screen].component({
           onChangeScreen: setScreen,
-          onClose: handleClose,
+          onClose:
+            AUTH_SCREENS[screen].id === "register"
+              ? handleRegisterSuccess
+              : handleClose,
         })}
       </DialogContent>
     </Dialog>
