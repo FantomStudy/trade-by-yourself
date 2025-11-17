@@ -149,10 +149,10 @@ export const PhoneField = ({
   return (
     <Field
       ref={inputRef}
-      type="tel"
       disabled={disabled}
       maxLength={18} // +7 (XXX) XXX-XX-XX = 18 символов
       name={name}
+      type="tel"
       value={value}
       error={error}
       onBlur={onBlur}

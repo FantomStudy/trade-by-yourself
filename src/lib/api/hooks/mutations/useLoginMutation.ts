@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import type { LoginData } from "../../types";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { login } from "../../requests";
 import { CURRENT_USER_QUERY_KEY } from "../queries/useCurrentUser";

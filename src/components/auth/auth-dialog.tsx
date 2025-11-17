@@ -2,6 +2,8 @@
 
 import type { ComponentProps } from "react";
 
+import type { AuthScreen } from "./types";
+
 import { useCallback, useState } from "react";
 
 import {
@@ -10,8 +12,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui";
-
-import type { AuthScreen } from "./types";
 
 import { LoginScreen } from "./login-screen";
 import { RecoverScreen } from "./recover-screen";

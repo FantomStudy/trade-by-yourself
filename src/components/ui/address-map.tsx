@@ -329,8 +329,8 @@ export const AddressMap = ({
             {suggestions.map((suggestion) => (
               <button
                 key={suggestion.place_id}
-                type="button"
                 className="w-full px-4 py-2 text-left text-sm first:rounded-t-md last:rounded-b-md hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
+                type="button"
                 onClick={() => handleSuggestionSelect(suggestion)}
               >
                 {suggestion.display_name}

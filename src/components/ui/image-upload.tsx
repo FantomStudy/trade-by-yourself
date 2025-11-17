@@ -77,8 +77,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 style={{ objectFit: "cover" }}
               />
               <button
-                type="button"
                 className="absolute top-2 right-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border-0 bg-red-500/90 text-xs text-white transition-colors duration-200 hover:bg-red-600/90"
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   removeImage(index);
@@ -119,9 +119,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         <input
           multiple
           ref={fileInputRef}
-          type="file"
           accept="image/*"
           style={{ display: "none" }}
+          type="file"
           onChange={handleFileSelect}
         />
       </div>

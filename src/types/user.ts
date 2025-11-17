@@ -9,8 +9,8 @@ export interface User {
 export interface CurrentUser {
   id: number;
   fullName: string;
-  profileType: "INDIVIDUAL" | "OOO";
   phoneNumber: string;
+  profileType: "INDIVIDUAL" | "OOO";
   rating: number | null;
   reviewsCount: number;
 }

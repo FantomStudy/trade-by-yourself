@@ -1,6 +1,6 @@
 import { api } from "../instance";
 
-//FIXME: ADD TYPES
+// FIXME: ADD TYPES
 export const chatStart = async (productId: number) =>
   api<unknown>("/chat/start", { method: "POST", body: { productId } });
 

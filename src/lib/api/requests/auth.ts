@@ -21,7 +21,7 @@ export const refresh = async () =>
 export const register = async (data: RegisterData) =>
   api<RegisterResponse>("/auth/sign-up", { method: "POST", body: data });
 
-//FIXME: ADD TYPES AND CREATE SCHEMAS
+// FIXME: ADD TYPES AND CREATE SCHEMAS
 export const forgotPassword = async (data: ForgotPasswordData) =>
   api<ForgotPasswordResponse>("/auth/forgot-password", {
     method: "POST",

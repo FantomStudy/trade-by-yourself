@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-
 import type { ExtendedProduct } from "@/types";
+
+import { useEffect, useState } from "react";
 
 import { getProductById } from "@/api/requests";
 

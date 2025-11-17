@@ -2,16 +2,15 @@
 
 import type { SubmitHandler } from "react-hook-form";
 
+import type { AuthFormProps } from "../types";
+import type { RegisterData } from "@/lib/api";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import type { RegisterData } from "@/lib/api";
-
 import { Button, Field, PhoneField, usePhoneField } from "@/components/ui";
 import { registerSchema, useRegisterMutation } from "@/lib/api";
-
-import type { AuthFormProps } from "../types";
 
 export const RegisterForm = ({ onSuccess }: AuthFormProps) => {
   const registerMutation = useRegisterMutation();
@@ -70,7 +69,7 @@ export const RegisterForm = ({ onSuccess }: AuthFormProps) => {
 
       {error && <span className="form-error">{error}</span>}
 
-      <Button type="submit" disabled={isSubmitting} variant={"secondary"}>
+      <Button disabled={isSubmitting} type="submit" variant="secondary">
         Зарегистрироваться
       </Button>
     </form>
