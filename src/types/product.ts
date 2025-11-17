@@ -17,4 +17,11 @@ export interface ExtendedProduct extends Product {
   state: string;
   subcategoryId: number;
   userId: number;
+  seller?: {
+    id: number;
+    name: string;
+    avatar?: string;
+    rating?: number;
+    reviewsCount?: number;
+  };
 }

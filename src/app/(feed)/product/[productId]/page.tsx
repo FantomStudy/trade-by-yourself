@@ -8,6 +8,8 @@ import type { ExtendedProduct } from "@/types";
 import { getProductById } from "@/api/requests";
 import { LikeButton } from "@/components/product/product-card/like-button";
 
+import { SellerSidebar } from "./_components";
+
 import styles from "./page.module.css";
 
 interface ProductPageProps {
@@ -78,120 +80,136 @@ const ProductPage = ({ params }: ProductPageProps) => {
   }
 
   return (
-    <div className={styles.container}>
-      {/* Основная карточка продукта */}
-      <div className={styles.productCard}>
-        {/* Заголовок с названием, ценой и кнопкой избранного */}
-        <div className={styles.productHeader}>
-          <div className={styles.headerTop}>
-            <div>
-              <h1 className={styles.productTitle}>{product.name}</h1>
-              <p className={styles.productPrice}>
-                {formatPrice(product.price)}
-              </p>
+    <div className={styles.pageLayout}>
+      {/* Сайдбар продавца слева */}
+      <aside className={styles.sidebar}>
+        <SellerSidebar
+          seller={{
+            id: product.seller?.id || product.userId,
+            name: product.seller?.name || "Николай Петров",
+            avatar: product.seller?.avatar,
+            rating: product.seller?.rating || 4.5,
+            reviewsCount: product.seller?.reviewsCount || 245,
+          }}
+        />
+      </aside>
+
+      {/* Основной контент справа */}
+      <main className={styles.mainContent}>
+        {/* Основная карточка продукта */}
+        <div className={styles.productCard}>
+          {/* Заголовок с названием, ценой и кнопкой избранного */}
+          <div className={styles.productHeader}>
+            <div className={styles.headerTop}>
+              <div>
+                <h1 className={styles.productTitle}>{product.name}</h1>
+                <p className={styles.productPrice}>
+                  {formatPrice(product.price)}
+                </p>
+              </div>
+              <LikeButton initLiked={isFavorite} productId={product.id} />
             </div>
-            <LikeButton initLiked={isFavorite} productId={product.id} />
           </div>
-        </div>
 
-        {/* Галерея изображений */}
-        <div className={styles.imageGallery}>
-          {/* Миниатюры слева */}
-          {product.images.length > 1 && (
-            <div className={styles.thumbnails}>
-              {product.images.map((image, index) => (
-                <button
-                  key={`${image}-${index}`}
-                  type="button"
-                  className={`${styles.thumbnail} ${
-                    index === currentImageIndex ? styles.active : ""
-                  }`}
-                  onClick={() => setCurrentImageIndex(index)}
-                >
-                  <Image
-                    fill
-                    alt={`${product.name} ${index + 1}`}
-                    src={image}
-                    style={{ objectFit: "cover" }}
-                  />
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Главное изображение справа */}
-          <div className={styles.mainImageWrapper}>
-            <Image
-              fill
-              alt={product.name}
-              className={styles.mainImage}
-              src={product.images[currentImageIndex]}
-              style={{ objectFit: "contain" }}
-              priority
-            />
-
+          {/* Галерея изображений */}
+          <div className={styles.imageGallery}>
+            {/* Миниатюры слева */}
             {product.images.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  className={`${styles.navigationButton} ${styles.prevButton}`}
-                  onClick={prevImage}
-                >
-                  ←
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.navigationButton} ${styles.nextButton}`}
-                  onClick={nextImage}
-                >
-                  →
-                </button>
-              </>
+              <div className={styles.thumbnails}>
+                {product.images.map((image, index) => (
+                  <button
+                    key={`${image}-${index}`}
+                    type="button"
+                    className={`${styles.thumbnail} ${
+                      index === currentImageIndex ? styles.active : ""
+                    }`}
+                    onClick={() => setCurrentImageIndex(index)}
+                  >
+                    <Image
+                      fill
+                      alt={`${product.name} ${index + 1}`}
+                      src={image}
+                      style={{ objectFit: "cover" }}
+                    />
+                  </button>
+                ))}
+              </div>
             )}
+
+            {/* Главное изображение справа */}
+            <div className={styles.mainImageWrapper}>
+              <Image
+                fill
+                alt={product.name}
+                className={styles.mainImage}
+                src={product.images[currentImageIndex]}
+                style={{ objectFit: "contain" }}
+                priority
+              />
+
+              {product.images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    className={`${styles.navigationButton} ${styles.prevButton}`}
+                    onClick={prevImage}
+                  >
+                    ←
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.navigationButton} ${styles.nextButton}`}
+                    onClick={nextImage}
+                  >
+                    →
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Описание */}
-      {product.description && (
+        {/* Описание */}
+        {product.description && (
+          <div className={styles.infoSection}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle} style={{ color: "#3498db" }}>
+                Описание
+              </h2>
+            </div>
+            <div className={styles.sectionContent}>
+              <p className={styles.description}>{product.description}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Местоположение */}
         <div className={styles.infoSection}>
           <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle} style={{ color: "#3498db" }}>
-              Описание
+            <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
+              Местоположение
             </h2>
           </div>
           <div className={styles.sectionContent}>
-            <p className={styles.description}>{product.description}</p>
+            <p className={styles.location}>{product.address}</p>
           </div>
         </div>
-      )}
 
-      {/* Местоположение */}
-      <div className={styles.infoSection}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
-            Местоположение
-          </h2>
-        </div>
-        <div className={styles.sectionContent}>
-          <p className={styles.location}>{product.address}</p>
-        </div>
-      </div>
-
-      {/* Характеристики */}
-      {(product.brand || product.model) && (
-        <div className={styles.infoSection}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle} style={{ color: "#27ae60" }}>
-              Характеристики
-            </h2>
+        {/* Характеристики */}
+        {(product.brand || product.model) && (
+          <div className={styles.infoSection}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle} style={{ color: "#27ae60" }}>
+                Характеристики
+              </h2>
+            </div>
+            <div className={styles.sectionContent}>
+              {product.brand && <p>Бренд: {product.brand}</p>}
+              {product.model && <p>Модель: {product.model}</p>}
+            </div>
           </div>
-          <div className={styles.sectionContent}>
-            {product.brand && <p>Бренд: {product.brand}</p>}
-            {product.model && <p>Модель: {product.model}</p>}
-          </div>
-        </div>
-      )}
+        )}
+      </main>
     </div>
   );
 };
