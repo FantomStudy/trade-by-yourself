@@ -85,9 +85,10 @@ const ProductPage = ({ params }: ProductPageProps) => {
       <aside className={styles.sidebar}>
         {product.seller && (
           <SellerSidebar
+            productId={product.id}
             seller={{
-              id: product.seller.id,
               fullName: product.seller.fullName,
+              id: product.seller.id,
               phoneNumber: product.seller.phoneNumber,
               profileType: product.seller.profileType,
               rating: product.seller.rating,

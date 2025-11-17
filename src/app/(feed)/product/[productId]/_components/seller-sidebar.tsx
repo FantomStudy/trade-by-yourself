@@ -1,13 +1,15 @@
 "use client";
 
 import { Phone } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { UserAvatar } from "@/components";
 import { Button } from "@/components/ui";
+import { useStartChatMutation } from "@/lib/api/hooks";
 
 interface SellerSidebarProps {
+  productId: number;
   seller: {
     id: number;
     fullName: string;
@@ -18,11 +20,27 @@ interface SellerSidebarProps {
   };
 }
 
-export const SellerSidebar = ({ seller }: SellerSidebarProps) => {
+export const SellerSidebar = ({ productId, seller }: SellerSidebarProps) => {
+  const router = useRouter();
   const [showPhone, setShowPhone] = useState(false);
+  const startChatMutation = useStartChatMutation();
 
   const handleShowPhone = () => {
     setShowPhone(true);
+  };
+
+  const handleStartChat = async () => {
+    try {
+      const result = await startChatMutation.mutateAsync({ productId });
+      const chatId = result.chatId || result.id;
+      if (chatId) {
+        router.push(`/profile/messages/${chatId}` as any);
+      } else {
+        console.error("No chat ID in response:", result);
+      }
+    } catch (error) {
+      console.error("Failed to start chat:", error);
+    }
   };
 
   const isLegalEntity = seller.profileType === "Юридическое лицо";
@@ -72,11 +90,13 @@ export const SellerSidebar = ({ seller }: SellerSidebarProps) => {
 
       {/* Кнопки действий */}
       <div className="flex w-full flex-col gap-3">
-        <Link href={"/profile/messages/1" as any} className="w-full">
-          <Button className="w-full bg-green-500 py-6 text-base font-medium hover:bg-green-600">
-            Написать продавцу
-          </Button>
-        </Link>
+        <Button
+          className="w-full bg-green-500 py-6 text-base font-medium hover:bg-green-600"
+          disabled={startChatMutation.isPending}
+          onClick={handleStartChat}
+        >
+          {startChatMutation.isPending ? "Загрузка..." : "Написать продавцу"}
+        </Button>
 
         <Button
           className="w-full border-2 border-blue-500 bg-blue-500 py-6 text-base font-medium text-white hover:bg-blue-600"

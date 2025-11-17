@@ -27,8 +27,6 @@ export const UserInfo = ({ user }: UserInfoProps) => {
           <span>{reviewsCount} отзывов</span>
         </div>
       )} */}
-
-      <Typography>{user.profileType}</Typography>
     </div>
   );
 };

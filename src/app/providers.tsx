@@ -6,7 +6,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 
-import { AuthProvider } from "@/lib/contexts";
+import { AuthProvider, ChatSocketProvider } from "@/lib/contexts";
 import { getQueryClient } from "@/lib/get-query-client";
 
 import { DevTools } from "./_components";
@@ -22,8 +22,10 @@ export const Providers = ({ children }: ProvidersProps) => {
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <AuthProvider>
-          {children}
-          <DevTools />
+          <ChatSocketProvider>
+            {children}
+            <DevTools />
+          </ChatSocketProvider>
         </AuthProvider>
       </HydrationBoundary>
     </QueryClientProvider>

@@ -1,13 +1,38 @@
+import type {
+  Chat,
+  ChatDetail,
+  MessagesResponse,
+  StartChatData,
+  StartChatResponse,
+} from "@/types";
+
 import { api } from "../instance";
 
-//FIXME: ADD TYPES
-export const chatStart = async (productId: number) =>
-  api<unknown>("/chat/start", { method: "POST", body: { productId } });
+/**
+ * Создает новый чат между покупателем и продавцом товара или возвращает существующий
+ */
+export const chatStart = async (data: StartChatData) =>
+  api<StartChatResponse>("/chat/start", {
+    body: data,
+    method: "POST",
+  });
 
-export const getAllChats = async () => api<unknown[]>("/chat");
+/**
+ * Возвращает все чаты пользователя с информацией о собеседниках и последних сообщениях
+ */
+export const getAllChats = async () => api<Chat[]>("/chat");
 
+/**
+ * Возвращает подробную информацию о чате, товаре и собеседнике
+ */
 export const getChatById = async (chatId: number) =>
-  api<unknown[]>(`/chat/${chatId}`);
+  api<ChatDetail>(`/chat/${chatId}`);
 
-// export const getChatMessages = async (chatId: number, query: unknown) =>
-//   api<unknown[]>(`/chat/messages/${chatId}`, { query: { query } });
+/**
+ * Возвращает сообщения чата с пагинацией
+ */
+export const getChatMessages = async (
+  chatId: number,
+  page: number = 1,
+  limit: number = 50,
+) => api<MessagesResponse>(`/chat/${chatId}/messages`);
