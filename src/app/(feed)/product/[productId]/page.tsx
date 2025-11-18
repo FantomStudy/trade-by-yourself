@@ -85,7 +85,6 @@ const ProductPage = ({ params }: ProductPageProps) => {
       <aside className={styles.sidebar}>
         {product.seller && (
           <SellerSidebar
-            productId={product.id}
             seller={{
               fullName: product.seller.fullName,
               id: product.seller.id,
@@ -94,6 +93,7 @@ const ProductPage = ({ params }: ProductPageProps) => {
               rating: product.seller.rating,
               reviewsCount: product.seller.reviewsCount,
             }}
+            productId={product.id}
           />
         )}
       </aside>
@@ -186,18 +186,6 @@ const ProductPage = ({ params }: ProductPageProps) => {
             </div>
           </div>
         )}
-
-        {/* Местоположение */}
-        <div className={styles.infoSection}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
-              Местоположение
-            </h2>
-          </div>
-          <div className={styles.sectionContent}>
-            <p className={styles.location}>{product.address}</p>
-          </div>
-        </div>
 
         {/* Характеристики */}
         {(product.brand || product.model) && (
