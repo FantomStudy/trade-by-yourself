@@ -10,6 +10,12 @@ export interface Message {
     id: number;
   };
   senderId: number;
+  product?: {
+    id: number;
+    image?: string;
+    name: string;
+    price: number;
+  };
 }
 
 export interface NewChatMessage {

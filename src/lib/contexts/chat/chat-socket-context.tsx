@@ -3,6 +3,8 @@
 import type { PropsWithChildren } from "react";
 import type { Socket } from "socket.io-client";
 
+import type { ChatSocketContextType, Message } from "./types";
+
 import {
   createContext,
   use,
@@ -12,8 +14,6 @@ import {
   useState,
 } from "react";
 import { io } from "socket.io-client";
-
-import type { ChatSocketContextType, Message } from "./types";
 
 import { useAuth } from "../auth";
 
@@ -42,17 +42,18 @@ const requestNotificationPermission = async () => {
 };
 
 // Функция для показа уведомления
-const showNotification = (message: Message, productName?: string) => {
+const showNotification = (message: Message) => {
   if (Notification.permission !== "granted") return;
 
+  const productName = message.product?.name;
   const title = productName
     ? `${message.sender.fullName} (${productName})`
     : message.sender.fullName;
 
   const notification = new Notification(title, {
     body: message.content,
-    icon: "/logo.png", // Можно заменить на аватар пользователя
-    badge: "/logo.png",
+    icon: message.product?.image || "/logo.png",
+    badge: message.product?.image || "/logo.png",
     tag: `chat-${message.chatId}`,
     requireInteraction: false,
   });
