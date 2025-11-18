@@ -8,12 +8,12 @@ import { Typography } from "@/components/ui";
 
 const menuItems = [
   {
-    href: "/admin/moderation",
+    href: "/admin/moderation" as const,
     icon: Package,
     label: "Модерация товаров",
   },
   {
-    href: "/admin/support",
+    href: "/admin/support" as const,
     icon: MessageSquare,
     label: "Чат поддержки",
   },
@@ -34,7 +34,7 @@ export const AdminSidebar = () => {
 
           return (
             <Link
-              href={item.href}
+              href={item.href as any}
               key={item.href}
               className={`flex items-center gap-4 rounded-lg px-4 py-3 text-base font-medium transition-colors ${
                 isActive
@@ -51,7 +51,7 @@ export const AdminSidebar = () => {
 
       <div className="border-t p-4">
         <Link
-          href="/"
+          href={"/" as any}
           className="flex items-center gap-4 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-100"
         >
           <Typography>← Вернуться на сайт</Typography>
