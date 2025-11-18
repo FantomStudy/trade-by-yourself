@@ -41,7 +41,7 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
 
     const socketInstance = io(SOCKET_URL, {
       transports: ["websocket", "polling"],
-      withCredentials: true, // Отправляет cookies автоматически
+      withCredentials: true,
     });
 
     socketInstance.on("connect", () => {
@@ -64,7 +64,7 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
     return () => {
       socketInstance.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [user]);
 
   const joinChat = useCallback(
