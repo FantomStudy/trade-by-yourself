@@ -13,7 +13,7 @@ import {
 } from "react";
 import { io } from "socket.io-client";
 
-import type { ChatSocketContextType } from "./types";
+import type { ChatSocketContextType, Message } from "./types";
 
 import { useAuth } from "../auth";
 
@@ -22,10 +22,59 @@ const ChatSocketContext = createContext<ChatSocketContextType | null>(null);
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_API_WS_URL || "ws://localhost:3000/chat";
 
+// Функция для запроса разрешения на уведомления
+const requestNotificationPermission = async () => {
+  if (!("Notification" in window)) {
+    console.log("Browser doesn't support notifications");
+    return false;
+  }
+
+  if (Notification.permission === "granted") {
+    return true;
+  }
+
+  if (Notification.permission !== "denied") {
+    const permission = await Notification.requestPermission();
+    return permission === "granted";
+  }
+
+  return false;
+};
+
+// Функция для показа уведомления
+const showNotification = (message: Message, productName?: string) => {
+  if (Notification.permission !== "granted") return;
+
+  const title = productName
+    ? `${message.sender.fullName} (${productName})`
+    : message.sender.fullName;
+
+  const notification = new Notification(title, {
+    body: message.content,
+    icon: "/logo.png", // Можно заменить на аватар пользователя
+    badge: "/logo.png",
+    tag: `chat-${message.chatId}`,
+    requireInteraction: false,
+  });
+
+  notification.onclick = () => {
+    window.focus();
+    window.location.href = `/profile/messages/${message.chatId}`;
+    notification.close();
+  };
+};
+
 export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const { user } = useAuth();
+
+  // Запрос разрешения на уведомления при монтировании
+  useEffect(() => {
+    if (user) {
+      requestNotificationPermission();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!user) {
@@ -59,12 +108,28 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
       setIsConnected(false);
     });
 
+    // Глобальный обработчик новых сообщений для уведомлений
+    socketInstance.on("newMessage", (data: Message) => {
+      // Показываем уведомление только если это не ваше сообщение
+      // и если окно неактивно или вы не на странице этого чата
+      if (data.senderId !== user.id) {
+        const isWindowFocused = document.hasFocus();
+        const isOnChatPage = window.location.pathname.includes(
+          `/profile/messages/${data.chatId}`,
+        );
+
+        // Показываем уведомление если окно неактивно или вы на другой странице
+        if (!isWindowFocused || !isOnChatPage) {
+          showNotification(data);
+        }
+      }
+    });
+
     setSocket(socketInstance);
 
     return () => {
       socketInstance.disconnect();
     };
-    
   }, [user]);
 
   const joinChat = useCallback(
