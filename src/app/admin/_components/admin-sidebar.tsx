@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, Package } from "lucide-react";
+import { Megaphone, MessageSquare, Package } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -16,6 +16,11 @@ const menuItems = [
     href: "/admin/support" as const,
     icon: MessageSquare,
     label: "Чат поддержки",
+  },
+  {
+    href: "/admin/advertising" as const,
+    icon: Megaphone,
+    label: "Управление рекламой",
   },
 ];
 

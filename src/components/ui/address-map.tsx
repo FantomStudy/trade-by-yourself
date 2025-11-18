@@ -304,13 +304,13 @@ export const AddressMap = ({
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Input
-              className="bg-white pr-10"
+              readOnly
+              className="cursor-not-allowed bg-gray-50 pr-10"
               value={address}
-              onChange={(e) => handleAddressChange(e.target.value)}
               placeholder={
                 isLoadingLocation
                   ? "Определяем ваше местоположение..."
-                  : "Введите адрес или выберите на карте"
+                  : "Выберите адрес на карте"
               }
             />
             <div className="absolute top-1/2 right-3 -translate-y-1/2">
@@ -322,22 +322,6 @@ export const AddressMap = ({
             </div>
           </div>
         </div>
-
-        {/* Список предложений адресов */}
-        {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute top-full z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
-            {suggestions.map((suggestion) => (
-              <button
-                key={suggestion.place_id}
-                className="w-full px-4 py-2 text-left text-sm first:rounded-t-md last:rounded-b-md hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
-                type="button"
-                onClick={() => handleSuggestionSelect(suggestion)}
-              >
-                {suggestion.display_name}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Карта */}
@@ -362,8 +346,7 @@ export const AddressMap = ({
       </div>
 
       <p className="text-sm text-gray-500">
-        Кликните на карту, чтобы выбрать точное местоположение, или введите
-        адрес в поле выше
+        Кликните на карту, чтобы выбрать местоположение
       </p>
     </div>
   );
