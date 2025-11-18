@@ -54,7 +54,7 @@ const showNotification = (message: Message) => {
     body: message.content,
     icon: message.product?.image || "/logo.png",
     badge: message.product?.image || "/logo.png",
-    tag: `chat-${message.chatId}`,
+    tag: message.product?.name || `chat-${message.chatId}`,
     requireInteraction: false,
   });
 
