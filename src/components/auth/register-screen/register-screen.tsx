@@ -13,7 +13,9 @@ export const RegisterScreen = ({
       <RegisterForm onSuccess={onClose} />
 
       <div className="flex flex-col gap-4 text-center">
-        <Typography className="text-muted">Уже есть аккаунт?</Typography>
+        <Typography className="text-muted-foreground">
+          Уже есть аккаунт?
+        </Typography>
 
         <Button onClick={() => onChangeScreen("login")}>Войти</Button>
       </div>

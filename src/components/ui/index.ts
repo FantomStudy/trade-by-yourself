@@ -10,6 +10,7 @@ export * from "./logo";
 export * from "./phone-field";
 export * from "./select";
 export * from "./skeleton";
+export * from "./sonner";
 export * from "./textarea";
 export * from "./typography";
 export * from "./use-phone-field";

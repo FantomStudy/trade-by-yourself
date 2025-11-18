@@ -1,5 +1,6 @@
 "use client";
 
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import {
@@ -15,6 +16,7 @@ import { useCreateProduct } from "@/lib/hooks";
 import styles from "./page.module.css";
 
 const CreateProductPage = () => {
+  const router = useRouter();
   const [categories, setCategories] = useState<
     Array<{ label: string; value: string }>
   >([]);
@@ -113,22 +115,29 @@ const CreateProductPage = () => {
       return;
     }
 
-    createProductMutation.mutate({
-      name: formData.name,
-      price: Number(formData.price),
-      state: formData.state as "new" | "used",
-      categoryId: Number(formData.categoryId),
-      subcategoryId: Number(formData.subcategoryId),
-      description: formData.description,
-      brand: formData.brand,
-      model: formData.model,
-      address: formData.address,
-      images,
-      ...(coordinates && {
-        latitude: coordinates.lat,
-        longitude: coordinates.lng,
-      }),
-    });
+    createProductMutation.mutate(
+      {
+        name: formData.name,
+        price: Number(formData.price),
+        state: formData.state as "new" | "used",
+        categoryId: Number(formData.categoryId),
+        subcategoryId: Number(formData.subcategoryId),
+        description: formData.description,
+        brand: formData.brand,
+        model: formData.model,
+        address: formData.address,
+        images,
+        ...(coordinates && {
+          latitude: coordinates.lat,
+          longitude: coordinates.lng,
+        }),
+      },
+      {
+        onSuccess: () => {
+          router.replace("/profile/my-products");
+        },
+      },
+    );
   };
 
   const availableSubcategories = formData.categoryId

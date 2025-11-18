@@ -10,7 +10,9 @@ export const RecoverScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
       <RecoverForm onSuccess={onClose} />
 
       <div className="flex flex-col gap-4 text-center">
-        <Typography className="text-muted">У вас нет аккаунта?</Typography>
+        <Typography className="text-muted-foreground">
+          У вас нет аккаунта?
+        </Typography>
 
         <Button variant="secondary" onClick={() => onChangeScreen("register")}>
           Зарегистрироваться
