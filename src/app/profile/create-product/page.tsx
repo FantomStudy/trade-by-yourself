@@ -62,8 +62,23 @@ const CreateProductPage = () => {
       setError(null);
       // Можно добавить уведомление или редирект
     },
-    onError: (error) => {
-      setError(`Ошибка при создании объявления: ${error.message}`);
+    onError: (error: any) => {
+      console.error("Ошибка создания объявления:", error);
+
+      // Обработка 400 ошибок с сообщением от сервера
+      if (error.response?.status === 400) {
+        const errorMessage =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Ошибка валидации данных";
+        setError(
+          Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage,
+        );
+      } else {
+        setError(
+          `Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`,
+        );
+      }
     },
   });
 
@@ -89,7 +104,14 @@ const CreateProductPage = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Для поля цены разрешаем только цифры
+    if (name === "price") {
+      const numericValue = value.replace(/\D/g, "");
+      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleStateChange = (state: string) => {
@@ -115,8 +137,18 @@ const CreateProductPage = () => {
       return;
     }
 
-    createProductMutation.mutate(
-      {
+    if (Number(formData.price) <= 0) {
+      setError("Цена должна быть больше нуля");
+      return;
+    }
+
+    if (images.length === 0) {
+      setError("Добавьте хотя бы одно изображение");
+      return;
+    }
+
+    try {
+      await createProductMutation.mutateAsync({
         name: formData.name,
         price: Number(formData.price),
         state: formData.state as "new" | "used",
@@ -131,13 +163,12 @@ const CreateProductPage = () => {
           latitude: coordinates.lat,
           longitude: coordinates.lng,
         }),
-      },
-      {
-        onSuccess: () => {
-          router.replace("/profile/my-products");
-        },
-      },
-    );
+      });
+      router.replace("/profile/my-products");
+    } catch (err) {
+      // Ошибка уже обработана в onError
+      console.error("Submit error:", err);
+    }
   };
 
   const availableSubcategories = formData.categoryId
@@ -162,7 +193,10 @@ const CreateProductPage = () => {
           required
           className="bg-white"
           name="price"
+          pattern="[0-9]*"
+          type="text"
           value={formData.price}
+          inputMode="numeric"
           onChange={handleInputChange}
           placeholder="Цена"
         />
