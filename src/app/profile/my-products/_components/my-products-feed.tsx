@@ -6,6 +6,7 @@ import { getCurrentUserProducts } from "@/lib/api";
 export const MyProductsFeed = async () => {
   const products = await getCurrentUserProducts();
 
+  console.log(products);
   if (!products) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-sm">

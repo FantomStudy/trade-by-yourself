@@ -4,19 +4,18 @@ export interface Product {
   address: string;
   createdAt: string;
   images: string[];
-  isLiked: boolean;
+  isFavorited: boolean;
   price: number;
+  userId: number;
 }
 
 export interface ExtendedProduct extends Product {
   brand?: string;
   categoryId: number;
   description?: string;
-  isFavorited?: boolean;
   model?: string;
   state: string;
   subcategoryId: number;
-  userId: number;
   seller?: {
     id: number;
     fullName: string;

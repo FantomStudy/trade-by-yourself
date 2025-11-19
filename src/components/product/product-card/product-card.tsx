@@ -87,7 +87,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       <div className="relative flex flex-1 flex-col gap-2 p-3 pr-10">
         <LikeButton
           className="absolute top-1 right-2"
-          initLiked={product.isLiked}
+          initLiked={product.isFavorited}
           productId={product.id}
         />
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Megaphone, MessageSquare, Package } from "lucide-react";
+import { FolderTree, Megaphone, MessageSquare, Package } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -21,6 +21,11 @@ const menuItems = [
     href: "/admin/advertising" as const,
     icon: Megaphone,
     label: "Управление рекламой",
+  },
+  {
+    href: "/admin/categories" as const,
+    icon: FolderTree,
+    label: "Управление категориями",
   },
 ];
 
