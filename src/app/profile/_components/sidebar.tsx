@@ -4,6 +4,7 @@ import type { Route } from "next";
 
 import { WalletIcon } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { UserInfo } from "@/components";
 import { Typography } from "@/components/ui";
@@ -66,6 +67,7 @@ const LINKS: SidebarLinkGroup[] = [
 
 export const Sidebar = () => {
   const { user } = useAuth();
+  const pathname = usePathname();
 
   const getProfileTypeLabel = (type: string) => {
     return type === "OOO" ? "Юридическое лицо" : "Физическое лицо";
@@ -111,11 +113,22 @@ export const Sidebar = () => {
             {group.name && <Typography variant="h2">{group.name}</Typography>}
 
             <div className="flex flex-col gap-4">
-              {group.links.map((link) => (
-                <Link href={link.href} key={link.label}>
-                  {link.label}
-                </Link>
-              ))}
+              {group.links.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    href={link.href}
+                    key={link.label}
+                    className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         ))}
