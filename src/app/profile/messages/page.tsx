@@ -57,9 +57,9 @@ const MessagesPage = () => {
 
           return (
             <Link
-              className="block rounded-lg border bg-white p-4 transition-shadow hover:shadow-md"
               href={`/profile/messages/${chat.id}` as any}
               key={chat.id}
+              className="block rounded-lg border bg-white p-4 transition-shadow hover:shadow-md"
             >
               <div className="mb-2 flex items-start justify-between">
                 <div>
