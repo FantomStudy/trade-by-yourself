@@ -1,5 +1,6 @@
 "use client";
 
+import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 
 import { useChats } from "@/lib/api/hooks";
@@ -10,18 +11,31 @@ const MessagesPage = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Сообщения</h1>
-        <p className="text-gray-500">Загрузка...</p>
+      <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-white p-8 shadow-sm">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500" />
       </div>
     );
   }
 
   if (!chats || chats.length === 0) {
     return (
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Сообщения</h1>
-        <p className="text-gray-500">У вас пока нет сообщений</p>
+      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-sm">
+        <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
+          <MessageSquare className="h-10 w-10 text-blue-500" />
+        </div>
+        <h3 className="mb-2 text-xl font-semibold text-gray-800">
+          У вас пока нет сообщений
+        </h3>
+        <p className="mb-4 text-gray-600">
+          Сообщения появятся здесь, когда вы начнете общение с продавцами или
+          покупателями
+        </p>
+        <a
+          href="/"
+          className="rounded-lg bg-blue-500 px-6 py-2 text-white transition-colors hover:bg-blue-600"
+        >
+          Посмотреть объявления
+        </a>
       </div>
     );
   }
