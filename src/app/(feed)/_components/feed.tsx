@@ -4,6 +4,8 @@ import { getAllProducts } from "@/lib/api";
 export const Feed = async () => {
   const products = await getAllProducts();
 
+  console.log("Server products:", products);
+
   // if (!products.success) {
   //   return (
   //     <div className="mx-auto max-w-7xl px-4 py-6">

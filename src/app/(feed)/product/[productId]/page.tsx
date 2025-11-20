@@ -188,29 +188,25 @@ const ProductPage = ({ params }: ProductPageProps) => {
         )}
 
         {/* Характеристики */}
-        {(product.brand || product.model) && (
-          <div className={styles.infoSection}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle} style={{ color: "#27ae60" }}>
-                Характеристики
-              </h2>
+        {product.fieldValues &&
+          !Array.isArray(product.fieldValues) &&
+          Object.keys(product.fieldValues).length > 0 && (
+            <div className={styles.infoSection}>
+              <div className={styles.sectionHeader}>
+                <h2
+                  className={styles.sectionTitle}
+                  style={{ color: "#27ae60" }}
+                >
+                  Характеристики
+                </h2>
+              </div>
+              <div className={styles.sectionContent}>
+                {Object.entries(product.fieldValues).map(([fieldId, value]) => (
+                  <p key={fieldId}>{value}</p>
+                ))}
+              </div>
             </div>
-            <div className={styles.sectionContent}>
-              {product.brand && (
-                <p>
-                  Бренд:
-                  {product.brand}
-                </p>
-              )}
-              {product.model && (
-                <p>
-                  Модель:
-                  {product.model}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
+          )}
 
         {/* Местоположение */}
         <div className={styles.infoSection}>

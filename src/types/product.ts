@@ -10,12 +10,12 @@ export interface Product {
 }
 
 export interface ExtendedProduct extends Product {
-  brand?: string;
-  categoryId: number;
+  categoryId?: number;
   description?: string;
-  model?: string;
-  state: string;
-  subcategoryId: number;
+  state?: string;
+  subcategoryId?: number;
+  typeId?: number;
+  fieldValues?: Record<string, string> | string[];
   seller?: {
     id: number;
     fullName: string;

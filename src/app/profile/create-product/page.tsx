@@ -1,6 +1,8 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import type { Category } from "@/types";
+
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import {
@@ -17,25 +19,20 @@ import styles from "./page.module.css";
 
 const CreateProductPage = () => {
   const router = useRouter();
-  const [categories, setCategories] = useState<
-    Array<{ label: string; value: string }>
-  >([]);
-  const [subcategories, setSubcategories] = useState<
-    Array<{ id: number; name: string; categoryId: number }>
-  >([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     description: "",
     state: "",
-    brand: "",
-    model: "",
     address: "",
     categoryId: "",
     subcategoryId: "",
+    typeId: "",
   });
 
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [images, setImages] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [coordinates, setCoordinates] = useState<{
@@ -51,21 +48,19 @@ const CreateProductPage = () => {
         price: "",
         description: "",
         state: "",
-        brand: "",
-        model: "",
         address: "",
         categoryId: "",
         subcategoryId: "",
+        typeId: "",
       });
+      setFieldValues({});
       setImages([]);
       setCoordinates(null);
       setError(null);
-      // Можно добавить уведомление или редирект
     },
     onError: (error: any) => {
       console.error("Ошибка создания объявления:", error);
 
-      // Обработка 400 ошибок с сообщением от сервера
       if (error.response?.status === 400) {
         const errorMessage =
           error.response?.data?.message ||
@@ -77,26 +72,14 @@ const CreateProductPage = () => {
       } else {
         setError(
           `Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`,
-        );
+        );  
       }
     },
   });
 
   useEffect(() => {
-    api<Array<{ id: number; name: string }>>("/category/all-categories").then(
-      (response) => {
-        setCategories(
-          response.map((cat) => ({
-            label: cat.name,
-            value: String(cat.id),
-          })),
-        );
-      },
-    );
-    api<Array<{ id: number; name: string; categoryId: number }>>(
-      "/category/all-subcategories",
-    ).then((response) => {
-      setSubcategories(response);
+    api<Category[]>("/category/find-all").then((response) => {
+      setCategories(response);
     });
   }, []);
 
@@ -131,7 +114,8 @@ const CreateProductPage = () => {
       !formData.price ||
       !formData.state ||
       !formData.categoryId ||
-      !formData.subcategoryId
+      !formData.subcategoryId ||
+      !formData.typeId
     ) {
       setError("Пожалуйста, заполните все обязательные поля");
       return;
@@ -151,14 +135,14 @@ const CreateProductPage = () => {
       await createProductMutation.mutateAsync({
         name: formData.name,
         price: Number(formData.price),
-        state: formData.state as "new" | "used",
+        state: formData.state as "NEW" | "USED",
         categoryId: Number(formData.categoryId),
         subcategoryId: Number(formData.subcategoryId),
+        typeId: Number(formData.typeId),
         description: formData.description,
-        brand: formData.brand,
-        model: formData.model,
         address: formData.address,
         images,
+        fieldValues,
         ...(coordinates && {
           latitude: coordinates.lat,
           longitude: coordinates.lng,
@@ -166,16 +150,27 @@ const CreateProductPage = () => {
       });
       router.replace("/profile/my-products");
     } catch (err) {
-      // Ошибка уже обработана в onError
       console.error("Submit error:", err);
     }
   };
 
-  const availableSubcategories = formData.categoryId
-    ? subcategories
-        .filter((sub) => String(sub.categoryId) === formData.categoryId)
-        .map((sub) => ({ value: String(sub.id), label: sub.name }))
-    : [];
+  // Получаем доступные подкатегории
+  const selectedCategory = categories.find(
+    (cat) => String(cat.id) === formData.categoryId,
+  );
+  const availableSubcategories = selectedCategory?.subCategories || [];
+
+  // Получаем доступные типы подкатегорий
+  const selectedSubcategory = availableSubcategories.find(
+    (sub) => String(sub.id) === formData.subcategoryId,
+  );
+  const availableTypes = selectedSubcategory?.subcategoryTypes || [];
+
+  // Получаем поля для выбранного типа
+  const selectedType = availableTypes.find(
+    (type) => String(type.id) === formData.typeId,
+  );
+  const fields = selectedType?.fields || [];
 
   return (
     <form onSubmit={handleSubmit}>
@@ -245,17 +240,19 @@ const CreateProductPage = () => {
             setFormData((prev) => ({
               ...prev,
               categoryId: e.target.value,
-              subcategoryId: "", // Сброс подкатегории при смене категории
+              subcategoryId: "",
+              typeId: "",
             }))
           }
         >
           <option value="">Выберите категорию</option>
           {categories.map((category) => (
-            <option key={category.value} value={category.value}>
-              {category.label}
+            <option key={category.id} value={category.id}>
+              {category.name}
             </option>
           ))}
         </select>
+
         <select
           required
           className="w-full rounded border border-gray-300 bg-white p-2"
@@ -263,32 +260,61 @@ const CreateProductPage = () => {
           name="subcategoryId"
           value={formData.subcategoryId}
           onChange={(e) =>
-            setFormData((prev) => ({ ...prev, subcategoryId: e.target.value }))
+            setFormData((prev) => ({
+              ...prev,
+              subcategoryId: e.target.value,
+              typeId: "",
+            }))
           }
         >
           <option value="">Выберите подкатегорию</option>
           {availableSubcategories.map((subcategory) => (
-            <option key={subcategory.value} value={subcategory.value}>
-              {subcategory.label}
+            <option key={subcategory.id} value={subcategory.id}>
+              {subcategory.name}
             </option>
           ))}
         </select>
 
-        <h1 className={styles.blue}>Дополнительная информация</h1>
-        <Input
-          className="bg-white"
-          name="brand"
-          value={formData.brand}
-          onChange={handleInputChange}
-          placeholder="Бренд"
-        />
-        <Input
-          className="bg-white"
-          name="model"
-          value={formData.model}
-          onChange={handleInputChange}
-          placeholder="Модель"
-        />
+        <select
+          required
+          className="w-full rounded border border-gray-300 bg-white p-2"
+          disabled={!formData.subcategoryId}
+          name="typeId"
+          value={formData.typeId}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              typeId: e.target.value,
+            }))
+          }
+        >
+          <option value="">Выберите тип</option>
+          {availableTypes.map((type) => (
+            <option key={type.id} value={type.id}>
+              {type.name}
+            </option>
+          ))}
+        </select>
+
+        {fields.length > 0 && (
+          <>
+            <h1 className={styles.blue}>Дополнительная информация</h1>
+            {fields.map((field) => (
+              <Input
+                key={field.id}
+                className="bg-white"
+                value={fieldValues[field.id] || ""}
+                onChange={(e) =>
+                  setFieldValues((prev) => ({
+                    ...prev,
+                    [field.id]: e.target.value,
+                  }))
+                }
+                placeholder={field.name}
+              />
+            ))}
+          </>
+        )}
 
         <h1 className={styles.green}>Подробности</h1>
       </div>

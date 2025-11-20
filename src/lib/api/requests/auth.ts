@@ -39,3 +39,6 @@ export const changePassword = async (data: unknown) =>
     method: "POST",
     body: data as BodyInit,
   });
+
+export const checkIsAdmin = async () =>
+  api<{ isAdmin: boolean }>("/auth/isAdmin");

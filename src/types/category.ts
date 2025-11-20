@@ -1,10 +1,22 @@
 export interface Category {
   id: number;
   name: string;
+  subCategories: Subcategory[];
 }
 
 export interface Subcategory {
   id: number;
   name: string;
-  categoryId: number;
+  subcategoryTypes: SubcategoryType[];
+}
+
+export interface SubcategoryType {
+  id: number;
+  name: string;
+  fields: Field[];
+}
+
+export interface Field {
+  id: number;
+  name: string;
 }
