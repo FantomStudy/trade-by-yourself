@@ -5,6 +5,7 @@ import type { Route } from "next";
 import { WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { UserInfo } from "@/components";
 import { Typography } from "@/components/ui";
@@ -37,8 +38,7 @@ const LINKS: SidebarLinkGroup[] = [
         label: "Избранное",
       },
       {
-        // href: "/profile/settings",
-        href: "/profile/my-products",
+        href: "/profile/settings",
         label: "Настройки",
       },
     ],
@@ -68,18 +68,44 @@ const LINKS: SidebarLinkGroup[] = [
 export const Sidebar = () => {
   const { user } = useAuth();
   const pathname = usePathname();
+  const [profileSettings, setProfileSettings] = useState<{
+    photo?: string | null;
+    phoneNumber?: string | null;
+    isAnswersCall?: boolean | null;
+  } | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile-settings`, {
+          credentials: "include",
+        }).then((r) => r.json());
+        setProfileSettings(res);
+      } catch (err) {
+        console.error("Failed to load profile settings for sidebar:", err);
+      }
+    };
+
+    load();
+  }, []);
 
   const getProfileTypeLabel = (type: string) => {
     return type === "OOO" ? "Юридическое лицо" : "Физическое лицо";
   };
 
-  const isLegalEntity = user?.profileType === "OOO";
+  const currentProfileType = profileSettings?.profileType ?? user?.profileType;
+  const isLegalEntity = currentProfileType === "OOO";
 
   return (
     <div className="bg-background flex flex-col items-center gap-5 rounded-md px-6 py-8">
       {user && (
         <>
-          <UserInfo user={user} />
+          <UserInfo
+            user={user}
+            photo={profileSettings?.photo ?? user.photo}
+            phoneNumber={profileSettings?.phoneNumber ?? user.phoneNumber}
+            isAnswersCall={profileSettings?.isAnswersCall ?? null}
+          />
 
           {/* Бейдж типа профиля */}
           <div
@@ -97,7 +123,7 @@ export const Sidebar = () => {
                 isLegalEntity ? "text-green-700" : "text-blue-700"
               }`}
             >
-              {getProfileTypeLabel(user.profileType)}
+              {getProfileTypeLabel(currentProfileType ?? "")}
             </span>
           </div>
 

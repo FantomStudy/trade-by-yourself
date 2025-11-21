@@ -33,7 +33,10 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <html lang="en">
-      <body className={cn(montserrat.variable, "antialiased")}>
+      <body
+        className={cn(montserrat.variable, "antialiased")}
+        suppressHydrationWarning
+      >
         <Providers>
           <MainLayout>{children}</MainLayout>
         </Providers>

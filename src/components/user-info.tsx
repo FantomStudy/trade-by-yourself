@@ -9,24 +9,22 @@ import { UserAvatar } from "./user-avatar";
 
 interface UserInfoProps extends ComponentProps<"div"> {
   user: CurrentUser;
+  photo?: string | null;
+  phoneNumber?: string | null;
+  isAnswersCall?: boolean | null;
 }
 
-export const UserInfo = ({ user }: UserInfoProps) => {
+export const UserInfo = ({ user, photo, phoneNumber, isAnswersCall }: UserInfoProps) => {
   return (
-    <div className="flex flex-col items-center gap-4">
-      <UserAvatar fullName={user.fullName} size="lg" src="" />
+    <div className="flex flex-col items-center gap-4 text-center">
+      <UserAvatar fullName={user.fullName} size="lg" src={photo ?? ""} />
       <Typography variant="h2">{formatFullName(user.fullName)}</Typography>
-
-      {/* {Boolean(rating && reviewsCount) && (
-        <div className={styles.stats}>
-          <span className={styles.rating}>
-            {rating}
-            <StarIcon />
-          </span>
-
-          <span>{reviewsCount} отзывов</span>
+      {phoneNumber && <div className="text-sm text-muted-foreground">{phoneNumber}</div>}
+      {isAnswersCall !== null && (
+        <div className="text-sm text-muted-foreground">
+          {isAnswersCall ? "Отвечает на звонки" : "Не отвечает на звонки"}
         </div>
-      )} */}
+      )}
     </div>
   );
 };
