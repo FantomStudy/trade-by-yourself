@@ -28,7 +28,7 @@ export const LINKS: SidebarLinkGroup[] = [
       },
       {
         // href: "/profile/settings",
-        href: "/profile/my-products",
+        href: "/profile/settings",
         label: "Настройки",
       },
     ],

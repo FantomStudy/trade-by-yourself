@@ -68,13 +68,6 @@ export const Sidebar = () => {
                 {profileSettings?.phoneNumber ?? (user as any)?.phoneNumber}
               </div>
             )}
-            {profileSettings?.isAnswersCall !== undefined && (
-              <div className="text-muted-foreground text-sm">
-                {profileSettings.isAnswersCall
-                  ? "Отвечает на звонки"
-                  : "Не отвечает на звонки"}
-              </div>
-            )}
           </div>
 
           <div
@@ -122,7 +115,7 @@ export const Sidebar = () => {
                     key={link.label}
                     className={
                       isActive
-                        ? (styles.linkActive ?? styles.link)
+                        ? `${styles.link} ${styles.linkActive}`
                         : styles.link
                     }
                   >
