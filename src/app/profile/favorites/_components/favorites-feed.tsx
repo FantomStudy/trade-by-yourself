@@ -1,10 +1,10 @@
 import { Heart } from "lucide-react";
 
+import { getFavorites } from "@/api/requests";
 import { FeedWrapper } from "@/components/feed-wrapper";
-import { getFavoritesProducts } from "@/lib/api";
 
 export const FavoritesFeed = async () => {
-  const favorites = await getFavoritesProducts();
+  const favorites = await getFavorites();
 
   if (!favorites) {
     return (
