@@ -14,14 +14,21 @@ interface UserInfoProps extends ComponentProps<"div"> {
   isAnswersCall?: boolean | null;
 }
 
-export const UserInfo = ({ user, photo, phoneNumber, isAnswersCall }: UserInfoProps) => {
+export const UserInfo = ({
+  user,
+  photo,
+  phoneNumber,
+  isAnswersCall,
+}: UserInfoProps) => {
   return (
     <div className="flex flex-col items-center gap-4 text-center">
       <UserAvatar fullName={user.fullName} size="lg" src={photo ?? ""} />
       <Typography variant="h2">{formatFullName(user.fullName)}</Typography>
-      {phoneNumber && <div className="text-sm text-muted-foreground">{phoneNumber}</div>}
+      {phoneNumber && (
+        <div className="text-muted-foreground text-sm">{phoneNumber}</div>
+      )}
       {isAnswersCall !== null && (
-        <div className="text-sm text-muted-foreground">
+        <div className="text-muted-foreground text-sm">
           {isAnswersCall ? "Отвечает на звонки" : "Не отвечает на звонки"}
         </div>
       )}

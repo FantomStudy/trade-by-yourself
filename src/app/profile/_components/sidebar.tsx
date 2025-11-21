@@ -77,9 +77,12 @@ export const Sidebar = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile-settings`, {
-          credentials: "include",
-        }).then((r) => r.json());
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/user/profile-settings`,
+          {
+            credentials: "include",
+          },
+        ).then((r) => r.json());
         setProfileSettings(res);
       } catch (err) {
         console.error("Failed to load profile settings for sidebar:", err);
