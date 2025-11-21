@@ -24,51 +24,59 @@ export const Gallery = ({ images }: GalleryProps) => {
   };
 
   return (
-    <div className={styles.gallery}>
-      <div>
-        
-      </div>
-      <Image
-        alt="Изображение продукта"
-        className={styles.mainFrame}
-        height={400}
-        src={images[currentImageIndex]}
-        width={400}
-      />
-
+    <div className={styles.imageGallery}>
+      {/* Миниатюры слева */}
       {images.length > 1 && (
-        <>
-          <div className={styles.thumbnails}>
-            {images.map((image, index) => (
-              <button
-                key={image}
-                className={styles.thumbnail}
-                data-active={index === currentImageIndex}
-                type="button"
-                onClick={() => setCurrentImageIndex(index)}
-              >
-                <Image fill alt={image} src={image} />
-              </button>
-            ))}
-          </div>
-
-          <Button
-            className={clsx(styles.navButton, styles.prevButton)}
-            variant="ghost"
-            onClick={prevImage}
-          >
-            <MoveLeft />
-          </Button>
-          <Button
-            className={clsx(styles.navigationButton, styles.nextButton)}
-            size="icon"
-            variant="ghost"
-            onClick={nextImage}
-          >
-            <MoveRight />
-          </Button>
-        </>
+        <div className={styles.thumbnails}>
+          {images.map((image, index) => (
+            <button
+              key={image}
+              className={`${styles.thumbnail} ${
+                index === currentImageIndex ? styles.active : ""
+              }`}
+              type="button"
+              onClick={() => setCurrentImageIndex(index)}
+            >
+              <Image
+                fill
+                alt={image}
+                src={image}
+                style={{ objectFit: "cover" }}
+              />
+            </button>
+          ))}
+        </div>
       )}
+
+      {/* Главное изображение справа */}
+      <div className={styles.mainImageWrapper}>
+        <Image
+          fill
+          alt={"thumbnail"}
+          className={styles.mainImage}
+          src={images[currentImageIndex]}
+          priority
+        />
+
+        {images.length > 1 && (
+          <div className={styles.controls}>
+            <button
+              className={styles.controlItem}
+              type="button"
+              onClick={prevImage}
+            >
+              <MoveLeft />
+            </button>
+            <button
+              className={styles.controlItem}
+              type="button"
+              onClick={nextImage}
+            >
+              <MoveRight />
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
