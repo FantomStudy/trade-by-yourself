@@ -1,229 +1,107 @@
-"use client";
-
-import type { ExtendedProduct } from "@/types";
-
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import Link from "next/link";
 
 import { getProductById } from "@/api/requests";
-import { LikeButton } from "@/components/product/product-card/like-button";
+import { LikeButton } from "@/components/like-button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+  Typography,
+} from "@/components/ui";
+import { formatPrice } from "@/lib/format";
 
-import { SellerSidebar } from "./_components";
+import { Gallery, SellerCard } from "./_components";
 
 import styles from "./page.module.css";
 
-interface ProductPageProps {
-  params: Promise<{ productId: string }>;
-}
-
-const ProductPage = ({ params }: ProductPageProps) => {
-  const [product, setProduct] = useState<ExtendedProduct | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadProduct = async () => {
-      try {
-        setIsLoading(true);
-        const resolvedParams = await params;
-        const productId = Number(resolvedParams.productId);
-        const data = await getProductById(productId);
-        console.log(data);
-
-        setProduct(data);
-        setIsFavorite(data.isFavorited || false);
-      } catch (err) {
-        setError("Не удалось загрузить товар");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadProduct();
-  }, [params]);
-
-  const nextImage = () => {
-    if (!product) return;
-    setCurrentImageIndex((prev) =>
-      prev === product.images.length - 1 ? 0 : prev + 1,
-    );
-  };
-
-  const prevImage = () => {
-    if (!product) return;
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? product.images.length - 1 : prev - 1,
-    );
-  };
-
-  const formatPrice = (price: number) => {
-    return `${price.toLocaleString()} ₽`;
-  };
-
-  if (isLoading) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.loading}>Загрузка...</div>
-      </div>
-    );
-  }
-
-  if (error || !product) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.error}>{error || "Товар не найден"}</div>
-      </div>
-    );
-  }
+const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
+  const { productId } = await params;
+  const product = await getProductById(Number(productId));
 
   return (
-    <div className={styles.pageLayout}>
-      {/* Сайдбар продавца слева */}
-      <aside className={styles.sidebar}>
-        {product.seller && (
-          <SellerSidebar
-            seller={{
-              fullName: product.seller.fullName,
-              id: product.seller.id,
-              phoneNumber: product.seller.phoneNumber,
-              profileType: product.seller.profileType,
-              rating: product.seller.rating,
-              reviewsCount: product.seller.reviewsCount,
-            }}
-            productId={product.id}
-          />
-        )}
-      </aside>
+    <div className="global-container">
+      <Breadcrumb className={styles.breadcrumb}>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">Главная</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">{product.category.name}</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">{product.subCategory.name}</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          {product.type && (
+            <>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/">{product.type}</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </>
+          )}
+        </BreadcrumbList>
+      </Breadcrumb>
 
-      {/* Основной контент справа */}
-      <main className={styles.mainContent}>
-        {/* Основная карточка продукта */}
-        <div className={styles.productCard}>
-          {/* Заголовок с названием, ценой и кнопкой избранного */}
-          <div className={styles.productHeader}>
-            <div className={styles.headerTop}>
-              <div>
-                <h1 className={styles.productTitle}>{product.name}</h1>
-                <p className={styles.productPrice}>
-                  {formatPrice(product.price)}
-                </p>
-              </div>
-              <LikeButton initLiked={isFavorite} productId={product.id} />
+      <div className={styles.container}>
+        <div className={styles.productInfo}>
+          <div>
+            <Typography variant="h1">{product.name}</Typography>
+            <div className={styles.productMeta}>
+              <Typography className="text-primary" variant="h2">
+                {formatPrice(product.price)}
+              </Typography>
+
+              <LikeButton
+                initLiked={product.isFavorited}
+                productId={product.id}
+              />
             </div>
           </div>
 
-          {/* Галерея изображений */}
-          <div className={styles.imageGallery}>
-            {/* Миниатюры слева */}
-            {product.images.length > 1 && (
-              <div className={styles.thumbnails}>
-                {product.images.map((image, index) => (
-                  <button
-                    key={`${image}-${index}`}
-                    className={`${styles.thumbnail} ${
-                      index === currentImageIndex ? styles.active : ""
-                    }`}
-                    type="button"
-                    onClick={() => setCurrentImageIndex(index)}
-                  >
-                    <Image
-                      fill
-                      alt={`${product.name} ${index + 1}`}
-                      src={image}
-                      style={{ objectFit: "cover" }}
-                    />
-                  </button>
+          <Gallery images={product.images} />
+
+          {product.description && (
+            <div className={styles.section}>
+              <Typography variant="h2">Описание</Typography>
+              <Typography>{product.description}</Typography>
+            </div>
+          )}
+
+          <div className={styles.section}>
+            <Typography variant="h2">Характеристики</Typography>
+            {product.fieldValues.map((property) => (
+              <div key={property.id}>
+                <Typography>{property.name}</Typography>
+                {product.fieldValues.map((property) => (
+                  <Typography key={property.id}>{property.name}</Typography>
                 ))}
               </div>
-            )}
-
-            {/* Главное изображение справа */}
-            <div className={styles.mainImageWrapper}>
-              <Image
-                fill
-                alt={product.name}
-                className={styles.mainImage}
-                src={product.images[currentImageIndex]}
-                style={{ objectFit: "contain" }}
-                priority
-              />
-
-              {product.images.length > 1 && (
-                <>
-                  <button
-                    className={`${styles.navigationButton} ${styles.prevButton}`}
-                    type="button"
-                    onClick={prevImage}
-                  >
-                    ←
-                  </button>
-                  <button
-                    className={`${styles.navigationButton} ${styles.nextButton}`}
-                    type="button"
-                    onClick={nextImage}
-                  >
-                    →
-                  </button>
-                </>
-              )}
-            </div>
+            ))}
           </div>
+
+          {product.address && (
+            <div className={styles.section}>
+              <Typography variant="h2">Местоположение</Typography>
+              <Typography>{product.address}</Typography>
+            </div>
+          )}
         </div>
-
-        {/* Описание */}
-        {product.description && (
-          <div className={styles.infoSection}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle} style={{ color: "#3498db" }}>
-                Описание
-              </h2>
-            </div>
-            <div className={styles.sectionContent}>
-              <p className={styles.description}>{product.description}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Характеристики */}
-        {(product.brand || product.model) && (
-          <div className={styles.infoSection}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle} style={{ color: "#27ae60" }}>
-                Характеристики
-              </h2>
-            </div>
-            <div className={styles.sectionContent}>
-              {product.brand && (
-                <p>
-                  Бренд:
-                  {product.brand}
-                </p>
-              )}
-              {product.model && (
-                <p>
-                  Модель:
-                  {product.model}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Местоположение */}
-        <div className={styles.infoSection}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle} style={{ color: "#e74c3c" }}>
-              Местоположение
-            </h2>
-          </div>
-          <div className={styles.sectionContent}>
-            <p className={styles.location}>{product.address}</p>
-          </div>
-        </div>
-      </main>
+        <aside className={styles.aside}>
+          <SellerCard product={product} />
+        </aside>
+      </div>
     </div>
   );
 };

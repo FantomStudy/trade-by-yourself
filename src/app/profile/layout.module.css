@@ -1,0 +1,6 @@
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  align-items: start;
+  gap: var(--space-md);
+}

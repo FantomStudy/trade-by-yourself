@@ -11,8 +11,10 @@ export const createProductSchema = z.object({
   longitude: z.number().optional(),
   model: z.string().optional(),
   price: z.number().min(0, "Цена должна быть положительным числом"),
-  state: z.enum(["new", "used"]),
+  state: z.enum(["NEW", "USED"]),
   subcategoryId: z.number(),
+  typeId: z.number(),
+  fieldValues: z.record(z.string(), z.string()).optional(),
 });
 
 export type CreateProductData = z.infer<typeof createProductSchema>;

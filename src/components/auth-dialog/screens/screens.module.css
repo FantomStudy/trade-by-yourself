@@ -1,0 +1,11 @@
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  color: var(--muted-foreground);
+  text-align: center;
+}
+.linkActions {
+  text-align: center;
+  color: var(--muted-foreground);
+}

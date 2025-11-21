@@ -5,7 +5,6 @@ import { Montserrat } from "next/font/google";
 import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
 import { getCurrentUser } from "@/api/requests";
 import { getQueryClient } from "@/lib/get-query-client";
-import { cn } from "@/lib/utils";
 
 import { MainLayout } from "./_components";
 import { Providers } from "./providers";
@@ -33,7 +32,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <html lang="en">
-      <body className={cn(montserrat.variable, "antialiased")}>
+      <body className={montserrat.variable}>
         <Providers>
           <MainLayout>{children}</MainLayout>
         </Providers>

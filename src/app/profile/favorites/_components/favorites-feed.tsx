@@ -1,6 +1,6 @@
 import { Heart } from "lucide-react";
 
-import { FeedWrapper } from "@/components/product";
+import { FeedWrapper } from "@/components/feed-wrapper";
 import { getFavoritesProducts } from "@/lib/api";
 
 export const FavoritesFeed = async () => {

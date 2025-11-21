@@ -1,3 +1,4 @@
+export * from "./useCreateProductMutation";
 export * from "./useFavoriteMutation";
 export * from "./useLoginMutation";
 export * from "./useRecoverMutation";
