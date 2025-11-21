@@ -1,0 +1,87 @@
+.button {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 150ms;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.button:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.button:focus-visible {
+  border-color: var(--ring);
+}
+
+/* .button svg {
+  pointer-events: none;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+} */
+
+/* Sizes */
+.sizeDefault {
+  height: 48px;
+  padding: 16px 20px;
+}
+
+.sizeDefault:has(> svg) {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.sizeIcon {
+  width: 40px;
+  height: 40px;
+}
+
+/* Variants */
+.default {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.default:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--primary) 90%, transparent);
+}
+
+.destructive {
+  background-color: var(--destructive);
+  color: white;
+}
+.destructive:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--destructive) 90%, transparent);
+}
+.destructive:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+.secondary {
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+}
+.secondary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--secondary) 80%, transparent);
+}
+
+.ghost:hover:not(:disabled) {
+  background-color: color-mix(in srgb, transparent 95%, black);
+  color: var(--accent-foreground);
+}
+
+.link {
+  padding: 0;
+  height: auto;
+  color: var(--primary);
+  text-decoration: none;
+}

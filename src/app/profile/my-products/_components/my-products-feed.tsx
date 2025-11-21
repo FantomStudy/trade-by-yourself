@@ -1,6 +1,6 @@
 import { Package } from "lucide-react";
 
-import { FeedWrapper } from "@/components/product";
+import { FeedWrapper } from "@/components/feed-wrapper";
 import { getCurrentUserProducts } from "@/lib/api";
 
 export const MyProductsFeed = async () => {

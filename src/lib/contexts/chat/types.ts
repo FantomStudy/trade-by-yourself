@@ -1,19 +1,15 @@
 import type { Socket } from "socket.io-client";
 
 export interface Message {
+  id: number;
   chatId: number;
   content: string;
   createdAt: string;
-  id: number;
-  sender: {
-    fullName: string;
-    id: number;
-  };
   senderId: number;
   product?: {
     id: number;
-    image?: string;
     name: string;
+    image?: string;
     price: number;
   };
 }
@@ -23,8 +19,8 @@ export interface NewChatMessage {
   message: Message;
   product: {
     id: number;
-    image?: string;
     name: string;
+    image?: string;
     price: number;
   };
 }
@@ -42,10 +38,10 @@ export interface MessagesReadData {
 
 export interface ChatSocketContextType {
   isConnected: boolean;
+  socket: Socket | null;
   joinChat: (chatId: number) => void;
   leaveChat: (chatId: number) => void;
   markAsRead: (chatId: number) => void;
   sendMessage: (chatId: number, content: string) => void;
   sendTyping: (chatId: number, isTyping: boolean) => void;
-  socket: Socket | null;
 }

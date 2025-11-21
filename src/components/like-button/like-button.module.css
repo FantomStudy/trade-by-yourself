@@ -1,0 +1,19 @@
+.heart {
+  width: 20px;
+  transition: all 0.2s;
+  stroke-width: 2;
+  fill: none;
+  color: var(--muted-foreground);
+}
+
+.liked {
+  fill: var(--pink);
+  stroke-width: 1.5;
+  color: var(--pink);
+  transform: scale(1.1);
+}
+
+.notLiked:hover {
+  color: var(--pink);
+  transform: scale(1.1);
+}

@@ -1,14 +1,18 @@
 import { Suspense } from "react";
 
-import { Feed } from "./_components/feed";
+import { Feed, HeroBanner } from "./_components";
 
 const HomePage = () => {
   return (
-    <div className="global-container">
-      <Suspense fallback={<div>Loading...</div>}>
-        <Feed />
-      </Suspense>
-    </div>
+    <>
+      <HeroBanner />
+
+      <div className="global-container">
+        <Suspense fallback={<div>Loading...</div>}>
+          <Feed />
+        </Suspense>
+      </div>
+    </>
   );
 };
 

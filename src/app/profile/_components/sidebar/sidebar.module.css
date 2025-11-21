@@ -1,0 +1,86 @@
+.sidebar {
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border-radius: 8px;
+  padding: 32px 24px;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.profileTypeLegal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  background: var(--green-50);
+}
+
+.profileTypePhysical {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  background: var(--blue-50);
+}
+
+.profileTypeDotLegal {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green-500);
+}
+
+.profileTypeDotPhysical {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue-500);
+}
+
+.profileTypeTextLegal {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--green-700);
+}
+
+.profileTypeTextPhysical {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--blue-700);
+}
+
+.balance {
+  color: var(--accent-foreground);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.groupLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

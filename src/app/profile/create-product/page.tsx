@@ -5,6 +5,7 @@ import type { Category } from "@/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { useCreateProductMutation } from "@/api/hooks";
 import {
   AddressMap,
   Button,
@@ -13,7 +14,6 @@ import {
   Textarea,
 } from "@/components/ui";
 import { api } from "@/lib/api/instance";
-import { useCreateProduct } from "@/lib/hooks";
 
 import styles from "./page.module.css";
 
@@ -40,42 +40,7 @@ const CreateProductPage = () => {
     lng: number;
   } | null>(null);
 
-  const createProductMutation = useCreateProduct({
-    onSuccess: (data) => {
-      console.log("Объявление создано:", data);
-      setFormData({
-        name: "",
-        price: "",
-        description: "",
-        state: "",
-        address: "",
-        categoryId: "",
-        subcategoryId: "",
-        typeId: "",
-      });
-      setFieldValues({});
-      setImages([]);
-      setCoordinates(null);
-      setError(null);
-    },
-    onError: (error: any) => {
-      console.error("Ошибка создания объявления:", error);
-
-      if (error.response?.status === 400) {
-        const errorMessage =
-          error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Ошибка валидации данных";
-        setError(
-          Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage,
-        );
-      } else {
-        setError(
-          `Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`,
-        );  
-      }
-    },
-  });
+  const createProductMutation = useCreateProductMutation();
 
   useEffect(() => {
     api<Category[]>("/category/find-all").then((response) => {
@@ -132,22 +97,62 @@ const CreateProductPage = () => {
     }
 
     try {
-      await createProductMutation.mutateAsync({
-        name: formData.name,
-        price: Number(formData.price),
-        state: formData.state as "NEW" | "USED",
-        categoryId: Number(formData.categoryId),
-        subcategoryId: Number(formData.subcategoryId),
-        typeId: Number(formData.typeId),
-        description: formData.description,
-        address: formData.address,
-        images,
-        fieldValues,
-        ...(coordinates && {
-          latitude: coordinates.lat,
-          longitude: coordinates.lng,
-        }),
-      });
+      await createProductMutation.mutateAsync(
+        {
+          name: formData.name,
+          price: Number(formData.price),
+          state: formData.state as "NEW" | "USED",
+          categoryId: Number(formData.categoryId),
+          subcategoryId: Number(formData.subcategoryId),
+          typeId: Number(formData.typeId),
+          description: formData.description,
+          address: formData.address,
+          images,
+          fieldValues,
+          ...(coordinates && {
+            latitude: coordinates.lat,
+            longitude: coordinates.lng,
+          }),
+        },
+        {
+          onSuccess: (data) => {
+            console.log("Объявление создано:", data);
+            setFormData({
+              name: "",
+              price: "",
+              description: "",
+              state: "",
+              address: "",
+              categoryId: "",
+              subcategoryId: "",
+              typeId: "",
+            });
+            setFieldValues({});
+            setImages([]);
+            setCoordinates(null);
+            setError(null);
+          },
+          onError: (error: any) => {
+            console.error("Ошибка создания объявления:", error);
+
+            if (error.response?.status === 400) {
+              const errorMessage =
+                error.response?.data?.message ||
+                error.response?.data?.error ||
+                "Ошибка валидации данных";
+              setError(
+                Array.isArray(errorMessage)
+                  ? errorMessage.join(", ")
+                  : errorMessage,
+              );
+            } else {
+              setError(
+                `Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`,
+              );
+            }
+          },
+        },
+      );
       router.replace("/profile/my-products");
     } catch (err) {
       console.error("Submit error:", err);

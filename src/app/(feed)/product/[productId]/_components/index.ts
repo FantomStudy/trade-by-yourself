@@ -1,1 +1,2 @@
-export { SellerSidebar } from "./seller-sidebar";
+export * from "./gallery/gallery";
+export * from "./seller-card/seller-card";

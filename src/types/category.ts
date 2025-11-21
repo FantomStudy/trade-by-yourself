@@ -4,7 +4,7 @@ export interface Category {
   subCategories: Subcategory[];
 }
 
-export interface Subcategory {
+interface Subcategory {
   id: number;
   name: string;
   subcategoryTypes: SubcategoryType[];
