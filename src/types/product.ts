@@ -11,16 +11,12 @@ export interface Product {
 
 export interface ExtendedProduct extends Product {
   description?: string;
+  fieldValues?: string[];
   type: string | null;
-  userId: number;
   category: {
     id: number;
     name: string;
   };
-  fieldValues: Array<{
-    id: number;
-    name: string;
-  }>;
   seller: {
     id: number;
     fullName: string;

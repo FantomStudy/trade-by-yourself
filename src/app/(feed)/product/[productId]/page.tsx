@@ -81,14 +81,27 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
 
           <div className={styles.section}>
             <Typography variant="h2">Характеристики</Typography>
-            {product.fieldValues.map((property) => (
-              <div key={property.id}>
-                <Typography>{property.name}</Typography>
-                {product.fieldValues.map((property) => (
-                  <Typography key={property.id}>{property.name}</Typography>
-                ))}
-              </div>
-            ))}
+            {product.fieldValues &&
+              !Array.isArray(product.fieldValues) &&
+              Object.keys(product.fieldValues).length > 0 && (
+                <div className={styles.infoSection}>
+                  <div className={styles.sectionHeader}>
+                    <h2
+                      className={styles.sectionTitle}
+                      style={{ color: "#27ae60" }}
+                    >
+                      Характеристики
+                    </h2>
+                  </div>
+                  <div className={styles.sectionContent}>
+                    {Object.entries(product.fieldValues).map(
+                      ([fieldId, value]) => (
+                        <p key={fieldId}>{value}</p>
+                      ),
+                    )}
+                  </div>
+                </div>
+              )}
           </div>
 
           {product.address && (

@@ -6,7 +6,64 @@ import { getCurrentUserProducts } from "@/lib/api";
 export const MyProductsFeed = async () => {
   const products = await getCurrentUserProducts();
 
-  console.log(products);
+  console.log("=== MY PRODUCTS DEBUG START ===");
+  console.log("My products:", products);
+  console.log("My products type:", typeof products);
+  console.log("My products is array:", Array.isArray(products));
+  console.log("My products length:", products?.length);
+
+  if (products && products.length > 0) {
+    console.log("First product:", products[0]);
+    console.log("First product keys:", Object.keys(products[0]));
+    console.log("First product values:", Object.values(products[0]));
+    console.log(
+      "First product full object:",
+      JSON.stringify(products[0], null, 2),
+    );
+
+    // Проверяем каждое поле
+    const firstProduct = products[0];
+    console.log("id:", firstProduct.id, "type:", typeof firstProduct.id);
+    console.log("name:", firstProduct.name, "type:", typeof firstProduct.name);
+    console.log(
+      "price:",
+      firstProduct.price,
+      "type:",
+      typeof firstProduct.price,
+    );
+    console.log(
+      "address:",
+      firstProduct.address,
+      "type:",
+      typeof firstProduct.address,
+    );
+    console.log(
+      "images:",
+      firstProduct.images,
+      "type:",
+      typeof firstProduct.images,
+    );
+    console.log(
+      "createdAt:",
+      firstProduct.createdAt,
+      "type:",
+      typeof firstProduct.createdAt,
+    );
+    console.log(
+      "userId:",
+      firstProduct.userId,
+      "type:",
+      typeof firstProduct.userId,
+    );
+    console.log(
+      "isFavorited:",
+      firstProduct.isFavorited,
+      "type:",
+      typeof firstProduct.isFavorited,
+    );
+  }
+  console.log("=== MY PRODUCTS DEBUG END ===");
+
   if (!products) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-sm">
