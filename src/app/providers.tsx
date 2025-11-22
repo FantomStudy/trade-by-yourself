@@ -1,5 +1,6 @@
-import { AuthProvider } from "@/lib/context";
-import { CurrentUser } from "@/types";
+import type { CurrentUser } from "@/types";
+
+import { AuthProvider } from "@/lib/contexts";
 
 interface ProvidersProps {
   children: React.ReactNode;

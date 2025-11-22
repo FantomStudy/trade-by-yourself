@@ -6,7 +6,11 @@ export interface User {
   profileType: string;
 }
 
-export interface CurrentUser extends Omit<User, "email"> {
+export interface CurrentUser {
+  id: number;
+  fullName: string;
+  phoneNumber: string;
+  profileType: string;
   rating: number;
   reviewsCount: number;
 }

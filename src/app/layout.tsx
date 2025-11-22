@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+
 import { Montserrat } from "next/font/google";
-import "./globals.css";
+
+import { MainLayout } from "./_components/MainLayout";
 import { Providers } from "./providers";
+
+import "./globals.css";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -18,7 +22,9 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <MainLayout>{children}</MainLayout>
+        </Providers>
       </body>
     </html>
   );

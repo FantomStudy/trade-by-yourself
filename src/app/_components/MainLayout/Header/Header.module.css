@@ -1,0 +1,27 @@
+.header {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.wrapper {
+  display: flex;
+  height: 72px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: 64px;
+  }
+  .actions {
+    display: none;
+  }
+}

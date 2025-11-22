@@ -1,0 +1,106 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  font-size: var(--text-sm);
+  font-weight: 500;
+
+  background-color: transparent;
+  border: transparent;
+  border-radius: var(--radius-sm);
+
+  cursor: pointer;
+  white-space: nowrap;
+  outline: none;
+
+  transition: all 0.15s;
+}
+
+.button:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.button:focus-visible {
+  border-color: var(--ring);
+}
+
+.button svg {
+  pointer-events: none;
+  flex-shrink: 0;
+  width: 16px important;
+  height: 16px important;
+}
+
+/* Sizes */
+.default {
+  height: 48px;
+  padding: 16px 20px;
+}
+
+.default:has(> svg) {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.icon {
+  width: 42px;
+  height: 42px;
+}
+
+/* Variants */
+.primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--primary) 90%, transparent);
+  }
+}
+
+.primary-green {
+  background-color: var(--green);
+  color: var(--primary-foreground);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--green) 90%, transparent);
+  }
+}
+
+.destructive {
+  background-color: var(--destructive);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--destructive) 90%, transparent);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--destructive) 20%, transparent);
+  }
+}
+
+/* .secondary {
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--secondary) 80%, transparent);
+  }
+} */
+
+.ghost:hover:not(:disabled) {
+  background-color: color-mix(in srgb, transparent 95%, black);
+  color: var(--accent-foreground);
+}
+
+.link {
+  padding: 0;
+  height: auto;
+  color: var(--primary);
+  text-decoration: none;
+}

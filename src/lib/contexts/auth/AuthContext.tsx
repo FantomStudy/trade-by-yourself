@@ -1,4 +1,7 @@
-import { CurrentUser } from "@/types";
+"use client";
+
+import type { CurrentUser } from "@/types";
+
 import { createContext } from "react";
 
 interface AuthContextType {
