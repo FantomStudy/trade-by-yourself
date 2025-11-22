@@ -1,16 +1,19 @@
-import { Suspense } from "react";
+"use client";
+import { useState } from "react";
 
-import { Feed, HeroBanner } from "./_components";
+import { FeedWrapper } from "@/components/feed-wrapper";
+
+import { HeroBanner, Search } from "./_components";
 
 const HomePage = () => {
+  const [products, setProducts] = useState([]);
+
   return (
     <>
       <HeroBanner />
-
       <div className="global-container">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Feed />
-        </Suspense>
+        <Search setProducts={setProducts} />
+        <FeedWrapper products={products} />
       </div>
     </>
   );

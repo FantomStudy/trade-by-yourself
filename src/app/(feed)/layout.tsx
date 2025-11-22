@@ -9,7 +9,7 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
         marginTop: "calc(-1 * var(--space-md))",
       }}
     >
-      <Search />
+      {/* <Search /> */}
       {children}
     </div>
   );
