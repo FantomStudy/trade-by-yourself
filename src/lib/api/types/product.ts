@@ -13,6 +13,7 @@ export const createProductSchema = z.object({
   subcategoryId: z.number(),
   typeId: z.number(),
   fieldValues: z.record(z.string(), z.string()).optional(),
+  videoUrl: z.string().optional(),
 });
 
 export type CreateProductData = z.infer<typeof createProductSchema>;

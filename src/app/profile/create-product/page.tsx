@@ -30,6 +30,7 @@ const CreateProductPage = () => {
     categoryId: "",
     subcategoryId: "",
     typeId: "",
+    videoUrl: "",
   });
 
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
@@ -109,6 +110,7 @@ const CreateProductPage = () => {
           address: formData.address,
           images,
           fieldValues,
+          videoUrl: formData.videoUrl,
           ...(coordinates && {
             latitude: coordinates.lat,
             longitude: coordinates.lng,
@@ -126,6 +128,7 @@ const CreateProductPage = () => {
               categoryId: "",
               subcategoryId: "",
               typeId: "",
+              videoUrl: "",
             });
             setFieldValues({});
             setImages([]);
@@ -323,7 +326,19 @@ const CreateProductPage = () => {
 
         <h1 className={styles.green}>Подробности</h1>
       </div>
+
       <ImageUpload maxImages={8} onImagesChange={handleImagesChange} />
+
+      {/* Поле для ссылки на видео */}
+      <div style={{ marginTop: 16, marginBottom: 16 }}>
+        <Input
+          className="bg-white"
+          name="videoUrl"
+          value={formData.videoUrl}
+          onChange={handleInputChange}
+          placeholder="Ссылка на видео"
+        />
+      </div>
 
       <div className={styles.wrapper}>
         <h1 className={styles.orange}>Местоположение</h1>

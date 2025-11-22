@@ -13,6 +13,7 @@ export interface ExtendedProduct extends Product {
   description?: string;
   fieldValues?: string[];
   type: string | null;
+  videoUrl?: string | null;
   category: {
     id: number;
     name: string;

@@ -24,6 +24,7 @@ export const createProduct = async (data: CreateProductData) => {
     formData.append("latitude", data.latitude.toString());
   if (data.longitude !== undefined)
     formData.append("longitude", data.longitude.toString());
+  if (data.videoUrl) formData.append("videoUrl", data.videoUrl);
 
   // Добавляем дополнительные поля как JSON
   if (data.fieldValues && Object.keys(data.fieldValues).length > 0) {

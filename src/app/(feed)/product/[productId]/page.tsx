@@ -70,7 +70,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
             </div>
           </div>
 
-          <Gallery images={product.images} />
+          <Gallery images={product.images} videoUrl={product.videoUrl} />
 
           {product.description && (
             <div className={styles.section}>
