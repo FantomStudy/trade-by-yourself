@@ -12,7 +12,6 @@ export const Search = ({
 }: {
   setProducts: (products: any[]) => void;
 }) => {
-
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const debounceTimeout = 400;
@@ -30,7 +29,9 @@ export const Search = ({
   useEffect(() => {
     const handler = setTimeout(async () => {
       setLoading(true);
-      const filtered = await api("/product/all-products", { query: { search } });
+      const filtered = await api("/product/all-products", {
+        query: { search },
+      });
       setProducts(filtered);
       setLoading(false);
     }, debounceTimeout);
