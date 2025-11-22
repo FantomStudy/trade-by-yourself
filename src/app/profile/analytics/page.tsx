@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { TrendCard } from "@/components/_deprecated/TrendCard/TrendCard";
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
+import { useCategories } from "@/lib/api/hooks";
 
 import styles from "./page.module.css";
 

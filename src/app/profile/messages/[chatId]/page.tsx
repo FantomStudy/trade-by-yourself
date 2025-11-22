@@ -64,7 +64,6 @@ const ChatPage = ({ params }: ChatPageProps) => {
           createdAt: data.createdAt,
           id: data.id,
           isRead: false, // false означает "не прочитано получателем"
-          sender: data.sender,
           senderId: data.senderId,
         };
         setNewMessages((prev) => [...prev, newMessage]);

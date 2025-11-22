@@ -2,11 +2,12 @@
 import { useState } from "react";
 
 import { FeedWrapper } from "@/components/feed-wrapper";
+import { Product } from "@/types/product";
 
 import { HeroBanner, Search } from "./_components";
 
 const HomePage = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   return (
     <>

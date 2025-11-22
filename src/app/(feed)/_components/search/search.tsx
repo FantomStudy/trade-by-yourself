@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 
 import { Button, Input } from "@/components/ui";
 import { api } from "@/lib/api/instance";
+import { Product } from "@/types/product";
 
 import styles from "./search.module.css";
 
 export const Search = ({
   setProducts,
 }: {
-  setProducts: (products: any[]) => void;
+  setProducts: (products: Product[]) => void;
 }) => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
