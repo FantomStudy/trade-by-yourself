@@ -11,7 +11,7 @@ export interface Product {
 
 export interface ExtendedProduct extends Product {
   description?: string;
-  fieldValues?: Record<string, string>;
+  fieldValues?: Array<{ id: number; [key: string]: string | number }>;
   type: string | null;
   videoUrl?: string | null;
   category: {
