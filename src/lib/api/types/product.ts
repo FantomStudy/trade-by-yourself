@@ -17,3 +17,16 @@ export const createProductSchema = z.object({
 });
 
 export type CreateProductData = z.infer<typeof createProductSchema>;
+
+export const updateProductSchema = z.object({
+  name: z.string().optional(),
+  price: z.number().optional(),
+  state: z.enum(["NEW", "USED"]).optional(),
+  description: z.string().optional(),
+  address: z.string().optional(),
+  videoUrl: z.string().optional(),
+  fieldValues: z.record(z.string(), z.string()).optional(),
+  images: z.array(z.instanceof(File)).optional(),
+});
+
+export type UpdateProductData = z.infer<typeof updateProductSchema>;

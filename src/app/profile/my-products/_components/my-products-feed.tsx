@@ -1,6 +1,6 @@
 import { Package } from "lucide-react";
 
-import { FeedWrapper } from "@/components/feed-wrapper";
+import { MyProductCard } from "@/components/product-card";
 import { getCurrentUserProducts } from "@/lib/api";
 
 export const MyProductsFeed = async () => {
@@ -100,5 +100,11 @@ export const MyProductsFeed = async () => {
     );
   }
 
-  return <FeedWrapper products={products} />;
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {products.map((product) => (
+        <MyProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
 };
