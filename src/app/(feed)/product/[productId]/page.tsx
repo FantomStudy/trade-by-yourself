@@ -46,7 +46,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/">{product.type}</Link>
+                  <Link href="/">{product.type.name}</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </>
@@ -85,16 +85,17 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
               Array.isArray(product.fieldValues) &&
               product.fieldValues.length > 0 && (
                 <div className={styles.infoSection}>
-                  <div className={styles.sectionHeader}>
-
-                  </div>
+                  <div className={styles.sectionHeader}></div>
                   <div className={styles.sectionContent}>
                     {product.fieldValues.map((fieldValue) => {
                       const entries = Object.entries(fieldValue).filter(
                         ([key]) => key !== "id",
                       );
                       return entries.map(([fieldName, value]) => (
-                        <div key={`${fieldValue.id}-${fieldName}`} className={styles.fieldItem}>
+                        <div
+                          key={`${fieldValue.id}-${fieldName}`}
+                          className={styles.fieldItem}
+                        >
                           <strong>{fieldName}:</strong> {value}
                         </div>
                       ));
