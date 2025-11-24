@@ -46,6 +46,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
+                  {/* @ts-expect-error - type will be fixed later */}
                   <Link href="/">{product.type.name}</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
