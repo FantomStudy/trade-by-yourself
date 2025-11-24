@@ -330,24 +330,18 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
 
       {error && <div className={styles.error}>{error}</div>}
 
-      <div className="flex gap-4">
-        <Button
-          className={styles.button}
-          disabled={updateProductMutation.isPending}
-          type="submit"
-        >
-          {updateProductMutation.isPending
-            ? "Сохранение..."
-            : "Сохранить изменения"}
-        </Button>
-        <Button
-          disabled={deleteProductMutation.isPending}
-          type="button"
-          variant="destructive"
-          onClick={handleDelete}
-        >
-          {deleteProductMutation.isPending ? "Удаление..." : "Удалить товар"}
-        </Button>
+      <div className={styles.wrapper}>
+        <div className="flex gap-4">
+          <Button
+            className={styles.button}
+            disabled={updateProductMutation.isPending}
+            type="submit"
+          >
+            {updateProductMutation.isPending
+              ? "Сохранение..."
+              : "Сохранить изменения"}
+          </Button>
+        </div>
       </div>
     </form>
   );
