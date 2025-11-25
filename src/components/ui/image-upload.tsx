@@ -16,11 +16,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const [mainImageIndex, setMainImageIndex] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const reorderImagesWithMain = (imagesList: File[], mainIndex: number) => {
+    if (mainIndex === 0 || imagesList.length === 0) return imagesList;
+    const reordered = [...imagesList];
+    const [mainImage] = reordered.splice(mainIndex, 1);
+    return [mainImage, ...reordered];
+  };
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     const newImages = [...images, ...files].slice(0, maxImages);
-    setImages(newImages);
-    onImagesChange?.(newImages);
+    const reordered = reorderImagesWithMain(newImages, mainImageIndex);
+    setImages(reordered);
+    onImagesChange?.(reordered);
   };
 
   const removeImage = (index: number) => {
@@ -40,6 +48,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const setAsMainImage = (index: number) => {
     setMainImageIndex(index);
+    // Reorder images so main image is first
+    const reordered = reorderImagesWithMain(images, index);
+    setImages(reordered);
+    onImagesChange?.(reordered);
+    setMainImageIndex(0); // After reordering, main is always at index 0
   };
 
   const triggerFileInput = () => {
