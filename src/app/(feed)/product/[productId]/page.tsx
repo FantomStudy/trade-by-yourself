@@ -56,11 +56,14 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
       </Breadcrumb>
 
       <div className={styles.container}>
+        <aside className={styles.aside}>
+          <SellerCard product={product} />
+        </aside>
         <div className={styles.productInfo}>
           <div>
             <Typography variant="h1">{product.name}</Typography>
             <div className={styles.productMeta}>
-              <Typography className="text-primary" variant="h2">
+              <Typography className={styles.price} variant="h2">
                 {formatPrice(product.price)}
               </Typography>
 
@@ -73,20 +76,21 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
 
           <Gallery images={product.images} videoUrl={product.videoUrl} />
 
-          {product.description && (
-            <div className={styles.section}>
-              <Typography variant="h2">Описание</Typography>
-              <Typography>{product.description}</Typography>
-            </div>
-          )}
-
           <div className={styles.section}>
-            <Typography variant="h2">Характеристики</Typography>
+            {product.description && (
+              <div className={styles.sectionBlock}>
+                <Typography variant="h2">Описание</Typography>
+                <div className={styles.description}>
+                  <Typography>{product.description}</Typography>
+                </div>
+              </div>
+            )}
+
             {product.fieldValues &&
               Array.isArray(product.fieldValues) &&
               product.fieldValues.length > 0 && (
-                <div className={styles.infoSection}>
-                  <div className={styles.sectionHeader}></div>
+                <div className={styles.sectionBlock}>
+                  <Typography variant="h2">Характеристики</Typography>
                   <div className={styles.sectionContent}>
                     {product.fieldValues.map((fieldValue) => {
                       const entries = Object.entries(fieldValue).filter(
@@ -97,25 +101,22 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
                           key={`${fieldValue.id}-${fieldName}`}
                           className={styles.fieldItem}
                         >
-                          <strong>{fieldName}:</strong> {value}
+                          {fieldName}: {value}
                         </div>
                       ));
                     })}
                   </div>
                 </div>
               )}
-          </div>
 
-          {product.address && (
-            <div className={styles.section}>
-              <Typography variant="h2">Местоположение</Typography>
-              <Typography>{product.address}</Typography>
-            </div>
-          )}
+            {product.address && (
+              <div className={styles.sectionBlock}>
+                <Typography variant="h2">Местоположение</Typography>
+                <Typography>{product.address}</Typography>
+              </div>
+            )}
+          </div>
         </div>
-        <aside className={styles.aside}>
-          <SellerCard product={product} />
-        </aside>
       </div>
     </div>
   );
