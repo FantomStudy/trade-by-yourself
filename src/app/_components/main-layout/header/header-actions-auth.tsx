@@ -10,7 +10,7 @@ import styles from "./header.module.css";
 export const HeaderActionsAuth = ({ user }: { user: CurrentUser }) => {
   return (
     <div className={styles.actions}>
-      <Link href="/">
+      <Link href="/profile/messages">
         <MessageSquareIcon className="text-secondary" />
       </Link>
 
