@@ -238,19 +238,6 @@ export const AddressMap = ({
     }, 300);
   };
 
-  // Обработка выбора адреса из списка предложений
-  const handleSuggestionSelect = (suggestion: AddressSuggestion) => {
-    const lat = Number.parseFloat(suggestion.lat);
-    const lng = Number.parseFloat(suggestion.lon);
-
-    setAddress(suggestion.display_name);
-    onChange?.(suggestion.display_name);
-    setMarkerPosition([lat, lng]);
-    onCoordinatesChange?.(lat, lng);
-    setShowSuggestions(false);
-    setSuggestions([]);
-  };
-
   // Обработка клика по карте
   const handleMapClick = (lat: number, lng: number) => {
     setMarkerPosition([lat, lng]);
