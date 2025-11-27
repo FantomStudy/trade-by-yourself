@@ -1,3 +1,4 @@
+export * from "./address";
 export * from "./analytic";
 export * from "./auth";
 export * from "./category";

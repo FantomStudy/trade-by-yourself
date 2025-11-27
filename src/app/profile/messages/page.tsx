@@ -61,27 +61,38 @@ const MessagesPage = () => {
               key={chat.id}
               className="block rounded-lg border bg-white p-4 transition-shadow hover:shadow-md"
             >
-              <div className="mb-2 flex items-start justify-between">
-                <div>
+              <div className="mb-2 flex items-start gap-3">
+                {/* Изображение товара */}
+                {chat.product.image && (
+                  <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={chat.product.image}
+                      alt={chat.product.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex-1">
                   <h3 className="font-semibold">{chat.product.name}</h3>
                   <p className="text-sm text-blue-600">
                     {formatPrice(chat.product.price)}
                   </p>
+                  {chat.lastMessage && (
+                    <span className="text-xs text-gray-500">
+                      {new Date(chat.lastMessage.createdAt).toLocaleString(
+                        "ru-RU",
+                        {
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          month: "2-digit",
+                          year: "2-digit",
+                        },
+                      )}
+                    </span>
+                  )}
                 </div>
-                {chat.lastMessage && (
-                  <span className="text-xs text-gray-500">
-                    {new Date(chat.lastMessage.createdAt).toLocaleString(
-                      "ru-RU",
-                      {
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
-                      },
-                    )}
-                  </span>
-                )}
               </div>
               <div className="flex items-center gap-2">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-xs font-medium text-white">

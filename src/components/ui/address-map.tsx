@@ -6,6 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 
 import { Input } from "@/components/ui";
+import {
+  getAddressSuggestions,
+  validateAddress,
+} from "@/lib/api/requests/address";
 
 import "leaflet/dist/leaflet.css";
 
@@ -21,6 +25,10 @@ L.Icon.Default.mergeOptions({
 });
 
 interface AddressSuggestion {
+  value: string;
+}
+
+interface OSMSuggestion {
   display_name: string;
   lat: string;
   lon: string;
@@ -66,6 +74,7 @@ export const AddressMap = ({
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [_locationPermission, setLocationPermission] =
     useState<PermissionState | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -178,42 +187,19 @@ export const AddressMap = ({
       setIsLoadingSuggestions(true);
       console.log("Loading suggestions set to true");
 
-      // Упрощенный подход - один запрос с несколькими вариантами
-      const baseQuery = `${query}, Оренбург`;
+      const data = await getAddressSuggestions(query);
+      console.log("API response:", data);
 
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        baseQuery,
-      )}&limit=15&accept-language=ru&addressdetails=1&countrycodes=ru`;
-
-      console.log("Fetching URL:", url);
-      const response = await fetch(url);
-      console.log("Response status:", response.status, response.statusText);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("Raw API response:", data);
-
-      if (!Array.isArray(data)) {
-        console.log("Data is not an array:", typeof data);
+      if (!Array.isArray(data) || data.length === 0) {
+        console.log("No suggestions received");
         setSuggestions([]);
         setShowSuggestions(false);
         return;
       }
 
-      // Простая фильтрация
-      const filteredResults = data
-        .filter(
-          (item) =>
-            item && item.display_name && item.lat && item.lon && item.place_id,
-        )
-        .slice(0, 8);
-
-      console.log("Filtered results:", filteredResults);
-      setSuggestions(filteredResults);
-      setShowSuggestions(filteredResults.length > 0);
+      console.log("Received suggestions:", data);
+      setSuggestions(data);
+      setShowSuggestions(true);
     } catch (error) {
       console.error("Ошибка при поиске адресов:", error);
       setSuggestions([]);
@@ -229,6 +215,7 @@ export const AddressMap = ({
     console.log("Address changed to:", newAddress);
     setAddress(newAddress);
     onChange?.(newAddress);
+    setValidationError(null); // Сбрасываем ошибку валидации при изменении
 
     // Если поле очистили, скрываем подсказки
     if (!newAddress.trim()) {
@@ -304,14 +291,40 @@ export const AddressMap = ({
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Input
-              readOnly
-              className="cursor-not-allowed bg-gray-50 pr-10"
+              className="pr-10"
               value={address}
-              placeholder={
-                isLoadingLocation
-                  ? "Определяем ваше местоположение..."
-                  : "Выберите адрес на карте"
-              }
+              placeholder="Введите адрес для поиска"
+              onChange={(e) => handleAddressChange(e.target.value)}
+              onFocus={() => {
+                if (suggestions.length > 0) {
+                  setShowSuggestions(true);
+                }
+              }}
+              onBlur={async () => {
+                // Валидация при потере фокуса
+                if (address.trim()) {
+                  try {
+                    setValidationError(null);
+                    console.log("Validating address on blur:", address);
+                    const validationResult = await validateAddress({
+                      address: address,
+                      addressDetails: {},
+                    });
+                    console.log("Validation result:", validationResult);
+
+                    if (!validationResult.valid) {
+                      setValidationError(
+                        validationResult.message || "Адрес не прошел валидацию",
+                      );
+                    }
+                  } catch (error) {
+                    console.error("Error validating address:", error);
+                    setValidationError(
+                      "Указанный адрес не найден. Пожалуйста, выберите адрес из предложенных вариантов.",
+                    );
+                  }
+                }
+              }}
             />
             <div className="absolute top-1/2 right-3 -translate-y-1/2">
               {isLoadingSuggestions || isLoadingAddress || isLoadingLocation ? (
@@ -322,7 +335,77 @@ export const AddressMap = ({
             </div>
           </div>
         </div>
+
+        {/* Список подсказок */}
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg">
+            {suggestions.map((suggestion, index) => (
+              <div
+                key={`${suggestion.value}-${index}`}
+                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                onClick={async () => {
+                  setAddress(suggestion.value);
+                  onChange?.(suggestion.value);
+                  setShowSuggestions(false);
+
+                  // Валидация адреса
+                  try {
+                    setValidationError(null);
+                    console.log("Validating address:", suggestion.value);
+                    const validationResult = await validateAddress({
+                      address: suggestion.value,
+                      addressDetails: {},
+                    });
+                    console.log("Address validation result:", validationResult);
+
+                    if (!validationResult.valid) {
+                      setValidationError(
+                        validationResult.message || "Адрес не прошел валидацию",
+                      );
+                      console.warn(
+                        "Address is not valid:",
+                        validationResult.message,
+                      );
+                    }
+                  } catch (error) {
+                    console.error("Error validating address:", error);
+                    setValidationError(
+                      "Указанный адрес не найден. Пожалуйста, выберите адрес из предложенных вариантов.",
+                    );
+                  }
+
+                  // Получаем координаты для выбранного адреса через OSM
+                  try {
+                    const osmResponse = await fetch(
+                      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                        suggestion.value,
+                      )}&limit=1&accept-language=ru`,
+                    );
+                    const osmData = await osmResponse.json();
+                    if (osmData && osmData[0]) {
+                      const lat = parseFloat(osmData[0].lat);
+                      const lng = parseFloat(osmData[0].lon);
+                      setMarkerPosition([lat, lng]);
+                      onCoordinatesChange?.(lat, lng);
+                    }
+                  } catch (error) {
+                    console.error("Error geocoding address:", error);
+                  }
+                }}
+              >
+                {suggestion.value}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Ошибка валидации */}
+      {validationError && (
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">
+          {validationError}
+        </div>
+      )}
 
       {/* Карта */}
       <div className="h-80 w-full overflow-hidden rounded-lg border border-gray-200">
