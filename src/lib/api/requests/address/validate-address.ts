@@ -6,8 +6,8 @@ export interface ValidateAddressRequest {
 }
 
 export interface ValidateAddressResponse {
-  valid: boolean;
   message?: string;
+  valid: boolean;
 }
 
 export const validateAddress = async (

@@ -28,7 +28,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           productId={product.id}
         />
 
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/product/${product.id}`} data-slot="product-link">
           <Typography className={styles.name}>{product.name}</Typography>
         </Link>
 
@@ -37,7 +37,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <Typography>{product.createdAt}</Typography>
         </div>
 
-        <Typography className={styles.price}>
+        <Typography className={styles.price} data-slot="product-price">
           {formatPrice(product.price)}
         </Typography>
       </div>

@@ -280,13 +280,6 @@ export const AddressMap = ({
             <Input
               className="pr-10"
               value={address}
-              placeholder="Введите адрес для поиска"
-              onChange={(e) => handleAddressChange(e.target.value)}
-              onFocus={() => {
-                if (suggestions.length > 0) {
-                  setShowSuggestions(true);
-                }
-              }}
               onBlur={async () => {
                 // Валидация при потере фокуса
                 if (address.trim()) {
@@ -294,7 +287,7 @@ export const AddressMap = ({
                     setValidationError(null);
                     console.log("Validating address on blur:", address);
                     const validationResult = await validateAddress({
-                      address: address,
+                      address,
                       addressDetails: {},
                     });
                     console.log("Validation result:", validationResult);
@@ -312,6 +305,13 @@ export const AddressMap = ({
                   }
                 }
               }}
+              onChange={(e) => handleAddressChange(e.target.value)}
+              onFocus={() => {
+                if (suggestions.length > 0) {
+                  setShowSuggestions(true);
+                }
+              }}
+              placeholder="Введите адрес для поиска"
             />
             <div className="absolute top-1/2 right-3 -translate-y-1/2">
               {isLoadingSuggestions || isLoadingAddress || isLoadingLocation ? (
@@ -370,8 +370,8 @@ export const AddressMap = ({
                     );
                     const osmData = await osmResponse.json();
                     if (osmData && osmData[0]) {
-                      const lat = parseFloat(osmData[0].lat);
-                      const lng = parseFloat(osmData[0].lon);
+                      const lat = Number.parseFloat(osmData[0].lat);
+                      const lng = Number.parseFloat(osmData[0].lon);
                       setMarkerPosition([lat, lng]);
                       onCoordinatesChange?.(lat, lng);
                     }
