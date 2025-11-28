@@ -15,6 +15,7 @@ export type LoginData = z.infer<typeof loginSchema>;
 export interface LoginResponse {
   message: string;
   user: User;
+  session_id: string;
 }
 
 // Register Schema

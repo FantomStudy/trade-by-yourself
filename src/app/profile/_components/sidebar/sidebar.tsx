@@ -63,11 +63,6 @@ export const Sidebar = () => {
             <Typography variant="h2">
               {formatFullName(user.fullName)}
             </Typography>
-            {(profileSettings?.phoneNumber ?? (user as any)?.phoneNumber) && (
-              <div className="text-muted-foreground text-sm">
-                {profileSettings?.phoneNumber ?? (user as any)?.phoneNumber}
-              </div>
-            )}
           </div>
 
           <div

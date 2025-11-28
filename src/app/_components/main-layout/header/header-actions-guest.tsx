@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AuthDialog } from "@/components/auth-dialog";
 import { Button } from "@/components/ui";
@@ -13,6 +13,16 @@ export const HeaderActionsGuest = () => {
   const openAuthDialog = () => {
     setIsAuthOpen(true);
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("auth") === "1") {
+      setIsAuthOpen(true);
+      params.delete("auth");
+      const url = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+      window.history.replaceState({}, "", url);
+    }
+  }, []);
 
   return (
     <div className={styles.actions}>

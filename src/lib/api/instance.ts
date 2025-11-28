@@ -21,29 +21,15 @@ export const api = ofetch.create({
       options.headers.append("cookie", cookieStore.toString());
     }
   },
-  // onResponseError: async ({ response, options, request }) => {
-  //   if (request.toString().includes("/auth/refresh")) {
-  //     return;
-  //   }
-  //   if (response.status !== 401) {
-  //   }
-  //   console.log("refresh attempt");
-  // const queryClient = getQueryClient();
-  // try {
-  //   if (!refreshPromise) {
-  //     const refreshResponse = await refresh()
-  //       .then((res) => {
-  //         queryClient.setQueryData(CURRENT_USER_QUERY_KEY, res.user);
-  //         return res;
-  //       })
-  //       .finally(() => {
-  //         refreshPromise = null;
-  //       });
-  //   }
-  //   await api(request, options);
-  // } catch (error) {
-  //   queryClient.setQueryData(CURRENT_USER_QUERY_KEY, null);
-  //   throw error;
-  // }
-  // },
+  onResponseError: async ({ response }) => {
+    if (response.status === 401 && !isServer()) {
+      try {
+        document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      } catch {}
+      const { getQueryClient } = await import("@/lib/get-query-client");
+      const { CURRENT_USER_QUERY_KEY } = await import("@/lib/api/hooks/queries/useCurrentUser");
+      const queryClient = getQueryClient();
+      queryClient.setQueryData(CURRENT_USER_QUERY_KEY, null);
+    }
+  },
 });

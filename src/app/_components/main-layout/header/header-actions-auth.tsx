@@ -4,10 +4,12 @@ import { HeartIcon, MessageSquareIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Avatar, Button } from "@/components/ui";
+import { useAuth } from "@/lib/contexts";
 
 import styles from "./header.module.css";
 
 export const HeaderActionsAuth = ({ user }: { user: CurrentUser }) => {
+  const { logout } = useAuth();
   return (
     <div className={styles.actions}>
       <Link href="/profile/messages">
@@ -25,6 +27,8 @@ export const HeaderActionsAuth = ({ user }: { user: CurrentUser }) => {
       <Button asChild variant="secondary">
         <Link href="/profile/create-product">Разместить объявление</Link>
       </Button>
+
+      <Button variant="ghost" onClick={logout}>Выйти</Button>
     </div>
   );
 };
