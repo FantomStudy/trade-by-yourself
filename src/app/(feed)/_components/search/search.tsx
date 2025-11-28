@@ -1,10 +1,11 @@
 "use client";
+import type { Product } from "@/types/product";
+
 import { MapPin, TextSearch } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button, Input } from "@/components/ui";
 import { api } from "@/lib/api/instance";
-import { Product } from "@/types/product";
 
 import styles from "./search.module.css";
 

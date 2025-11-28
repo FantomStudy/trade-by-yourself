@@ -67,9 +67,9 @@ const MessagesPage = () => {
                   <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={chat.product.image}
                       alt={chat.product.name}
                       className="h-full w-full object-cover"
+                      src={chat.product.image}
                     />
                   </div>
                 )}

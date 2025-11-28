@@ -32,6 +32,7 @@ export const ProductPreview = ({ images }: ProductPreviewProps) => {
   return (
     <div
       className={styles.preview}
+      data-slot="product-preview"
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
     >

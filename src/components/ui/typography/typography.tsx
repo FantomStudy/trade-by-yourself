@@ -14,8 +14,13 @@ export const Typography = ({
   variant = "p",
   children,
   className,
+  ...props
 }: TypographyProps) => {
   const Comp = variant;
 
-  return <Comp className={clsx(styles[variant], className)}>{children}</Comp>;
+  return (
+    <Comp className={clsx(styles[variant], className)} {...props}>
+      {children}
+    </Comp>
+  );
 };

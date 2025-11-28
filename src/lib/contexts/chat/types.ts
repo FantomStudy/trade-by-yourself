@@ -6,15 +6,15 @@ export interface Message {
   content: string;
   createdAt: string;
   senderId: number;
-  sender: {
-    id: number;
-    fullName: string;
-  };
   product?: {
     id: number;
     name: string;
     image?: string;
     price: number;
+  };
+  sender: {
+    id: number;
+    fullName: string;
   };
 }
 

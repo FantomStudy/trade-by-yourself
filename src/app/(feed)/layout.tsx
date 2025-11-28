@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-import { Search } from "./_components";
 
 const HomeLayout = ({ children }: { children: ReactNode }) => {
   return (
