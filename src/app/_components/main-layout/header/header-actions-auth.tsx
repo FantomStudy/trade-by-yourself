@@ -28,7 +28,9 @@ export const HeaderActionsAuth = ({ user }: { user: CurrentUser }) => {
         <Link href="/profile/create-product">Разместить объявление</Link>
       </Button>
 
-      <Button variant="ghost" onClick={logout}>Выйти</Button>
+      <Button variant="ghost" onClick={logout}>
+        Выйти
+      </Button>
     </div>
   );
 };

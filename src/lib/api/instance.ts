@@ -24,10 +24,13 @@ export const api = ofetch.create({
   onResponseError: async ({ response }) => {
     if (response.status === 401 && !isServer()) {
       try {
-        document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        document.cookie =
+          "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
       } catch {}
       const { getQueryClient } = await import("@/lib/get-query-client");
-      const { CURRENT_USER_QUERY_KEY } = await import("@/lib/api/hooks/queries/useCurrentUser");
+      const { CURRENT_USER_QUERY_KEY } = await import(
+        "@/lib/api/hooks/queries/useCurrentUser"
+      );
       const queryClient = getQueryClient();
       queryClient.setQueryData(CURRENT_USER_QUERY_KEY, null);
     }
