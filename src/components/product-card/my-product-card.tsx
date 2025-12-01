@@ -73,13 +73,15 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
   };
 
   return (
-    <article className={styles.card}>
+    <article
+      className={`${styles.card} ${product.isHide ? styles.hiddenProduct : ""}`}
+    >
       <div className="relative">
         <Link href={`/product/${product.id}`}>
-          <div className={product.isHide ? "relative" : ""}>
+          <div className="relative">
             <ProductPreview images={product.images} />
             {product.isHide && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/60">
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/60 backdrop-blur-[2px]">
                 <span className="text-center text-lg font-semibold text-red-500">
                   Объявление снято с продажи
                 </span>
@@ -125,15 +127,25 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
 
       <div className={styles.info}>
         <Link href={`/product/${product.id}`}>
-          <Typography className={styles.name}>{product.name}</Typography>
+          <Typography
+            className={`${styles.name} ${product.isHide ? styles.hiddenText : ""}`}
+          >
+            {product.name}
+          </Typography>
         </Link>
 
         <div className={styles.meta}>
-          <Typography>{product.address}</Typography>
-          <Typography>{product.createdAt}</Typography>
+          <Typography className={product.isHide ? styles.hiddenText : ""}>
+            {product.address}
+          </Typography>
+          <Typography className={product.isHide ? styles.hiddenText : ""}>
+            {product.createdAt}
+          </Typography>
         </div>
 
-        <Typography className={styles.price}>
+        <Typography
+          className={`${styles.price} ${product.isHide ? styles.hiddenText : ""}`}
+        >
           {formatPrice(product.price)}
         </Typography>
       </div>
