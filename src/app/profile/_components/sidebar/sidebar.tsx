@@ -70,12 +70,19 @@ export const Sidebar = () => {
           <div className={styles.stats}>
             <div className={styles.ratingSection}>
               <Typography className={styles.rating}>
-                {(profileSettings?.rating ?? (user as any)?.rating ?? 0).toFixed(1)}
+                {(
+                  profileSettings?.rating ??
+                  (user as any)?.rating ??
+                  0
+                ).toFixed(1)}
                 <StarIcon fill="currentColor" />
               </Typography>
 
               <Typography className={styles.reviews}>
-                {profileSettings?.reviewsCount ?? (user as any)?.reviewsCount ?? 0} отзывов
+                {profileSettings?.reviewsCount ??
+                  (user as any)?.reviewsCount ??
+                  0}{" "}
+                отзывов
               </Typography>
             </div>
 
