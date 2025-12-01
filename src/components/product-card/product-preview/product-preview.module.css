@@ -9,6 +9,10 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px);
+  transform: scale(1.1);
 }
 .previewImage {
   object-fit: contain;
