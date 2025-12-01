@@ -7,7 +7,9 @@ export interface Product {
   isFavorited: boolean;
   isHide?: boolean;
   price: number;
+  subCategoryName?: string;
   userId: number;
+  videoUrl?: string | null;
 }
 
 export interface ExtendedProduct extends Product {
