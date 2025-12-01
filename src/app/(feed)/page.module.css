@@ -34,6 +34,9 @@
   border-start-start-radius: 8px;
   background-color: var(--category-accent);
   color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .grid > :nth-child(2) {

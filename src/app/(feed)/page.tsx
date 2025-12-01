@@ -3,6 +3,7 @@ import type { Product } from "@/types/product";
 
 import { useState } from "react";
 
+import { useRandomProducts } from "@/api/hooks";
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { ProductCard } from "@/components/product-card";
 
@@ -12,6 +13,7 @@ import styles from "./page.module.css";
 
 const HomePage = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const { data: randomProducts = [] } = useRandomProducts();
 
   return (
     <>
@@ -19,9 +21,11 @@ const HomePage = () => {
       <div className="global-container">
         <Search setProducts={setProducts} />
         <div className={styles.grid}>
-          {products.slice(0, 5).map((product) => (
+          {randomProducts.map((product) => (
             <div key={product.id} className={styles.categoryCard}>
-              <header className={styles.productHeader}>Категория</header>
+              <header className={styles.productHeader}>
+                {product.subCategoryName}
+              </header>
               <ProductCard product={product} />
             </div>
           ))}

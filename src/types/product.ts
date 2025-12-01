@@ -5,6 +5,7 @@ export interface Product {
   createdAt: string;
   images: string[];
   isFavorited: boolean;
+  isHide?: boolean;
   price: number;
   userId: number;
 }

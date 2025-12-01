@@ -5,4 +5,5 @@ export * from "./useLoginMutation";
 export * from "./useRecoverMutation";
 export * from "./useRegisterMutation";
 export * from "./useStartChatMutation";
+export * from "./useToggleProductMutation";
 export * from "./useUpdateProductMutation";
