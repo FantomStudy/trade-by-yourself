@@ -7,7 +7,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { useDeleteProductMutation, useToggleProductMutation } from "@/api/hooks";
+import {
+  useDeleteProductMutation,
+  useToggleProductMutation,
+} from "@/api/hooks";
 import { Typography } from "@/components/ui";
 import { formatPrice } from "@/lib/format";
 
