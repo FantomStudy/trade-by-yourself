@@ -296,6 +296,25 @@ export const AddressMap = ({
                       setValidationError(
                         validationResult.message || "Адрес не прошел валидацию",
                       );
+                    } else {
+                      // Если адрес корректный, получаем координаты и устанавливаем маркер
+                      try {
+                        const osmResponse = await fetch(
+                          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                            address,
+                          )}&limit=1&accept-language=ru`,
+                        );
+                        const osmData = await osmResponse.json();
+                        if (osmData && osmData[0]) {
+                          const lat = Number.parseFloat(osmData[0].lat);
+                          const lng = Number.parseFloat(osmData[0].lon);
+                          setMarkerPosition([lat, lng]);
+                          onCoordinatesChange?.(lat, lng);
+                          console.log("Marker set at:", lat, lng);
+                        }
+                      } catch (error) {
+                        console.error("Error geocoding address:", error);
+                      }
                     }
                   } catch (error) {
                     console.error("Error validating address:", error);
@@ -335,7 +354,26 @@ export const AddressMap = ({
                   onChange?.(suggestion.value);
                   setShowSuggestions(false);
 
-                  // Валидация адреса
+                  // Получаем координаты для выбранного адреса через OSM
+                  try {
+                    const osmResponse = await fetch(
+                      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                        suggestion.value,
+                      )}&limit=1&accept-language=ru`,
+                    );
+                    const osmData = await osmResponse.json();
+                    if (osmData && osmData[0]) {
+                      const lat = Number.parseFloat(osmData[0].lat);
+                      const lng = Number.parseFloat(osmData[0].lon);
+                      setMarkerPosition([lat, lng]);
+                      onCoordinatesChange?.(lat, lng);
+                      console.log("Marker set from suggestion at:", lat, lng);
+                    }
+                  } catch (error) {
+                    console.error("Error geocoding address:", error);
+                  }
+
+                  // Валидация адреса после установки координат
                   try {
                     setValidationError(null);
                     console.log("Validating address:", suggestion.value);
@@ -359,24 +397,6 @@ export const AddressMap = ({
                     setValidationError(
                       "Указанный адрес не найден. Пожалуйста, выберите адрес из предложенных вариантов.",
                     );
-                  }
-
-                  // Получаем координаты для выбранного адреса через OSM
-                  try {
-                    const osmResponse = await fetch(
-                      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-                        suggestion.value,
-                      )}&limit=1&accept-language=ru`,
-                    );
-                    const osmData = await osmResponse.json();
-                    if (osmData && osmData[0]) {
-                      const lat = Number.parseFloat(osmData[0].lat);
-                      const lng = Number.parseFloat(osmData[0].lon);
-                      setMarkerPosition([lat, lng]);
-                      onCoordinatesChange?.(lat, lng);
-                    }
-                  } catch (error) {
-                    console.error("Error geocoding address:", error);
                   }
                 }}
               >
