@@ -224,7 +224,7 @@ const ProfileSettingsPage = () => {
           Тип профиля
         </label>
         <select
-          className="w-full rounded border bg-white p-2"
+          className="w-full rounded bg-gray-50 p-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           id="profileType"
           value={data.profileType}
           onChange={(e) => handleChange("profileType", e.target.value)}

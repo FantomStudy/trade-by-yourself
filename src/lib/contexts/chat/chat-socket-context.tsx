@@ -19,8 +19,7 @@ import { useAuth } from "../auth";
 
 const ChatSocketContext = createContext<ChatSocketContextType | null>(null);
 
-const SOCKET_URL =
-  process.env.NEXT_PUBLIC_API_WS_URL || "ws://localhost:3000/chat";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 // Функция для запроса разрешения на уведомления
 const requestNotificationPermission = async () => {
@@ -87,9 +86,10 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
       return;
     }
 
-    console.log("Initializing WebSocket connection to:", SOCKET_URL);
+    console.log("Initializing Socket.IO connection to:", API_URL);
 
-    const socketInstance = io(SOCKET_URL, {
+    const socketInstance = io(`${API_URL}/chat`, {
+      path: "/socket.io/",
       transports: ["websocket", "polling"],
       withCredentials: true,
     });

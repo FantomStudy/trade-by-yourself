@@ -184,7 +184,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
   return (
     <div className="flex h-[calc(100vh-110px)] flex-col overflow-hidden rounded-lg bg-white shadow-sm">
       {/* Хедер чата */}
-      <div className="flex flex-shrink-0 items-center gap-4 border-b bg-white px-4 py-3">
+      <div className="flex flex-shrink-0 items-center gap-4 bg-white px-4 py-3 shadow-sm">
         <Link href={"/profile/messages" as any}>
           <Button className="h-10 w-10 p-0" variant="ghost">
             <ArrowLeft className="h-5 w-5" />
@@ -306,10 +306,10 @@ const ChatPage = ({ params }: ChatPageProps) => {
       </div>
 
       {/* Поле ввода */}
-      <div className="border-t bg-white p-4">
+      <div className="bg-white p-4 shadow-sm">
         <div className="flex items-end gap-3">
           <textarea
-            className="flex-1 resize-none rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+            className="flex-1 resize-none rounded-lg bg-gray-50 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value={message}
             onChange={handleMessageChange}
             onKeyPress={handleKeyPress}

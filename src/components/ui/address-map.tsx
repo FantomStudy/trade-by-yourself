@@ -25,14 +25,9 @@ L.Icon.Default.mergeOptions({
 });
 
 interface AddressSuggestion {
+  lat?: string;
+  lon?: string;
   value: string;
-}
-
-interface OSMSuggestion {
-  display_name: string;
-  lat: string;
-  lon: string;
-  place_id: string;
 }
 
 interface AddressMapProps {
@@ -280,50 +275,6 @@ export const AddressMap = ({
             <Input
               className="pr-10"
               value={address}
-              onBlur={async () => {
-                // Валидация при потере фокуса
-                if (address.trim()) {
-                  try {
-                    setValidationError(null);
-                    console.log("Validating address on blur:", address);
-                    const validationResult = await validateAddress({
-                      address,
-                      addressDetails: {},
-                    });
-                    console.log("Validation result:", validationResult);
-
-                    if (!validationResult.valid) {
-                      setValidationError(
-                        validationResult.message || "Адрес не прошел валидацию",
-                      );
-                    } else {
-                      // Если адрес корректный, получаем координаты и устанавливаем маркер
-                      try {
-                        const osmResponse = await fetch(
-                          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-                            address,
-                          )}&limit=1&accept-language=ru`,
-                        );
-                        const osmData = await osmResponse.json();
-                        if (osmData && osmData[0]) {
-                          const lat = Number.parseFloat(osmData[0].lat);
-                          const lng = Number.parseFloat(osmData[0].lon);
-                          setMarkerPosition([lat, lng]);
-                          onCoordinatesChange?.(lat, lng);
-                          console.log("Marker set at:", lat, lng);
-                        }
-                      } catch (error) {
-                        console.error("Error geocoding address:", error);
-                      }
-                    }
-                  } catch (error) {
-                    console.error("Error validating address:", error);
-                    setValidationError(
-                      "Указанный адрес не найден. Пожалуйста, выберите адрес из предложенных вариантов.",
-                    );
-                  }
-                }
-              }}
               onChange={(e) => handleAddressChange(e.target.value)}
               onFocus={() => {
                 if (suggestions.length > 0) {
@@ -354,23 +305,13 @@ export const AddressMap = ({
                   onChange?.(suggestion.value);
                   setShowSuggestions(false);
 
-                  // Получаем координаты для выбранного адреса через OSM
-                  try {
-                    const osmResponse = await fetch(
-                      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-                        suggestion.value,
-                      )}&limit=1&accept-language=ru`,
-                    );
-                    const osmData = await osmResponse.json();
-                    if (osmData && osmData[0]) {
-                      const lat = Number.parseFloat(osmData[0].lat);
-                      const lng = Number.parseFloat(osmData[0].lon);
-                      setMarkerPosition([lat, lng]);
-                      onCoordinatesChange?.(lat, lng);
-                      console.log("Marker set from suggestion at:", lat, lng);
-                    }
-                  } catch (error) {
-                    console.error("Error geocoding address:", error);
+                  // Используем координаты из API suggestions
+                  if (suggestion.lat && suggestion.lon) {
+                    const lat = Number.parseFloat(suggestion.lat);
+                    const lng = Number.parseFloat(suggestion.lon);
+                    setMarkerPosition([lat, lng]);
+                    onCoordinatesChange?.(lat, lng);
+                    console.log("Marker set from suggestion at:", lat, lng);
                   }
 
                   // Валидация адреса после установки координат
