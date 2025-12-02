@@ -19,7 +19,7 @@ import { useAuth } from "../auth";
 
 const ChatSocketContext = createContext<ChatSocketContextType | null>(null);
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_WS_URL || "http://localhost:3000";
 
 // Функция для запроса разрешения на уведомления
 const requestNotificationPermission = async () => {
