@@ -3,10 +3,7 @@
 import { Check, X } from "lucide-react";
 import { useState } from "react";
 
-import {
-  useModerateProductMutation,
-  useProductsToModerate,
-} from "@/api/hooks";
+import { useModerateProductMutation, useProductsToModerate } from "@/api/hooks";
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { Button, Typography } from "@/components/ui";
 

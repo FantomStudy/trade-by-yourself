@@ -74,8 +74,13 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
 
   const getCardClassName = () => {
     if (product.isHide) return `${styles.card} ${styles.hiddenProduct}`;
-    if (product.moderateState === "MODERATE") return `${styles.card} ${styles.moderateProduct}`;
-    if (product.moderateState === "DENIED" || product.moderateState === "DENIDED") return `${styles.card} ${styles.deniedProduct}`;
+    if (product.moderateState === "MODERATE")
+      return `${styles.card} ${styles.moderateProduct}`;
+    if (
+      product.moderateState === "DENIED" ||
+      product.moderateState === "DENIDED"
+    )
+      return `${styles.card} ${styles.deniedProduct}`;
     return styles.card;
   };
 
@@ -99,7 +104,8 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
                 </span>
               </div>
             )}
-            {(product.moderateState === "DENIED" || product.moderateState === "DENIDED") && (
+            {(product.moderateState === "DENIED" ||
+              product.moderateState === "DENIDED") && (
               <div className="absolute inset-0 flex items-center justify-center bg-red-900/60 backdrop-blur-[2px]">
                 <span className="text-center text-lg font-semibold text-red-200">
                   Не прошел модерацию
