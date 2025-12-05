@@ -70,3 +70,17 @@
   color: #9ca3af !important;
   text-decoration: line-through;
 }
+
+/* Стили для товаров на модерации */
+.moderateProduct {
+  opacity: 0.85;
+  background-color: #dbeafe;
+  border: 2px solid #3b82f6;
+}
+
+/* Стили для товаров, не прошедших модерацию */
+.deniedProduct {
+  opacity: 0.7;
+  background-color: #fee2e2;
+  border: 2px solid #ef4444;
+}

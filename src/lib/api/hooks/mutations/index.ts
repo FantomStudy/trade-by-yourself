@@ -2,6 +2,7 @@ export * from "./useCreateProductMutation";
 export * from "./useDeleteProductMutation";
 export * from "./useFavoriteMutation";
 export * from "./useLoginMutation";
+export * from "./useModerateProductMutation";
 export * from "./useRecoverMutation";
 export * from "./useRegisterMutation";
 export * from "./useStartChatMutation";
