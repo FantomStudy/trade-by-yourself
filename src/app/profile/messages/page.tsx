@@ -103,7 +103,9 @@ const MessagesPage = () => {
                     <span className="font-medium text-gray-800">
                       {companion.fullName}:
                     </span>{" "}
-                    <span className="line-clamp-2">{chat.lastMessage.content}</span>
+                    <span className="line-clamp-2">
+                      {chat.lastMessage.content}
+                    </span>
                   </p>
                 ) : (
                   <p className="flex-1 text-sm text-gray-400">Нет сообщений</p>
