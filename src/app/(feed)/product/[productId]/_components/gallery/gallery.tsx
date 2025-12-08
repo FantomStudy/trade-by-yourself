@@ -1,5 +1,5 @@
 "use client";
-import { MoveLeft, MoveRight } from "lucide-react";
+import { MoveLeft, MoveRight, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -11,6 +11,7 @@ interface GalleryProps {
 }
 
 export const Gallery = ({ images, videoUrl }: GalleryProps) => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
   // Проверка валидности embed-URL VK
   function isValidVkEmbedUrl(url?: string | null) {
     if (!url) return false;
@@ -52,9 +53,18 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
     setCurrentIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
   };
 
+  const openFullScreen = () => {
+    setIsFullScreen(true);
+  };
+
+  const closeFullScreen = () => {
+    setIsFullScreen(false);
+  };
+
   return (
-    <div className={styles.imageGallery}>
-      {/* Миниатюры слева */}
+    <>
+      <div className={styles.imageGallery}>
+        {/* Миниатюры слева */}
       {slides.length > 1 ? (
         <div className={styles.thumbnails}>
           {slides.map((slide, index) => {
@@ -174,6 +184,8 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
             className={styles.mainImage}
             src={slides[currentIndex]}
             priority
+            onClick={openFullScreen}
+            style={{ cursor: "pointer" }}
           />
         )}
         {slides.length > 1 ? (
@@ -196,5 +208,79 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
         ) : null}
       </div>
     </div>
+
+    {/* Полноэкранный просмотр */}
+    {isFullScreen && !videoUrl && (
+      <div
+        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95"
+        onClick={closeFullScreen}
+      >
+        <button
+          className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+          onClick={closeFullScreen}
+          type="button"
+        >
+          <X className="h-6 w-6" />
+        </button>
+
+        {/* Навигация */}
+        {slides.length > 1 && (
+          <>
+            <button
+              className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+              onClick={(e) => {
+                e.stopPropagation();
+                prevSlide();
+              }}
+              type="button"
+            >
+              <MoveLeft className="h-6 w-6" />
+            </button>
+            <button
+              className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+              onClick={(e) => {
+                e.stopPropagation();
+                nextSlide();
+              }}
+              type="button"
+            >
+              <MoveRight className="h-6 w-6" />
+            </button>
+          </>
+        )}
+
+        <div className="relative h-full w-full p-16">
+          <Image
+            fill
+            alt={slides[currentIndex]}
+            className="object-contain"
+            src={slides[currentIndex]}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+
+        {/* Индикаторы */}
+        {slides.length > 1 && (
+          <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-2">
+            {slides.map((slide, index) => (
+              <button
+                key={`fullscreen-dot-${slide}-${index}`}
+                className={`h-3 w-3 rounded-full transition-all ${
+                  index === currentIndex
+                    ? "bg-white"
+                    : "bg-white/50 hover:bg-white/75"
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentIndex(index);
+                }}
+                type="button"
+              />
+            ))}
+          </div>
+        )}
+        </div>
+      )}
+    </>
   );
 };
