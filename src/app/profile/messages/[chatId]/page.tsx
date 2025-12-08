@@ -51,11 +51,13 @@ const ChatPage = ({ params }: ChatPageProps) => {
   useEffect(() => {
     if (!socket || !isConnected || !chatIdNum) return;
 
+    console.log("Joining chat:", chatIdNum);
     joinChat(chatIdNum);
     markAsRead(chatIdNum);
 
     // Обработчик новых сообщений
     const handleNewMessage = (data: SocketMessage) => {
+      console.log("Received newMessage event:", data);
       if (data.chatId === chatIdNum) {
         const isMyMessage = data.senderId === currentUser?.id;
         const newMessage: Message = {
@@ -66,6 +68,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
           isRead: false, // false означает "не прочитано получателем"
           senderId: data.senderId,
         };
+        console.log("Adding new message to state:", newMessage);
         setNewMessages((prev) => [...prev, newMessage]);
 
         // Помечаем как прочитанное только если это сообщение от собеседника
@@ -124,9 +127,19 @@ const ChatPage = ({ params }: ChatPageProps) => {
 
   const handleSend = () => {
     if (message.trim() && isConnected) {
+      console.log("Sending message:", {
+        chatId: chatIdNum,
+        content: message.trim(),
+        isConnected,
+      });
       sendSocketMessage(chatIdNum, message.trim());
       setMessage("");
       sendTyping(chatIdNum, false);
+    } else {
+      console.warn("Cannot send message:", {
+        hasMessage: !!message.trim(),
+        isConnected,
+      });
     }
   };
 

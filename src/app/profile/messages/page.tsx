@@ -94,16 +94,16 @@ const MessagesPage = () => {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-xs font-medium text-white">
+              <div className="flex items-start gap-2">
+                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-500 text-xs font-medium text-white">
                   {initials}
                 </div>
                 {chat.lastMessage ? (
-                  <p className="flex-1 truncate text-sm text-gray-600">
+                  <p className="flex-1 text-sm text-gray-600">
                     <span className="font-medium text-gray-800">
                       {companion.fullName}:
                     </span>{" "}
-                    {chat.lastMessage.content}
+                    <span className="line-clamp-2">{chat.lastMessage.content}</span>
                   </p>
                 ) : (
                   <p className="flex-1 text-sm text-gray-400">Нет сообщений</p>

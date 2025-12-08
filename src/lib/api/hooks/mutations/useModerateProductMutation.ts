@@ -9,10 +9,12 @@ export const useModerateProductMutation = () => {
     mutationFn: ({
       productId,
       status,
+      reason,
     }: {
       productId: number;
       status: "APPROVED" | "DENIDED";
-    }) => moderateProduct(productId, status),
+      reason?: string;
+    }) => moderateProduct(productId, status, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["productsToModerate"] });
     },
