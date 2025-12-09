@@ -33,17 +33,17 @@ interface TypeField {
 const CategoriesPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [subcategoryTypes, setSubcategoryTypes] = useState<SubcategoryType[]>([]);
+  const [subcategoryTypes, setSubcategoryTypes] = useState<SubcategoryType[]>(
+    [],
+  );
   const [typeFields, setTypeFields] = useState<TypeField[]>([]);
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(
     new Set(),
   );
-  const [expandedSubcategories, setExpandedSubcategories] = useState<Set<number>>(
-    new Set(),
-  );
-  const [expandedTypes, setExpandedTypes] = useState<Set<number>>(
-    new Set(),
-  );
+  const [expandedSubcategories, setExpandedSubcategories] = useState<
+    Set<number>
+  >(new Set());
+  const [expandedTypes, setExpandedTypes] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
 
   // Модальные окна для категорий
@@ -68,19 +68,18 @@ const CategoriesPage = () => {
   const [editingSubcategoryType, setEditingSubcategoryType] =
     useState<SubcategoryType | null>(null);
   const [subcategoryTypeName, setSubcategoryTypeName] = useState("");
-  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<number | null>(
-    null,
-  );
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<
+    number | null
+  >(null);
 
   // Модальные окна для характеристик типов
   const [showAddTypeField, setShowAddTypeField] = useState(false);
   const [showEditTypeField, setShowEditTypeField] = useState(false);
-  const [editingTypeField, setEditingTypeField] =
-    useState<TypeField | null>(null);
-  const [typeFieldName, setTypeFieldName] = useState("");
-  const [selectedTypeId, setSelectedTypeId] = useState<number | null>(
+  const [editingTypeField, setEditingTypeField] = useState<TypeField | null>(
     null,
   );
+  const [typeFieldName, setTypeFieldName] = useState("");
+  const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -91,7 +90,12 @@ const CategoriesPage = () => {
   const loadData = async () => {
     try {
       setIsLoading(true);
-      const [categoriesData, subcategoriesData, subcategoryTypesData, typeFieldsData] = await Promise.all([
+      const [
+        categoriesData,
+        subcategoriesData,
+        subcategoryTypesData,
+        typeFieldsData,
+      ] = await Promise.all([
         api<Category[]>("/category/find-all"),
         api<Subcategory[]>("/subcategory/find-all"),
         api<SubcategoryType[]>("/subcategory-type/find-all"),
@@ -326,7 +330,10 @@ const CategoriesPage = () => {
       setIsSubmitting(true);
       await api("/subcategory-type/create", {
         method: "POST",
-        body: { name: subcategoryTypeName, subcategoryId: selectedSubcategoryId },
+        body: {
+          name: subcategoryTypeName,
+          subcategoryId: selectedSubcategoryId,
+        },
       });
       toast.success("Тип подкатегории создан");
       setShowAddSubcategoryType(false);
@@ -344,7 +351,11 @@ const CategoriesPage = () => {
   };
 
   const handleUpdateSubcategoryType = async () => {
-    if (!editingSubcategoryType || !subcategoryTypeName.trim() || !selectedSubcategoryId) {
+    if (
+      !editingSubcategoryType ||
+      !subcategoryTypeName.trim() ||
+      !selectedSubcategoryId
+    ) {
       toast.error("Введите название типа подкатегории и выберите подкатегорию");
       return;
     }
@@ -353,7 +364,10 @@ const CategoriesPage = () => {
       setIsSubmitting(true);
       await api(`/subcategory-type/${editingSubcategoryType.id}`, {
         method: "PATCH",
-        body: { name: subcategoryTypeName, subcategoryId: selectedSubcategoryId },
+        body: {
+          name: subcategoryTypeName,
+          subcategoryId: selectedSubcategoryId,
+        },
       });
       toast.success("Тип подкатегории обновлен");
       setShowEditSubcategoryType(false);
@@ -373,7 +387,9 @@ const CategoriesPage = () => {
 
   const handleDeleteSubcategoryType = async (id: number, name: string) => {
     if (
-      !window.confirm(`Вы уверены, что хотите удалить тип подкатегории "${name}"?`)
+      !window.confirm(
+        `Вы уверены, что хотите удалить тип подкатегории "${name}"?`,
+      )
     ) {
       return;
     }
@@ -462,7 +478,9 @@ const CategoriesPage = () => {
 
   const handleDeleteTypeField = async (id: number, name: string) => {
     if (
-      !window.confirm(`Вы уверены, что хотите удалить характеристику "${name}"?`)
+      !window.confirm(
+        `Вы уверены, что хотите удалить характеристику "${name}"?`,
+      )
     ) {
       return;
     }
@@ -623,21 +641,23 @@ const CategoriesPage = () => {
                     {isExpanded && categorySubcategories.length > 0 && (
                       <div className="mt-1 ml-8 space-y-1">
                         {categorySubcategories.map((subcategory) => {
-                          const subcategorySubcategoryTypes = subcategoryTypes.filter(
-                            (type) => type.subcategoryId === subcategory.id,
-                          );
-                          const isSubcategoryExpanded = expandedSubcategories.has(subcategory.id);
+                          const subcategorySubcategoryTypes =
+                            subcategoryTypes.filter(
+                              (type) => type.subcategoryId === subcategory.id,
+                            );
+                          const isSubcategoryExpanded =
+                            expandedSubcategories.has(subcategory.id);
 
                           return (
                             <div key={subcategory.id}>
-                              <div
-                                className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 transition-colors hover:bg-gray-100"
-                              >
+                              <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 transition-colors hover:bg-gray-100">
                                 <div className="flex items-center gap-2">
                                   <button
                                     className="rounded p-1 hover:bg-gray-200"
                                     type="button"
-                                    onClick={() => toggleSubcategory(subcategory.id)}
+                                    onClick={() =>
+                                      toggleSubcategory(subcategory.id)
+                                    }
                                   >
                                     {isSubcategoryExpanded ? (
                                       <ChevronDown className="h-4 w-4" />
@@ -645,7 +665,9 @@ const CategoriesPage = () => {
                                       <ChevronRight className="h-4 w-4" />
                                     )}
                                   </button>
-                                  <span className="text-sm font-medium">{subcategory.name}</span>
+                                  <span className="text-sm font-medium">
+                                    {subcategory.name}
+                                  </span>
                                   <span className="text-sm text-gray-500">
                                     ({subcategorySubcategoryTypes.length})
                                   </span>
@@ -655,7 +677,11 @@ const CategoriesPage = () => {
                                     className="rounded p-1.5 text-green-600 transition-colors hover:bg-green-50"
                                     title="Добавить тип подкатегории"
                                     type="button"
-                                    onClick={() => openAddSubcategoryTypeModal(subcategory.id)}
+                                    onClick={() =>
+                                      openAddSubcategoryTypeModal(
+                                        subcategory.id,
+                                      )
+                                    }
                                   >
                                     <Plus className="h-4 w-4" />
                                   </button>
@@ -686,114 +712,138 @@ const CategoriesPage = () => {
                               </div>
 
                               {/* Типы подкатегорий */}
-                              {isSubcategoryExpanded && subcategorySubcategoryTypes.length > 0 && (
-                                <div className="mt-1 ml-6 space-y-1">
-                                  {subcategorySubcategoryTypes.map((subcategoryType) => {
-                                    const typeTypeFields = typeFields.filter(
-                                      (field) => field.typeId === subcategoryType.id,
-                                    );
-                                    const isTypeExpanded = expandedTypes.has(subcategoryType.id);
+                              {isSubcategoryExpanded &&
+                                subcategorySubcategoryTypes.length > 0 && (
+                                  <div className="mt-1 ml-6 space-y-1">
+                                    {subcategorySubcategoryTypes.map(
+                                      (subcategoryType) => {
+                                        const typeTypeFields =
+                                          typeFields.filter(
+                                            (field) =>
+                                              field.typeId ===
+                                              subcategoryType.id,
+                                          );
+                                        const isTypeExpanded =
+                                          expandedTypes.has(subcategoryType.id);
 
-                                    return (
-                                      <div key={subcategoryType.id}>
-                                        <div
-                                          className="flex items-center justify-between rounded-lg border border-gray-300 bg-white p-2.5 transition-colors hover:bg-gray-50"
-                                        >
-                                          <div className="flex items-center gap-2">
-                                            <button
-                                              className="rounded p-1 hover:bg-gray-200"
-                                              type="button"
-                                              onClick={() => toggleType(subcategoryType.id)}
-                                            >
-                                              {isTypeExpanded ? (
-                                                <ChevronDown className="h-3.5 w-3.5" />
-                                              ) : (
-                                                <ChevronRight className="h-3.5 w-3.5" />
-                                              )}
-                                            </button>
-                                            <span className="text-sm">{subcategoryType.name}</span>
-                                            <span className="text-sm text-gray-500">
-                                              ({typeTypeFields.length})
-                                            </span>
-                                          </div>
-                                          <div className="flex gap-2">
-                                            <button
-                                              className="rounded p-1.5 text-green-600 transition-colors hover:bg-green-50"
-                                              title="Добавить характеристику"
-                                              type="button"
-                                              onClick={() => openAddTypeFieldModal(subcategoryType.id)}
-                                            >
-                                              <Plus className="h-3.5 w-3.5" />
-                                            </button>
-                                            <button
-                                              className="rounded p-1.5 text-blue-600 transition-colors hover:bg-blue-50"
-                                              title="Редактировать"
-                                              type="button"
-                                              onClick={() =>
-                                                openEditSubcategoryTypeModal(subcategoryType)
-                                              }
-                                            >
-                                              <Edit className="h-3.5 w-3.5" />
-                                            </button>
-                                            <button
-                                              className="rounded p-1.5 text-red-600 transition-colors hover:bg-red-50"
-                                              title="Удалить"
-                                              type="button"
-                                              onClick={() =>
-                                                handleDeleteSubcategoryType(
-                                                  subcategoryType.id,
-                                                  subcategoryType.name,
-                                                )
-                                              }
-                                            >
-                                              <Trash2 className="h-3.5 w-3.5" />
-                                            </button>
-                                          </div>
-                                        </div>
-
-                                        {/* Характеристики типов */}
-                                        {isTypeExpanded && typeTypeFields.length > 0 && (
-                                          <div className="mt-1 ml-5 space-y-1">
-                                            {typeTypeFields.map((typeField) => (
-                                              <div
-                                                key={typeField.id}
-                                                className="flex items-center justify-between rounded-lg border border-gray-400 bg-gray-50 p-2 transition-colors hover:bg-gray-100"
-                                              >
-                                                <span className="text-sm text-gray-700">{typeField.name}</span>
-                                                <div className="flex gap-1.5">
-                                                  <button
-                                                    className="rounded p-1 text-blue-600 transition-colors hover:bg-blue-50"
-                                                    title="Редактировать"
-                                                    type="button"
-                                                    onClick={() =>
-                                                      openEditTypeFieldModal(typeField)
-                                                    }
-                                                  >
-                                                    <Edit className="h-3 w-3" />
-                                                  </button>
-                                                  <button
-                                                    className="rounded p-1 text-red-600 transition-colors hover:bg-red-50"
-                                                    title="Удалить"
-                                                    type="button"
-                                                    onClick={() =>
-                                                      handleDeleteTypeField(
-                                                        typeField.id,
-                                                        typeField.name,
-                                                      )
-                                                    }
-                                                  >
-                                                    <Trash2 className="h-3 w-3" />
-                                                  </button>
-                                                </div>
+                                        return (
+                                          <div key={subcategoryType.id}>
+                                            <div className="flex items-center justify-between rounded-lg border border-gray-300 bg-white p-2.5 transition-colors hover:bg-gray-50">
+                                              <div className="flex items-center gap-2">
+                                                <button
+                                                  className="rounded p-1 hover:bg-gray-200"
+                                                  type="button"
+                                                  onClick={() =>
+                                                    toggleType(
+                                                      subcategoryType.id,
+                                                    )
+                                                  }
+                                                >
+                                                  {isTypeExpanded ? (
+                                                    <ChevronDown className="h-3.5 w-3.5" />
+                                                  ) : (
+                                                    <ChevronRight className="h-3.5 w-3.5" />
+                                                  )}
+                                                </button>
+                                                <span className="text-sm">
+                                                  {subcategoryType.name}
+                                                </span>
+                                                <span className="text-sm text-gray-500">
+                                                  ({typeTypeFields.length})
+                                                </span>
                                               </div>
-                                            ))}
+                                              <div className="flex gap-2">
+                                                <button
+                                                  className="rounded p-1.5 text-green-600 transition-colors hover:bg-green-50"
+                                                  title="Добавить характеристику"
+                                                  type="button"
+                                                  onClick={() =>
+                                                    openAddTypeFieldModal(
+                                                      subcategoryType.id,
+                                                    )
+                                                  }
+                                                >
+                                                  <Plus className="h-3.5 w-3.5" />
+                                                </button>
+                                                <button
+                                                  className="rounded p-1.5 text-blue-600 transition-colors hover:bg-blue-50"
+                                                  title="Редактировать"
+                                                  type="button"
+                                                  onClick={() =>
+                                                    openEditSubcategoryTypeModal(
+                                                      subcategoryType,
+                                                    )
+                                                  }
+                                                >
+                                                  <Edit className="h-3.5 w-3.5" />
+                                                </button>
+                                                <button
+                                                  className="rounded p-1.5 text-red-600 transition-colors hover:bg-red-50"
+                                                  title="Удалить"
+                                                  type="button"
+                                                  onClick={() =>
+                                                    handleDeleteSubcategoryType(
+                                                      subcategoryType.id,
+                                                      subcategoryType.name,
+                                                    )
+                                                  }
+                                                >
+                                                  <Trash2 className="h-3.5 w-3.5" />
+                                                </button>
+                                              </div>
+                                            </div>
+
+                                            {/* Характеристики типов */}
+                                            {isTypeExpanded &&
+                                              typeTypeFields.length > 0 && (
+                                                <div className="mt-1 ml-5 space-y-1">
+                                                  {typeTypeFields.map(
+                                                    (typeField) => (
+                                                      <div
+                                                        key={typeField.id}
+                                                        className="flex items-center justify-between rounded-lg border border-gray-400 bg-gray-50 p-2 transition-colors hover:bg-gray-100"
+                                                      >
+                                                        <span className="text-sm text-gray-700">
+                                                          {typeField.name}
+                                                        </span>
+                                                        <div className="flex gap-1.5">
+                                                          <button
+                                                            className="rounded p-1 text-blue-600 transition-colors hover:bg-blue-50"
+                                                            title="Редактировать"
+                                                            type="button"
+                                                            onClick={() =>
+                                                              openEditTypeFieldModal(
+                                                                typeField,
+                                                              )
+                                                            }
+                                                          >
+                                                            <Edit className="h-3 w-3" />
+                                                          </button>
+                                                          <button
+                                                            className="rounded p-1 text-red-600 transition-colors hover:bg-red-50"
+                                                            title="Удалить"
+                                                            type="button"
+                                                            onClick={() =>
+                                                              handleDeleteTypeField(
+                                                                typeField.id,
+                                                                typeField.name,
+                                                              )
+                                                            }
+                                                          >
+                                                            <Trash2 className="h-3 w-3" />
+                                                          </button>
+                                                        </div>
+                                                      </div>
+                                                    ),
+                                                  )}
+                                                </div>
+                                              )}
                                           </div>
-                                        )}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
+                                        );
+                                      },
+                                    )}
+                                  </div>
+                                )}
                             </div>
                           );
                         })}
@@ -977,7 +1027,9 @@ const CategoriesPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-xl font-semibold">Создать тип подкатегории</h3>
+              <h3 className="text-xl font-semibold">
+                Создать тип подкатегории
+              </h3>
               <button
                 className="rounded p-1 hover:bg-gray-100"
                 type="button"

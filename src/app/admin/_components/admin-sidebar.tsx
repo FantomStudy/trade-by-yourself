@@ -1,6 +1,12 @@
 "use client";
 
-import { DollarSign, FolderTree, Megaphone, MessageSquare, Package } from "lucide-react";
+import {
+  DollarSign,
+  FolderTree,
+  Megaphone,
+  MessageSquare,
+  Package,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
