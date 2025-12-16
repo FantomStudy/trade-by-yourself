@@ -6,7 +6,7 @@ export interface Product {
   images: string[];
   isFavorited: boolean;
   isHide?: boolean;
-  moderateState?: "MODERATE" | "APPROVED" | "DENIED" | "DENIDED";
+  moderateState?: "APPROVED" | "DENIDED" | "DENIED" | "MODERATE";
   price: number;
   subCategoryName?: string;
   userId: number;

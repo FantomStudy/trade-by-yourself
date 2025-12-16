@@ -183,9 +183,9 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
             alt={"thumbnail"}
             className={styles.mainImage}
             src={slides[currentIndex]}
-            priority
-            onClick={openFullScreen}
             style={{ cursor: "pointer" }}
+            onClick={openFullScreen}
+            priority
           />
         )}
         {slides.length > 1 ? (
@@ -217,8 +217,8 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
       >
         <button
           className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-          onClick={closeFullScreen}
           type="button"
+          onClick={closeFullScreen}
         >
           <X className="h-6 w-6" />
         </button>
@@ -228,21 +228,21 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
           <>
             <button
               className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 prevSlide();
               }}
-              type="button"
             >
               <MoveLeft className="h-6 w-6" />
             </button>
             <button
               className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 nextSlide();
               }}
-              type="button"
             >
               <MoveRight className="h-6 w-6" />
             </button>
@@ -270,11 +270,11 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
                     ? "bg-white"
                     : "bg-white/50 hover:bg-white/75"
                 }`}
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   setCurrentIndex(index);
                 }}
-                type="button"
               />
             ))}
           </div>

@@ -59,6 +59,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
         <aside className={styles.aside}>
           <SellerCard product={product} />
         </aside>
+
         <div className={styles.productInfo}>
           <div>
             <Typography variant="h1">{product.name}</Typography>

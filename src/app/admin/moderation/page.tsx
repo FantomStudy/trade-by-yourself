@@ -145,9 +145,9 @@ const ModerationPage = () => {
               </p>
               <Textarea
                 className="mb-4 min-h-32"
-                placeholder="Например: Некачественные фотографии, неполное описание товара..."
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
+                placeholder="Например: Некачественные фотографии, неполное описание товара..."
               />
               <div className="flex gap-2">
                 <Button

@@ -1,4 +1,3 @@
-import type { LoginResponse } from "@/api/types";
 
 import { api } from "@/api/instance";
 

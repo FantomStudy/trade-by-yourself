@@ -12,8 +12,8 @@ export const useModerateProductMutation = () => {
       reason,
     }: {
       productId: number;
-      status: "APPROVED" | "DENIDED";
       reason?: string;
+      status: "APPROVED" | "DENIDED";
     }) => moderateProduct(productId, status, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["productsToModerate"] });

@@ -1,0 +1,33 @@
+.title:hover {
+  color: var(--primary);
+}
+
+.card[data-promoted="true"] {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border: 2px solid var(--pink);
+  border-top: 0;
+}
+
+.card[data-promoted="true"] .content {
+  padding-right: 48px;
+}
+
+.card[data-promoted="true"] :is(.price, .title:hover) {
+  color: var(--pink);
+}
+
+.promotedSign {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-sm);
+  color: var(--pink);
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}

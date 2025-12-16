@@ -1,0 +1,17 @@
+.form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-lg);
+}
+
+.input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
