@@ -1,6 +1,6 @@
 import type { AvatarRootProps } from "./primitives";
 
-import { formatFullName } from "@/utils/format";
+import { formatFullName } from "@/lib/format";
 
 import { AvatarFallback, AvatarImage, AvatarRoot } from "./primitives";
 

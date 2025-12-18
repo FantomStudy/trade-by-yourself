@@ -12,7 +12,12 @@ import {
 } from "@/components/ui";
 import { formatPrice } from "@/lib/format";
 
-import { Gallery, SellerCard } from "./_components";
+import {
+  Gallery,
+  ProductMap,
+  SellerCard,
+  ToggleProductButton,
+} from "./_components";
 
 import styles from "./page.module.css";
 
@@ -113,10 +118,17 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
             {product.address && (
               <div className={styles.sectionBlock}>
                 <Typography variant="h2">Местоположение</Typography>
-                <Typography>{product.address}</Typography>
+                <Typography className="mb-4">{product.address}</Typography>
+                <ProductMap address={product.address} />
               </div>
             )}
           </div>
+
+          <ToggleProductButton
+            isHidden={product.isHide ?? false}
+            sellerId={product.seller.id}
+            productId={product.id}
+          />
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import { useRandomProducts } from "@/api/hooks";
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { ProductCard } from "@/components/product-card";
 
-import { HeroBanner, Search } from "./_components";
+// import { HeroBanner, Search } from "./_components";
 
 import styles from "./page.module.css";
 
@@ -17,9 +17,9 @@ const HomePage = () => {
 
   return (
     <>
-      <HeroBanner />
+      {/* <HeroBanner /> */}
       <div className="global-container">
-        <Search setProducts={setProducts} />
+        {/* <Search setProducts={setProducts} /> */}
         <div className={styles.grid}>
           {randomProducts.map((product) => (
             <div key={product.id} className={styles.categoryCard}>

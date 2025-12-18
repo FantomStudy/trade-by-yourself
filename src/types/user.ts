@@ -4,6 +4,9 @@ export interface User {
   fullName: string;
   phoneNumber: string;
   profileType: string;
+  rating: number | null;
+  photo: string | null;
+  balance: number;
 }
 
 export interface CurrentUser {
@@ -13,4 +16,6 @@ export interface CurrentUser {
   profileType: string;
   rating: number;
   reviewsCount: number;
+  balance: number;
+  photo: string | null;
 }

@@ -1,13 +1,14 @@
-import type { RequestOptions } from "@/utils/fetcher";
+import type { RequestOptions } from "../../../../../_lib/utils/fetcher";
 
-import { fetcher } from "@/utils/fetcher";
+import { fetcher } from "../../../../../_lib/utils/fetcher";
 
 /**
  * TODO: Добавить returnType
  */
 export const updateSubcategory = async (
   id: number,
-  { body, options }: RequestOptions<{ name: string }>
+  body: { name: string },
+  options?: RequestOptions
 ) =>
   fetcher<unknown>(`/subcategory/update-subcategory/${id}`, {
     ...options,

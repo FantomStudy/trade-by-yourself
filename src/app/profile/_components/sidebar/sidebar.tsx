@@ -24,6 +24,7 @@ export const Sidebar = () => {
     profileType?: string | null;
     rating?: number;
     reviewsCount?: number;
+    balance?: number;
   } | null>(null);
 
   useEffect(() => {
@@ -113,7 +114,8 @@ export const Sidebar = () => {
           </div>
 
           <span className={styles.balance}>
-            <WalletIcon /> ₽
+            <WalletIcon />{" "}
+            {profileSettings?.balance ?? (user as any)?.balance ?? 0} ₽
           </span>
         </>
       )}

@@ -6,6 +6,7 @@ import {
   Megaphone,
   MessageSquare,
   Package,
+  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -32,6 +33,11 @@ const menuItems = [
     href: "/admin/categories" as const,
     icon: FolderTree,
     label: "Управление категориями",
+  },
+  {
+    href: "/admin/promotion" as const,
+    icon: TrendingUp,
+    label: "Продвижение товаров",
   },
   {
     href: "/admin/finance" as const,
