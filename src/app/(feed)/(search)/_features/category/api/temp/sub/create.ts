@@ -7,7 +7,7 @@ import { fetcher } from "../../../../../_lib/utils/fetcher";
  */
 export const createSubcategory = async (
   body: { name: string },
-  options?: RequestOptions
+  options?: RequestOptions,
 ) =>
   fetcher<unknown>("/subcategory/create-subcategory", {
     ...options,

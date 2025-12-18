@@ -8,7 +8,7 @@ import { fetcher } from "../../../../_lib/utils/fetcher";
 export const updateCategory = async (
   id: number,
   body: { name: string },
-  options?: RequestOptions
+  options?: RequestOptions,
 ) =>
   fetcher<unknown>(`/category/update-category/${id}`, {
     ...options,
