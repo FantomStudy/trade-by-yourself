@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Filters } from "../../../_components/filters";
 import { getCategoryBySlug } from "../../../_features/category";
 import { ProductFeed } from "../../../_features/feed";
 import { Breadcrumb } from "../../../_lib/ui/breadcrumb";
@@ -67,7 +68,9 @@ const Page = async ({
         </Breadcrumb.List>
       </Breadcrumb>
 
-      <ProductFeed filters={{ typeId: type.id }} />
+      <Filters>
+        <ProductFeed filters={{ typeId: type.id }} />
+      </Filters>
     </>
   );
 };

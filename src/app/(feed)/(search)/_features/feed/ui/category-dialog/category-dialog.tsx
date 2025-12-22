@@ -29,7 +29,7 @@ export const CategoryDialog = () => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog onOpenChange={setIsOpen} open={isOpen}>
       <Dialog.Trigger asChild>
         <Button>
           <TextSearch /> Все категории
@@ -56,8 +56,8 @@ export const CategoryDialog = () => {
           <div className={styles.details}>
             <Link
               href={`/${activeCategory?.slug}`}
-              onClick={handleClose}
               className={styles.link}
+              onClick={handleClose}
             >
               <Typography variant="h2">{activeCategory?.name}</Typography>
             </Link>
@@ -67,8 +67,8 @@ export const CategoryDialog = () => {
                 <div key={sub.id} className={styles.typeWrapper}>
                   <Link
                     href={`/${activeCategory?.slug}/${sub.slug}`}
-                    onClick={handleClose}
                     className={styles.link}
+                    onClick={handleClose}
                   >
                     <Typography variant="h3">{sub.name}</Typography>
                   </Link>
@@ -77,8 +77,8 @@ export const CategoryDialog = () => {
                     <Link
                       href={`/${activeCategory?.slug}/${sub.slug}/${type.slug}`}
                       key={type.id}
-                      onClick={handleClose}
                       className={styles.link}
+                      onClick={handleClose}
                     >
                       {type.name}
                     </Link>

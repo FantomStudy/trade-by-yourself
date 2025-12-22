@@ -5,7 +5,12 @@ import type { FeedFilters } from "../../../product";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUp } from "lucide-react";
 import Link from "next/link";
-import { useQueryState } from "nuqs";
+import {
+  parseAsInteger,
+  parseAsString,
+  useQueryState,
+  useQueryStates,
+} from "nuqs";
 
 import { ProductCard } from "@/app/(feed)/(search)/_lib/ui/product-card";
 import {
@@ -18,20 +23,66 @@ import { getFeed } from "../../../product";
 
 import styles from "./product-card.module.css";
 
-export interface ProductFeedProps {
-  filters?: Omit<FeedFilters, "search">;
+const mapSortByToApi = (
+  sortBy: string,
+): "date_asc" | "date_desc" | "price_asc" | "price_desc" | "relevance" => {
+  switch (sortBy) {
+    case "price-desc":
+      return "price_desc";
+    case "price-asc":
+      return "price_asc";
+    case "newest":
+      return "date_desc";
+    case "relevance":
+    default:
+      return "relevance";
+  }
+};
+
+export interface FeedProps {
+  filters?: Omit<
+    FeedFilters,
+    "maxPrice" | "minPrice" | "search" | "sortBy" | "state"
+  >;
 }
 
-export const ProductFeed = ({ filters }: ProductFeedProps) => {
+export const ProductFeed = ({ filters }: FeedProps) => {
   const [search] = useQueryState("search");
+  const [urlFilters] = useQueryStates(
+    {
+      minPrice: parseAsInteger,
+      maxPrice: parseAsInteger,
+      state: parseAsString,
+      sortBy: parseAsString,
+    },
+    {
+      history: "push",
+      shallow: false,
+    },
+  );
+
+  // Преобразуем значения из URL в формат API
+  const apiFilters: FeedFilters = {
+    ...filters,
+    search: search || undefined,
+    minPrice: urlFilters.minPrice ?? undefined,
+    maxPrice: urlFilters.maxPrice ?? undefined,
+    state:
+      urlFilters.state && urlFilters.state !== ""
+        ? (urlFilters.state.toUpperCase() as "NEW" | "USED")
+        : undefined,
+    sortBy:
+      urlFilters.sortBy && urlFilters.sortBy !== ""
+        ? mapSortByToApi(urlFilters.sortBy)
+        : undefined,
+  };
 
   const { isPending, isError, data } = useQuery({
-    queryKey: ["products", filters, search],
+    queryKey: ["products", apiFilters],
     queryFn: async () =>
       getFeed({
         query: {
-          ...filters,
-          search: search || undefined,
+          ...apiFilters,
         },
       }),
   });
@@ -44,8 +95,8 @@ export const ProductFeed = ({ filters }: ProductFeedProps) => {
     <ProductGrid>
       {data.map((product) => (
         <ProductCard
-          className={styles.card}
           key={product.id}
+          className={styles.card}
           data-promoted={product.hasPromotion}
           product={product}
         >
