@@ -7,6 +7,9 @@ export interface User {
   rating: number | null;
   photo: string | null;
   balance: number;
+  bonusBalance?: number;
+  products?: number;
+  isBanned?: boolean;
 }
 
 export interface CurrentUser {

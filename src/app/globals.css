@@ -163,4 +163,8 @@
   .text-secondary {
     color: var(--color-secondary);
   }
+
+  main:not(.admin-layout):not(:has(.admin-layout)) {
+    padding-top: var(--space-md);
+  }
 }

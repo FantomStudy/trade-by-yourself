@@ -1,6 +1,5 @@
 .footer {
   background: var(--background);
-  margin-top: 128px;
   border-top: 1px solid var(--border);
 }
 .wrapper {

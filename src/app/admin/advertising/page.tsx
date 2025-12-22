@@ -1,21 +1,12 @@
-import { Typography } from "@/components/ui";
+"use client";
+
+import { BannerSelector } from "./_components/banner-selector";
 
 const AdvertisingPage = () => {
   return (
     <div className="space-y-6">
-      <div>
-        <Typography className="text-3xl font-bold">
-          Управление рекламой
-        </Typography>
-        <Typography className="mt-2 text-gray-600">
-          Управление рекламными материалами и размещениями
-        </Typography>
-      </div>
-
       <div className="rounded-lg bg-white p-6 shadow-sm">
-        <Typography className="text-gray-500">
-          Функционал управления рекламой в разработке...
-        </Typography>
+        <BannerSelector />
       </div>
     </div>
   );

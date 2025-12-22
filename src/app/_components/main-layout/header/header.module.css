@@ -1,7 +1,6 @@
 .header {
   background: var(--background);
   border-bottom: 1px solid var(--border);
-  margin-bottom: var(--space-md);
 }
 
 .wrapper {

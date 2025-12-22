@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  DollarSign,
   FolderTree,
   Megaphone,
   MessageSquare,
   Package,
   TrendingUp,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,6 +18,11 @@ const menuItems = [
     href: "/admin/moderation" as const,
     icon: Package,
     label: "Модерация товаров",
+  },
+  {
+    href: "/admin/users" as const,
+    icon: Users,
+    label: "Управление пользователями",
   },
   {
     href: "/admin/support" as const,
@@ -38,11 +43,6 @@ const menuItems = [
     href: "/admin/promotion" as const,
     icon: TrendingUp,
     label: "Продвижение товаров",
-  },
-  {
-    href: "/admin/finance" as const,
-    icon: DollarSign,
-    label: "Управление деньгами",
   },
 ];
 
