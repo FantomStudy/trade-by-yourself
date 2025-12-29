@@ -201,7 +201,7 @@ const BalancePage = () => {
             ) : (
               <>
                 <ArrowUpRight className="mr-2 h-5 w-5" />
-                Пополнить через Т-Банк
+                Пополнить
               </>
             )}
           </Button>
