@@ -45,6 +45,28 @@
   width: 100%;
 }
 
+.regionButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+  text-align: left;
+  font-weight: normal;
+}
+
+.regionIcon {
+  flex-shrink: 0;
+  color: #3b82f6;
+}
+
+.regionText {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .footerButtons {
   display: flex;
   gap: 12px;

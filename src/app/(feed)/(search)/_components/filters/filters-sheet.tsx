@@ -20,7 +20,6 @@ interface FiltersSheetProps {
 interface FiltersState {
   maxPrice: number | null;
   minPrice: number | null;
-  region: string | null;
   sortBy: string | null;
   state: string | null;
 }
@@ -36,7 +35,6 @@ export const FiltersSheet = ({
       maxPrice: parseAsInteger,
       state: parseAsString,
       sortBy: parseAsString,
-      region: parseAsString,
     },
     {
       history: "push",
@@ -50,7 +48,6 @@ export const FiltersSheet = ({
     maxPrice: urlFilters.maxPrice,
     state: urlFilters.state,
     sortBy: urlFilters.sortBy,
-    region: urlFilters.region,
   });
 
   // Синхронизация локального состояния с URL при открытии
@@ -61,7 +58,6 @@ export const FiltersSheet = ({
         maxPrice: urlFilters.maxPrice,
         state: urlFilters.state,
         sortBy: urlFilters.sortBy,
-        region: urlFilters.region,
       });
     }
   }, [open, urlFilters]);
@@ -82,7 +78,6 @@ export const FiltersSheet = ({
       maxPrice: null,
       state: null,
       sortBy: null,
-      region: null,
     };
     setLocalFilters(resetState);
     setUrlFilters(resetState);
@@ -148,22 +143,6 @@ export const FiltersSheet = ({
                   <Select.Item value="used">Б/У</Select.Item>
                 </Select.Content>
               </Select>
-            </div>
-
-            <div className={styles.filterGroup}>
-              <Typography className={styles.filterLabel}>Регион</Typography>
-              <Input
-                className={styles.priceInput}
-                type="text"
-                value={localFilters.region ?? ""}
-                onChange={(e) =>
-                  setLocalFilters((prev) => ({
-                    ...prev,
-                    region: e.target.value,
-                  }))
-                }
-                placeholder="Введите регион"
-              />
             </div>
 
             <div className={styles.filterGroup}>
