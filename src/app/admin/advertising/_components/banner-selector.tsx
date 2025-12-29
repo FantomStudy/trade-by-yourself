@@ -108,7 +108,9 @@ export const BannerSelector = () => {
             onClick={() => handleSelect(banner.id)}
           >
             <input
-              ref={(el) => (fileInputRefs.current[banner.id] = el)}
+              ref={(el) => {
+                fileInputRefs.current[banner.id] = el;
+              }}
               accept="image/*"
               className="hidden"
               type="file"
