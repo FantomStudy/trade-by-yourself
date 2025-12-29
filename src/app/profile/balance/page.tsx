@@ -48,13 +48,8 @@ const BalancePage = () => {
   const handleTopUp = async () => {
     const numAmount = Number(amount);
 
-    if (!amount || numAmount <= 0) {
+    if (!amount || numAmount < 1) {
       toast.error("Введите корректную сумму");
-      return;
-    }
-
-    if (numAmount < 100) {
-      toast.error("Минимальная сумма пополнения 100₽");
       return;
     }
 
@@ -164,7 +159,7 @@ const BalancePage = () => {
             </label>
             <Input
               id="amount-input"
-              min="100"
+              min="1"
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
