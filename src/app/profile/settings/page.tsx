@@ -6,13 +6,18 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Input } from "@/components/ui";
 import { api } from "@/lib/api/instance";
 
+import { AvatarEditor } from "./_components/avatar-editor";
+
 interface ProfileSettings {
   id: number;
+  email: string;
   fullName: string;
-  isAnswersCall: boolean | null;
-  phoneNumber: string | null;
-  photo?: string | null;
+  phoneNumber: string;
   profileType: string;
+  photo: string | null;
+  rating: number | null;
+  isAnswersCall: boolean;
+  role?: string;
 }
 
 const ProfileSettingsPage = () => {
@@ -20,6 +25,8 @@ const ProfileSettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [rawImageUrl, setRawImageUrl] = useState<string | null>(null);
+  const [showEditor, setShowEditor] = useState(false);
   const previewUrl = useMemo(() => {
     if (!selectedFile) return null;
     try {
@@ -34,9 +41,9 @@ const ProfileSettingsPage = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const res = await api<ProfileSettings>("/user/profile-settings");
+        const res = await api<ProfileSettings>("/auth/me");
         setData(res);
-        console.log("Profile settings loaded:", res);
+        console.log("Profile settings loaded from /auth/me:", res);
       } catch (err) {
         console.error("Failed to load profile settings:", err);
       } finally {
@@ -88,6 +95,51 @@ const ProfileSettingsPage = () => {
       if (url) URL.revokeObjectURL(url);
     };
   }, [previewUrl]);
+
+  useEffect(() => {
+    const url = rawImageUrl;
+    return () => {
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [rawImageUrl]);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files && e.target.files[0];
+    if (f) {
+      // Open editor with the raw image
+      const url = URL.createObjectURL(f);
+      setRawImageUrl(url);
+      setShowEditor(true);
+    }
+  };
+
+  const handleEditorSave = (blob: Blob) => {
+    // Convert blob to File
+    const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
+    setSelectedFile(file);
+    setShowEditor(false);
+
+    // Cleanup raw image URL
+    if (rawImageUrl) {
+      URL.revokeObjectURL(rawImageUrl);
+      setRawImageUrl(null);
+    }
+  };
+
+  const handleEditorCancel = () => {
+    setShowEditor(false);
+
+    // Cleanup raw image URL
+    if (rawImageUrl) {
+      URL.revokeObjectURL(rawImageUrl);
+      setRawImageUrl(null);
+    }
+
+    // Clear file input
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
 
   const photoSrc = useMemo(() => {
     const p = data?.photo;
@@ -145,10 +197,7 @@ const ProfileSettingsPage = () => {
             accept="image/*"
             className="hidden"
             type="file"
-            onChange={(e) => {
-              const f = e.target.files && e.target.files[0];
-              if (f) setSelectedFile(f);
-            }}
+            onChange={handleFileSelect}
           />
           <Button
             type="button"
@@ -160,6 +209,14 @@ const ProfileSettingsPage = () => {
           </Button>
         </div>
       </div>
+
+      {showEditor && rawImageUrl && (
+        <AvatarEditor
+          image={rawImageUrl}
+          onCancel={handleEditorCancel}
+          onSave={handleEditorSave}
+        />
+      )}
 
       <div>
         <label className="mb-1 block text-sm text-gray-600" htmlFor="fullName">

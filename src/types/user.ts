@@ -1,6 +1,6 @@
 export interface User {
   id: number;
-  email: string;
+  email?: string;
   fullName: string;
   phoneNumber: string;
   profileType: string;
@@ -10,6 +10,14 @@ export interface User {
   bonusBalance?: number;
   products?: number;
   isBanned?: boolean;
+  usedFreeAds?: number;
+  reviewsCount?: number;
+  adsLimit?: {
+    total: number;
+    used: number;
+    remaining: number;
+    costPerAd: number;
+  };
 }
 
 export interface CurrentUser {

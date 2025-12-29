@@ -3,8 +3,8 @@
 import { StarIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
+import { useUserInfo } from "@/api/hooks";
 import { Avatar, Typography } from "@/components/ui";
 import { useAuth } from "@/lib/contexts";
 import { formatFullName } from "@/lib/format";
@@ -15,48 +15,19 @@ import styles from "./sidebar.module.css";
 
 export const Sidebar = () => {
   const { user } = useAuth();
+  const { data: userInfo } = useUserInfo(user?.id);
   const pathname = usePathname();
 
-  const [profileSettings, setProfileSettings] = useState<{
-    isAnswersCall?: boolean | null;
-    phoneNumber?: string | null;
-    photo?: string | null;
-    profileType?: string | null;
-    rating?: number;
-    reviewsCount?: number;
-    balance?: number;
-  } | null>(null);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/profile-settings`,
-          {
-            credentials: "include",
-          },
-        ).then((r) => r.json());
-        setProfileSettings(res);
-      } catch (err) {
-        console.error("Failed to load profile settings for sidebar:", err);
-      }
-    };
-
-    void load();
-
-    // Обновляем профиль каждые 30 секунд для актуализации баланса
-    const interval = setInterval(load, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const getProfileTypeLabel = (type?: string | null) => {
-    return type === "OOO" ? "Юридическое лицо" : "Физическое лицо";
+    if (!type) return "Физическое лицо";
+    return type === "OOO" || type === "Юридическое лицо"
+      ? "Юридическое лицо"
+      : "Физическое лицо";
   };
 
-  const currentProfileType =
-    profileSettings?.profileType ?? (user as any)?.profileType;
-  const isLegalEntity = currentProfileType === "OOO";
+  const isLegalEntity =
+    userInfo?.profileType === "OOO" ||
+    userInfo?.profileType === "Юридическое лицо";
 
   return (
     <div className={styles.sidebar}>
@@ -66,7 +37,7 @@ export const Sidebar = () => {
             <Avatar
               fullName={user.fullName}
               size="lg"
-              src={profileSettings?.photo ?? (user as any)?.photo ?? ""}
+              src={userInfo?.photo ?? ""}
             />
             <Typography variant="h2">
               {formatFullName(user.fullName)}
@@ -76,19 +47,12 @@ export const Sidebar = () => {
           <div className={styles.stats}>
             <div className={styles.ratingSection}>
               <Typography className={styles.rating}>
-                {(
-                  profileSettings?.rating ??
-                  (user as any)?.rating ??
-                  0
-                ).toFixed(1)}
+                {(userInfo?.rating ?? 0).toFixed(1)}
                 <StarIcon fill="currentColor" />
               </Typography>
 
               <Typography className={styles.reviews}>
-                {profileSettings?.reviewsCount ??
-                  (user as any)?.reviewsCount ??
-                  0}{" "}
-                отзывов
+                {userInfo?.reviewsCount ?? 0} отзывов
               </Typography>
             </div>
 
@@ -113,14 +77,13 @@ export const Sidebar = () => {
                     : styles.profileTypeTextPhysical
                 }
               >
-                {getProfileTypeLabel(currentProfileType)}
+                {getProfileTypeLabel(userInfo?.profileType)}
               </span>
             </div>
           </div>
 
           <span className={styles.balance}>
-            <WalletIcon />{" "}
-            {profileSettings?.balance ?? (user as any)?.balance ?? 0} ₽
+            <WalletIcon /> {userInfo?.balance ?? 0} ₽
           </span>
         </>
       )}

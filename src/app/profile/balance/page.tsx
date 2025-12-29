@@ -16,6 +16,7 @@ import {
   useCheckPaymentStatusMutation,
   useCreatePaymentMutation,
   usePaymentHistory,
+  useUserInfo,
 } from "@/api/hooks";
 import { Button, Input, Typography } from "@/components/ui";
 import { useAuth } from "@/lib/contexts";
@@ -24,10 +25,40 @@ import styles from "./page.module.css";
 
 const BalancePage = () => {
   const { user } = useAuth();
+  const { data: userInfo } = useUserInfo(user?.id);
   const [amount, setAmount] = useState("");
   const { data: payments = [], isLoading, refetch } = usePaymentHistory();
   const createPaymentMutation = useCreatePaymentMutation();
-  const checkStatusMutation = useCheckPaymentStatusMutation();
+  const checkStatusMutation = useCheckPaymentStatusMutation(user?.id);
+
+  // Логирование данных пользователя
+  useEffect(() => {
+    console.log("[BALANCE PAGE] User from auth:", user);
+    console.log("[BALANCE PAGE] User ID:", user?.id);
+  }, [user]);
+
+  // Логирование данных из /user/info/{id}
+  useEffect(() => {
+    console.log("[BALANCE PAGE] User info from /user/info:", userInfo);
+    console.log(
+      "[BALANCE PAGE] User balance from /user/info:",
+      userInfo?.balance,
+    );
+    console.log("[BALANCE PAGE] User bonus balance:", userInfo?.bonusBalance);
+    if (userInfo) {
+      console.log("[BALANCE PAGE] User info keys:", Object.keys(userInfo));
+      console.log(
+        "[BALANCE PAGE] Full user info:",
+        JSON.stringify(userInfo, null, 2),
+      );
+    }
+  }, [userInfo]);
+
+  // Логирование истории платежей
+  useEffect(() => {
+    console.log("[BALANCE PAGE] Payments history:", payments);
+    console.log("[BALANCE PAGE] Payments count:", payments.length);
+  }, [payments]);
 
   // Автоматическая проверка pending платежей каждые 30 секунд
   useEffect(() => {
@@ -48,6 +79,8 @@ const BalancePage = () => {
   const handleTopUp = async () => {
     const numAmount = Number(amount);
 
+    console.log("[BALANCE PAGE] Creating payment with amount:", numAmount);
+
     if (!amount || numAmount < 1) {
       toast.error("Введите корректную сумму");
       return;
@@ -59,18 +92,32 @@ const BalancePage = () => {
         description: `Пополнение баланса на сумму ${numAmount}₽`,
       });
 
+      console.log("[BALANCE PAGE] Payment created successfully:", result);
+      console.log("[BALANCE PAGE] Payment URL:", result.paymentUrl);
+      console.log("[BALANCE PAGE] Payment ID:", result.paymentId);
+      console.log("[BALANCE PAGE] Order ID:", result.orderId);
+
       // Открываем ссылку на оплату в новой вкладке
       window.open(result.paymentUrl, "_blank");
       toast.success("Перенаправление на страницу оплаты...");
       setAmount("");
-    } catch {
+    } catch (error) {
+      console.error("[BALANCE PAGE] Error creating payment:", error);
       toast.error("Ошибка при создании платежа");
     }
   };
 
   const handleCheckStatus = async (paymentId: string) => {
+    console.log("[BALANCE PAGE] Checking payment status for ID:", paymentId);
+
     try {
       const result = await checkStatusMutation.mutateAsync({ paymentId });
+
+      console.log("[BALANCE PAGE] Payment status check result:", result);
+      console.log("[BALANCE PAGE] Status:", result.status);
+      console.log("[BALANCE PAGE] Amount:", result.amount);
+      console.log("[BALANCE PAGE] Order ID:", result.orderId);
+
       if (result.status === "CONFIRMED" || result.status === "COMPLETED") {
         toast.success("Платеж успешно завершен");
       } else if (result.status === "PENDING") {
@@ -78,7 +125,8 @@ const BalancePage = () => {
       } else {
         toast.error("Платеж отклонен");
       }
-    } catch {
+    } catch (error) {
+      console.error("[BALANCE PAGE] Error checking payment status:", error);
       toast.error("Ошибка при проверке статуса");
     }
   };
@@ -133,7 +181,7 @@ const BalancePage = () => {
             Текущий баланс
           </Typography>
           <Typography className={styles["balance-amount"]}>
-            {user?.balance?.toFixed(2) || "0.00"} ₽
+            {userInfo?.balance?.toFixed(2) || "0.00"} ₽
           </Typography>
 
           <div className={styles["balance-info"]}>

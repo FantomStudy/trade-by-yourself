@@ -117,7 +117,7 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
     return (
       user.id.toString().includes(searchQuery) ||
       user.fullName.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query) ||
+      user.email?.toLowerCase().includes(query) ||
       user.phoneNumber.includes(searchQuery)
     );
   });
