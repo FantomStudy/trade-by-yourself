@@ -1,5 +1,6 @@
 import { HeroBanner } from "./_features/ad";
 import { CategoryDialog, SearchBox } from "./_features/feed";
+import { FiltersButton } from "./_components/filters-button";
 
 import styles from "./layout.module.css";
 
@@ -10,6 +11,7 @@ const Layout = ({ children }: LayoutProps<"/">) => {
       <div className="global-container">
         <div className={styles.search}>
           <CategoryDialog />
+          <FiltersButton />
           <SearchBox />
         </div>
 
