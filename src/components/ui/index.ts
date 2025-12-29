@@ -9,6 +9,7 @@ export * from "./image-upload";
 export * from "./input/input";
 export * from "./logo/logo";
 export * from "./phone-field";
+export * from "./sheet/sheet";
 export * from "./sonner/sonner";
 export * from "./textarea/textarea";
 export * from "./typography/typography";

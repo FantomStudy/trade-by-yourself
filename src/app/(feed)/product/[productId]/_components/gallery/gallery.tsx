@@ -1,5 +1,5 @@
 "use client";
-import { MoveLeft, MoveRight, X } from "lucide-react";
+import { MoveLeft, MoveRight, PlayIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -65,220 +65,211 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
     <>
       <div className={styles.imageGallery}>
         {/* Миниатюры слева */}
-      {slides.length > 1 ? (
-        <div className={styles.thumbnails}>
-          {slides.map((slide, index) => {
-            const isVideo = videoUrl && index === slides.length - 1;
-            return (
-              <button
-                key={slide + index}
-                className={`${styles.thumbnail} ${index === currentIndex ? styles.active : ""}`}
-                type="button"
-                onClick={() => setCurrentIndex(index)}
-              >
-                {isVideo ? (
-                  <div className={styles.videoThumbnail}>
-                    <svg fill="none" height="32" width="32" viewBox="0 0 32 32">
-                      <circle
-                        cx="16"
-                        cy="16"
-                        fill="#000"
-                        fillOpacity="0.5"
-                        r="16"
-                      />
-                      <polygon fill="#fff" points="13,10 23,16 13,22" />
-                    </svg>
-                  </div>
-                ) : (
-                  <Image
-                    fill
-                    alt={slide}
-                    src={slide}
-                    style={{ objectFit: "cover" }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      ) : null}
-
-      {/* Главное изображение/видео справа */}
-      <div className={styles.mainImageWrapper}>
-        {videoUrl && currentIndex === slides.length - 1 ? (
-          <div className={styles.videoWrapper}>
-            {videoUrl.includes("vkvideo.ru") ? (
-              (() => {
-                const embedUrl = getVkEmbedUrl(videoUrl);
-                const valid = isValidVkEmbedUrl(embedUrl);
-                console.log("[Gallery] VK video debug:", {
-                  originalVideoUrl: videoUrl,
-                  embedUrl,
-                  valid,
-                  currentIndex,
-                  slides,
-                });
-                if (valid) {
-                  return (
-                    <iframe
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                      className={styles.mainImage}
-                      src={embedUrl || undefined}
-                      title="video"
-                      allowFullScreen
-                      frameBorder="0"
-                      sandbox="allow-scripts allow-same-origin allow-presentation"
-                    />
-                  );
-                } else {
-                  return (
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "#222",
-                        color: "#fff",
-                        flexDirection: "column",
-                        fontSize: "14px",
-                      }}
-                    >
-                      Видео недоступно для просмотра
-                      <br />
-                      <pre
-                        style={{
-                          color: "#fff",
-                          fontSize: "12px",
-                          marginTop: "8px",
-                        }}
-                      >
-                        {JSON.stringify(
-                          { videoUrl, embedUrl, valid, currentIndex, slides },
-                          null,
-                          2,
-                        )}
-                      </pre>
-                    </div>
-                  );
-                }
-              })()
-            ) : (
-              <video
-                className={styles.mainImage}
-                src={videoUrl}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                controls
-              />
-            )}
-          </div>
-        ) : (
-          <Image
-            fill
-            alt={"thumbnail"}
-            className={styles.mainImage}
-            src={slides[currentIndex]}
-            style={{ cursor: "pointer" }}
-            onClick={openFullScreen}
-            priority
-          />
-        )}
         {slides.length > 1 ? (
-          <div className={styles.controls}>
-            <button
-              className={styles.controlItem}
-              type="button"
-              onClick={prevSlide}
-            >
-              <MoveLeft />
-            </button>
-            <button
-              className={styles.controlItem}
-              type="button"
-              onClick={nextSlide}
-            >
-              <MoveRight />
-            </button>
+          <div className={styles.thumbnails}>
+            {slides.map((slide, index) => {
+              const isVideo = videoUrl && index === slides.length - 1;
+              return (
+                <button
+                  key={slide + index}
+                  className={`${styles.thumbnail} ${index === currentIndex ? styles.active : ""}`}
+                  type="button"
+                  onClick={() => setCurrentIndex(index)}
+                >
+                  {isVideo ? (
+                    <div className={styles.thumbnailContent}>
+                      <PlayIcon className={styles.thumbnailIcon} />
+                    </div>
+                  ) : (
+                    <Image
+                      fill
+                      alt={slide}
+                      src={slide}
+                      style={{ objectFit: "cover" }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
         ) : null}
-      </div>
-    </div>
 
-    {/* Полноэкранный просмотр */}
-    {isFullScreen && !videoUrl && (
-      <div
-        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95"
-        onClick={closeFullScreen}
-      >
-        <button
-          className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-          type="button"
+        {/* Главное изображение/видео справа */}
+        <div className={styles.mainImageWrapper}>
+          {videoUrl && currentIndex === slides.length - 1 ? (
+            <div className={styles.videoWrapper}>
+              {videoUrl.includes("vkvideo.ru") ? (
+                (() => {
+                  const embedUrl = getVkEmbedUrl(videoUrl);
+                  const valid = isValidVkEmbedUrl(embedUrl);
+                  console.log("[Gallery] VK video debug:", {
+                    originalVideoUrl: videoUrl,
+                    embedUrl,
+                    valid,
+                    currentIndex,
+                    slides,
+                  });
+                  if (valid) {
+                    return (
+                      <iframe
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        className={styles.mainImage}
+                        src={embedUrl || undefined}
+                        title="video"
+                        allowFullScreen
+                        frameBorder="0"
+                        sandbox="allow-scripts allow-same-origin allow-presentation"
+                      />
+                    );
+                  } else {
+                    return (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "#222",
+                          color: "#fff",
+                          flexDirection: "column",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Видео недоступно для просмотра
+                        <br />
+                        <pre
+                          style={{
+                            color: "#fff",
+                            fontSize: "12px",
+                            marginTop: "8px",
+                          }}
+                        >
+                          {JSON.stringify(
+                            { videoUrl, embedUrl, valid, currentIndex, slides },
+                            null,
+                            2,
+                          )}
+                        </pre>
+                      </div>
+                    );
+                  }
+                })()
+              ) : (
+                <video
+                  className={styles.mainImage}
+                  src={videoUrl}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  controls
+                />
+              )}
+            </div>
+          ) : (
+            <Image
+              fill
+              alt={"thumbnail"}
+              className={styles.mainImage}
+              src={slides[currentIndex]}
+              style={{ cursor: "pointer" }}
+              onClick={openFullScreen}
+              priority
+            />
+          )}
+          {slides.length > 1 ? (
+            <div className={styles.controls}>
+              <button
+                className={styles.controlItem}
+                type="button"
+                onClick={prevSlide}
+              >
+                <MoveLeft />
+              </button>
+              <button
+                className={styles.controlItem}
+                type="button"
+                onClick={nextSlide}
+              >
+                <MoveRight />
+              </button>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Полноэкранный просмотр */}
+      {isFullScreen && !videoUrl && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95"
           onClick={closeFullScreen}
         >
-          <X className="h-6 w-6" />
-        </button>
+          <button
+            className="absolute top-4 right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            type="button"
+            onClick={closeFullScreen}
+          >
+            <X className="h-6 w-6" />
+          </button>
 
-        {/* Навигация */}
-        {slides.length > 1 && (
-          <>
-            <button
-              className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                prevSlide();
-              }}
-            >
-              <MoveLeft className="h-6 w-6" />
-            </button>
-            <button
-              className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                nextSlide();
-              }}
-            >
-              <MoveRight className="h-6 w-6" />
-            </button>
-          </>
-        )}
-
-        <div className="relative h-full w-full p-16">
-          <Image
-            fill
-            alt={slides[currentIndex]}
-            className="object-contain"
-            src={slides[currentIndex]}
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
-
-        {/* Индикаторы */}
-        {slides.length > 1 && (
-          <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-2">
-            {slides.map((slide, index) => (
+          {/* Навигация */}
+          {slides.length > 1 && (
+            <>
               <button
-                key={`fullscreen-dot-${slide}-${index}`}
-                className={`h-3 w-3 rounded-full transition-all ${
-                  index === currentIndex
-                    ? "bg-white"
-                    : "bg-white/50 hover:bg-white/75"
-                }`}
+                className="absolute top-1/2 left-4 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setCurrentIndex(index);
+                  prevSlide();
                 }}
-              />
-            ))}
+              >
+                <MoveLeft className="h-6 w-6" />
+              </button>
+              <button
+                className="absolute top-1/2 right-4 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextSlide();
+                }}
+              >
+                <MoveRight className="h-6 w-6" />
+              </button>
+            </>
+          )}
+
+          <div className="relative h-full w-full p-16">
+            <Image
+              fill
+              alt={slides[currentIndex]}
+              className="object-contain"
+              src={slides[currentIndex]}
+              onClick={(e) => e.stopPropagation()}
+            />
           </div>
-        )}
+
+          {/* Индикаторы */}
+          {slides.length > 1 && (
+            <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-2">
+              {slides.map((slide, index) => (
+                <button
+                  key={`fullscreen-dot-${slide}-${index}`}
+                  className={`h-3 w-3 rounded-full transition-all ${
+                    index === currentIndex
+                      ? "bg-white"
+                      : "bg-white/50 hover:bg-white/75"
+                  }`}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentIndex(index);
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </>

@@ -92,6 +92,8 @@ export const ProductFeed = ({ filters }: FeedProps) => {
       }),
   });
 
+  console.log(data?.map((p) => p.videoUrl));
+
   if (isError) return <div>Не удалось загрузить объявления</div>;
 
   if (isPending) return <SkeletonGrid />;
