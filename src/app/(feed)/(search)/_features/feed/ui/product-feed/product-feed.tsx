@@ -54,6 +54,7 @@ export const ProductFeed = ({ filters }: FeedProps) => {
       maxPrice: parseAsInteger,
       state: parseAsString,
       sortBy: parseAsString,
+      region: parseAsString,
     },
     {
       history: "push",
@@ -74,6 +75,10 @@ export const ProductFeed = ({ filters }: FeedProps) => {
     sortBy:
       urlFilters.sortBy && urlFilters.sortBy !== ""
         ? mapSortByToApi(urlFilters.sortBy)
+        : undefined,
+    region:
+      urlFilters.region && urlFilters.region !== ""
+        ? urlFilters.region
         : undefined,
   };
 

@@ -1,10 +1,11 @@
 import { Package } from "lucide-react";
 
 import { MyProductCard } from "@/components/product-card";
-import { getCurrentUserProducts } from "@/lib/api";
+import { getCurrentUser, getCurrentUserProducts } from "@/lib/api";
 
 export const MyProductsFeed = async () => {
-  const products = await getCurrentUserProducts();
+  const currentUser = await getCurrentUser();
+  const products = await getCurrentUserProducts(currentUser.id);
 
   console.log("=== MY PRODUCTS DEBUG START ===");
   console.log("My products:", products);

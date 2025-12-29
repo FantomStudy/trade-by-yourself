@@ -16,6 +16,7 @@ export const Filters = ({ children }: React.PropsWithChildren) => {
       maxPrice: parseAsInteger,
       state: parseAsString,
       sortBy: parseAsString,
+      region: parseAsString,
     },
     {
       history: "push",
@@ -34,6 +35,7 @@ export const Filters = ({ children }: React.PropsWithChildren) => {
       maxPrice: null,
       state: null,
       sortBy: null,
+      region: null,
     });
   };
 
@@ -81,6 +83,17 @@ export const Filters = ({ children }: React.PropsWithChildren) => {
               <Select.Item value="used">Б/У</Select.Item>
             </Select.Content>
           </Select>
+        </div>
+
+        <div className={styles.filterGroup}>
+          <Typography className={styles.filterLabel}>Регион</Typography>
+          <Input
+            className={styles.priceInput}
+            type="text"
+            value={filters.region ?? ""}
+            onChange={(e) => setFilters({ region: e.target.value })}
+            placeholder="Введите регион"
+          />
         </div>
 
         <div className={styles.filterGroup}>

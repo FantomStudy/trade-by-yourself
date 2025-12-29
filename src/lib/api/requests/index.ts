@@ -4,6 +4,7 @@ export * from "./auth";
 export * from "./category";
 export * from "./chat";
 export * from "./favorites";
+export * from "./payment";
 export * from "./product";
 export * from "./reviews";
 export * from "./user";

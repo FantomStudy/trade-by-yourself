@@ -15,6 +15,7 @@ import { formatPrice } from "@/lib/format";
 import {
   Gallery,
   ProductMap,
+  ReviewForm,
   SellerCard,
   ToggleProductButton,
 } from "./_components";
@@ -123,6 +124,11 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
               </div>
             )}
           </div>
+
+          <ReviewForm
+            sellerId={product.seller.id}
+            sellerName={product.seller.fullName}
+          />
 
           <ToggleProductButton
             isHidden={product.isHide ?? false}

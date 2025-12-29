@@ -43,6 +43,11 @@ export const Sidebar = () => {
     };
 
     void load();
+
+    // Обновляем профиль каждые 30 секунд для актуализации баланса
+    const interval = setInterval(load, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const getProfileTypeLabel = (type?: string | null) => {

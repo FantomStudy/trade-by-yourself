@@ -86,7 +86,6 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       profileType: user.profileType,
-      balance: user.balance,
       bonusBalance: user.bonusBalance,
     });
     setIsEditDialogOpen(true);
@@ -324,27 +323,6 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                 <option value="INDIVIDUAL">Физ лицо</option>
                 <option value="OOO">Юр лицо</option>
               </select>
-            </div>
-
-            <div>
-              <label
-                className="mb-1 block text-sm font-medium text-gray-700"
-                htmlFor="balance"
-              >
-                Баланс
-              </label>
-              <Input
-                id="balance"
-                step="0.01"
-                type="number"
-                value={editForm.balance || 0}
-                onChange={(e) =>
-                  setEditForm({
-                    ...editForm,
-                    balance: Number.parseFloat(e.target.value),
-                  })
-                }
-              />
             </div>
 
             <div>
