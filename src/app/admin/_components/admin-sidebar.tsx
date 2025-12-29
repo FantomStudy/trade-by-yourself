@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  FileText,
   FolderTree,
   Megaphone,
   MessageSquare,
@@ -43,6 +44,11 @@ const menuItems = [
     href: "/admin/promotion" as const,
     icon: TrendingUp,
     label: "Продвижение товаров",
+  },
+  {
+    href: "/admin/logs" as const,
+    icon: FileText,
+    label: "Логи системы",
   },
 ];
 
