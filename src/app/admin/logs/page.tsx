@@ -97,10 +97,7 @@ const LogsPage = () => {
               </tr>
             ) : (
               filteredLogs.map((log) => (
-                <tr
-                  key={log.id}
-                  className="transition-colors hover:bg-gray-50"
-                >
+                <tr key={log.id} className="transition-colors hover:bg-gray-50">
                   <td className="border-b px-4 py-3 text-sm text-gray-900">
                     {log.id}
                   </td>
