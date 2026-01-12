@@ -105,7 +105,21 @@
   color: var(--blue-700);
 }
 
+.balanceSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
 .balance {
+  color: var(--accent-foreground);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bonusBalance {
   color: var(--accent-foreground);
   display: flex;
   align-items: center;

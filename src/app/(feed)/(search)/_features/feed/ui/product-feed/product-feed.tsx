@@ -17,6 +17,7 @@ import {
   ProductGrid,
   SkeletonGrid,
 } from "@/app/(feed)/(search)/_lib/ui/product-grid";
+import { ProductFeedBanner } from "@/components/product-feed-banner";
 
 import { LikeButton } from "../../../favorites";
 import { getFeed } from "../../../product";
@@ -98,9 +99,22 @@ export const ProductFeed = ({ filters }: FeedProps) => {
 
   if (isPending) return <SkeletonGrid />;
 
-  return (
-    <ProductGrid>
-      {data.map((product) => (
+  if (!data || data.length === 0) {
+    return <ProductGrid>{[]}</ProductGrid>;
+  }
+
+  // Функция для вставки баннеров в нужные позиции
+  const renderProductsWithBanners = () => {
+    const items: JSX.Element[] = [];
+
+    data.forEach((product, index) => {
+      // Вставляем баннер на позиции 1 (второй элемент), затем через каждые 6 карточек
+      // Позиции баннеров: 1, 7, 13, 19...
+      if (index === 1 || (index > 1 && (index - 1) % 6 === 0)) {
+        items.push(<ProductFeedBanner key={`banner-${index}`} />);
+      }
+
+      items.push(
         <ProductCard
           key={product.id}
           className={styles.card}
@@ -132,8 +146,12 @@ export const ProductFeed = ({ filters }: FeedProps) => {
               <ArrowUp /> Поднят
             </ProductCard.BottomActions>
           )}
-        </ProductCard>
-      ))}
-    </ProductGrid>
-  );
+        </ProductCard>,
+      );
+    });
+
+    return items;
+  };
+
+  return <ProductGrid>{renderProductsWithBanners()}</ProductGrid>;
 };

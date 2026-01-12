@@ -1,6 +1,6 @@
 "use client";
 
-import { StarIcon, WalletIcon } from "lucide-react";
+import { Gift, StarIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -82,9 +82,14 @@ export const Sidebar = () => {
             </div>
           </div>
 
-          <span className={styles.balance}>
-            <WalletIcon /> {userInfo?.balance ?? 0} ₽
-          </span>
+          <div className={styles.balanceSection}>
+            <span className={styles.balance}>
+              <WalletIcon /> {userInfo?.balance ?? 0} ₽
+            </span>
+            <span className={styles.bonusBalance}>
+              <Gift /> {userInfo?.bonusBalance ?? 0} ₽
+            </span>
+          </div>
         </>
       )}
 
