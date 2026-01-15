@@ -17,14 +17,6 @@
   gap: 8px;
   text-align: center;
   width: 100%;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-  text-decoration: none;
-  color: inherit;
-}
-
-.userInfo:hover {
-  opacity: 0.8;
 }
 
 .stats {
@@ -64,6 +56,12 @@
 
 .profileType {
   font-size: 12px;
+}
+
+.productsCount {
+  width: 100%;
+  padding: 12px 0;
+  text-align: center;
 }
 
 .actions {

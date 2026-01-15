@@ -24,7 +24,7 @@ export const RegionButton = () => {
         onClick={() => setRegionPickerOpen(true)}
       >
         <MapPin className={styles.icon} size={20} />
-        <span className={styles.text}>{region || "Весь регион"}</span>
+        <span className={styles.text}>{region || "Все регионы"}</span>
       </Button>
       <RegionPicker
         value={region}

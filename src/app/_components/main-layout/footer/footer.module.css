@@ -1,6 +1,7 @@
 .footer {
   background: var(--background);
   border-top: 1px solid var(--border);
+  margin-top: 40px;
 }
 .wrapper {
   display: flex;

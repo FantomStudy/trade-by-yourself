@@ -2,6 +2,7 @@
 import type { ExtendedProduct } from "@/types";
 
 import { CircleSmall, Phone, StarIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -43,10 +44,10 @@ export const SellerCard = ({ product }: SellerCardProps) => {
 
   return (
     <div className={styles.card}>
-      <div className={styles.userInfo}>
+      <Link href={`/seller/${product.seller.id}`} className={styles.userInfo}>
         <Avatar fullName={product.seller.fullName} size="lg" />
         <Typography variant="h2">{product.seller.fullName}</Typography>
-      </div>
+      </Link>
 
       <div className={styles.stats}>
         <div className={styles.ratingSection}>
