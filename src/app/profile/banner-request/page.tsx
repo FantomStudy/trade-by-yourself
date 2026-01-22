@@ -62,7 +62,13 @@ const BannerRequestPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!bannerName.trim() || !targetUrl.trim() || !bannerPlace || !days || !previewImage) {
+    if (
+      !bannerName.trim() ||
+      !targetUrl.trim() ||
+      !bannerPlace ||
+      !days ||
+      !previewImage
+    ) {
       toast.error("Заполните все обязательные поля и загрузите изображение");
       return;
     }
@@ -94,7 +100,8 @@ const BannerRequestPage = () => {
           Заявка на размещение баннера
         </Typography>
         <Typography className="mt-2 text-gray-600">
-          Разместите рекламный баннер на нашей платформе. Заявка будет рассмотрена в течение 24 часов.
+          Разместите рекламный баннер на нашей платформе. Заявка будет
+          рассмотрена в течение 24 часов.
         </Typography>
       </div>
 
@@ -110,7 +117,10 @@ const BannerRequestPage = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="bannerName">
+              <label
+                className="mb-2 block text-sm font-medium text-gray-700"
+                htmlFor="bannerName"
+              >
                 Название баннера <span className="text-red-500">*</span>
               </label>
               <Input
@@ -122,7 +132,10 @@ const BannerRequestPage = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="targetUrl">
+              <label
+                className="mb-2 block text-sm font-medium text-gray-700"
+                htmlFor="targetUrl"
+              >
                 URL для перехода <span className="text-red-500">*</span>
               </label>
               <Input
@@ -174,9 +187,7 @@ const BannerRequestPage = () => {
                   <span className="text-sm text-gray-600">
                     Нажмите для загрузки изображения
                   </span>
-                  <span className="text-xs text-gray-400">
-                    PNG, JPG до 5MB
-                  </span>
+                  <span className="text-xs text-gray-400">PNG, JPG до 5MB</span>
                 </button>
               )}
             </div>
@@ -218,7 +229,10 @@ const BannerRequestPage = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="bannerDays">
+              <label
+                className="mb-2 block text-sm font-medium text-gray-700"
+                htmlFor="bannerDays"
+              >
                 Количество дней <span className="text-red-500">*</span>
               </label>
               <Input
@@ -245,7 +259,10 @@ const BannerRequestPage = () => {
 
           {/* Комментарий */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="bannerComment">
+            <label
+              className="mb-2 block text-sm font-medium text-gray-700"
+              htmlFor="bannerComment"
+            >
               Комментарий к заявке
             </label>
             <textarea

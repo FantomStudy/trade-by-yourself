@@ -52,7 +52,8 @@ const PromotionRequestPage = () => {
           Заявка на продвижение товара
         </Typography>
         <Typography className="mt-2 text-gray-600">
-          Отправьте заявку на продвижение вашего товара. Администратор рассмотрит её в течение 24 часов.
+          Отправьте заявку на продвижение вашего товара. Администратор
+          рассмотрит её в течение 24 часов.
         </Typography>
       </div>
 
@@ -68,7 +69,10 @@ const PromotionRequestPage = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="productName">
+              <label
+                className="mb-2 block text-sm font-medium text-gray-700"
+                htmlFor="productName"
+              >
                 Название товара <span className="text-red-500">*</span>
               </label>
               <Input
@@ -78,7 +82,6 @@ const PromotionRequestPage = () => {
                 placeholder="Введите название товара"
               />
             </div>
-
           </div>
 
           {/* Параметры продвижения */}
@@ -114,7 +117,10 @@ const PromotionRequestPage = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="days">
+              <label
+                className="mb-2 block text-sm font-medium text-gray-700"
+                htmlFor="days"
+              >
                 Количество дней <span className="text-red-500">*</span>
               </label>
               <Input
@@ -141,7 +147,10 @@ const PromotionRequestPage = () => {
 
           {/* Комментарий */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="comment">
+            <label
+              className="mb-2 block text-sm font-medium text-gray-700"
+              htmlFor="comment"
+            >
               Комментарий к заявке
             </label>
             <textarea
