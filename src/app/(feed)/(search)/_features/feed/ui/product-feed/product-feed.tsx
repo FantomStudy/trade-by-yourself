@@ -19,7 +19,10 @@ import {
   ProductGrid,
   SkeletonGrid,
 } from "@/app/(feed)/(search)/_lib/ui/product-grid";
-import { ProductFeedBanner } from "@/components/product-feed-banner";
+import {
+  ProductFeedBanner,
+  WideBanner,
+} from "@/components/product-feed-banner";
 
 import { LikeButton } from "../../../favorites";
 import { getFeed } from "../../../product";
@@ -118,13 +121,27 @@ export const ProductFeed = ({ filters }: FeedProps) => {
   // Функция для вставки баннеров в нужные позиции
   const renderProductsWithBanners = () => {
     const items: JSX.Element[] = [];
+    let productIndex = 0;
 
-    data.forEach((product, index) => {
-      // Вставляем баннер на позиции 1 (второй элемент), затем через каждые 6 карточек
-      // Позиции баннеров: 1, 7, 13, 19...
-      if (index === 1 || (index > 1 && (index - 1) % 6 === 0)) {
-        items.push(<ProductFeedBanner key={`banner-${index}`} />);
+    while (productIndex < data.length) {
+      // Вставляем широкий баннер каждые 20 карточек (занимает место двух карточек)
+      if (items.length > 0 && items.length % 20 === 0) {
+        items.push(<WideBanner key={`wide-banner-${items.length}`} />);
+        productIndex += 2; // Пропускаем 2 карточки
+        continue;
       }
+      // Вставляем узкий баннер на позиции 1, затем через каждые 6 элементов
+      else if (
+        items.length === 1 ||
+        (items.length > 1 && (items.length - 1) % 6 === 0)
+      ) {
+        items.push(<ProductFeedBanner key={`banner-${items.length}`} />);
+        productIndex++; // Пропускаем 1 карточку
+        continue;
+      }
+
+      const product = data[productIndex];
+      if (!product) break;
 
       items.push(
         <ProductCard key={product.id} product={product}>
@@ -155,7 +172,9 @@ export const ProductFeed = ({ filters }: FeedProps) => {
           </ProductCardContent>
         </ProductCard>,
       );
-    });
+
+      productIndex++;
+    }
 
     return items;
   };

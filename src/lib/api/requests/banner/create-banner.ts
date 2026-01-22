@@ -7,6 +7,8 @@ export const createBanner = async (data: CreateBannerData) => {
 
   formData.append("image", data.image);
   formData.append("place", data.place);
+  formData.append("name", data.name);
+  formData.append("navigateToUrl", data.navigateToUrl);
 
   return api("/banner", {
     method: "POST",

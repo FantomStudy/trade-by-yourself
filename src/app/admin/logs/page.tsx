@@ -11,18 +11,25 @@ const LogsPage = () => {
 
   const filteredLogs = useMemo(() => {
     if (!logs) return [];
-    if (!searchQuery.trim()) return logs;
 
-    const query = searchQuery.toLowerCase();
-    return logs.filter((log) => {
-      return (
-        log.id.toString().includes(searchQuery) ||
-        log.userId.toString().includes(searchQuery) ||
-        log.action.toLowerCase().includes(query) ||
-        log.user?.fullName.toLowerCase().includes(query) ||
-        log.user?.email?.toLowerCase().includes(query)
-      );
-    });
+    let result = [...logs];
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((log) => {
+        return (
+          log.id.toString().includes(searchQuery) ||
+          log.userId.toString().includes(searchQuery) ||
+          log.action.toLowerCase().includes(query) ||
+          log.user?.fullName.toLowerCase().includes(query) ||
+          log.user?.email?.toLowerCase().includes(query) ||
+          log.user?.id.toString().includes(searchQuery)
+        );
+      });
+    }
+
+    // Сортируем по ID в обратном порядке (новые сверху)
+    return result.sort((a, b) => b.id - a.id);
   }, [logs, searchQuery]);
 
   if (isLoading) {
@@ -65,61 +72,42 @@ const LogsPage = () => {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-        <table className="w-full border-collapse">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="border-b px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                ID
-              </th>
-              <th className="border-b px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                User ID
-              </th>
-              <th className="border-b px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                Пользователь
-              </th>
-              <th className="border-b px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                Email
-              </th>
-              <th className="border-b px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                Действие
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredLogs.length === 0 ? (
-              <tr>
-                <td className="px-4 py-8 text-center text-gray-500" colSpan={5}>
-                  {searchQuery
-                    ? "Логи не найдены по вашему запросу"
-                    : "Логи отсутствуют"}
-                </td>
-              </tr>
-            ) : (
-              filteredLogs.map((log) => (
-                <tr key={log.id} className="transition-colors hover:bg-gray-50">
-                  <td className="border-b px-4 py-3 text-sm text-gray-900">
-                    {log.id}
-                  </td>
-                  <td className="border-b px-4 py-3 text-sm text-gray-900">
-                    {log.userId}
-                  </td>
-                  <td className="border-b px-4 py-3 text-sm text-gray-900">
-                    {log.user?.fullName || "-"}
-                  </td>
-                  <td className="border-b px-4 py-3 text-sm text-gray-600">
-                    {log.user?.email || "-"}
-                  </td>
-                  <td className="border-b px-4 py-3 text-sm">
-                    <code className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-800">
-                      {log.action}
-                    </code>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="space-y-4">
+        {filteredLogs.length === 0 ? (
+          <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
+            <p className="text-gray-500">
+              {searchQuery
+                ? "Логи не найдены по вашему запросу"
+                : "Логи отсутствуют"}
+            </p>
+          </div>
+        ) : (
+          filteredLogs.map((log) => (
+            <div
+              key={log.id}
+              className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md"
+            >
+              <div className="flex items-start justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-medium text-gray-500">
+                      Log ID: {log.id}
+                    </span>
+                    <span className="text-xs font-medium text-gray-500">
+                      User ID: {log.userId}
+                    </span>
+                  </div>
+
+                  <div className="mt-2 rounded-md bg-blue-50 px-3 py-2">
+                    <div className="text-sm font-medium whitespace-pre-wrap text-blue-900">
+                      {log.action.split("\\n").join("\n")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {filteredLogs.length > 0 && (

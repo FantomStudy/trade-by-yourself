@@ -76,6 +76,18 @@ export const BannerSelector = () => {
     chats: null,
     favorites: null,
   });
+  const [bannerNames, setBannerNames] = useState<Record<BannerPlace, string>>({
+    product_feed: "",
+    profile: "",
+    chats: "",
+    favorites: "",
+  });
+  const [bannerUrls, setBannerUrls] = useState<Record<BannerPlace, string>>({
+    product_feed: "",
+    profile: "",
+    chats: "",
+    favorites: "",
+  });
   const fileInputRefs = useRef<Record<BannerPlace, HTMLInputElement | null>>({
     product_feed: null,
     profile: null,
@@ -92,6 +104,31 @@ export const BannerSelector = () => {
       setLoading(true);
       const data = await getBanners();
       setBanners(data);
+
+      // Заполняем поля name и navigateToUrl из существующих баннеров
+      const names: Record<BannerPlace, string> = {
+        product_feed: "",
+        profile: "",
+        chats: "",
+        favorites: "",
+      };
+      const urls: Record<BannerPlace, string> = {
+        product_feed: "",
+        profile: "",
+        chats: "",
+        favorites: "",
+      };
+
+      data.forEach((banner) => {
+        const place = placeFromAPI[banner.place];
+        if (place) {
+          names[place] = banner.name;
+          urls[place] = banner.navigateToUrl;
+        }
+      });
+
+      setBannerNames(names);
+      setBannerUrls(urls);
     } catch (error) {
       console.error("Ошибка загрузки баннеров:", error);
     } finally {
@@ -120,6 +157,27 @@ export const BannerSelector = () => {
       return;
     }
 
+    const name = bannerNames[place]?.trim();
+    const navigateToUrl = bannerUrls[place]?.trim();
+
+    if (!name) {
+      alert("Введите название баннера");
+      return;
+    }
+
+    if (!navigateToUrl) {
+      alert("Введите URL для перехода");
+      return;
+    }
+
+    // Простая валидация URL
+    try {
+      new URL(navigateToUrl);
+    } catch {
+      alert("Введите корректный URL (например, https://example.com)");
+      return;
+    }
+
     const config = BANNER_CONFIGS.find((c) => c.place === place);
     if (!config) return;
 
@@ -131,10 +189,19 @@ export const BannerSelector = () => {
 
       if (existingBanner) {
         // Обновляем существующий баннер через PUT /banner/{id}
-        await updateBanner(existingBanner.id, { image: file });
+        await updateBanner(existingBanner.id, {
+          image: file,
+          name,
+          navigateToUrl,
+        });
       } else {
         // Создаем новый баннер
-        await createBanner({ image: file, place });
+        await createBanner({
+          image: file,
+          place,
+          name,
+          navigateToUrl,
+        });
       }
 
       // Перезагружаем список баннеров
@@ -162,6 +229,11 @@ export const BannerSelector = () => {
     try {
       await deleteBanner(banner.id);
       await loadBanners();
+
+      // Очищаем поля
+      setBannerNames((prev) => ({ ...prev, [place]: "" }));
+      setBannerUrls((prev) => ({ ...prev, [place]: "" }));
+
       alert("Баннер успешно удален!");
     } catch (error) {
       console.error("Ошибка удаления баннера:", error);
@@ -289,6 +361,44 @@ export const BannerSelector = () => {
                       </Typography>
                     </div>
                   )}
+                </div>
+              </div>
+
+              {/* Поля для ввода названия и URL */}
+              <div className="mb-4 space-y-3">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Название баннера
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Например: Google Browser"
+                    value={bannerNames[config.place]}
+                    onChange={(e) =>
+                      setBannerNames((prev) => ({
+                        ...prev,
+                        [config.place]: e.target.value,
+                      }))
+                    }
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    URL для перехода
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://example.com"
+                    value={bannerUrls[config.place]}
+                    onChange={(e) =>
+                      setBannerUrls((prev) => ({
+                        ...prev,
+                        [config.place]: e.target.value,
+                      }))
+                    }
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  />
                 </div>
               </div>
 
