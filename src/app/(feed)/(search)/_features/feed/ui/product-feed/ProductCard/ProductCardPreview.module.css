@@ -1,0 +1,50 @@
+.preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  overflow: hidden;
+}
+.blur {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px);
+  transform: scale(1.1);
+}
+.image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transition: 0.2s opacity ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dotsWrapper {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  pointer-events: none;
+  bottom: 4px;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.dot {
+  height: 6px;
+  width: 6px;
+  border-radius: 50px;
+  transition:
+    0.2s width ease,
+    0.2s opacity ease;
+  background-color: white;
+  opacity: 0.6;
+
+  &[data-active="true"] {
+    width: 16px;
+    opacity: 1;
+  }
+}
