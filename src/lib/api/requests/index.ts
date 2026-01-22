@@ -8,5 +8,6 @@ export * from "./favorites";
 export * from "./log";
 export * from "./payment";
 export * from "./product";
+export * from "./promotion";
 export * from "./reviews";
 export * from "./user";

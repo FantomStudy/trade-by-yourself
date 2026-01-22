@@ -6,6 +6,11 @@ import { toast } from "sonner";
 
 import { Button, Input, Typography } from "@/components/ui";
 import { api } from "@/lib/api/instance";
+import { addPromotion, getCurrentUserProducts } from "@/lib/api";
+import { useCurrentUser } from "@/lib/api/hooks/queries";
+import type { Product } from "@/types";
+
+import { ProductSelector } from "./_components";
 
 interface Promotion {
   id: number;
@@ -14,13 +19,26 @@ interface Promotion {
 }
 
 const PromotionPage = () => {
+  const { data: currentUser } = useCurrentUser();
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Модальное окно
+  // Модальное окно создания типа продвижения
   const [showAddPromotion, setShowAddPromotion] = useState(false);
   const [promotionName, setPromotionName] = useState("");
   const [pricePerDay, setPricePerDay] = useState("");
+
+  // Модальное окно активации продвижения
+  const [showActivatePromotion, setShowActivatePromotion] = useState(false);
+  const [userProducts, setUserProducts] = useState<Product[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null,
+  );
+  const [selectedPromotionId, setSelectedPromotionId] = useState<number | null>(
+    null,
+  );
+  const [days, setDays] = useState("");
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -84,6 +102,66 @@ const PromotionPage = () => {
     setShowAddPromotion(false);
     setPromotionName("");
     setPricePerDay("");
+
+    setShowActivatePromotion(false);
+    setSelectedProductId(null);
+    setSelectedPromotionId(null);
+    setDays("");
+    setUserProducts([]);
+  };
+
+  const openActivatePromotionModal = async (promotionId: number) => {
+    if (!currentUser) {
+      toast.error("Не удалось получить данные пользователя");
+      return;
+    }
+
+    try {
+      setIsLoadingProducts(true);
+      setSelectedPromotionId(promotionId);
+      setShowActivatePromotion(true);
+
+      // Получаем товары пользователя
+      const products = await getCurrentUserProducts(currentUser.id);
+      setUserProducts(products || []);
+    } catch (error: any) {
+      console.error("Ошибка загрузки товаров:", error);
+      toast.error("Не удалось загрузить список товаров");
+      setShowActivatePromotion(false);
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  };
+
+  const handleActivatePromotion = async () => {
+    if (!selectedProductId || !selectedPromotionId || !days.trim()) {
+      toast.error("Заполните все поля");
+      return;
+    }
+
+    const daysNum = Number.parseInt(days, 10);
+    if (isNaN(daysNum) || daysNum < 1) {
+      toast.error("Введите корректное количество дней (минимум 1)");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await addPromotion({
+        productId: selectedProductId,
+        promotionId: selectedPromotionId,
+        days: daysNum,
+      });
+      toast.success("Продвижение успешно активировано");
+      closeModals();
+    } catch (error: any) {
+      console.error("Ошибка активации продвижения:", error);
+      const errorMessage =
+        error.response?.data?.message || "Не удалось активировать продвижение";
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -115,6 +193,16 @@ const PromotionPage = () => {
   return (
     <div className="space-y-6">
       <div className="grid gap-6">
+        {/* Заголовок */}
+        <div>
+          <Typography className="text-3xl font-bold">
+            Продвижение товаров
+          </Typography>
+          <Typography className="mt-2 text-gray-600">
+            Выберите тип продвижения и товар для активации
+          </Typography>
+        </div>
+
         {/* Типы продвижения */}
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
@@ -148,7 +236,7 @@ const PromotionPage = () => {
                     <h4 className="mb-3 text-2xl font-bold text-gray-900">
                       {promotion.name}
                     </h4>
-                    <div className="flex items-baseline gap-1">
+                    <div className="mb-4 flex items-baseline gap-1">
                       <span className="text-3xl font-bold text-blue-600">
                         {promotion.pricePerDay}
                       </span>
@@ -156,6 +244,12 @@ const PromotionPage = () => {
                         ₽ / день
                       </span>
                     </div>
+                    <Button
+                      className="w-full bg-blue-500 hover:bg-blue-600"
+                      onClick={() => openActivatePromotionModal(promotion.id)}
+                    >
+                      Выбрать товар
+                    </Button>
                   </div>
                 </div>
               ))
@@ -163,6 +257,109 @@ const PromotionPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Модальное окно активации продвижения */}
+      {showActivatePromotion && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-semibold">
+                  Активировать продвижение товара
+                </h3>
+                {selectedPromotionId && (
+                  <p className="mt-1 text-sm text-gray-600">
+                    Тариф:{" "}
+                    <span className="font-semibold text-blue-600">
+                      {
+                        promotions.find((p) => p.id === selectedPromotionId)
+                          ?.name
+                      }
+                    </span>
+                    {" — "}
+                    {
+                      promotions.find((p) => p.id === selectedPromotionId)
+                        ?.pricePerDay
+                    }{" "}
+                    ₽ / день
+                  </p>
+                )}
+              </div>
+              <button
+                className="rounded p-1 hover:bg-gray-100"
+                type="button"
+                onClick={closeModals}
+              >
+                ✕
+              </button>
+            </div>
+
+            {isLoadingProducts ? (
+              <div className="flex min-h-[200px] items-center justify-center">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500" />
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Шаг 1: Выбор товара */}
+                <div>
+                  <label className="mb-3 block text-base font-semibold text-gray-700">
+                    1. Выберите товар для продвижения
+                  </label>
+                  <ProductSelector
+                    products={userProducts}
+                    selectedProductId={selectedProductId}
+                    onSelectProduct={setSelectedProductId}
+                  />
+                </div>
+
+                {/* Шаг 2: Количество дней */}
+                <div>
+                  <label className="mb-3 block text-base font-semibold text-gray-700">
+                    2. Укажите количество дней
+                  </label>
+                  <Input
+                    min="1"
+                    type="number"
+                    value={days}
+                    onChange={(e) => setDays(e.target.value)}
+                    placeholder="Например: 7"
+                  />
+                  {selectedPromotionId && days && (
+                    <p className="mt-2 text-sm text-gray-600">
+                      Итого:{" "}
+                      <span className="font-semibold text-blue-600">
+                        {(
+                          (promotions.find((p) => p.id === selectedPromotionId)
+                            ?.pricePerDay || 0) * Number.parseInt(days, 10)
+                        ).toFixed(0)}{" "}
+                        ₽
+                      </span>
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 flex justify-end gap-2 border-t pt-4">
+              <Button variant="destructive" onClick={closeModals}>
+                Отмена
+              </Button>
+              <Button
+                className="bg-green-500 hover:bg-green-600"
+                disabled={
+                  isSubmitting ||
+                  !selectedProductId ||
+                  !selectedPromotionId ||
+                  !days
+                }
+                onClick={handleActivatePromotion}
+              >
+                {isSubmitting ? "Активация..." : "Активировать"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Модальное окно создания типа продвижения */}
       {showAddPromotion && (
