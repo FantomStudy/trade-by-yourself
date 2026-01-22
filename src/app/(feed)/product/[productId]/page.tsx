@@ -1,3 +1,4 @@
+import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 
 import { getProductById } from "@/api/requests";
@@ -8,6 +9,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
+  Button,
   Typography,
 } from "@/components/ui";
 import { formatPrice } from "@/lib/format";

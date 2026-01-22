@@ -1,6 +1,7 @@
 "use client";
 
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, PencilIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -43,23 +44,30 @@ export const ToggleProductButton = ({
   };
 
   return (
-    <Button
-      className="w-full"
-      disabled={isToggling}
-      variant={isHidden ? "default" : "destructive"}
-      onClick={handleToggle}
-    >
-      {isHidden ? (
-        <>
-          <Eye className="mr-2 h-4 w-4" />
-          Вернуть в продажу
-        </>
-      ) : (
-        <>
-          <EyeOff className="mr-2 h-4 w-4" />
-          Снять с продажи
-        </>
-      )}
-    </Button>
+    <>
+      <Button
+        className="w-full"
+        disabled={isToggling}
+        variant={isHidden ? "default" : "destructive"}
+        onClick={handleToggle}
+      >
+        {isHidden ? (
+          <>
+            <Eye className="mr-2 h-4 w-4" />
+            Вернуть в продажу
+          </>
+        ) : (
+          <>
+            <EyeOff className="mr-2 h-4 w-4" />
+            Снять с продажи
+          </>
+        )}
+      </Button>
+      <Button asChild>
+        <Link href={`/profile/my-products/${productId}`}>
+          <PencilIcon className="size-4" /> Редактировать
+        </Link>
+      </Button>
+    </>
   );
 };

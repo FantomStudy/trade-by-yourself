@@ -39,7 +39,7 @@ export const WideBanner = () => {
           sizes="660px"
           src={banner.photoUrl}
         />
-        <div className="absolute bottom-2 left-2 rounded-full bg-gray-200/80 px-2 py-0.5">
+        <div className="absolute bottom-2 left-2 inline-flex rounded-full bg-gray-200/80 px-2 py-0.5">
           <span className="text-[10px] font-medium text-gray-700 uppercase">
             Реклама
           </span>
