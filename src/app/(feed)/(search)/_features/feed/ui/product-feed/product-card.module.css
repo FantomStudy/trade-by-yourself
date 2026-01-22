@@ -1,29 +1,28 @@
-.title:hover {
-  color: var(--primary);
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
 }
 
-.card[data-promoted="true"] {
-  position: relative;
-  border-radius: var(--radius-lg);
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
+.promoted {
   border: 2px solid var(--pink);
-  border-top: 0;
-}
+  border-top: none;
+  border-radius: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 
-.card[data-promoted="true"] .content {
-  padding-right: 48px;
-}
-
-.card[data-promoted="true"] :is(.price, .title:hover) {
-  color: var(--pink);
+  --product-card-accent: var(--pink);
 }
 
 .promotedSign {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--text-sm);
+  font-size: 12px;
+  font-weight: 500;
   color: var(--pink);
 
   svg {

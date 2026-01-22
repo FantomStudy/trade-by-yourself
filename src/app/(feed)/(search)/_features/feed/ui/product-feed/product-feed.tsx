@@ -1,9 +1,12 @@
 "use client";
 
+import type { JSX } from "react";
+
 import type { FeedFilters } from "../../../product";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowUp } from "lucide-react";
+import clsx from "clsx";
+import { CircleFadingArrowUpIcon } from "lucide-react";
 import Link from "next/link";
 import {
   parseAsInteger,
@@ -12,7 +15,6 @@ import {
   useQueryStates,
 } from "nuqs";
 
-import { ProductCard } from "@/app/(feed)/(search)/_lib/ui/product-card";
 import {
   ProductGrid,
   SkeletonGrid,
@@ -24,6 +26,16 @@ import {
 
 import { LikeButton } from "../../../favorites";
 import { getFeed } from "../../../product";
+import {
+  ProductCard,
+  ProductCardAction,
+  ProductCardAddress,
+  ProductCardContent,
+  ProductCardMedia,
+  ProductCardPreview,
+  ProductCardPrice,
+  ProductCardTitle,
+} from "./ProductCard";
 
 import styles from "./product-card.module.css";
 
@@ -132,37 +144,32 @@ export const ProductFeed = ({ filters }: FeedProps) => {
       if (!product) break;
 
       items.push(
-        <ProductCard
-          key={product.id}
-          className={styles.card}
-          data-promoted={product.hasPromotion}
-          product={product}
-        >
-          <Link href={`/product/${product.id}`}>
-            <ProductCard.Preview />
-          </Link>
-
-          <ProductCard.Content className={styles.content}>
+        <ProductCard key={product.id} product={product}>
+          <ProductCardMedia>
             <Link href={`/product/${product.id}`}>
-              <ProductCard.Title className={styles.title} />
+              <ProductCardPreview />
             </Link>
-
-            <ProductCard.Address />
-            <ProductCard.Price className={styles.price} />
-
-            <ProductCard.Actions>
+          </ProductCardMedia>
+          <ProductCardContent
+            className={clsx(product.hasPromotion && styles.promoted)}
+          >
+            <Link href={`/product/${product.id}`}>
+              <ProductCardTitle />
+            </Link>
+            <ProductCardAction>
               <LikeButton
                 initLiked={product.isFavorited}
                 productId={product.id}
               />
-            </ProductCard.Actions>
-          </ProductCard.Content>
-
-          {product.hasPromotion && (
-            <ProductCard.BottomActions className={styles.promotedSign}>
-              <ArrowUp /> Поднят
-            </ProductCard.BottomActions>
-          )}
+            </ProductCardAction>
+            <ProductCardAddress />
+            <ProductCardPrice />
+            {product.hasPromotion && (
+              <div className={styles.promotedSign}>
+                <CircleFadingArrowUpIcon /> Поднято
+              </div>
+            )}
+          </ProductCardContent>
         </ProductCard>,
       );
 
@@ -172,5 +179,5 @@ export const ProductFeed = ({ filters }: FeedProps) => {
     return items;
   };
 
-  return <ProductGrid>{renderProductsWithBanners()}</ProductGrid>;
+  return <div className={styles.grid}>{renderProductsWithBanners()}</div>;
 };
