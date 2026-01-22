@@ -13,6 +13,14 @@ export const updateBanner = async (id: number, data: UpdateBannerData) => {
     formData.append("place", data.place);
   }
 
+  if (data.name) {
+    formData.append("name", data.name);
+  }
+
+  if (data.navigateToUrl) {
+    formData.append("navigateToUrl", data.navigateToUrl);
+  }
+
   return api(`/banner/${id}`, {
     method: "PUT",
     body: formData,

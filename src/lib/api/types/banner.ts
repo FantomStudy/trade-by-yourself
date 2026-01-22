@@ -5,6 +5,9 @@ export interface Banner {
   id: number;
   photoUrl: string;
   place: BannerPlaceAPI;
+  name: string;
+  navigateToUrl: string;
+  userId: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -12,11 +15,15 @@ export interface Banner {
 export interface CreateBannerData {
   image: File;
   place: BannerPlace;
+  name: string;
+  navigateToUrl: string;
 }
 
 export interface UpdateBannerData {
   image?: File;
   place?: BannerPlace;
+  name?: string;
+  navigateToUrl?: string;
 }
 
 export interface GetBannersParams {
