@@ -166,7 +166,7 @@ export const ProductFeed = ({ filters }: FeedProps) => {
             <ProductCardPrice />
             {product.hasPromotion && (
               <div className={styles.promotedSign}>
-                <CircleFadingArrowUpIcon /> Поднято
+                <CircleFadingArrowUpIcon /> В топе
               </div>
             )}
           </ProductCardContent>
