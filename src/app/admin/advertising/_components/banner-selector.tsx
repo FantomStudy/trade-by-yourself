@@ -306,7 +306,7 @@ export const BannerSelector = () => {
                 </div>
                 {existingBanner && (
                   <Button
-                    size="sm"
+                    className="text-sm"
                     variant="destructive"
                     onClick={() => handleDelete(config.place)}
                   >
@@ -409,7 +409,7 @@ export const BannerSelector = () => {
                 <Button
                   className="flex-1"
                   disabled={isUploading}
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => triggerFileInput(config.place)}
                 >
                   {existingBanner ? "Изменить изображение" : "Выбрать файл"}

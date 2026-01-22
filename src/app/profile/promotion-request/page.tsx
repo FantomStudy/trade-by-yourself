@@ -16,7 +16,6 @@ const PromotionRequestPage = () => {
   const promotionTypes = [
     { id: "standard", name: "Стандарт", price: 50 },
     { id: "premium", name: "Премиум", price: 100 },
-    { id: "vip", name: "VIP", price: 200 },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {

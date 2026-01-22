@@ -62,10 +62,8 @@ const MessagesPage = () => {
               className="block rounded-lg bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
             >
               <div className="mb-2 flex items-start gap-3">
-                {/* Изображение товара */}
                 {chat.product.image && (
                   <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       alt={chat.product.name}
                       className="h-full w-full object-cover"

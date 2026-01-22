@@ -110,28 +110,17 @@ export const RegionPicker = ({
     }
 
     try {
-      const validationResult = await validateAddress(address);
+      const validationResult = await validateAddress({ address });
 
-      if (validationResult.suggestions?.[0]?.data) {
-        const regionParts = [];
-        const data = validationResult.suggestions[0].data;
-
-        if (data.city) regionParts.push(data.city);
-        else if (data.settlement) regionParts.push(data.settlement);
-
-        if (data.region && !regionParts.includes(data.region)) {
-          regionParts.push(data.region);
-        }
-
-        const regionName = regionParts.join(", ") || address;
-        onSelect?.(regionName);
-        onOpenChange?.(false);
-      } else {
+      if (validationResult.valid) {
         onSelect?.(address);
         onOpenChange?.(false);
+      } else {
+        setValidationError(validationResult.message || "Некорректный адрес");
       }
     } catch (error) {
       console.error("Ошибка валидации адреса:", error);
+      // В случае ошибки API всё равно применяем адрес
       onSelect?.(address);
       onOpenChange?.(false);
     }

@@ -2,8 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { useEffect } from "react";
 
-import { getBanners } from "@/api/requests/banner";
+import { getBanners, trackBannerView } from "@/api/requests/banner";
 
 export const ProductFeedBanner = () => {
   const { data: banners, isLoading } = useQuery({
@@ -11,9 +12,15 @@ export const ProductFeedBanner = () => {
     queryFn: async () => getBanners(),
   });
 
-  if (isLoading) return null;
-
   const banner = banners?.find((b) => b.place === "PRODUCT_FEED");
+
+  useEffect(() => {
+    if (banner?.id) {
+      trackBannerView(banner.id);
+    }
+  }, [banner?.id]);
+
+  if (isLoading) return null;
 
   if (!banner) return null;
 

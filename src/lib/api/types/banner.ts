@@ -12,6 +12,18 @@ export interface Banner {
   updatedAt: string;
 }
 
+export interface BannerStats {
+  bannerId: number;
+  bannerName: string;
+  place: BannerPlaceAPI;
+  totalViews: number;
+  uniqueViews: number;
+  viewsByDate: Array<{
+    date: string;
+    views: number;
+  }>;
+}
+
 export interface CreateBannerData {
   image: File;
   place: BannerPlace;
