@@ -11,9 +11,9 @@ const LogsPage = () => {
 
   const filteredLogs = useMemo(() => {
     if (!logs) return [];
-    
+
     let result = [...logs];
-    
+
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter((log) => {
@@ -27,7 +27,7 @@ const LogsPage = () => {
         );
       });
     }
-    
+
     // Сортируем по ID в обратном порядке (новые сверху)
     return result.sort((a, b) => b.id - a.id);
   }, [logs, searchQuery]);
@@ -97,10 +97,10 @@ const LogsPage = () => {
                       User ID: {log.userId}
                     </span>
                   </div>
-                  
+
                   <div className="mt-2 rounded-md bg-blue-50 px-3 py-2">
-                    <div className="whitespace-pre-wrap text-sm font-medium text-blue-900">
-                      {log.action.split('\\n').join('\n')}
+                    <div className="text-sm font-medium whitespace-pre-wrap text-blue-900">
+                      {log.action.split("\\n").join("\n")}
                     </div>
                   </div>
                 </div>
