@@ -52,4 +52,18 @@ export const LINKS: SidebarLinkGroup[] = [
       },
     ],
   },
+  {
+    id: "requests",
+    name: "Заявки",
+    links: [
+      {
+        href: "/profile/promotion-request",
+        label: "Продвижение товара",
+      },
+      {
+        href: "/profile/banner-request",
+        label: "Размещение баннера",
+      },
+    ],
+  },
 ];

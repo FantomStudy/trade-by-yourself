@@ -280,8 +280,10 @@ export const BannerSelector = () => {
           return (
             <div
               key={config.place}
-              className="rounded-lg border-2 border-gray-200 bg-white p-6"
-              style={{ width: `${config.width + 60}px` }}
+              className="w-full rounded-lg border-2 border-gray-200 bg-white p-4 sm:p-6"
+              style={{
+                maxWidth: `${config.width + 60}px`,
+              }}
             >
               <input
                 ref={(el) => {
@@ -293,12 +295,12 @@ export const BannerSelector = () => {
                 onChange={(e) => handleImageSelect(config.place, e)}
               />
 
-              <div className="mb-4 flex items-start justify-between">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <Typography className="text-lg font-semibold">
+                  <Typography className="text-base font-semibold sm:text-lg">
                     {config.width} × {config.height}
                   </Typography>
-                  <Typography className="text-sm text-gray-500">
+                  <Typography className="text-xs text-gray-500 sm:text-sm">
                     {config.description}
                   </Typography>
                 </div>
@@ -314,11 +316,12 @@ export const BannerSelector = () => {
               </div>
 
               {/* Preview с точными размерами */}
-              <div className="mb-4 overflow-auto">
+              <div className="mb-4">
                 <div
                   style={{
-                    width: `${config.width}px`,
-                    height: `${config.height}px`,
+                    width: "100%",
+                    maxWidth: `${config.width}px`,
+                    aspectRatio: `${config.width} / ${config.height}`,
                     position: "relative",
                   }}
                   className="group cursor-pointer rounded border border-gray-300 bg-gray-50"
@@ -402,7 +405,7 @@ export const BannerSelector = () => {
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <Button
                   className="flex-1"
                   disabled={isUploading}
