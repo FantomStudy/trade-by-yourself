@@ -6,10 +6,7 @@
 
 .promoted {
   border: 2px solid var(--pink);
-  border-top: none;
   border-radius: 8px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 
   --product-card-accent: var(--pink);
 }

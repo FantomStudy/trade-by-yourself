@@ -144,15 +144,17 @@ export const ProductFeed = ({ filters }: FeedProps) => {
       if (!product) break;
 
       items.push(
-        <ProductCard key={product.id} product={product}>
+        <ProductCard
+          key={product.id}
+          product={product}
+          className={clsx(product.hasPromotion && styles.promoted)}
+        >
           <ProductCardMedia>
             <Link href={`/product/${product.id}`}>
               <ProductCardPreview />
             </Link>
           </ProductCardMedia>
-          <ProductCardContent
-            className={clsx(product.hasPromotion && styles.promoted)}
-          >
+          <ProductCardContent>
             <Link href={`/product/${product.id}`}>
               <ProductCardTitle />
             </Link>
