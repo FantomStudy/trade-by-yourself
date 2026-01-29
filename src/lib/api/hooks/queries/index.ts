@@ -1,6 +1,7 @@
 export * from "./useCategories";
 export * from "./useChats";
 export * from "./useCurrentUser";
+export * from "./useIsAdmin";
 export * from "./usePaymentHistory";
 export * from "./useProductsToModerate";
 export * from "./useRandomProducts";

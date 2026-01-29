@@ -4,15 +4,26 @@ import {
   FileText,
   FolderTree,
   Megaphone,
+  Menu,
   MessageSquare,
   Package,
   TrendingUp,
   Users,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 
 import { Typography } from "@/components/ui";
+
+import styles from "../admin.module.css";
 
 const menuItems = [
   {
@@ -23,7 +34,7 @@ const menuItems = [
   {
     href: "/admin/users" as const,
     icon: Users,
-    label: "Управление пользователями",
+    label: "Пользователи",
   },
   {
     href: "/admin/support" as const,
@@ -33,63 +44,128 @@ const menuItems = [
   {
     href: "/admin/advertising" as const,
     icon: Megaphone,
-    label: "Управление рекламой",
+    label: "Реклама",
   },
   {
     href: "/admin/categories" as const,
     icon: FolderTree,
-    label: "Управление категориями",
+    label: "Категории",
   },
   {
     href: "/admin/promotion" as const,
     icon: TrendingUp,
-    label: "Продвижение товаров",
+    label: "Продвижение",
   },
   {
     href: "/admin/logs" as const,
     icon: FileText,
-    label: "Логи системы",
+    label: "Логи",
   },
 ];
 
-export const AdminSidebar = () => {
+// Контекст для управления сайдбаром
+interface SidebarContextValue {
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+}
+
+const SidebarContext = createContext<SidebarContextValue | null>(null);
+
+export const useSidebar = () => {
+  const context = useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within SidebarProvider");
+  }
+  return context;
+};
+
+export const SidebarProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
+
+  // Закрываем сайдбар при переходе на другую страницу
+  useEffect(() => {
+    close();
+  }, [pathname, close]);
+
   return (
-    <aside className="flex w-64 flex-col border-r bg-white">
-      <nav className="flex-1 space-y-2 p-4">
-        <Typography className="mb-4 px-3 text-xs font-semibold text-gray-500 uppercase">
-          Админ панель
-        </Typography>
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
+    <SidebarContext.Provider value={{ isOpen, open, close, toggle }}>
+      {children}
+    </SidebarContext.Provider>
+  );
+};
 
-          return (
-            <Link
-              href={item.href as any}
-              key={item.href}
-              className={`flex items-center gap-4 rounded-lg px-4 py-3 text-base font-medium transition-colors ${
-                isActive
-                  ? "bg-blue-50 text-blue-600"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Icon className="h-6 w-6" />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
+export const AdminSidebar = () => {
+  const pathname = usePathname();
+  const { isOpen, close } = useSidebar();
 
-      <div className="border-t p-4">
-        <Link
-          href={"/" as any}
-          className="flex items-center gap-4 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-100"
-        >
-          <Typography>← Вернуться на сайт</Typography>
-        </Link>
-      </div>
-    </aside>
+  return (
+    <>
+      {/* Overlay */}
+      <div
+        className={`${styles.overlay} ${isOpen ? styles.overlayVisible : ""}`}
+        onClick={close}
+      />
+
+      {/* Sidebar */}
+      <aside
+        className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}
+      >
+        {/* Кнопка закрытия для мобильных */}
+        <button className={styles.closeButton} onClick={close} type="button">
+          <X className="h-5 w-5" />
+        </button>
+
+        <nav className={styles.nav}>
+          <Typography className={styles.navTitle}>Админ панель</Typography>
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+
+            return (
+              <Link
+                href={item.href as any}
+                key={item.href}
+                className={`${styles.navLink} ${isActive ? styles.navLinkActive : ""}`}
+                onClick={close}
+              >
+                <Icon className={styles.navIcon} />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className={styles.sidebarFooter}>
+          <Link href={"/" as any} className={styles.backLink} onClick={close}>
+            ← Вернуться на сайт
+          </Link>
+        </div>
+      </aside>
+    </>
+  );
+};
+
+// Компонент мобильного header
+export const MobileHeader = ({ title }: { title?: string }) => {
+  const { toggle } = useSidebar();
+
+  return (
+    <div className={styles.mobileHeader}>
+      <button className={styles.menuButton} onClick={toggle} type="button">
+        <Menu className="h-5 w-5" />
+      </button>
+      <span className={styles.mobileTitle}>{title || "Админ панель"}</span>
+    </div>
   );
 };

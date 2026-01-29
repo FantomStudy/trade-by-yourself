@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 
 import { checkIsAdmin } from "@/lib/api";
 
-import { AdminSidebar } from "./_components/admin-sidebar";
+import { AdminSidebar, SidebarProvider } from "./_components/admin-sidebar";
+import styles from "./admin.module.css";
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   try {
@@ -17,10 +18,12 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="admin-layout flex min-h-screen bg-gray-50">
-      <AdminSidebar />
-      <main className="flex-1 p-8">{children}</main>
-    </div>
+    <SidebarProvider>
+      <div className={styles.layout}>
+        <AdminSidebar />
+        <main className={styles.main}>{children}</main>
+      </div>
+    </SidebarProvider>
   );
 };
 

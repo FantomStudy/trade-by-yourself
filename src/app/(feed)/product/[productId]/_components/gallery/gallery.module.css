@@ -111,3 +111,58 @@
     stroke-width: 1.5;
   }
 }
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .imageGallery {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .thumbnails {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+
+  .mainImageWrapper {
+    max-width: 100%;
+    min-height: 300px;
+    aspect-ratio: 4 / 3;
+  }
+
+  .controlItem {
+    width: 36px;
+    height: 36px;
+    margin: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageGallery {
+    gap: 8px;
+  }
+
+  .thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+
+  .mainImageWrapper {
+    min-height: 250px;
+    border-radius: 8px;
+  }
+
+  .controlItem {
+    width: 32px;
+    height: 32px;
+    margin: 6px;
+  }
+}

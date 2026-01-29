@@ -33,7 +33,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </Link>
 
         <div className={styles.meta}>
-          <Typography>{product.address}</Typography>
+          <Typography className={styles.address}>{product.address}</Typography>
           <Typography>{product.createdAt}</Typography>
         </div>
 

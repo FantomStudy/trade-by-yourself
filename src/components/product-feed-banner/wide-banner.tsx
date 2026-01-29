@@ -6,13 +6,28 @@ import { useEffect } from "react";
 
 import { getBanners, trackBannerView } from "@/api/requests/banner";
 
-export const WideBanner = () => {
+import styles from "./wide-banner.module.css";
+
+export interface WideBannerProps {
+  bannerIndex?: number;
+}
+
+export const WideBanner = ({ bannerIndex = 0 }: WideBannerProps) => {
   const { data: banners, isLoading } = useQuery({
     queryKey: ["banners", "PROFILE"],
-    queryFn: async () => getBanners(),
+    queryFn: async () => getBanners({ place: "PROFILE" }),
   });
 
-  const banner = banners?.find((b) => b.place === "PROFILE");
+  console.log("[WideBanner] Banners loaded:", banners?.length || 0);
+  console.log("[WideBanner] Banner index:", bannerIndex);
+
+  const profileBanners = banners?.filter((b) => b.place === "PROFILE") || [];
+  const banner =
+    profileBanners.length > 0
+      ? profileBanners[bannerIndex % profileBanners.length]
+      : undefined;
+
+  console.log("[WideBanner] Selected banner:", banner?.id, banner?.name);
 
   useEffect(() => {
     if (banner?.id) {
@@ -27,35 +42,24 @@ export const WideBanner = () => {
   return (
     <a
       href={banner.navigateToUrl}
-      className="flex h-full flex-col overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--background)] transition-opacity hover:opacity-90"
+      className={styles.banner}
       rel="noopener noreferrer"
-      style={{ gridColumn: "span 2" }}
       target="_blank"
     >
-      <div
-        style={{
-          width: "100%",
-          aspectRatio: "660 / 400",
-        }}
-        className="relative"
-      >
+      <div className={styles.imageWrapper}>
         <Image
           fill
           alt={banner.name}
-          className="object-cover"
-          sizes="660px"
+          className={styles.image}
+          sizes="(max-width: 768px) 100vw, 660px"
           src={banner.photoUrl}
         />
-        <div className="absolute bottom-2 left-2 inline-flex rounded-full bg-gray-200/80 px-2 py-0.5">
-          <span className="text-[10px] font-medium text-gray-700 uppercase">
-            Реклама
-          </span>
+        <div className={styles.badge}>
+          <span className={styles.badgeText}>Реклама</span>
         </div>
       </div>
-      <div className="p-3">
-        <p className="text-sm font-medium text-[var(--foreground)]">
-          {banner.name}
-        </p>
+      <div className={styles.content}>
+        <p className={styles.name}>{banner.name}</p>
       </div>
     </a>
   );

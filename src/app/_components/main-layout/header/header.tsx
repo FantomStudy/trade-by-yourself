@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui";
 
 import { HeaderActions } from "./header-actions";
+import { MobileMenu } from "./mobile-menu";
 import { SearchButton } from "./search-button";
 
 import styles from "./header.module.css";
@@ -20,7 +21,10 @@ export const Header = () => {
 
         <div className={styles.rightSection}>
           <SearchButton />
-          <HeaderActions />
+          <div className={styles.desktopActions}>
+            <HeaderActions />
+          </div>
+          <MobileMenu />
         </div>
       </div>
     </header>

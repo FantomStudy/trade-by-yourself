@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { Button, Input, Typography } from "@/components/ui";
 import { api } from "@/lib/api/instance";
 
+import { MobileHeader } from "../_components/admin-sidebar";
+
 interface Category {
   id: number;
   name: string;
@@ -536,11 +538,12 @@ const CategoriesPage = () => {
   if (isLoading) {
     return (
       <div className="space-y-6">
+        <MobileHeader title="Категории" />
         <div>
-          <Typography className="text-3xl font-bold">
+          <Typography className="text-xl font-bold sm:text-3xl">
             Управление категориями
           </Typography>
-          <Typography className="mt-2 text-gray-600">
+          <Typography className="mt-2 text-sm text-gray-600">
             Создание и редактирование категорий и подкатегорий товаров
           </Typography>
         </div>
@@ -553,11 +556,12 @@ const CategoriesPage = () => {
 
   return (
     <div className="space-y-6">
+      <MobileHeader title="Категории" />
       <div>
-        <Typography className="text-3xl font-bold">
+        <Typography className="text-xl font-bold sm:text-3xl">
           Управление категориями
         </Typography>
-        <Typography className="mt-2 text-gray-600">
+        <Typography className="mt-2 text-sm text-gray-600">
           Создание и редактирование категорий и подкатегорий товаров
         </Typography>
       </div>

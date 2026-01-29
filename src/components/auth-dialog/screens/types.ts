@@ -1,4 +1,4 @@
-export type AuthScreen = "login" | "recover" | "register";
+export type AuthScreen = "login" | "recover" | "register" | "verify-code";
 
 export interface AuthScreenProps {
   onChangeScreen: (screen: AuthScreen) => void;

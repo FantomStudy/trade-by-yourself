@@ -69,3 +69,60 @@
     min-width: 180px;
   }
 }
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .list {
+    min-width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-height: 120px;
+    overflow-y: auto;
+  }
+
+  .categoryItem {
+    padding: 8px 12px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .subcategoryWrapper {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .details {
+    gap: 12px;
+  }
+
+  .typeWrapper {
+    padding-bottom: 16px;
+    gap: 8px;
+  }
+
+  .title {
+    padding: 16px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 12px;
+  }
+
+  .list {
+    max-height: 100px;
+  }
+
+  .categoryItem {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}

@@ -10,6 +10,8 @@ import { useChats } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
 
+import { MobileHeader } from "../_components/admin-sidebar";
+
 const SupportPage = () => {
   const { data: initialChats, isLoading } = useChats();
   const [chats, setChats] = useState<Chat[]>([]);
@@ -72,8 +74,11 @@ const SupportPage = () => {
   if (isLoading) {
     return (
       <div className="space-y-6">
+        <MobileHeader title="Чат поддержки" />
         <div>
-          <Typography className="text-3xl font-bold">Чат поддержки</Typography>
+          <Typography className="text-xl font-bold sm:text-3xl">
+            Чат поддержки
+          </Typography>
           <Typography className="mt-2 text-gray-600">
             Общение с пользователями и поддержка
           </Typography>
@@ -89,8 +94,11 @@ const SupportPage = () => {
 
   return (
     <div className="space-y-6">
+      <MobileHeader title="Чат поддержки" />
       <div>
-        <Typography className="text-3xl font-bold">Чат поддержки</Typography>
+        <Typography className="text-xl font-bold sm:text-3xl">
+          Чат поддержки
+        </Typography>
         <Typography className="mt-2 text-gray-600">
           Общение с пользователями и поддержка
         </Typography>

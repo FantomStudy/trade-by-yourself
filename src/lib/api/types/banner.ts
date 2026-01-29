@@ -1,10 +1,9 @@
-export type BannerPlace = "product_feed" | "profile" | "chats" | "favorites";
-export type BannerPlaceAPI = "PRODUCT_FEED" | "PROFILE" | "CHATS" | "FAVORITES";
+export type BannerPlace = "PRODUCT_FEED" | "PROFILE" | "CHATS" | "FAVORITES";
 
 export interface Banner {
   id: number;
   photoUrl: string;
-  place: BannerPlaceAPI;
+  place: BannerPlace;
   name: string;
   navigateToUrl: string;
   userId: number;
@@ -15,7 +14,7 @@ export interface Banner {
 export interface BannerStats {
   bannerId: number;
   bannerName: string;
-  place: BannerPlaceAPI;
+  place: BannerPlace;
   totalViews: number;
   uniqueViews: number;
   viewsByDate: Array<{

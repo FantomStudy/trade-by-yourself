@@ -16,8 +16,33 @@
   gap: var(--space-md);
 }
 
+.desktopActions {
+  display: flex;
+  align-items: center;
+}
+
 .actions {
   display: flex;
   align-items: center;
   gap: var(--space-md);
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: 60px;
+  }
+
+  .desktopActions {
+    display: none;
+  }
+
+  .rightSection {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    height: 56px;
+  }
 }

@@ -14,7 +14,12 @@ import {
   DialogTitle,
 } from "@/components/ui";
 
-import { LoginScreen, RecoverScreen, RegisterScreen } from "./screens";
+import {
+  LoginScreen,
+  RecoverScreen,
+  RegisterScreen,
+  VerifyCodeScreen,
+} from "./screens";
 
 const AUTH_SCREENS = {
   login: {
@@ -31,6 +36,11 @@ const AUTH_SCREENS = {
     id: "register",
     title: "Регистрация",
     component: RegisterScreen,
+  },
+  "verify-code": {
+    id: "verify-code",
+    title: "Подтверждение номера",
+    component: VerifyCodeScreen,
   },
 };
 
@@ -54,10 +64,17 @@ export const AuthDialog = ({
     handleOpenChange(false);
   }, [handleOpenChange]);
 
-  const handleRegisterSuccess = useCallback(() => {
+  const handleVerifyCodeSuccess = useCallback(() => {
     toast("Регистрация прошла успешно!");
     setScreen("login");
   }, []);
+
+  const getOnCloseHandler = useCallback(() => {
+    if (screen === "verify-code") {
+      return handleVerifyCodeSuccess;
+    }
+    return handleClose;
+  }, [screen, handleVerifyCodeSuccess, handleClose]);
 
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
@@ -68,10 +85,7 @@ export const AuthDialog = ({
 
         {AUTH_SCREENS[screen].component({
           onChangeScreen: setScreen,
-          onClose:
-            AUTH_SCREENS[screen].id === "register"
-              ? handleRegisterSuccess
-              : handleClose,
+          onClose: getOnCloseHandler(),
         })}
       </DialogContent>
     </Dialog>

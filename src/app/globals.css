@@ -150,6 +150,12 @@
     padding: 0 48px;
   }
 
+  @media (max-width: 768px) {
+    .global-container {
+      padding: 0 16px;
+    }
+  }
+
   .text-primary {
     color: var(--primary);
   }

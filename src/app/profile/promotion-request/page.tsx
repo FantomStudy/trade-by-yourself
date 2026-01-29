@@ -1,193 +1,321 @@
 "use client";
 
-import { Package, Send, TrendingUp } from "lucide-react";
-import { useState } from "react";
+import { Plus, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button, Input, Typography } from "@/components/ui";
+import { api } from "@/lib/api/instance";
+import { addPromotion, getCurrentUserProducts } from "@/lib/api";
+import { useCurrentUser } from "@/lib/api/hooks/queries";
+import type { Product } from "@/types";
 
-const PromotionRequestPage = () => {
-  const [productName, setProductName] = useState("");
-  const [promotionType, setPromotionType] = useState("");
+import { ProductSelector } from "./_components";
+
+interface Promotion {
+  id: number;
+  name: string;
+  pricePerDay: number;
+}
+
+const PromotionPage = () => {
+  const { data: currentUser } = useCurrentUser();
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Модальное окно активации продвижения
+  const [showActivatePromotion, setShowActivatePromotion] = useState(false);
+  const [userProducts, setUserProducts] = useState<Product[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null,
+  );
+  const [selectedPromotionId, setSelectedPromotionId] = useState<number | null>(
+    null,
+  );
   const [days, setDays] = useState("");
-  const [comment, setComment] = useState("");
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const promotionTypes = [
-    { id: "standard", name: "Стандарт", price: 50 },
-    { id: "premium", name: "Премиум", price: 100 },
-  ];
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const loadData = async () => {
+    try {
+      setIsLoading(true);
+      const promotionsData = await api<Promotion[]>(
+        "/promotion/all-promotions",
+      );
+      setPromotions(promotionsData);
+    } catch (error) {
+      console.error("Ошибка загрузки данных:", error);
+      toast.error("Не удалось загрузить данные");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    if (!productName.trim() || !promotionType || !days) {
-      toast.error("Заполните все обязательные поля");
+  const closeModals = () => {
+    setShowActivatePromotion(false);
+    setSelectedProductId(null);
+    setSelectedPromotionId(null);
+    setDays("");
+    setUserProducts([]);
+  };
+
+  const openActivatePromotionModal = async (promotionId: number) => {
+    if (!currentUser) {
+      toast.error("Не удалось получить данные пользователя");
       return;
     }
 
-    setIsSubmitting(true);
+    try {
+      setIsLoadingProducts(true);
+      setSelectedPromotionId(promotionId);
+      setShowActivatePromotion(true);
 
-    // Имитация отправки
-    setTimeout(() => {
-      toast.success("Заявка на продвижение успешно отправлена!");
-      setProductName("");
-      setPromotionType("");
-      setDays("");
-      setComment("");
-      setIsSubmitting(false);
-    }, 1000);
+      // Получаем товары пользователя
+      const products = await getCurrentUserProducts(currentUser.id);
+      setUserProducts(products || []);
+    } catch (error: any) {
+      console.error("Ошибка загрузки товаров:", error);
+      toast.error("Не удалось загрузить список товаров");
+      setShowActivatePromotion(false);
+    } finally {
+      setIsLoadingProducts(false);
+    }
   };
 
-  const selectedPromotion = promotionTypes.find((p) => p.id === promotionType);
-  const totalPrice = selectedPromotion
-    ? selectedPromotion.price * Number(days || 0)
-    : 0;
+  const handleActivatePromotion = async () => {
+    if (!selectedProductId || !selectedPromotionId || !days.trim()) {
+      toast.error("Заполните все поля");
+      return;
+    }
+
+    const daysNum = Number.parseInt(days, 10);
+    if (isNaN(daysNum) || daysNum < 1) {
+      toast.error("Введите корректное количество дней (минимум 1)");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await addPromotion({
+        productId: selectedProductId,
+        promotionId: selectedPromotionId,
+        days: daysNum,
+      });
+      toast.success("Продвижение успешно активировано");
+      closeModals();
+    } catch (error: any) {
+      console.error("Ошибка активации продвижения:", error);
+      const errorMessage =
+        error.response?.data?.message || "Не удалось активировать продвижение";
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("ru-RU", {
+      style: "currency",
+      currency: "RUB",
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <Typography className="text-3xl font-bold">
+            Продвижение товаров
+          </Typography>
+          <Typography className="mt-2 text-gray-600">
+            Управление типами продвижения товаров
+          </Typography>
+        </div>
+        <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-white p-8 shadow-sm">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full space-y-6">
-      <div>
-        <Typography className="text-2xl font-bold sm:text-3xl">
-          Заявка на продвижение товара
-        </Typography>
-        <Typography className="mt-2 text-gray-600">
-          Отправьте заявку на продвижение вашего товара. Администратор
-          рассмотрит её в течение 24 часов.
-        </Typography>
-      </div>
+    <div className="space-y-6">
+      <div className="grid gap-6">
+        {/* Заголовок */}
+        <div>
+          <Typography className="text-3xl font-bold">
+            Продвижение товаров
+          </Typography>
+          <Typography className="mt-2 text-gray-600">
+            Выберите тип продвижения и товар для активации
+          </Typography>
+        </div>
 
-      <div className="rounded-lg bg-white p-4 shadow-sm sm:p-6">
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Информация о товаре */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b pb-3">
-              <Package className="h-5 w-5 text-blue-500" />
-              <Typography className="text-lg font-semibold">
-                Информация о товаре
-              </Typography>
-            </div>
-
-            <div>
-              <label
-                className="mb-2 block text-sm font-medium text-gray-700"
-                htmlFor="productName"
-              >
-                Название товара <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="productName"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
-                placeholder="Введите название товара"
-              />
-            </div>
+        {/* Типы продвижения */}
+        <div className="rounded-lg bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-xl font-semibold">Типы продвижения</h3>
           </div>
 
-          {/* Параметры продвижения */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b pb-3">
-              <TrendingUp className="h-5 w-5 text-green-500" />
-              <Typography className="text-lg font-semibold">
-                Параметры продвижения
-              </Typography>
-            </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {promotions.length === 0 ? (
+              <p className="col-span-full py-8 text-center text-gray-500">
+                Нет типов продвижения
+              </p>
+            ) : (
+              promotions.map((promotion) => (
+                <div
+                  key={promotion.id}
+                  className="group relative overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+                >
+                  <div className="absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-blue-100/50 blur-2xl transition-all group-hover:bg-blue-200/60" />
+                  <div className="relative">
+                    <div className="mb-4 flex items-center gap-3">
+                      <div className="rounded-lg bg-blue-100 p-2.5">
+                        <TrendingUp className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div className="h-8 w-px bg-gray-200" />
+                      <div>
+                        <p className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                          Тариф
+                        </p>
+                      </div>
+                    </div>
+                    <h4 className="mb-3 text-2xl font-bold text-gray-900">
+                      {promotion.name}
+                    </h4>
+                    <div className="mb-4 flex items-baseline gap-1">
+                      <span className="text-3xl font-bold text-blue-600">
+                        {promotion.pricePerDay}
+                      </span>
+                      <span className="text-sm font-medium text-gray-600">
+                        ₽ / день
+                      </span>
+                    </div>
+                    <Button
+                      className="w-full bg-blue-500 hover:bg-blue-600"
+                      onClick={() => openActivatePromotionModal(promotion.id)}
+                    >
+                      Выбрать товар
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
 
-            <div>
-              <span className="mb-2 block text-sm font-medium text-gray-700">
-                Тип продвижения <span className="text-red-500">*</span>
-              </span>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                {promotionTypes.map((type) => (
-                  <button
-                    key={type.id}
-                    className={`rounded-lg border-2 p-4 text-left transition-all ${
-                      promotionType === type.id
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                    type="button"
-                    onClick={() => setPromotionType(type.id)}
-                  >
-                    <p className="font-semibold text-gray-900">{type.name}</p>
-                    <p className="text-sm text-blue-600">{type.price} ₽/день</p>
-                  </button>
-                ))}
+      {/* Модальное окно активации продвижения */}
+      {showActivatePromotion && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-semibold">
+                  Активировать продвижение товара
+                </h3>
+                {selectedPromotionId && (
+                  <p className="mt-1 text-sm text-gray-600">
+                    Тариф:{" "}
+                    <span className="font-semibold text-blue-600">
+                      {
+                        promotions.find((p) => p.id === selectedPromotionId)
+                          ?.name
+                      }
+                    </span>
+                    {" — "}
+                    {
+                      promotions.find((p) => p.id === selectedPromotionId)
+                        ?.pricePerDay
+                    }{" "}
+                    ₽ / день
+                  </p>
+                )}
               </div>
-            </div>
-
-            <div>
-              <label
-                className="mb-2 block text-sm font-medium text-gray-700"
-                htmlFor="days"
+              <button
+                className="rounded p-1 hover:bg-gray-100"
+                type="button"
+                onClick={closeModals}
               >
-                Количество дней <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="days"
-                min="1"
-                type="number"
-                value={days}
-                onChange={(e) => setDays(e.target.value)}
-                placeholder="Например: 7"
-              />
+                ✕
+              </button>
             </div>
 
-            {totalPrice > 0 && (
-              <div className="rounded-lg bg-blue-50 p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Итого к оплате:</span>
-                  <span className="text-2xl font-bold text-blue-600">
-                    {totalPrice} ₽
-                  </span>
+            {isLoadingProducts ? (
+              <div className="flex min-h-[200px] items-center justify-center">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500" />
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Шаг 1: Выбор товара */}
+                <div>
+                  <label className="mb-3 block text-base font-semibold text-gray-700">
+                    1. Выберите товар для продвижения
+                  </label>
+                  <ProductSelector
+                    products={userProducts}
+                    selectedProductId={selectedProductId}
+                    onSelectProduct={setSelectedProductId}
+                  />
+                </div>
+
+                {/* Шаг 2: Количество дней */}
+                <div>
+                  <label className="mb-3 block text-base font-semibold text-gray-700">
+                    2. Укажите количество дней
+                  </label>
+                  <Input
+                    min="1"
+                    type="number"
+                    value={days}
+                    onChange={(e) => setDays(e.target.value)}
+                    placeholder="Например: 7"
+                  />
+                  {selectedPromotionId && days && (
+                    <p className="mt-2 text-sm text-gray-600">
+                      Итого:{" "}
+                      <span className="font-semibold text-blue-600">
+                        {(
+                          (promotions.find((p) => p.id === selectedPromotionId)
+                            ?.pricePerDay || 0) * Number.parseInt(days, 10)
+                        ).toFixed(0)}{" "}
+                        ₽
+                      </span>
+                    </p>
+                  )}
                 </div>
               </div>
             )}
+
+            <div className="mt-6 flex justify-end gap-2 border-t pt-4">
+              <Button variant="destructive" onClick={closeModals}>
+                Отмена
+              </Button>
+              <Button
+                className="bg-green-500 hover:bg-green-600"
+                disabled={
+                  isSubmitting ||
+                  !selectedProductId ||
+                  !selectedPromotionId ||
+                  !days
+                }
+                onClick={handleActivatePromotion}
+              >
+                {isSubmitting ? "Активация..." : "Активировать"}
+              </Button>
+            </div>
           </div>
-
-          {/* Комментарий */}
-          <div>
-            <label
-              className="mb-2 block text-sm font-medium text-gray-700"
-              htmlFor="comment"
-            >
-              Комментарий к заявке
-            </label>
-            <textarea
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-              id="comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Дополнительная информация..."
-              rows={4}
-            />
-          </div>
-
-          {/* Кнопка отправки */}
-          <Button
-            className="w-full bg-blue-500 hover:bg-blue-600 sm:w-auto"
-            disabled={isSubmitting}
-            type="submit"
-          >
-            <Send className="mr-2 h-4 w-4" />
-            {isSubmitting ? "Отправка..." : "Отправить заявку"}
-          </Button>
-        </form>
-      </div>
-
-      {/* Информационный блок */}
-      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-        <Typography className="font-semibold text-blue-800">
-          Как это работает?
-        </Typography>
-        <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-blue-700">
-          <li>Заполните форму и отправьте заявку</li>
-          <li>Администратор проверит заявку в течение 24 часов</li>
-          <li>После одобрения средства будут списаны с баланса</li>
-          <li>Ваш товар появится в продвигаемых</li>
-        </ul>
-      </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default PromotionRequestPage;
+export default PromotionPage;

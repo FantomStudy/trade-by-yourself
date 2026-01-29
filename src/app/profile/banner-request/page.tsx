@@ -19,7 +19,7 @@ const BannerRequestPage = () => {
 
   const bannerPlaces = [
     {
-      id: "product_feed",
+      id: "PRODUCT_FEED",
       name: "Лента товаров",
       size: "320×400",
       price: 500,

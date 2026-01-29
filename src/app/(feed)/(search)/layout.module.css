@@ -4,4 +4,21 @@
   padding: 24px 0;
   margin-bottom: 24px;
   gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .search {
+    padding: 16px 0;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search {
+    padding: 12px 0;
+    margin-bottom: 12px;
+    gap: 8px;
+  }
 }

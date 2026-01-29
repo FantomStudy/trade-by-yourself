@@ -11,6 +11,7 @@ export interface Product {
   subCategoryName?: string;
   userId: number;
   videoUrl?: string | null;
+  hasPromotion?: boolean;
 }
 
 export interface ExtendedProduct extends Product {

@@ -6,13 +6,29 @@ import { useEffect } from "react";
 
 import { getBanners, trackBannerView } from "@/api/requests/banner";
 
-export const ProductFeedBanner = () => {
+export interface ProductFeedBannerProps {
+  bannerIndex?: number;
+}
+
+export const ProductFeedBanner = ({
+  bannerIndex = 0,
+}: ProductFeedBannerProps) => {
   const { data: banners, isLoading } = useQuery({
     queryKey: ["banners", "PRODUCT_FEED"],
-    queryFn: async () => getBanners(),
+    queryFn: async () => getBanners({ place: "PRODUCT_FEED" }),
   });
 
-  const banner = banners?.find((b) => b.place === "PRODUCT_FEED");
+  console.log("[ProductFeedBanner] Banners loaded:", banners?.length || 0);
+  console.log("[ProductFeedBanner] Banner index:", bannerIndex);
+
+  const productFeedBanners =
+    banners?.filter((b) => b.place === "PRODUCT_FEED") || [];
+  const banner =
+    productFeedBanners.length > 0
+      ? productFeedBanners[bannerIndex % productFeedBanners.length]
+      : undefined;
+
+  console.log("[ProductFeedBanner] Selected banner:", banner?.id, banner?.name);
 
   useEffect(() => {
     if (banner?.id) {

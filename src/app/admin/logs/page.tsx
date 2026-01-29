@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { Button, Input } from "@/components/ui";
 import { useLogsQuery } from "@/lib/api/hooks/queries/useLogsQuery";
 
+import { MobileHeader } from "../_components/admin-sidebar";
+
 const LogsPage = () => {
   const { data: logs, isLoading, error, refetch } = useLogsQuery();
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,20 +54,21 @@ const LogsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Логи системы</h1>
+      <MobileHeader title="Логи системы" />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl font-bold sm:text-2xl">Логи системы</h1>
         <Button type="button" onClick={() => refetch()}>
           Обновить
         </Button>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Input
-          className="max-w-md bg-white"
+          className="w-full bg-white sm:max-w-md"
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Поиск по ID, действию, пользователю..."
+          placeholder="Поиск..."
         />
         <div className="text-sm text-gray-600">
           Найдено: {filteredLogs.length} из {logs?.length || 0}

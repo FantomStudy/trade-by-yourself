@@ -1,11 +1,11 @@
 "use client";
 
-import { Gift, StarIcon, WalletIcon } from "lucide-react";
+import { Gift, ShieldCheck, StarIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useUserInfo } from "@/api/hooks";
-import { Avatar, Typography } from "@/components/ui";
+import { useUserInfo, useIsAdmin } from "@/api/hooks";
+import { Avatar, Button, Typography } from "@/components/ui";
 import { useAuth } from "@/lib/contexts";
 import { formatFullName } from "@/lib/format";
 
@@ -16,6 +16,7 @@ import styles from "./sidebar.module.css";
 export const Sidebar = () => {
   const { user } = useAuth();
   const { data: userInfo } = useUserInfo(user?.id);
+  const { data: adminCheck } = useIsAdmin();
   const pathname = usePathname();
 
   const getProfileTypeLabel = (type?: string | null) => {
@@ -90,6 +91,15 @@ export const Sidebar = () => {
               <Gift /> {userInfo?.bonusBalance ?? 0} ₽
             </span>
           </div>
+
+          {adminCheck?.isAdmin && (
+            <Link href="/admin">
+              <Button className={styles.adminButton} variant="secondary">
+                <ShieldCheck size={20} />
+                Панель администратора
+              </Button>
+            </Link>
+          )}
         </>
       )}
 

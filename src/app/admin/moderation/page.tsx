@@ -7,6 +7,8 @@ import { useModerateProductMutation, useProductsToModerate } from "@/api/hooks";
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { Button, Dialog, Textarea, Typography } from "@/components/ui";
 
+import { MobileHeader } from "../_components/admin-sidebar";
+
 const ModerationPage = () => {
   const { data: products, isLoading } = useProductsToModerate();
   const moderateProductMutation = useModerateProductMutation();
@@ -65,8 +67,9 @@ const ModerationPage = () => {
   if (isLoading) {
     return (
       <div className="space-y-6">
+        <MobileHeader title="Модерация товаров" />
         <div>
-          <Typography className="text-3xl font-bold">
+          <Typography className="text-2xl font-bold sm:text-3xl">
             Модерация товаров
           </Typography>
           <Typography className="mt-2 text-gray-600">
@@ -82,11 +85,12 @@ const ModerationPage = () => {
 
   return (
     <div className="space-y-6">
+      <MobileHeader title="Модерация товаров" />
       <div>
-        <Typography className="text-3xl font-bold">
+        <Typography className="text-2xl font-bold sm:text-3xl">
           Модерация товаров
         </Typography>
-        <Typography className="mt-2 text-gray-600">
+        <Typography className="mt-2 text-sm text-gray-600 sm:text-base">
           Товары ожидающие модерации: {products?.length || 0}
         </Typography>
       </div>

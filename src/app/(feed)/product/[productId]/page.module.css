@@ -75,3 +75,68 @@
   word-wrap: break-word;
   gap: 4px;
 }
+
+/* Мобильная адаптация */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .aside {
+    position: static;
+    order: 2;
+  }
+
+  .productInfo {
+    order: 1;
+  }
+
+  .breadcrumb {
+    margin-top: 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+
+  .sectionBlock {
+    padding: 16px;
+  }
+
+  .sectionBlock h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    gap: 12px;
+  }
+
+  .breadcrumb {
+    margin-top: 12px;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .sectionBlock {
+    padding: 12px;
+  }
+
+  .sectionBlock h2 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .price {
+    font-size: 20px;
+  }
+}

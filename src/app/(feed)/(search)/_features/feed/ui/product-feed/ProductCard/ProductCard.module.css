@@ -79,3 +79,111 @@
   font-weight: 700;
   color: var(--product-card-accent);
 }
+
+/* С сайдбаром - адаптация для меньшего пространства */
+@media (max-width: 1024px) {
+  .content {
+    padding: 10px;
+
+    &:has(.action) {
+      padding-right: 36px;
+    }
+  }
+
+  .title {
+    font-size: 13px;
+  }
+
+  .address {
+    font-size: 11px;
+  }
+
+  .price {
+    font-size: 16px;
+  }
+}
+
+/* Без сайдбара */
+@media (max-width: 768px) {
+  .card {
+    border-radius: 6px;
+  }
+
+  .content {
+    padding: 10px;
+
+    &:has(.action) {
+      padding-right: 36px;
+    }
+  }
+
+  .title {
+    font-size: 13px;
+  }
+
+  .address {
+    font-size: 11px;
+  }
+
+  .price {
+    font-size: 16px;
+  }
+
+  .overlay {
+    top: 6px;
+
+    &[data-align="left"] {
+      left: 6px;
+    }
+
+    &[data-align="right"] {
+      right: 6px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    border-radius: 4px;
+  }
+
+  .content {
+    padding: 8px;
+    gap: 6px;
+
+    &:has(.action) {
+      padding-right: 32px;
+    }
+  }
+
+  .title {
+    font-size: 12px;
+  }
+
+  .address {
+    font-size: 10px;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+
+  .price {
+    font-size: 14px;
+  }
+
+  .action {
+    right: 4px;
+    top: 4px;
+  }
+
+  .overlay {
+    top: 4px;
+
+    &[data-align="left"] {
+      left: 4px;
+    }
+
+    &[data-align="right"] {
+      right: 4px;
+    }
+  }
+}

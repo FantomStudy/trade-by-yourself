@@ -41,3 +41,25 @@
 .resetButton {
   height: 40px;
 }
+
+/* Мобильная адаптация - скрываем сайдбар */
+@media (max-width: 1024px) {
+  .wrapper {
+    grid-template-columns: 240px 1fr;
+  }
+
+  .filters {
+    padding: 12px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    display: none;
+  }
+}

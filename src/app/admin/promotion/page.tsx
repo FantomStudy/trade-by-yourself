@@ -10,6 +10,7 @@ import { addPromotion, getCurrentUserProducts } from "@/lib/api";
 import { useCurrentUser } from "@/lib/api/hooks/queries";
 import type { Product } from "@/types";
 
+import { MobileHeader } from "../_components/admin-sidebar";
 import { ProductSelector } from "./_components";
 
 interface Promotion {
@@ -175,11 +176,12 @@ const PromotionPage = () => {
   if (isLoading) {
     return (
       <div className="space-y-6">
+        <MobileHeader title="Продвижение" />
         <div>
-          <Typography className="text-3xl font-bold">
+          <Typography className="text-xl font-bold sm:text-3xl">
             Продвижение товаров
           </Typography>
-          <Typography className="mt-2 text-gray-600">
+          <Typography className="mt-2 text-sm text-gray-600">
             Управление типами продвижения товаров
           </Typography>
         </div>
@@ -192,13 +194,14 @@ const PromotionPage = () => {
 
   return (
     <div className="space-y-6">
+      <MobileHeader title="Продвижение" />
       <div className="grid gap-6">
         {/* Заголовок */}
         <div>
-          <Typography className="text-3xl font-bold">
+          <Typography className="text-xl font-bold sm:text-3xl">
             Продвижение товаров
           </Typography>
-          <Typography className="mt-2 text-gray-600">
+          <Typography className="mt-2 text-sm text-gray-600">
             Выберите тип продвижения и товар для активации
           </Typography>
         </div>

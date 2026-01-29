@@ -4,15 +4,17 @@ import { useState } from "react";
 
 import { Input, Typography } from "@/components/ui";
 
+import { MobileHeader } from "../_components/admin-sidebar";
 import { UsersTable } from "./_components/users-table";
 
 export default function UsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="p-6">
+    <div>
+      <MobileHeader title="Пользователи" />
       <div className="mb-6">
-        <Typography variant="h1" className="text-2xl font-bold">
+        <Typography variant="h1" className="text-xl font-bold sm:text-2xl">
           Управление пользователями
         </Typography>
         <Typography className="mt-1 text-gray-600">

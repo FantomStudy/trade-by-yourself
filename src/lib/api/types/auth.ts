@@ -49,3 +49,18 @@ export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
 export interface ForgotPasswordResponse {
   message: string;
 }
+
+// Verify Mobile Code Schema
+export const verifyMobileCodeSchema = z.object({
+  code: z
+    .string()
+    .min(6, "Код должен состоять из 6 цифр")
+    .max(6, "Код должен состоять из 6 цифр")
+    .regex(/^\d{6}$/, "Код должен содержать только цифры"),
+});
+
+export type VerifyMobileCodeData = z.infer<typeof verifyMobileCodeSchema>;
+
+export interface VerifyMobileCodeResponse {
+  message: string;
+}

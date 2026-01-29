@@ -3,7 +3,7 @@
 import type { Message as SocketMessage } from "@/lib/contexts/chat";
 import type { Message } from "@/types";
 
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Phone, Send } from "lucide-react";
 import Link from "next/link";
 import { use, useEffect, useMemo, useRef, useState } from "react";
 
@@ -11,6 +11,8 @@ import { Button } from "@/components/ui";
 import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
+
+import styles from "./page.module.css";
 
 interface ChatPageProps {
   params: Promise<{ chatId: string }>;

@@ -6,13 +6,14 @@ import { RegisterForm } from "./register-form";
 
 import styles from "../screens.module.css";
 
-export const RegisterScreen = ({
-  onClose,
-  onChangeScreen,
-}: AuthScreenProps) => {
+export const RegisterScreen = ({ onChangeScreen }: AuthScreenProps) => {
+  const handleRegisterSuccess = () => {
+    onChangeScreen("verify-code");
+  };
+
   return (
     <>
-      <RegisterForm onSuccess={onClose} />
+      <RegisterForm onSuccess={handleRegisterSuccess} />
 
       <div className={styles.actions}>
         <Typography>Уже есть аккаунт?</Typography>
