@@ -5,6 +5,10 @@ import type { SubmitHandler } from "react-hook-form";
 import type { AuthFormProps } from "../types";
 import type { RegisterData } from "@/lib/api";
 
+interface RegisterFormProps extends AuthFormProps {
+  onSuccess?: (phoneNumber: string) => void;
+}
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,7 +19,7 @@ import { registerSchema } from "@/lib/api";
 
 import styles from "../forms.module.css";
 
-export const RegisterForm = ({ onSuccess }: AuthFormProps) => {
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const registerMutation = useRegisterMutation();
   const {
     register,
@@ -36,7 +40,7 @@ export const RegisterForm = ({ onSuccess }: AuthFormProps) => {
   const onSubmit: SubmitHandler<RegisterData> = async (formData) => {
     registerMutation.mutate(formData, {
       onSuccess: () => {
-        onSuccess?.();
+        onSuccess?.(formData.phoneNumber);
         setError(undefined);
       },
       onError: (err) => {

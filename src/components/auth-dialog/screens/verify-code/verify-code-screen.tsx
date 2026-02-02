@@ -9,6 +9,7 @@ import styles from "../screens.module.css";
 export const VerifyCodeScreen = ({
   onClose,
   onChangeScreen,
+  phoneNumber,
 }: AuthScreenProps) => {
   return (
     <>
@@ -16,7 +17,7 @@ export const VerifyCodeScreen = ({
         Код подтверждения отправлен на ваш номер телефона. Введите его ниже.
       </Typography>
 
-      <VerifyCodeForm onSuccess={onClose} />
+      <VerifyCodeForm phoneNumber={phoneNumber || ""} onSuccess={onClose} />
 
       <div className={styles.actions}>
         <Typography>Не получили код?</Typography>

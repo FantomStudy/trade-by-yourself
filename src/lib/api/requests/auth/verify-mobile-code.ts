@@ -8,5 +8,5 @@ import { api } from "@/api/instance";
 export const verifyMobileCode = async (data: VerifyMobileCodeData) =>
   api<VerifyMobileCodeResponse>("/auth/verify-mobile-code", {
     method: "POST",
-    body: data,
+    query: data,
   });

@@ -6,8 +6,12 @@ import { RegisterForm } from "./register-form";
 
 import styles from "../screens.module.css";
 
-export const RegisterScreen = ({ onChangeScreen }: AuthScreenProps) => {
-  const handleRegisterSuccess = () => {
+export const RegisterScreen = ({
+  onChangeScreen,
+  onPhoneNumberChange,
+}: AuthScreenProps) => {
+  const handleRegisterSuccess = (phoneNumber: string) => {
+    onPhoneNumberChange?.(phoneNumber);
     onChangeScreen("verify-code");
   };
 

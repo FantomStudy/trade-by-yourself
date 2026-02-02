@@ -52,6 +52,13 @@ export interface ForgotPasswordResponse {
 
 // Verify Mobile Code Schema
 export const verifyMobileCodeSchema = z.object({
+  phoneNumber: z
+    .string()
+    .min(1, "Номер телефона обязателен")
+    .refine(
+      (value) => isValidPhoneNumber(value),
+      "Введите корректный российский номер телефона в формате +7 (XXX) XXX-XX-XX",
+    ),
   code: z
     .string()
     .min(6, "Код должен состоять из 6 цифр")

@@ -49,11 +49,13 @@ export const AuthDialog = ({
   onOpenChange,
 }: ComponentProps<typeof Dialog>) => {
   const [screen, setScreen] = useState<AuthScreen>("login");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
 
   const handleOpenChange = useCallback(
     (isOpen: boolean) => {
       if (!isOpen) {
         setScreen("login");
+        setPhoneNumber("");
       }
       onOpenChange?.(isOpen);
     },
@@ -86,6 +88,8 @@ export const AuthDialog = ({
         {AUTH_SCREENS[screen].component({
           onChangeScreen: setScreen,
           onClose: getOnCloseHandler(),
+          phoneNumber,
+          onPhoneNumberChange: setPhoneNumber,
         })}
       </DialogContent>
     </Dialog>
