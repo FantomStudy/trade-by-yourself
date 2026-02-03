@@ -1,6 +1,13 @@
 "use client";
 
-import { BarChart3, Eye, Heart, MessageSquare, Phone, Star } from "lucide-react";
+import {
+  BarChart3,
+  Eye,
+  Heart,
+  MessageSquare,
+  Phone,
+  Star,
+} from "lucide-react";
 import { useState } from "react";
 
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
@@ -112,8 +119,11 @@ const Analytics = () => {
       {/* Карточки метрик */}
       <div className={styles.metricsGrid}>
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: '#dbeafe' }}>
-            <Eye className="h-6 w-6" style={{ color: '#3b82f6' }} />
+          <div
+            className={styles.metricIcon}
+            style={{ backgroundColor: "#dbeafe" }}
+          >
+            <Eye className="h-6 w-6" style={{ color: "#3b82f6" }} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Просмотры</Typography>
@@ -127,11 +137,16 @@ const Analytics = () => {
         </div>
 
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: '#d1fae5' }}>
-            <MessageSquare className="h-6 w-6" style={{ color: '#10b981' }} />
+          <div
+            className={styles.metricIcon}
+            style={{ backgroundColor: "#d1fae5" }}
+          >
+            <MessageSquare className="h-6 w-6" style={{ color: "#10b981" }} />
           </div>
           <div className={styles.metricContent}>
-            <Typography className={styles.metricLabel}>Контакты / Чаты</Typography>
+            <Typography className={styles.metricLabel}>
+              Контакты / Чаты
+            </Typography>
             <Typography className={styles.metricValue}>
               {analyticsData?.contacts?.toString() || "0"}
             </Typography>
@@ -142,8 +157,11 @@ const Analytics = () => {
         </div>
 
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: '#fce7f3' }}>
-            <Heart className="h-6 w-6" style={{ color: '#ec4899' }} />
+          <div
+            className={styles.metricIcon}
+            style={{ backgroundColor: "#fce7f3" }}
+          >
+            <Heart className="h-6 w-6" style={{ color: "#ec4899" }} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Избранное</Typography>
@@ -157,8 +175,11 @@ const Analytics = () => {
         </div>
 
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: '#dbeafe' }}>
-            <Phone className="h-6 w-6" style={{ color: '#06b6d4' }} />
+          <div
+            className={styles.metricIcon}
+            style={{ backgroundColor: "#dbeafe" }}
+          >
+            <Phone className="h-6 w-6" style={{ color: "#06b6d4" }} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Телефон</Typography>
@@ -172,8 +193,11 @@ const Analytics = () => {
         </div>
 
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: '#fef3c7' }}>
-            <Star className="h-6 w-6" style={{ color: '#f59e0b' }} />
+          <div
+            className={styles.metricIcon}
+            style={{ backgroundColor: "#fef3c7" }}
+          >
+            <Star className="h-6 w-6" style={{ color: "#f59e0b" }} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Рейтинг</Typography>
@@ -187,8 +211,11 @@ const Analytics = () => {
         </div>
 
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: '#fed7aa' }}>
-            <BarChart3 className="h-6 w-6" style={{ color: '#f97316' }} />
+          <div
+            className={styles.metricIcon}
+            style={{ backgroundColor: "#fed7aa" }}
+          >
+            <BarChart3 className="h-6 w-6" style={{ color: "#f97316" }} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Конверсия</Typography>
