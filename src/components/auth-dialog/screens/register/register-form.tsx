@@ -2,10 +2,9 @@
 
 import type { SubmitHandler } from "react-hook-form";
 
-import type { AuthFormProps } from "../types";
 import type { RegisterData } from "@/lib/api";
 
-interface RegisterFormProps extends AuthFormProps {
+interface RegisterFormProps {
   onSuccess?: (phoneNumber: string) => void;
 }
 

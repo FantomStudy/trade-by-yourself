@@ -43,7 +43,7 @@ const BANNER_CONFIGS: BannerConfig[] = [
     place: "FAVORITES",
     width: 1280,
     height: 200,
-    description: "Баннер под карточками в профиле",
+    description: "Баннер под хедером на главной странице",
   },
 ];
 

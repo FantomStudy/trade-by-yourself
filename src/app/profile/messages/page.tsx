@@ -3,6 +3,7 @@
 import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 
+import { ChatsBanner } from "@/components/product-feed-banner";
 import { useChats } from "@/lib/api/hooks";
 import { formatPrice } from "@/lib/format";
 
@@ -43,6 +44,8 @@ const MessagesPage = () => {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">Сообщения</h1>
+
+      <ChatsBanner />
 
       <div className="space-y-2">
         {chats.map((chat) => {
