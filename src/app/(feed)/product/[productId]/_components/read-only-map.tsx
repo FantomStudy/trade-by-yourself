@@ -74,7 +74,7 @@ export const ReadOnlyMap = ({ address }: ReadOnlyMapProps) => {
 
   if (isLoading) {
     return (
-      <div className="flex h-80 w-full items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
+      <div className="mx-auto flex h-80 w-1/2 items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-blue-500"></div>
           <p className="mt-2 text-sm text-gray-500">Загрузка карты...</p>
@@ -85,7 +85,7 @@ export const ReadOnlyMap = ({ address }: ReadOnlyMapProps) => {
 
   if (error) {
     return (
-      <div className="flex h-80 w-full items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
+      <div className="mx-auto flex h-80 w-1/2 items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
         <div className="text-center text-gray-500">
           <p>{error}</p>
         </div>
@@ -94,7 +94,7 @@ export const ReadOnlyMap = ({ address }: ReadOnlyMapProps) => {
   }
 
   return (
-    <div className="h-80 w-full overflow-hidden rounded-lg border border-gray-200">
+    <div className="mx-auto h-80 w-1/2 overflow-hidden rounded-lg border border-gray-200">
       <MapContainer
         center={coordinates || ORENBURG_CENTER}
         className="z-0 [&_.leaflet-control-attribution]:hidden"

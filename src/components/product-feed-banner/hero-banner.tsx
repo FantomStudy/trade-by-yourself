@@ -53,16 +53,18 @@ export const FavoritesBanner = () => {
 
   return (
     <div
-      className="relative w-full cursor-pointer overflow-hidden rounded-lg"
-      style={{ maxHeight: "200px" }}
+      className="relative mx-auto w-full cursor-pointer overflow-hidden"
+      style={{ maxHeight: "200px", maxWidth: "1200px" }}
       onClick={handleBannerClick}
     >
-      <div className="relative h-[200px] w-full">
+      <div className="relative w-full">
         <Image
-          fill
           alt={banner.name}
-          className="object-cover"
+          className="h-auto w-full"
+          height={200}
           src={banner.photoUrl}
+          style={{ maxHeight: "200px", width: "100%", maxWidth: "1200px" }}
+          width={1200}
           priority
         />
         <div className="absolute bottom-2 left-2 inline-flex rounded-full bg-gray-200/80 px-2 py-0.5">

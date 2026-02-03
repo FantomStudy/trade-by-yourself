@@ -1,9 +1,10 @@
 "use client";
 
+import { BarChart3, Eye, Heart, MessageSquare, Phone, Star } from "lucide-react";
 import { useState } from "react";
 
-import { TrendCard } from "@/components/_deprecated/TrendCard/TrendCard";
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
+import { Typography } from "@/components/ui";
 import { useCategories } from "@/lib/api/hooks";
 
 import styles from "./page.module.css";
@@ -47,7 +48,7 @@ const Analytics = () => {
 
   if (isLoading) {
     return (
-      <div className={styles.container}>
+      <div className={styles.page}>
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
           <p>Загрузка аналитики...</p>
@@ -58,7 +59,7 @@ const Analytics = () => {
 
   if (error) {
     return (
-      <div className={styles.container}>
+      <div className={styles.page}>
         <div className={styles.error}>
           <h2>Ошибка</h2>
           <p>{error}</p>
@@ -74,94 +75,131 @@ const Analytics = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
+      {/* Заголовок с фильтрами */}
       <div className={styles.header}>
-        <h1 className={styles.title}>Аналитика</h1>
-        <div className={styles.filtersRow}>
-          <div className={styles.filterGroup}>
-            <select
-              className={styles.filterSelect}
-              value={selectedPeriod}
-              onChange={handlePeriodChange}
-            >
-              <option value="day">День</option>
-              <option value="week">Неделя</option>
-              <option value="month">Месяц</option>
-              <option value="quarter">Квартал</option>
-              <option value="half-year">Полгода</option>
-              <option value="year">Год</option>
-            </select>
-            <select
-              className={styles.filterSelect}
-              value={selectedCategoryId || ""}
-              onChange={handleCategoryChange}
-            >
-              <option value="">Все категории</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        <Typography className={styles.title} variant="h1">
+          Аналитика
+        </Typography>
+        <div className={styles.filters}>
+          <select
+            className={styles.filterSelect}
+            value={selectedPeriod}
+            onChange={handlePeriodChange}
+          >
+            <option value="day">День</option>
+            <option value="week">Неделя</option>
+            <option value="month">Месяц</option>
+            <option value="quarter">Квартал</option>
+            <option value="half-year">Полгода</option>
+            <option value="year">Год</option>
+          </select>
+          <select
+            className={styles.filterSelect}
+            value={selectedCategoryId || ""}
+            onChange={handleCategoryChange}
+          >
+            <option value="">Все категории</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* Основные метрики */}
+      {/* Карточки метрик */}
       <div className={styles.metricsGrid}>
-        <TrendCard
-          title="Просмотры"
-          trend={0}
-          value={analyticsData?.views?.toString() || "0"}
-          color="blue"
-          icon="👁️"
-          trendPeriod="за выбранный период"
-        />
+        <div className={styles.metricCard}>
+          <div className={styles.metricIcon} style={{ backgroundColor: '#dbeafe' }}>
+            <Eye className="h-6 w-6" style={{ color: '#3b82f6' }} />
+          </div>
+          <div className={styles.metricContent}>
+            <Typography className={styles.metricLabel}>Просмотры</Typography>
+            <Typography className={styles.metricValue}>
+              {analyticsData?.views?.toString() || "0"}
+            </Typography>
+            <Typography className={styles.metricPeriod}>
+              за выбранный период
+            </Typography>
+          </div>
+        </div>
 
-        <TrendCard
-          title="Контакты / Чаты"
-          trend={0}
-          value={analyticsData?.contacts?.toString() || "0"}
-          color="green"
-          icon="👁️"
-          trendPeriod="за выбранный период"
-        />
+        <div className={styles.metricCard}>
+          <div className={styles.metricIcon} style={{ backgroundColor: '#d1fae5' }}>
+            <MessageSquare className="h-6 w-6" style={{ color: '#10b981' }} />
+          </div>
+          <div className={styles.metricContent}>
+            <Typography className={styles.metricLabel}>Контакты / Чаты</Typography>
+            <Typography className={styles.metricValue}>
+              {analyticsData?.contacts?.toString() || "0"}
+            </Typography>
+            <Typography className={styles.metricPeriod}>
+              за выбранный период
+            </Typography>
+          </div>
+        </div>
 
-        <TrendCard
-          title="Избранное"
-          trend={0}
-          value={analyticsData?.favorites?.toString() || "0"}
-          color="pink"
-          icon="👁️"
-          trendPeriod="за выбранный период"
-        />
+        <div className={styles.metricCard}>
+          <div className={styles.metricIcon} style={{ backgroundColor: '#fce7f3' }}>
+            <Heart className="h-6 w-6" style={{ color: '#ec4899' }} />
+          </div>
+          <div className={styles.metricContent}>
+            <Typography className={styles.metricLabel}>Избранное</Typography>
+            <Typography className={styles.metricValue}>
+              {analyticsData?.favorites?.toString() || "0"}
+            </Typography>
+            <Typography className={styles.metricPeriod}>
+              за выбранный период
+            </Typography>
+          </div>
+        </div>
 
-        <TrendCard
-          title="Телефон"
-          trend={0}
-          value={analyticsData?.phone?.toString() || "0"}
-          color="light-blue"
-          icon="👁️"
-          trendPeriod="за выбранный период"
-        />
+        <div className={styles.metricCard}>
+          <div className={styles.metricIcon} style={{ backgroundColor: '#dbeafe' }}>
+            <Phone className="h-6 w-6" style={{ color: '#06b6d4' }} />
+          </div>
+          <div className={styles.metricContent}>
+            <Typography className={styles.metricLabel}>Телефон</Typography>
+            <Typography className={styles.metricValue}>
+              {analyticsData?.phone?.toString() || "0"}
+            </Typography>
+            <Typography className={styles.metricPeriod}>
+              за выбранный период
+            </Typography>
+          </div>
+        </div>
 
-        <TrendCard
-          title="Рейтинг"
-          trend={0}
-          value={analyticsData?.rating?.toString() || "0"}
-          color="yellow"
-          icon="👁️"
-          trendPeriod="за выбранный период"
-        />
+        <div className={styles.metricCard}>
+          <div className={styles.metricIcon} style={{ backgroundColor: '#fef3c7' }}>
+            <Star className="h-6 w-6" style={{ color: '#f59e0b' }} />
+          </div>
+          <div className={styles.metricContent}>
+            <Typography className={styles.metricLabel}>Рейтинг</Typography>
+            <Typography className={styles.metricValue}>
+              {analyticsData?.rating?.toString() || "0"}
+            </Typography>
+            <Typography className={styles.metricPeriod}>
+              за выбранный период
+            </Typography>
+          </div>
+        </div>
 
-        <TrendCard
-          title="Конверсия"
-          trend={0}
-          value={analyticsData?.conversion?.toString() || "0"}
-          color="orange"
-          icon="👁️"
-          trendPeriod="за выбранный период"
-        />
+        <div className={styles.metricCard}>
+          <div className={styles.metricIcon} style={{ backgroundColor: '#fed7aa' }}>
+            <BarChart3 className="h-6 w-6" style={{ color: '#f97316' }} />
+          </div>
+          <div className={styles.metricContent}>
+            <Typography className={styles.metricLabel}>Конверсия</Typography>
+            <Typography className={styles.metricValue}>
+              {analyticsData?.conversion?.toString() || "0"}%
+            </Typography>
+            <Typography className={styles.metricPeriod}>
+              за выбранный период
+            </Typography>
+          </div>
+        </div>
       </div>
     </div>
   );
