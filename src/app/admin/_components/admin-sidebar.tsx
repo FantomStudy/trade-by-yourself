@@ -7,6 +7,7 @@ import {
   Menu,
   MessageSquare,
   Package,
+  Star,
   TrendingUp,
   Users,
   X,
@@ -30,6 +31,11 @@ const menuItems = [
     href: "/admin/moderation" as const,
     icon: Package,
     label: "Модерация товаров",
+  },
+  {
+    href: "/admin/reviews" as const,
+    icon: Star,
+    label: "Модерация отзывов",
   },
   {
     href: "/admin/users" as const,

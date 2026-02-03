@@ -3,6 +3,7 @@ export * from "./useDeleteProductMutation";
 export * from "./useFavoriteMutation";
 export * from "./useLoginMutation";
 export * from "./useModerateProductMutation";
+export * from "./useModerateReviewMutation";
 export * from "./usePaymentMutations";
 export * from "./useRecoverMutation";
 export * from "./useRegisterMutation";

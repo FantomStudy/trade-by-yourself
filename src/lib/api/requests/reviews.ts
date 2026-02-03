@@ -1,3 +1,8 @@
+import type {
+  ModerateReviewData,
+  ModerateReviewResponse,
+  ReviewToModerate,
+} from "../types";
 import { api } from "../instance";
 
 export interface SendReviewDto {
@@ -31,4 +36,18 @@ export const sendReview = async (data: SendReviewDto) =>
   api<Review>("/review/send-review", {
     method: "POST",
     body: JSON.stringify(data),
+  });
+
+// Получить список отзывов на модерации (для админа)
+export const getAllReviewsToModerate = async () =>
+  api<ReviewToModerate[]>("/review/all-reviews-to-moderate");
+
+// Модерировать отзыв (одобрить/отклонить)
+export const moderateReview = async ({
+  reviewId,
+  status,
+}: ModerateReviewData) =>
+  api<ModerateReviewResponse>(`/review/moderate-review/${reviewId}`, {
+    method: "PUT",
+    query: { status },
   });
