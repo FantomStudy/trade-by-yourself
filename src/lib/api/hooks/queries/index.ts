@@ -1,4 +1,6 @@
+export * from "./useAvailableFilters";
 export * from "./useCategories";
+export * from "./useCategoryBySlug";
 export * from "./useChats";
 export * from "./useCurrentUser";
 export * from "./useIsAdmin";

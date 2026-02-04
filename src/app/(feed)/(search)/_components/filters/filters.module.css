@@ -38,8 +38,36 @@
   width: 100%;
 }
 
-.resetButton {
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.resetButton,
+.applyButton {
+  flex: 1;
   height: 40px;
+}
+
+.resetButton {
+  background-color: transparent;
+  border: 1px solid var(--border-color, #e5e7eb);
+  color: var(--text-color, #374151);
+}
+
+.resetButton:hover {
+  background-color: var(--hover-bg, #f9fafb);
+}
+
+.applyButton {
+  background-color: var(--primary-color, #3b82f6);
+  color: white;
+  border: none;
+}
+
+.applyButton:hover {
+  background-color: var(--primary-hover, #2563eb);
 }
 
 /* Мобильная адаптация - скрываем сайдбар */

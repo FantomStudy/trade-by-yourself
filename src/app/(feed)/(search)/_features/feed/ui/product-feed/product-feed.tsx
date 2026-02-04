@@ -70,9 +70,13 @@ export const ProductFeed = ({ filters }: FeedProps) => {
     {
       minPrice: parseAsInteger,
       maxPrice: parseAsInteger,
+      minRating: parseAsInteger,
+      maxRating: parseAsInteger,
       state: parseAsString,
       sortBy: parseAsString,
       region: parseAsString,
+      profileType: parseAsString,
+      fieldValues: parseAsString,
     },
     {
       history: "push",
@@ -91,6 +95,8 @@ export const ProductFeed = ({ filters }: FeedProps) => {
     search: search || undefined,
     minPrice: urlFilters.minPrice ?? undefined,
     maxPrice: urlFilters.maxPrice ?? undefined,
+    minRating: urlFilters.minRating ?? undefined,
+    maxRating: urlFilters.maxRating ?? undefined,
     state:
       urlFilters.state && urlFilters.state !== ""
         ? (urlFilters.state.toUpperCase() as "NEW" | "USED")
@@ -102,6 +108,14 @@ export const ProductFeed = ({ filters }: FeedProps) => {
     region:
       urlFilters.region && urlFilters.region !== ""
         ? urlFilters.region
+        : undefined,
+    profileType:
+      urlFilters.profileType && urlFilters.profileType !== ""
+        ? (urlFilters.profileType as "INDIVIDUAL" | "OOO" | "IP")
+        : undefined,
+    fieldValues:
+      urlFilters.fieldValues && urlFilters.fieldValues !== ""
+        ? (JSON.parse(urlFilters.fieldValues) as Record<string, string>)
         : undefined,
   };
 

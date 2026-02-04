@@ -22,8 +22,8 @@ export interface ReviewToModerate {
 // Схема для модерации отзыва
 export const moderateReviewSchema = z.object({
   reviewId: z.number().positive("ID отзыва обязателен"),
-  status: z.enum(["APPROVED", "DENIDED"], {
-    required_error: "Статус обязателен",
+  status: z.enum(["APPROVED", "DENIDED"]).refine(val => val, {
+    message: "Статус обязателен",
   }),
 });
 

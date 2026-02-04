@@ -38,7 +38,7 @@ const Page = async ({ params }: PageProps<"/[categorySlug]">) => {
         </Breadcrumb.List>
       </Breadcrumb>
 
-      <ProductFeed filters={{ categoryId: category.id }} />
+      <ProductFeed filters={{ categorySlug }} />
     </>
   );
 };

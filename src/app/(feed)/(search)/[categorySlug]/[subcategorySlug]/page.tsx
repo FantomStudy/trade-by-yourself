@@ -56,7 +56,12 @@ const Page = async ({
         </Breadcrumb.List>
       </Breadcrumb>
 
-      <ProductFeed filters={{ subCategoryId: subcategory.id }} />
+      <ProductFeed
+        filters={{
+          categorySlug,
+          subCategorySlug: subcategorySlug,
+        }}
+      />
     </>
   );
 };
