@@ -5,8 +5,6 @@ import {
   BarChart3,
   Eye,
   Image as ImageIcon,
-  TrendingUp,
-  Users,
 } from "lucide-react";
 
 import { getMyBannerStats } from "@/api/requests/banner";
@@ -65,7 +63,6 @@ const BannerStatsPage = () => {
   }
 
   const totalViews = stats?.reduce((sum, s) => sum + s.totalViews, 0) ?? 0;
-  const uniqueViews = stats?.reduce((sum, s) => sum + s.uniqueViews, 0) ?? 0;
 
   return (
     <div className="w-full space-y-6">
@@ -79,7 +76,7 @@ const BannerStatsPage = () => {
       </div>
 
       {/* Общая статистика */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-purple-100 p-3">
@@ -102,18 +99,6 @@ const BannerStatsPage = () => {
             <div>
               <p className="text-sm text-gray-500">Всего просмотров</p>
               <p className="text-2xl font-bold text-gray-900">{totalViews}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg bg-white p-6 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-green-100 p-3">
-              <Users className="h-6 w-6 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Уникальных просмотров</p>
-              <p className="text-2xl font-bold text-gray-900">{uniqueViews}</p>
             </div>
           </div>
         </div>
@@ -167,32 +152,6 @@ const BannerStatsPage = () => {
                         </p>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-green-500" />
-                      <div>
-                        <p className="text-xs text-gray-500">Уникальные</p>
-                        <p className="font-semibold text-gray-900">
-                          {bannerStat.uniqueViews}
-                        </p>
-                      </div>
-                    </div>
-
-                    {bannerStat.totalViews > 0 && (
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-purple-500" />
-                        <div>
-                          <p className="text-xs text-gray-500">CTR</p>
-                          <p className="font-semibold text-gray-900">
-                            {(
-                              (bannerStat.uniqueViews / bannerStat.totalViews) *
-                              100
-                            ).toFixed(1)}
-                            %
-                          </p>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -244,8 +203,7 @@ const BannerStatsPage = () => {
           Как считается статистика?
         </Typography>
         <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-purple-700">
-          <li>Просмотры — общее количество показов баннера</li>
-          <li>Уникальные — количество уникальных пользователей</li>
+          <li>Просмотры — количество кликов на баннер</li>
           <li>Статистика обновляется в реальном времени</li>
         </ul>
       </div>

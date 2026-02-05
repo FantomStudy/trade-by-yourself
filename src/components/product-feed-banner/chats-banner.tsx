@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useEffect } from "react";
 
 import { getBanners, trackBannerView } from "@/api/requests/banner";
 
@@ -15,18 +14,14 @@ export const ChatsBanner = () => {
   const chatBanners = banners?.filter((b) => b.place === "CHATS") || [];
   const banner = chatBanners.length > 0 ? chatBanners[0] : undefined;
 
-  // Отслеживание просмотра баннера
-  useEffect(() => {
-    if (banner) {
-      trackBannerView(banner.id);
-    }
-  }, [banner]);
-
   if (isLoading || !banner) {
     return null;
   }
 
   const handleBannerClick = () => {
+    if (banner) {
+      trackBannerView(banner.id);
+    }
     if (banner.navigateToUrl) {
       window.open(banner.navigateToUrl, "_blank", "noopener,noreferrer");
     }

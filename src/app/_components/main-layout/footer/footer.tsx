@@ -14,7 +14,9 @@ export const Footer = () => {
             <Link href="/">Разместить объявление</Link>
             <Link href="/">Правила</Link>
             <Link href="/">Политика конфиденциальности</Link>
-            <Button variant="secondary">Тех поддержка</Button>
+            <Link href="/profile/messages/support">
+              <Button variant="secondary">Тех поддержка</Button>
+            </Link>
           </nav>
         </div>
       </div>

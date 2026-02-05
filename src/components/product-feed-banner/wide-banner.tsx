@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useEffect } from "react";
 
 import { getBanners, trackBannerView } from "@/api/requests/banner";
 
@@ -29,11 +28,11 @@ export const WideBanner = ({ bannerIndex = 0 }: WideBannerProps) => {
 
   console.log("[WideBanner] Selected banner:", banner?.id, banner?.name);
 
-  useEffect(() => {
+  const handleBannerClick = () => {
     if (banner?.id) {
       trackBannerView(banner.id);
     }
-  }, [banner?.id]);
+  };
 
   if (isLoading) return null;
 
@@ -45,6 +44,7 @@ export const WideBanner = ({ bannerIndex = 0 }: WideBannerProps) => {
       className={styles.banner}
       rel="noopener noreferrer"
       target="_blank"
+      onClick={handleBannerClick}
     >
       <div className={styles.imageWrapper}>
         <Image

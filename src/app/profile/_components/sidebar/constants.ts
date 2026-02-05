@@ -42,11 +42,6 @@ export const LINKS: SidebarLinkGroup[] = [
         label: "Аналитика",
       },
       {
-        href: "/profile/my-products",
-        // href: "/profile/support",
-        label: "Тех. поддержка",
-      },
-      {
         href: "/profile/balance",
         label: "Пополнение баланса",
       },

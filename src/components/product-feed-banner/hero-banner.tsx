@@ -34,18 +34,14 @@ export const FavoritesBanner = () => {
     return favoritesBanners[selectedBannerIndex];
   }, [favoritesBanners, selectedBannerIndex]);
 
-  // Отслеживание просмотра баннера
-  useEffect(() => {
-    if (banner) {
-      trackBannerView(banner.id);
-    }
-  }, [banner]);
-
   if (isLoading || !banner) {
     return null;
   }
 
   const handleBannerClick = () => {
+    if (banner) {
+      trackBannerView(banner.id);
+    }
     if (banner.navigateToUrl) {
       window.open(banner.navigateToUrl, "_blank", "noopener,noreferrer");
     }

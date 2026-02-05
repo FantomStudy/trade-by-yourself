@@ -1,0 +1,140 @@
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background-color: white;
+  height: calc(100vh - 110px);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Хедер чата */
+.header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: white;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.backButton {
+  height: 2.5rem;
+  width: 2.5rem;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* Контейнер сообщений */
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f9fafb;
+}
+
+.messagesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+/* Обертка сообщения */
+.messageWrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.messageWrapper.myMessage {
+  justify-content: flex-end;
+}
+
+.messageWrapper.theirMessage {
+  justify-content: flex-start;
+}
+
+/* Само сообщение */
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 70%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  word-wrap: break-word;
+}
+
+.myMessage .message {
+  background-color: #3b82f6;
+  color: white;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.theirMessage .message {
+  background-color: white;
+  color: #1f2937;
+  border-bottom-left-radius: 0.25rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.messageContent {
+  white-space: pre-wrap;
+  font-size: 0.875rem;
+}
+
+.messageTime {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  align-self: flex-end;
+}
+
+/* Форма отправки */
+.inputContainer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: white;
+  border-top: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.textarea {
+  flex: 1;
+  min-height: 2.5rem;
+  max-height: 7.5rem;
+  resize: none;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.sendButton {
+  flex-shrink: 0;
+  height: 2.5rem;
+  width: 2.5rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .chatContainer {
+    height: calc(100vh - 60px);
+    border-radius: 0;
+  }
+
+  .message {
+    max-width: 85%;
+  }
+}

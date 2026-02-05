@@ -122,10 +122,6 @@ const ChatPage = ({ params }: ChatPageProps) => {
     markAsRead,
   ]);
 
-  // Автоскролл к последнему сообщению
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [allMessages]);
 
   const handleSend = () => {
     if (message.trim() && isConnected) {

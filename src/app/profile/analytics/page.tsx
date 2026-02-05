@@ -1,18 +1,19 @@
 "use client";
 
 import {
-  BarChart3,
   Eye,
   Heart,
   MessageSquare,
+  Package,
   Phone,
-  Star,
 } from "lucide-react";
 import { useState } from "react";
 
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
 import { Typography } from "@/components/ui";
-import { useCategories } from "@/lib/api/hooks";
+import { getFavorites } from "@/lib/api/requests";
+import { useCategories, useChats } from "@/lib/api/hooks";
+import { useQuery } from "@tanstack/react-query";
 
 import styles from "./page.module.css";
 
@@ -28,6 +29,13 @@ const Analytics = () => {
     isLoading: categoriesLoading,
     error: categoriesError,
   } = useCategories();
+
+  // Загружаем чаты и избранное
+  const { data: chats } = useChats();
+  const { data: favorites } = useQuery({
+    queryKey: ["favorites"],
+    queryFn: getFavorites,
+  });
 
   // Загружаем аналитику
   const {
@@ -145,13 +153,13 @@ const Analytics = () => {
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>
-              Контакты / Чаты
+              Всего чатов
             </Typography>
             <Typography className={styles.metricValue}>
-              {analyticsData?.contacts?.toString() || "0"}
+              {chats?.length || 0}
             </Typography>
             <Typography className={styles.metricPeriod}>
-              за выбранный период
+              активных диалогов
             </Typography>
           </div>
         </div>
@@ -164,12 +172,12 @@ const Analytics = () => {
             <Heart className="h-6 w-6" style={{ color: "#ec4899" }} />
           </div>
           <div className={styles.metricContent}>
-            <Typography className={styles.metricLabel}>Избранное</Typography>
+            <Typography className={styles.metricLabel}>В избранном</Typography>
             <Typography className={styles.metricValue}>
-              {analyticsData?.favorites?.toString() || "0"}
+              {favorites?.length || 0}
             </Typography>
             <Typography className={styles.metricPeriod}>
-              за выбранный период
+              сохраненных товаров
             </Typography>
           </div>
         </div>
@@ -177,50 +185,14 @@ const Analytics = () => {
         <div className={styles.metricCard}>
           <div
             className={styles.metricIcon}
-            style={{ backgroundColor: "#dbeafe" }}
+            style={{ backgroundColor: "#e0e7ff" }}
           >
-            <Phone className="h-6 w-6" style={{ color: "#06b6d4" }} />
+            <Package className="h-6 w-6" style={{ color: "#6366f1" }} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Телефон</Typography>
             <Typography className={styles.metricValue}>
               {analyticsData?.phone?.toString() || "0"}
-            </Typography>
-            <Typography className={styles.metricPeriod}>
-              за выбранный период
-            </Typography>
-          </div>
-        </div>
-
-        <div className={styles.metricCard}>
-          <div
-            className={styles.metricIcon}
-            style={{ backgroundColor: "#fef3c7" }}
-          >
-            <Star className="h-6 w-6" style={{ color: "#f59e0b" }} />
-          </div>
-          <div className={styles.metricContent}>
-            <Typography className={styles.metricLabel}>Рейтинг</Typography>
-            <Typography className={styles.metricValue}>
-              {analyticsData?.rating?.toString() || "0"}
-            </Typography>
-            <Typography className={styles.metricPeriod}>
-              за выбранный период
-            </Typography>
-          </div>
-        </div>
-
-        <div className={styles.metricCard}>
-          <div
-            className={styles.metricIcon}
-            style={{ backgroundColor: "#fed7aa" }}
-          >
-            <BarChart3 className="h-6 w-6" style={{ color: "#f97316" }} />
-          </div>
-          <div className={styles.metricContent}>
-            <Typography className={styles.metricLabel}>Конверсия</Typography>
-            <Typography className={styles.metricValue}>
-              {analyticsData?.conversion?.toString() || "0"}%
             </Typography>
             <Typography className={styles.metricPeriod}>
               за выбранный период

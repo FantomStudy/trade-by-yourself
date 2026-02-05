@@ -5,6 +5,7 @@ import type { User } from "@/types";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Ban, Edit, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -177,10 +178,15 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
               >
                 <td className="px-2 py-2 text-xs text-gray-900">{user.id}</td>
                 <td
-                  className="max-w-[150px] truncate px-2 py-2 text-xs text-gray-900"
+                  className="max-w-[150px] truncate px-2 py-2 text-xs"
                   title={user.fullName}
                 >
-                  {user.fullName}
+                  <Link 
+                    href={`/seller/${user.id}`}
+                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                  >
+                    {user.fullName}
+                  </Link>
                 </td>
                 <td
                   className="max-w-[150px] truncate px-2 py-2 text-xs text-gray-900"
