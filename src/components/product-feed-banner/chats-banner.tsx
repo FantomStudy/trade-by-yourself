@@ -32,7 +32,7 @@ export const ChatsBanner = () => {
       className="relative w-full cursor-pointer overflow-hidden rounded-lg"
       onClick={handleBannerClick}
     >
-      <div className="relative h-[200px] w-full sm:h-[300px] lg:h-[400px]">
+      <div className="relative h-[160px] w-full sm:h-[220px] lg:h-[280px]">
         <Image
           fill
           alt={banner.name}
