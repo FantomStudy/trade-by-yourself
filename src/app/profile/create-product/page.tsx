@@ -4,6 +4,7 @@ import type { Category } from "@/types";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import { useCreateProductMutation } from "@/api/hooks";
 import {
@@ -119,6 +120,7 @@ const CreateProductPage = () => {
         {
           onSuccess: (data) => {
             console.log("Объявление создано:", data);
+            toast.success("Товар отправлен на модерацию. После проверки он появится в вашем списке объявлений.");
             setFormData({
               name: "",
               price: "",

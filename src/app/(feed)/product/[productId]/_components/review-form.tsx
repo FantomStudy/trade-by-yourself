@@ -26,7 +26,7 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
   const mutation = useMutation({
     mutationFn: (data: SendReviewDto) => sendReview(data),
     onSuccess: () => {
-      toast.success("Отзыв успешно отправлен");
+      toast.success("Отзыв отправлен на модерацию. После проверки он будет опубликован.");
       setRating(0);
       setText("");
       setHasSubmitted(true);

@@ -270,3 +270,39 @@
     padding: 6px 12px;
   }
 }
+
+.adBanner {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.adBannerWrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.adBannerImage {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.adBadge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: rgba(229, 231, 235, 0.8);
+}
+
+.adBadgeText {
+  font-size: 10px;
+  font-weight: 500;
+  color: #374151;
+  text-transform: uppercase;
+}

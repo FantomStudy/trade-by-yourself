@@ -1,6 +1,7 @@
 "use client";
 
 import { Gift, ShieldCheck, StarIcon, WalletIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -129,6 +130,21 @@ export const Sidebar = () => {
           </div>
         ))}
       </nav>
+
+      <div className={styles.adBanner}>
+        <div className={styles.adBannerWrapper}>
+          <Image
+            src="/ad-banner-megafon.png"
+            alt="Реклама"
+            width={300}
+            height={300}
+            className={styles.adBannerImage}
+          />
+          <div className={styles.adBadge}>
+            <span className={styles.adBadgeText}>Реклама</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

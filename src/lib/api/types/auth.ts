@@ -30,6 +30,7 @@ export const registerSchema = z.object({
       "Введите корректный российский номер телефона в формате +7 (XXX) XXX-XX-XX",
     ),
   password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
+  where: z.enum(["telegram", "sms"]).default("sms"),
 });
 
 export type RegisterData = z.infer<typeof registerSchema>;

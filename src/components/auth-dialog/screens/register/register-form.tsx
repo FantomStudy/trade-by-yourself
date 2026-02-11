@@ -24,11 +24,17 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      where: "sms" as const,
+    },
   });
   const [error, setError] = useState<string>();
+  const verificationMethod = watch("where");
 
   const phoneField = usePhoneField({
     control,
@@ -72,6 +78,25 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         placeholder="Пароль"
         {...register("password")}
       />
+
+      <div style={{ display: "flex", gap: "8px", width: "100%" }}>
+        <Button
+          type="button"
+          variant={verificationMethod === "sms" ? "secondary" : "outline"}
+          onClick={() => setValue("where", "sms")}
+          style={{ flex: 1 }}
+        >
+          SMS
+        </Button>
+        <Button
+          type="button"
+          variant={verificationMethod === "telegram" ? "secondary" : "outline"}
+          onClick={() => setValue("where", "telegram")}
+          style={{ flex: 1 }}
+        >
+          Telegram
+        </Button>
+      </div>
 
       {error && <span className={styles.error}>{error}</span>}
 
