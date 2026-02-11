@@ -82,7 +82,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       <div style={{ display: "flex", gap: "8px", width: "100%" }}>
         <Button
           type="button"
-          variant={verificationMethod === "sms" ? "secondary" : "outline"}
+          variant={verificationMethod === "sms" ? "secondary" : "ghost"}
           onClick={() => setValue("where", "sms")}
           style={{ flex: 1 }}
         >
@@ -90,7 +90,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         </Button>
         <Button
           type="button"
-          variant={verificationMethod === "telegram" ? "secondary" : "outline"}
+          variant={verificationMethod === "telegram" ? "secondary" : "ghost"}
           onClick={() => setValue("where", "telegram")}
           style={{ flex: 1 }}
         >
