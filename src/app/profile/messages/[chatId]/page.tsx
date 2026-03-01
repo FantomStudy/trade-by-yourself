@@ -8,10 +8,10 @@ import Link from "next/link";
 import { use, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui-lab/Button";
-import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useChat, useChatMessages } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
-
 
 interface ChatPageProps {
   params: Promise<{ chatId: string }>;

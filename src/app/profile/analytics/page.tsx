@@ -5,9 +5,9 @@ import { Eye, Heart, MessageSquare, Package } from "lucide-react";
 import { useState } from "react";
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
 import { Typography } from "@/components/ui";
-import { useCategories, useChats } from "@/lib/api/hooks";
+import { useCategories } from "@/hooks/useCategories";
+import { useChats } from "@/lib/api/hooks";
 import { getFavorites } from "@/lib/api/requests";
-
 import styles from "./page.module.css";
 
 const Analytics = () => {
@@ -17,11 +17,7 @@ const Analytics = () => {
   >(undefined);
 
   // Загружаем категории
-  const {
-    categories,
-    isLoading: categoriesLoading,
-    error: categoriesError,
-  } = useCategories();
+  const categories = useCategories();
 
   // Загружаем чаты и избранное
   const { data: chats } = useChats();
@@ -40,8 +36,8 @@ const Analytics = () => {
     categoryId: selectedCategoryId,
   });
 
-  const isLoading = categoriesLoading || analyticsLoading;
-  const error = categoriesError || analyticsError;
+  const isLoading = categories.isPending || analyticsLoading;
+  const error = categories.error || analyticsError;
 
   const handlePeriodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPeriod(event.target.value);
@@ -108,7 +104,7 @@ const Analytics = () => {
             onChange={handleCategoryChange}
           >
             <option value="">Все категории</option>
-            {categories.map((category) => (
+            {categories.data.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>

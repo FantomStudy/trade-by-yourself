@@ -1,5 +1,5 @@
 import { ofetch } from "ofetch";
-
+import { CURRENT_USER_QUERY_KEY } from "@/hooks/useCurrentUser";
 import { isServer } from "../is-server";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -28,8 +28,6 @@ export const api = ofetch.create({
           "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
       } catch {}
       const { getQueryClient } = await import("@/lib/get-query-client");
-      const { CURRENT_USER_QUERY_KEY } =
-        await import("@/lib/api/hooks/queries/useCurrentUser");
       const queryClient = getQueryClient();
       queryClient.setQueryData(CURRENT_USER_QUERY_KEY, null);
     }

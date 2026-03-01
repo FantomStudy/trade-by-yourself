@@ -23,9 +23,8 @@ import {
   DialogTitle,
   Typography,
 } from "@/components/ui";
-import { Input } from "@/components/ui-lab/Input";
-
 import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
 
 interface UsersTableProps {
   searchQuery: string;

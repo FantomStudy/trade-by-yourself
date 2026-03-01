@@ -2,8 +2,8 @@ import type { LoginData, LoginResponse } from "../../types";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { CURRENT_USER_QUERY_KEY } from "@/hooks/useCurrentUser";
 import { login } from "../../requests";
-import { CURRENT_USER_QUERY_KEY } from "../queries/useCurrentUser";
 
 export const useLoginMutation = () => {
   const queryClient = useQueryClient();

@@ -9,12 +9,11 @@ import { useIsAdmin, useUserInfo } from "@/api/hooks";
 import { Typography } from "@/components/ui";
 import { Avatar } from "@/components/ui-lab/Avatar";
 import { Button } from "@/components/ui-lab/Button";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { formatFullName } from "@/lib/format";
 
 import { LINKS } from "./constants";
-
 import styles from "./sidebar.module.css";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export const Sidebar = () => {
   const user = useCurrentUser();

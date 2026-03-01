@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getCategoryBySlug } from "../../_features/category";
+import { getCategory } from "@/api-lab/categories/getCategory";
 import { ProductFeed } from "../../_features/feed";
 import { Breadcrumb } from "../../_lib/ui/breadcrumb";
 import { safe } from "../../_lib/utils/safe";
-
 import styles from "../page.module.css";
 
 // TODO: См. комментарий в src/features/categories/api/get-category-by-slug.ts
@@ -14,7 +13,7 @@ const Page = async ({
 }: PageProps<"/[categorySlug]/[subcategorySlug]">) => {
   const { categorySlug, subcategorySlug } = await params;
 
-  const request = await safe(getCategoryBySlug(`${categorySlug}`));
+  const request = await safe(getCategory(categorySlug));
 
   if (request.success === false) {
     if (request.status === 404) return notFound();

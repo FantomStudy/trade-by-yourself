@@ -18,12 +18,11 @@ import {
   usePaymentHistory,
   useUserInfo,
 } from "@/api/hooks";
-import { Input } from "@/components/ui-lab/Input";
 import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
-
-import styles from "./page.module.css";
+import { Input } from "@/components/ui-lab/Input";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import styles from "./page.module.css";
 
 const BalancePage = () => {
   const user = useCurrentUser();

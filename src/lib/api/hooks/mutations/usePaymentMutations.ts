@@ -3,8 +3,7 @@ import type { CheckPaymentStatusDto, CreatePaymentDto } from "@/api/requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { checkPaymentStatus, createPayment } from "@/api/requests";
-
-import { CURRENT_USER_QUERY_KEY } from "../queries/useCurrentUser";
+import { CURRENT_USER_QUERY_KEY } from "@/hooks/useCurrentUser";
 import { PAYMENT_HISTORY_QUERY_KEY } from "../queries/usePaymentHistory";
 import { USER_INFO_QUERY_KEY } from "../queries/useUserInfo";
 

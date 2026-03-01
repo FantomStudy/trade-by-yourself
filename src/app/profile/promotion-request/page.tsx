@@ -5,13 +5,11 @@ import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Typography } from "@/components/ui";
-import { Input } from "@/components/ui-lab/Input";
-
 import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { addPromotion, getCurrentUserProducts } from "@/lib/api";
-import { useCurrentUser } from "@/lib/api/hooks/queries";
 import { api } from "@/lib/api/instance";
-
 import { ProductSelector } from "./_components";
 
 interface Promotion {
@@ -96,7 +94,7 @@ const PromotionPage = () => {
     }
 
     const daysNum = Number.parseInt(days, 10);
-    if (isNaN(daysNum) || daysNum < 1) {
+    if (Number.isNaN(daysNum) || daysNum < 1) {
       toast.error("Введите корректное количество дней (минимум 1)");
       return;
     }

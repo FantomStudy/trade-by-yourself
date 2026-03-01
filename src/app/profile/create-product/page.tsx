@@ -7,9 +7,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useCreateProductMutation } from "@/api/hooks";
 import { AddressMap, ImageUpload, Textarea } from "@/components/ui";
-import { Input } from "@/components/ui-lab/Input";
-
 import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
 import { api } from "@/lib/api/instance";
 
 import styles from "./page.module.css";

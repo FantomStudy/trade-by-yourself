@@ -4,13 +4,12 @@ import type { Product } from "@/types";
 import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Input } from "@/components/ui-lab/Input";
 import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { addPromotion, getCurrentUserProducts } from "@/lib/api";
-import { useCurrentUser } from "@/lib/api/hooks/queries";
 import { api } from "@/lib/api/instance";
-
 import { MobileHeader } from "../_components/admin-sidebar";
 import { ProductSelector } from "./_components";
 

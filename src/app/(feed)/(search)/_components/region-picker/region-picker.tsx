@@ -11,12 +11,12 @@ import {
   DialogTitle,
 } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
 import {
   getAddressSuggestions,
   validateAddress,
 } from "@/lib/api/requests/address";
 import styles from "./region-picker.module.css";
-import { Input } from "@/components/ui-lab/Input";
 
 interface AddressSuggestion {
   lat?: string;

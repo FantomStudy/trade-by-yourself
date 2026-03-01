@@ -7,13 +7,12 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui-lab/Button";
-import { useCurrentUser } from "@/lib/api/hooks";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import {
   addSupportMessage,
   getSupportMessages,
   markSupportMessagesAsRead,
 } from "@/lib/support-chat";
-
 import styles from "./page.module.css";
 
 const SupportChatPage = () => {

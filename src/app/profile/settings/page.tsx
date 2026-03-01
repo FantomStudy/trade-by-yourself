@@ -3,9 +3,8 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Input } from "@/components/ui-lab/Input";
-
 import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
 import { api } from "@/lib/api/instance";
 
 import { AvatarEditor } from "./_components/avatar-editor";

@@ -6,10 +6,10 @@ if (!BASE_URL) {
 }
 
 export const api = ofetch.create({
-  baseURL: process.env.API_URL,
+  baseURL: BASE_URL,
   credentials: "include",
   onRequest: async ({ options }) => {
-    if (typeof window !== undefined) return;
+    if (typeof window !== "undefined") return;
 
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();

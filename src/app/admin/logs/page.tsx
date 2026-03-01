@@ -2,9 +2,8 @@
 
 import { useMemo, useState } from "react";
 
-import { Input } from "@/components/ui-lab/Input";
-
 import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
 import { useLogsQuery } from "@/lib/api/hooks/queries/useLogsQuery";
 
 import { MobileHeader } from "../_components/admin-sidebar";
