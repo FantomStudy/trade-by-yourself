@@ -2,7 +2,6 @@
 
 import { MapPin, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
 import {
   Dialog,
   DialogContent,
@@ -10,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  Input,
 } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 import {
@@ -18,6 +16,7 @@ import {
   validateAddress,
 } from "@/lib/api/requests/address";
 import styles from "./region-picker.module.css";
+import { Input } from "@/components/ui-lab/Input";
 
 interface AddressSuggestion {
   lat?: string;
@@ -148,7 +147,6 @@ export const RegionPicker = ({
             <div className={styles.inputWrapper}>
               <Input
                 className={styles.input}
-                type="text"
                 value={address}
                 onChange={handleAddressInputChange}
                 placeholder="Начните вводить адрес..."

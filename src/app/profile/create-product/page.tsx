@@ -6,13 +6,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useCreateProductMutation } from "@/api/hooks";
-import {
-  AddressMap,
+import { AddressMap, ImageUpload, Textarea } from "@/components/ui";
+import { Input } from "@/components/ui-lab/Input";
 
-  ImageUpload,
-  Input,
-  Textarea,
-} from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 import { api } from "@/lib/api/instance";
 

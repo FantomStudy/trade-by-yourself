@@ -18,25 +18,26 @@ import {
   usePaymentHistory,
   useUserInfo,
 } from "@/api/hooks";
-import { Input, Typography } from "@/components/ui";
+import { Input } from "@/components/ui-lab/Input";
+import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
-import { useAuth } from "@/lib/contexts";
 
 import styles from "./page.module.css";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const BalancePage = () => {
-  const { user } = useAuth();
+  const user = useCurrentUser();
   const { data: userInfo } = useUserInfo(user?.id);
   const [amount, setAmount] = useState("");
   const { data: payments = [], isLoading, refetch } = usePaymentHistory();
   const createPaymentMutation = useCreatePaymentMutation();
-  const checkStatusMutation = useCheckPaymentStatusMutation(user?.id);
+  const checkStatusMutation = useCheckPaymentStatusMutation(user.data.id);
 
   // Логирование данных пользователя
   useEffect(() => {
-    console.log("[BALANCE PAGE] User from auth:", user);
-    console.log("[BALANCE PAGE] User ID:", user?.id);
-  }, [user]);
+    console.log("[BALANCE PAGE] User from auth:", user.data);
+    console.log("[BALANCE PAGE] User ID:", user.data.id);
+  }, [user.data]);
 
   // Логирование данных из /user/info/{id}
   useEffect(() => {

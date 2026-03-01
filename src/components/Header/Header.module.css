@@ -1,0 +1,40 @@
+.header {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.wrapper {
+  display: flex;
+  height: 72px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.messageIcon {
+  color: var(--success);
+}
+.favoritesIcon {
+  color: var(--pink);
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: 64px;
+  }
+  .actions {
+    display: none;
+  }
+}

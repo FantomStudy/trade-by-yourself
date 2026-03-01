@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-import { Input, Typography } from "@/components/ui";
+import { Input } from "@/components/ui-lab/Input";
+import { Typography } from "@/components/ui";
 
 import { MobileHeader } from "../_components/admin-sidebar";
 import { UsersTable } from "./_components/users-table";

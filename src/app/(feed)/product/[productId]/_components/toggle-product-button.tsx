@@ -7,7 +7,7 @@ import { useState } from "react";
 
 import { useToggleProductMutation } from "@/api/hooks";
 import { Button } from "@/components/ui-lab/Button";
-import { useAuth } from "@/lib/contexts";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 interface ToggleProductButtonProps {
   isHidden: boolean;
@@ -20,13 +20,13 @@ export const ToggleProductButton = ({
   sellerId,
   isHidden,
 }: ToggleProductButtonProps) => {
-  const { user } = useAuth();
+  const user = useCurrentUser();
   const router = useRouter();
   const toggleProductMutation = useToggleProductMutation();
   const [isToggling, setIsToggling] = useState(false);
 
   // Показываем кнопку только владельцу товара
-  if (!user || user.id !== sellerId) {
+  if (!user.data || user.data.id !== sellerId) {
     return null;
   }
 

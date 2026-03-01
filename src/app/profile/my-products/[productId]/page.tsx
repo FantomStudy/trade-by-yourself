@@ -11,9 +11,10 @@ import {
   useUpdateProductMutation,
 } from "@/api/hooks";
 import { getProductById } from "@/api/requests";
-import { AddressMap, Input, Textarea } from "@/components/ui";
+import { AddressMap, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 import { api } from "@/lib/api/instance";
+import { Input } from "@/components/ui-lab/Input";
 
 import styles from "../../create-product/page.module.css";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import type { IMaskInputProps } from "react-imask";
 import clsx from "clsx";
 import { IMaskInput } from "react-imask";

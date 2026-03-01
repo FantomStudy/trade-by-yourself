@@ -4,7 +4,9 @@ import type { Product } from "@/types";
 import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import {  Input, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Input } from "@/components/ui-lab/Input";
+
 import { Button } from "@/components/ui-lab/Button";
 import { addPromotion, getCurrentUserProducts } from "@/lib/api";
 import { useCurrentUser } from "@/lib/api/hooks/queries";

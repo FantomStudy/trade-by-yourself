@@ -8,9 +8,9 @@ import { useState } from "react";
 
 import { useStartChatMutation } from "@/api/hooks";
 import { Badge, Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui-lab/Avatar";
 import { Button } from "@/components/ui-lab/Button";
 import styles from "./seller-card.module.css";
-import { Avatar } from "@/components/ui-lab/Avatar";
 
 interface SellerCardProps {
   product: ExtendedProduct;

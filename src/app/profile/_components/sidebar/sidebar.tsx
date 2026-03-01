@@ -6,18 +6,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useIsAdmin, useUserInfo } from "@/api/hooks";
-import { Avatar } from "@/components/ui-lab/Avatar";
 import { Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui-lab/Avatar";
 import { Button } from "@/components/ui-lab/Button";
-import { useAuth } from "@/lib/contexts";
 import { formatFullName } from "@/lib/format";
 
 import { LINKS } from "./constants";
 
 import styles from "./sidebar.module.css";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export const Sidebar = () => {
-  const { user } = useAuth();
+  const user = useCurrentUser();
   const { data: userInfo } = useUserInfo(user?.id);
   const { data: adminCheck } = useIsAdmin();
   const pathname = usePathname();
@@ -35,7 +35,7 @@ export const Sidebar = () => {
 
   return (
     <div className={styles.sidebar}>
-      {user && (
+      {user.data && (
         <>
           <div className={styles.profileInfo}>
             <Avatar

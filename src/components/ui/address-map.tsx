@@ -5,7 +5,8 @@ import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 
-import { Input } from "@/components/ui";
+import { Input } from "@/components/ui-lab/Input";
+
 import {
   getAddressSuggestions,
   validateAddress,

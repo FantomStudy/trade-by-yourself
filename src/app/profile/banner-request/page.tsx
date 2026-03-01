@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { Input, Typography } from "@/components/ui";
+import { Input } from "@/components/ui-lab/Input";
+import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 
 const BannerRequestPage = () => {

@@ -1,16 +1,14 @@
 "use client";
 
 import type { SendReviewDto } from "@/api/requests";
-
 import { useMutation } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-
 import { sendReview } from "@/api/requests";
 import { Textarea, Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
-import { useAuth } from "@/lib/contexts";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 interface ReviewFormProps {
   sellerId: number;
@@ -18,7 +16,7 @@ interface ReviewFormProps {
 }
 
 export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
-  const { user } = useAuth();
+  const user = useCurrentUser();
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [text, setText] = useState("");
@@ -60,7 +58,7 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
     });
   };
 
-  if (!user) {
+  if (!user.data) {
     return (
       <div className="mb-8 rounded-lg bg-white p-6">
         <Typography className="text-gray-600">
@@ -70,7 +68,7 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
     );
   }
 
-  if (user.id === sellerId) {
+  if (user.data.id === sellerId) {
     return null; // Не показываем форму, если это свой товар
   }
 

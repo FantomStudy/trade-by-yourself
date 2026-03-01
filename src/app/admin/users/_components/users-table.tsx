@@ -21,9 +21,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  Input,
   Typography,
 } from "@/components/ui";
+import { Input } from "@/components/ui-lab/Input";
+
 import { Button } from "@/components/ui-lab/Button";
 
 interface UsersTableProps {
