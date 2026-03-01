@@ -1,0 +1,114 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* outline: none; */
+}
+
+.button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.button[aria-invalid="true"] {
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 3px rgba(vae(--destructive), 0.2);
+}
+
+/* .button:focus-visible {
+  border-color: var(--ring);
+} */
+
+.button > svg {
+  pointer-events: none;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+/* Sizes */
+.default {
+  height: 48px;
+  padding: 16px 20px;
+}
+.default:has(> svg) {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* .icon-sm {
+  width: 32px;
+  height: 32px;
+} */
+
+/* Variants */
+.primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.primary:hover {
+  background-color: color-mix(in srgb, var(--primary) 90%, transparent);
+}
+
+.outline {
+  border: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+.outline:hover {
+  background-color: var(--accent);
+}
+
+.success {
+  background-color: var(--success);
+  color: white;
+}
+
+.success:hover {
+  background-color: color-mix(in srgb, var(--success) 90%, transparent);
+}
+
+.destructive {
+  background-color: var(--destructive);
+  color: white;
+}
+.destructive:hover {
+  background-color: color-mix(in srgb, var(--destructive) 90%, transparent);
+}
+
+.destructive:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+.ghost:hover {
+  background-color: color-mix(in srgb, transparent 95%, black);
+  color: var(--accent-foreground);
+}
+
+.link {
+  height: auto;
+  padding: 0;
+  font-size: 16px;
+  text-decoration: none;
+  color: var(--primary);
+}
+/* 
+.ghost:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+} */
