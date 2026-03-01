@@ -2,10 +2,8 @@
 
 import { useQueryState } from "nuqs";
 import { useState } from "react";
-
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
 import { Input } from "@/app/(feed)/(search)/_lib/ui/input";
-
+import { Button } from "@/components/ui-lab/Button";
 import styles from "./search-box.module.css";
 
 export const SearchBox = () => {
@@ -29,7 +27,7 @@ export const SearchBox = () => {
         onChange={onChange}
         placeholder="Поиск по объявлениям"
       />
-      <Button className={styles.button} type="submit">
+      <Button type="submit" className={styles.button}>
         Найти
       </Button>
     </form>

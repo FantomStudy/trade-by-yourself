@@ -5,12 +5,12 @@ import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 
 import { useAvailableFilters } from "@/api/hooks";
 
-import { Button } from "../../_lib/ui/button";
 import { Input } from "../../_lib/ui/input";
 import { Select } from "../../_lib/ui/select";
 import { Typography } from "../../_lib/ui/typography";
 
 import styles from "./filters.module.css";
+import { Button } from "@/components/ui-lab/Button";
 
 interface FiltersProps {
   children?: React.ReactNode;
@@ -294,7 +294,7 @@ export const Filters = ({
           <Button
             className={styles.resetButton}
             onClick={handleReset}
-            variant="secondary"
+            variant="success"
           >
             Сбросить
           </Button>

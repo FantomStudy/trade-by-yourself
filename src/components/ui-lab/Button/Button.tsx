@@ -4,7 +4,7 @@ import styles from "./Button.module.css";
 
 export interface ButtonProps extends React.ComponentProps<"button"> {
   asChild?: boolean;
-  size?: "default" | "icon";
+  size?: "default" | "icon" | "icon-sm";
   variant?:
     | "primary"
     | "outline"

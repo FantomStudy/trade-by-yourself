@@ -4,13 +4,13 @@ import { MapPin } from "lucide-react";
 import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
 import { getCityByIp } from "@/lib/api/requests/address";
 
 import { CityConfirmPopup } from "../city-confirm-popup";
 import { RegionPicker } from "../region-picker";
 
 import styles from "./region-button.module.css";
+import { Button } from "@/components/ui-lab/Button";
 
 export const RegionButton = () => {
   const [region, setRegion] = useQueryState("region", parseAsString);

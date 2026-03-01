@@ -5,13 +5,13 @@ import { TextSearch } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
 import { Dialog } from "@/app/(feed)/(search)/_lib/ui/dialog";
 import { Typography } from "@/app/(feed)/(search)/_lib/ui/typography";
 
 import { getCategories } from "../../../category";
 
 import styles from "./category-dialog.module.css";
+import { Button } from "@/components/ui-lab/Button";
 
 export const CategoryDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
