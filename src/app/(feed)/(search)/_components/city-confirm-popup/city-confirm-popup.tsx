@@ -2,8 +2,8 @@
 
 import { MapPin, X } from "lucide-react";
 
-import styles from "./city-confirm-popup.module.css";
 import { Button } from "@/components/ui-lab/Button";
+import styles from "./city-confirm-popup.module.css";
 
 interface CityConfirmPopupProps {
   city: string;

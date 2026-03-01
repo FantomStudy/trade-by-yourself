@@ -7,11 +7,10 @@ import { useState } from "react";
 
 import { Dialog } from "@/app/(feed)/(search)/_lib/ui/dialog";
 import { Typography } from "@/app/(feed)/(search)/_lib/ui/typography";
+import { Button } from "@/components/ui-lab/Button";
 
 import { getCategories } from "../../../category";
-
 import styles from "./category-dialog.module.css";
-import { Button } from "@/components/ui-lab/Button";
 
 export const CategoryDialog = () => {
   const [isOpen, setIsOpen] = useState(false);

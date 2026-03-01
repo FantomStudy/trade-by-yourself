@@ -5,10 +5,6 @@ import type { SubmitHandler } from "react-hook-form";
 import type { AuthFormProps } from "../types";
 import type { VerifyMobileCodeData } from "@/lib/api";
 
-interface VerifyCodeFormProps extends AuthFormProps {
-  phoneNumber: string;
-}
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,6 +14,10 @@ import { Button, Field } from "@/components/ui";
 import { verifyMobileCodeSchema } from "@/lib/api";
 
 import styles from "../forms.module.css";
+
+interface VerifyCodeFormProps extends AuthFormProps {
+  phoneNumber: string;
+}
 
 export const VerifyCodeForm = ({
   phoneNumber,

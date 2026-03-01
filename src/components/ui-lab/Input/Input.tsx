@@ -1,11 +1,10 @@
 import clsx from "clsx";
-
-import styles from "./input.module.css";
+import styles from "./Input.module.css";
 
 export type InputProps = React.ComponentProps<"input">;
 
 export const Input = ({ type = "text", className, ...props }: InputProps) => {
   return (
-    <input className={clsx(styles.input, className)} type={type} {...props} />
+    <input type={type} className={clsx(styles.input, className)} {...props} />
   );
 };

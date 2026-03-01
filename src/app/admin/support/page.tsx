@@ -1,11 +1,10 @@
 "use client";
 
+import type {SupportMessage} from "@/lib/support-chat";
 import type { Chat } from "@/types";
-
 import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-
 import { Button, Typography } from "@/components/ui";
 import { useChats } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
@@ -14,8 +13,8 @@ import {
   addSupportMessage,
   getAdminUnreadCount,
   getSupportMessages,
-  markSupportMessagesAsRead,
-  type SupportMessage,
+  markSupportMessagesAsRead
+  
 } from "@/lib/support-chat";
 
 import { MobileHeader } from "../_components/admin-sidebar";

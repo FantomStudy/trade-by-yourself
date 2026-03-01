@@ -4,8 +4,8 @@ import { Filter } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-import { FiltersSheet } from "../filters";
 import { Button } from "@/components/ui-lab/Button";
+import { FiltersSheet } from "../filters";
 
 export const FiltersButton = () => {
   const [filtersOpen, setFiltersOpen] = useState(false);

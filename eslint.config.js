@@ -1,5 +1,4 @@
 import antfu from "@antfu/eslint-config";
-import pluginQuery from "@tanstack/eslint-plugin-query";
 
 const eslintConfig = antfu(
   {
@@ -7,16 +6,7 @@ const eslintConfig = antfu(
     markdown: false,
     react: true,
     nextjs: true,
-    jsx: {
-      a11y: true,
-    },
-    ignores: [
-      "package.json",
-      ".next/**",
-      "out/**",
-      "build/**",
-      "next-env.d.ts",
-    ],
+    ignores: ["package.json"],
   },
   {
     name: "fantomstudy/rewrite",
@@ -29,7 +19,6 @@ const eslintConfig = antfu(
       "react-refresh/only-export-components": "off",
     },
   },
-  ...pluginQuery.configs["flat/recommended"],
   {
     name: "fantomstudy/perfectionist",
     rules: {

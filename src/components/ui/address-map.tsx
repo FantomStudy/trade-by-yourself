@@ -144,7 +144,7 @@ export const AddressMap = ({
     };
 
     initializeLocation();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   // Функция для получения адреса по координатам (обратное геокодирование)
   const getAddressFromCoordinates = async (lat: number, lng: number) => {

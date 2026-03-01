@@ -5,11 +5,10 @@ import { Heart } from "lucide-react";
 import { useState } from "react";
 
 import { safe } from "@/app/(feed)/(search)/_lib/utils/safe";
+import { Button } from "@/components/ui-lab/Button";
 
 import { toggleFavorite } from "../../api";
-
 import styles from "./like-button.module.css";
-import { Button } from "@/components/ui-lab/Button";
 
 interface LikeButtonProps {
   className?: string;

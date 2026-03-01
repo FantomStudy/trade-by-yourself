@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
+import { useEffect, useState } from "react";
 
 import { useAvailableFilters } from "@/api/hooks";
-
-import { Input } from "../../_lib/ui/input";
+import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
 import { Select } from "../../_lib/ui/select";
 import { Typography } from "../../_lib/ui/typography";
-
 import styles from "./filters.module.css";
-import { Button } from "@/components/ui-lab/Button";
 
 interface FiltersProps {
   children?: React.ReactNode;

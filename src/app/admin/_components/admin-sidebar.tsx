@@ -16,10 +16,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   createContext,
-  useContext,
-  useState,
+  use,
   useCallback,
   useEffect,
+  useState,
 } from "react";
 
 import { Typography } from "@/components/ui";
@@ -80,7 +80,7 @@ interface SidebarContextValue {
 const SidebarContext = createContext<SidebarContextValue | null>(null);
 
 export const useSidebar = () => {
-  const context = useContext(SidebarContext);
+  const context = use(SidebarContext);
   if (!context) {
     throw new Error("useSidebar must be used within SidebarProvider");
   }
@@ -105,9 +105,9 @@ export const SidebarProvider = ({
   }, [pathname, close]);
 
   return (
-    <SidebarContext.Provider value={{ isOpen, open, close, toggle }}>
+    <SidebarContext value={{ isOpen, open, close, toggle }}>
       {children}
-    </SidebarContext.Provider>
+    </SidebarContext>
   );
 };
 

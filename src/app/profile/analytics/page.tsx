@@ -1,13 +1,12 @@
 "use client";
 
-import { Eye, Heart, MessageSquare, Package, Phone } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Eye, Heart, MessageSquare, Package } from "lucide-react";
 import { useState } from "react";
-
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
 import { Typography } from "@/components/ui";
-import { getFavorites } from "@/lib/api/requests";
 import { useCategories, useChats } from "@/lib/api/hooks";
-import { useQuery } from "@tanstack/react-query";
+import { getFavorites } from "@/lib/api/requests";
 
 import styles from "./page.module.css";
 

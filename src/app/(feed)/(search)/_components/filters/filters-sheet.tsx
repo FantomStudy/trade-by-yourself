@@ -4,13 +4,12 @@ import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import * as React from "react";
 
 import { useAvailableFilters } from "@/api/hooks";
-import { Input } from "@/app/(feed)/(search)/_lib/ui/input";
 import { Select } from "@/app/(feed)/(search)/_lib/ui/select";
 import { Typography } from "@/app/(feed)/(search)/_lib/ui/typography";
 import { Sheet } from "@/components/ui";
-
-import styles from "./filters-sheet.module.css";
 import { Button } from "@/components/ui-lab/Button";
+import { Input } from "@/components/ui-lab/Input";
+import styles from "./filters-sheet.module.css";
 
 interface FiltersSheetProps {
   children?: React.ReactNode;

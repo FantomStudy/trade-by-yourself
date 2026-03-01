@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import * as React from "react";
+import { useRef, useState } from "react";
 
 interface ImageUploadProps {
   maxImages?: number;
