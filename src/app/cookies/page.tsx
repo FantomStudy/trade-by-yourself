@@ -30,9 +30,9 @@ const CookiesPage = () => {
           технологии при посещении Вами нашего Сайта.
         </p>
         <p className="mb-3">
-          1.2. Оператор Сайта: Общество с ограниченной ответственностью
-          «Олимп» (ООО «Олимп»), ИНН 5609186174, ОГРН 1175658012441, адрес:
-          460005, Оренбургская область, г. Оренбург, ул. Шевченко, д. 20В.
+          1.2. Оператор Сайта: Общество с ограниченной ответственностью «Олимп»
+          (ООО «Олимп»), ИНН 5609186174, ОГРН 1175658012441, адрес: 460005,
+          Оренбургская область, г. Оренбург, ул. Шевченко, д. 20В.
         </p>
         <p className="mb-3">
           1.3. Используя наш Сайт, Вы соглашаетесь с использованием cookies в
@@ -62,8 +62,8 @@ const CookiesPage = () => {
         <p className="mb-3">
           2.1.2. Представьте, что cookies — это «записка», которую сайт
           оставляет в Вашем браузере. Когда Вы возвращаетесь на сайт, он читает
-          эту записку и «вспоминает» Вас: Ваши настройки, что Вы смотрели,
-          вошли ли Вы в свой аккаунт.
+          эту записку и «вспоминает» Вас: Ваши настройки, что Вы смотрели, вошли
+          ли Вы в свой аккаунт.
         </p>
         <p className="mb-3">
           2.1.3. Cookies не являются вирусами или вредоносными программами. Они
@@ -94,33 +94,47 @@ const CookiesPage = () => {
           3. КАКИЕ ФАЙЛЫ COOKIES МЫ ИСПОЛЬЗУЕМ
         </h2>
 
-        <p className="mb-3 font-semibold">3.1. Классификация по сроку хранения</p>
+        <p className="mb-3 font-semibold">
+          3.1. Классификация по сроку хранения
+        </p>
         <div className="mb-6 overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-gray-100">
                 <th className="border border-gray-300 p-3 text-left">Тип</th>
-                <th className="border border-gray-300 p-3 text-left">Описание</th>
-                <th className="border border-gray-300 p-3 text-left">Срок хранения</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Описание
+                </th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Срок хранения
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 p-3 font-medium">Сессионные cookies</td>
+                <td className="border border-gray-300 p-3 font-medium">
+                  Сессионные cookies
+                </td>
                 <td className="border border-gray-300 p-3">
                   Временные файлы, которые удаляются при закрытии браузера.
                   Необходимы для корректной работы сайта во время Вашего визита
                 </td>
-                <td className="border border-gray-300 p-3">До закрытия браузера</td>
+                <td className="border border-gray-300 p-3">
+                  До закрытия браузера
+                </td>
               </tr>
               <tr>
-                <td className="border border-gray-300 p-3 font-medium">Постоянные cookies</td>
-                <td className="border border-gray-300 p-3">
-                  Сохраняются на Вашем устройстве в течение определённого времени
-                  или до момента их удаления Вами. Позволяют «запомнить» Вас при
-                  следующих посещениях
+                <td className="border border-gray-300 p-3 font-medium">
+                  Постоянные cookies
                 </td>
-                <td className="border border-gray-300 p-3">От 1 дня до 2 лет</td>
+                <td className="border border-gray-300 p-3">
+                  Сохраняются на Вашем устройстве в течение определённого
+                  времени или до момента их удаления Вами. Позволяют «запомнить»
+                  Вас при следующих посещениях
+                </td>
+                <td className="border border-gray-300 p-3">
+                  От 1 дня до 2 лет
+                </td>
               </tr>
             </tbody>
           </table>
@@ -129,7 +143,9 @@ const CookiesPage = () => {
         <p className="mb-3 font-semibold">3.2. Классификация по назначению</p>
 
         {/* 3.2.1 */}
-        <p className="mb-2 font-medium">3.2.1. Строго необходимые (технические) cookies</p>
+        <p className="mb-2 font-medium">
+          3.2.1. Строго необходимые (технические) cookies
+        </p>
         <p className="mb-1">
           <strong>Что это:</strong> Cookies, без которых Сайт не может нормально
           работать. Они обеспечивают базовые функции: авторизацию, безопасность,
@@ -141,9 +157,7 @@ const CookiesPage = () => {
             чтобы Вы оставались авторизованным в Личном кабинете при переходе
             между страницами;
           </li>
-          <li>
-            чтобы сохранять товары, которые Вы добавили в «Избранное»;
-          </li>
+          <li>чтобы сохранять товары, которые Вы добавили в «Избранное»;</li>
           <li>чтобы обеспечить безопасность Вашей учётной записи;</li>
           <li>чтобы запомнить Ваше согласие на использование cookies.</li>
         </ul>
@@ -155,20 +169,34 @@ const CookiesPage = () => {
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-300 p-3 text-left">Название</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Название
+                </th>
                 <th className="border border-gray-300 p-3 text-left">Цель</th>
-                <th className="border border-gray-300 p-3 text-left">Срок хранения</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Срок хранения
+                </th>
               </tr>
             </thead>
             <tbody>
               {[
                 ["session_id", "Идентификатор сессии пользователя", "Сессия"],
-                ["csrf_token", "Защита от межсайтовой подделки запросов", "Сессия"],
+                [
+                  "csrf_token",
+                  "Защита от межсайтовой подделки запросов",
+                  "Сессия",
+                ],
                 ["auth_token", "Поддержание авторизации", "До 30 дней"],
-                ["cookie_consent", "Сохранение Вашего выбора по cookies", "1 год"],
+                [
+                  "cookie_consent",
+                  "Сохранение Вашего выбора по cookies",
+                  "1 год",
+                ],
               ].map(([name, purpose, ttl]) => (
                 <tr key={name}>
-                  <td className="border border-gray-300 p-3 font-mono text-xs">{name}</td>
+                  <td className="border border-gray-300 p-3 font-mono text-xs">
+                    {name}
+                  </td>
                   <td className="border border-gray-300 p-3">{purpose}</td>
                   <td className="border border-gray-300 p-3">{ttl}</td>
                 </tr>
@@ -180,8 +208,8 @@ const CookiesPage = () => {
         {/* 3.2.2 */}
         <p className="mb-2 font-medium">3.2.2. Функциональные cookies</p>
         <p className="mb-1">
-          <strong>Что это:</strong> Cookies, которые запоминают Ваши предпочтения
-          и настройки, делая использование сайта более удобным.
+          <strong>Что это:</strong> Cookies, которые запоминают Ваши
+          предпочтения и настройки, делая использование сайта более удобным.
         </p>
         <p className="mb-1">Зачем нужны:</p>
         <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
@@ -189,7 +217,9 @@ const CookiesPage = () => {
           <li>
             чтобы сохранить настройки отображения (вид списка, сортировка);
           </li>
-          <li>чтобы запомнить Ваш язык (если предусмотрена мультиязычность);</li>
+          <li>
+            чтобы запомнить Ваш язык (если предусмотрена мультиязычность);
+          </li>
           <li>чтобы запомнить, какие категории Вам интересны.</li>
         </ul>
         <p className="mb-3">
@@ -200,19 +230,29 @@ const CookiesPage = () => {
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-300 p-3 text-left">Название</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Название
+                </th>
                 <th className="border border-gray-300 p-3 text-left">Цель</th>
-                <th className="border border-gray-300 p-3 text-left">Срок хранения</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Срок хранения
+                </th>
               </tr>
             </thead>
             <tbody>
               {[
                 ["user_region", "Выбранный регион поиска", "1 год"],
                 ["view_settings", "Настройки отображения объявлений", "1 год"],
-                ["recent_categories", "Недавно просмотренные категории", "30 дней"],
+                [
+                  "recent_categories",
+                  "Недавно просмотренные категории",
+                  "30 дней",
+                ],
               ].map(([name, purpose, ttl]) => (
                 <tr key={name}>
-                  <td className="border border-gray-300 p-3 font-mono text-xs">{name}</td>
+                  <td className="border border-gray-300 p-3 font-mono text-xs">
+                    {name}
+                  </td>
                   <td className="border border-gray-300 p-3">{purpose}</td>
                   <td className="border border-gray-300 p-3">{ttl}</td>
                 </tr>
@@ -222,7 +262,9 @@ const CookiesPage = () => {
         </div>
 
         {/* 3.2.3 */}
-        <p className="mb-2 font-medium">3.2.3. Аналитические (статистические) cookies</p>
+        <p className="mb-2 font-medium">
+          3.2.3. Аналитические (статистические) cookies
+        </p>
         <p className="mb-1">
           <strong>Что это:</strong> Cookies, которые помогают нам понять, как
           посетители используют Сайт, какие страницы популярны, где возникают
@@ -237,8 +279,8 @@ const CookiesPage = () => {
           <li>чтобы анализировать эффективность нововведений.</li>
         </ul>
         <p className="mb-3 text-sm">
-          <strong>Важно:</strong> Данные собираются в обезличенном виде. Мы видим
-          статистику, но не можем идентифицировать конкретного человека.
+          <strong>Важно:</strong> Данные собираются в обезличенном виде. Мы
+          видим статистику, но не можем идентифицировать конкретного человека.
         </p>
         <p className="mb-3">
           <strong>Можно ли отключить:</strong> Да, это не повлияет на работу
@@ -248,21 +290,44 @@ const CookiesPage = () => {
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-300 p-3 text-left">Название</th>
-                <th className="border border-gray-300 p-3 text-left">Поставщик</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Название
+                </th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Поставщик
+                </th>
                 <th className="border border-gray-300 p-3 text-left">Цель</th>
-                <th className="border border-gray-300 p-3 text-left">Срок хранения</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Срок хранения
+                </th>
               </tr>
             </thead>
             <tbody>
               {[
-                ["_ym_uid", "Яндекс.Метрика", "Идентификатор пользователя для статистики", "1 год"],
+                [
+                  "_ym_uid",
+                  "Яндекс.Метрика",
+                  "Идентификатор пользователя для статистики",
+                  "1 год",
+                ],
                 ["_ym_d", "Яндекс.Метрика", "Дата первого визита", "1 год"],
-                ["_ym_isad", "Яндекс.Метрика", "Определение блокировщика рекламы", "2 дня"],
-                ["_ym_visorc", "Яндекс.Метрика", "Данные для Вебвизора", "30 минут"],
+                [
+                  "_ym_isad",
+                  "Яндекс.Метрика",
+                  "Определение блокировщика рекламы",
+                  "2 дня",
+                ],
+                [
+                  "_ym_visorc",
+                  "Яндекс.Метрика",
+                  "Данные для Вебвизора",
+                  "30 минут",
+                ],
               ].map(([name, provider, purpose, ttl]) => (
                 <tr key={name}>
-                  <td className="border border-gray-300 p-3 font-mono text-xs">{name}</td>
+                  <td className="border border-gray-300 p-3 font-mono text-xs">
+                    {name}
+                  </td>
                   <td className="border border-gray-300 p-3">{provider}</td>
                   <td className="border border-gray-300 p-3">{purpose}</td>
                   <td className="border border-gray-300 p-3">{ttl}</td>
@@ -273,21 +338,25 @@ const CookiesPage = () => {
         </div>
 
         {/* 3.2.4 */}
-        <p className="mb-2 font-medium">3.2.4. Рекламные (маркетинговые) cookies</p>
+        <p className="mb-2 font-medium">
+          3.2.4. Рекламные (маркетинговые) cookies
+        </p>
         <p className="mb-1">
           <strong>Что это:</strong> Cookies, которые используются для показа Вам
           релевантной рекламы и отслеживания эффективности рекламных кампаний.
         </p>
         <p className="mb-1">Зачем нужны:</p>
         <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
-          <li>чтобы показывать Вам рекламу, которая может быть Вам интересна;</li>
+          <li>
+            чтобы показывать Вам рекламу, которая может быть Вам интересна;
+          </li>
           <li>чтобы ограничить количество показов одной и той же рекламы;</li>
           <li>чтобы измерить эффективность рекламных кампаний;</li>
           <li>чтобы понять, пришли ли Вы к нам по рекламе.</li>
         </ul>
         <p className="mb-3 text-sm">
-          <strong>Важно:</strong> Эти cookies могут отслеживать Ваше поведение на
-          разных сайтах.
+          <strong>Важно:</strong> Эти cookies могут отслеживать Ваше поведение
+          на разных сайтах.
         </p>
         <p className="mb-3">
           <strong>Можно ли отключить:</strong> Да, Вы продолжите видеть рекламу,
@@ -297,20 +366,43 @@ const CookiesPage = () => {
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-300 p-3 text-left">Название</th>
-                <th className="border border-gray-300 p-3 text-left">Поставщик</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Название
+                </th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Поставщик
+                </th>
                 <th className="border border-gray-300 p-3 text-left">Цель</th>
-                <th className="border border-gray-300 p-3 text-left">Срок хранения</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Срок хранения
+                </th>
               </tr>
             </thead>
             <tbody>
               {[
-                ["ym_metrika...", "Яндекс", "Рекламные кампании Яндекса", "До 2 лет"],
-                ["remixlang", "ВКонтакте", "Язык интерфейса VK-виджетов", "1 год"],
-                ["remixstid", "ВКонтакте", "Идентификатор для рекламы VK", "1 год"],
+                [
+                  "ym_metrika...",
+                  "Яндекс",
+                  "Рекламные кампании Яндекса",
+                  "До 2 лет",
+                ],
+                [
+                  "remixlang",
+                  "ВКонтакте",
+                  "Язык интерфейса VK-виджетов",
+                  "1 год",
+                ],
+                [
+                  "remixstid",
+                  "ВКонтакте",
+                  "Идентификатор для рекламы VK",
+                  "1 год",
+                ],
               ].map(([name, provider, purpose, ttl]) => (
                 <tr key={name}>
-                  <td className="border border-gray-300 p-3 font-mono text-xs">{name}</td>
+                  <td className="border border-gray-300 p-3 font-mono text-xs">
+                    {name}
+                  </td>
                   <td className="border border-gray-300 p-3">{provider}</td>
                   <td className="border border-gray-300 p-3">{purpose}</td>
                   <td className="border border-gray-300 p-3">{ttl}</td>
@@ -328,8 +420,8 @@ const CookiesPage = () => {
         <p className="mb-2 font-semibold">4.1. Что такое сторонние cookies</p>
         <p className="mb-3">
           4.1.1. Сторонние cookies (third-party cookies) — это cookies, которые
-          устанавливаются не нашим Сайтом, а другими сервисами,
-          интегрированными с нашим Сайтом.
+          устанавливаются не нашим Сайтом, а другими сервисами, интегрированными
+          с нашим Сайтом.
         </p>
         <p className="mb-3">
           4.1.2. Мы не контролируем эти cookies напрямую. Они управляются
@@ -337,7 +429,9 @@ const CookiesPage = () => {
           собственными политиками.
         </p>
 
-        <p className="mb-2 font-semibold">4.2. Какие сторонние сервисы мы используем</p>
+        <p className="mb-2 font-semibold">
+          4.2. Какие сторонние сервисы мы используем
+        </p>
 
         <p className="mb-2 font-medium">4.2.1. Яндекс.Метрика</p>
         <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
@@ -405,8 +499,8 @@ const CookiesPage = () => {
             <strong>Поставщик:</strong> ООО «В Контакте» (Россия)
           </li>
           <li>
-            <strong>Назначение:</strong> Кнопки «Поделиться», виджеты,
-            аналитика рекламы, пиксель отслеживания
+            <strong>Назначение:</strong> Кнопки «Поделиться», виджеты, аналитика
+            рекламы, пиксель отслеживания
           </li>
           <li>
             <strong>Какие данные собирает:</strong> Идентификатор пользователя
@@ -460,7 +554,9 @@ const CookiesPage = () => {
           5.1. Помимо cookies, мы можем использовать аналогичные технологии:
         </p>
 
-        <p className="mb-2 font-medium">5.1.1. Локальное хранилище (Local Storage, Session Storage)</p>
+        <p className="mb-2 font-medium">
+          5.1.1. Локальное хранилище (Local Storage, Session Storage)
+        </p>
         <p className="mb-1">
           <strong>Что это:</strong> Механизм хранения данных в браузере, похожий
           на cookies, но позволяющий хранить больше информации.
@@ -472,7 +568,9 @@ const CookiesPage = () => {
           <li>хранение настроек интерфейса.</li>
         </ul>
 
-        <p className="mb-2 font-medium">5.1.2. Пиксели отслеживания (Web Beacons, Tracking Pixels)</p>
+        <p className="mb-2 font-medium">
+          5.1.2. Пиксели отслеживания (Web Beacons, Tracking Pixels)
+        </p>
         <p className="mb-1">
           <strong>Что это:</strong> Невидимые изображения размером 1×1 пиксель,
           встроенные в страницы сайта или email-письма.
@@ -681,7 +779,9 @@ const CookiesPage = () => {
           и сервисы учитывают этот сигнал.
         </p>
 
-        <p className="mb-2 font-semibold">6.4. Последствия отключения cookies</p>
+        <p className="mb-2 font-semibold">
+          6.4. Последствия отключения cookies
+        </p>
         <p className="mb-1">6.4.1. Если Вы отключите все cookies:</p>
         <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
           <li>Вы не сможете авторизоваться в Личном кабинете;</li>
@@ -707,15 +807,17 @@ const CookiesPage = () => {
       <section className="mb-8">
         <h2 className="mb-4 text-xl font-bold">7. СРОК ХРАНЕНИЯ COOKIES</h2>
 
-        <p className="mb-3">
-          7.1. Различные cookies хранятся разное время:
-        </p>
+        <p className="mb-3">7.1. Различные cookies хранятся разное время:</p>
         <div className="mb-4 overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-300 p-3 text-left">Тип cookies</th>
-                <th className="border border-gray-300 p-3 text-left">Срок хранения</th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Тип cookies
+                </th>
+                <th className="border border-gray-300 p-3 text-left">
+                  Срок хранения
+                </th>
               </tr>
             </thead>
             <tbody>

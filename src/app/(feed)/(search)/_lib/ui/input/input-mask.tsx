@@ -28,12 +28,12 @@ export const InputMask = ({
       const extracted = extractValue(value, mask);
       return applyMask(extracted, mask, protectedPrefix);
     },
-    [mask, protectedPrefix]
+    [mask, protectedPrefix],
   );
 
   const displayValue = useMemo(
     () => getDisplayValue(value),
-    [value, getDisplayValue]
+    [value, getDisplayValue],
   );
 
   const handleChange = useCallback(
@@ -70,7 +70,7 @@ export const InputMask = ({
         externalOnChange(syntheticEvent);
       }
     },
-    [mask, protectedPrefix, externalOnChange]
+    [mask, protectedPrefix, externalOnChange],
   );
 
   const handleKeyDown = useCallback(
@@ -105,14 +105,14 @@ export const InputMask = ({
               if (internalRef.current) {
                 internalRef.current.setSelectionRange(
                   protectedPrefix.length,
-                  protectedPrefix.length
+                  protectedPrefix.length,
                 );
               }
             }, 0);
           } else {
             input.setSelectionRange(
               protectedPrefix.length,
-              Math.max(protectedPrefix.length, selectionEnd)
+              Math.max(protectedPrefix.length, selectionEnd),
             );
           }
         } else if (
@@ -125,7 +125,7 @@ export const InputMask = ({
         }
       }
     },
-    [protectedPrefix, externalOnChange]
+    [protectedPrefix, externalOnChange],
   );
 
   return (

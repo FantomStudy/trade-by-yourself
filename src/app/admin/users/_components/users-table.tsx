@@ -181,7 +181,7 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                   className="max-w-[150px] truncate px-2 py-2 text-xs"
                   title={user.fullName}
                 >
-                  <Link 
+                  <Link
                     href={`/seller/${user.id}`}
                     className="text-blue-600 hover:text-blue-800 hover:underline"
                   >

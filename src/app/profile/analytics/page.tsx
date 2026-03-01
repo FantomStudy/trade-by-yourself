@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Eye,
-  Heart,
-  MessageSquare,
-  Package,
-  Phone,
-} from "lucide-react";
+import { Eye, Heart, MessageSquare, Package, Phone } from "lucide-react";
 import { useState } from "react";
 
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
@@ -152,9 +146,7 @@ const Analytics = () => {
             <MessageSquare className="h-6 w-6" style={{ color: "#10b981" }} />
           </div>
           <div className={styles.metricContent}>
-            <Typography className={styles.metricLabel}>
-              Всего чатов
-            </Typography>
+            <Typography className={styles.metricLabel}>Всего чатов</Typography>
             <Typography className={styles.metricValue}>
               {chats?.length || 0}
             </Typography>

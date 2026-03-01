@@ -76,7 +76,9 @@ export const FiltersSheet = ({
     sortBy: urlFilters.sortBy,
     region: urlFilters.region,
     profileType: urlFilters.profileType,
-    fieldValues: urlFilters.fieldValues ? JSON.parse(urlFilters.fieldValues) : {},
+    fieldValues: urlFilters.fieldValues
+      ? JSON.parse(urlFilters.fieldValues)
+      : {},
   });
 
   // Синхронизация локального состояния с URL при открытии
@@ -91,7 +93,9 @@ export const FiltersSheet = ({
         sortBy: urlFilters.sortBy,
         region: urlFilters.region,
         profileType: urlFilters.profileType,
-        fieldValues: urlFilters.fieldValues ? JSON.parse(urlFilters.fieldValues) : {},
+        fieldValues: urlFilters.fieldValues
+          ? JSON.parse(urlFilters.fieldValues)
+          : {},
       });
     }
   }, [open, urlFilters]);
@@ -119,9 +123,10 @@ export const FiltersSheet = ({
   const handleApply = () => {
     const filtersToApply = {
       ...localFilters,
-      fieldValues: Object.keys(localFilters.fieldValues).length > 0
-        ? JSON.stringify(localFilters.fieldValues)
-        : null,
+      fieldValues:
+        Object.keys(localFilters.fieldValues).length > 0
+          ? JSON.stringify(localFilters.fieldValues)
+          : null,
     };
     setUrlFilters(filtersToApply as any);
     onOpenChange?.(false);
@@ -299,41 +304,39 @@ export const FiltersSheet = ({
             </div>
 
             {/* Динамические характеристики из available-filters */}
-            {availableFilters?.fields &&
-              availableFilters.fields.length > 0 && (
-                <>
-                  {availableFilters.fields.map((field) => (
-                    <div key={field.fieldId} className={styles.filterGroup}>
-                      <Typography className={styles.filterLabel}>
-                        {field.fieldName}
-                        {field.isRequired && (
-                          <span style={{ color: "red" }}> *</span>
-                        )}
-                      </Typography>
-                      <Select
-                        value={
-                          localFilters.fieldValues[field.fieldId.toString()] ??
-                          ""
-                        }
-                        onValueChange={(value) =>
-                          handleFieldValueChange(field.fieldId.toString(), value)
-                        }
-                      >
-                        <Select.Trigger className={styles.selectTrigger}>
-                          <Select.Value placeholder="Все" />
-                        </Select.Trigger>
-                        <Select.Content>
-                          {field.values.map((value) => (
-                            <Select.Item key={value} value={value}>
-                              {value}
-                            </Select.Item>
-                          ))}
-                        </Select.Content>
-                      </Select>
-                    </div>
-                  ))}
-                </>
-              )}
+            {availableFilters?.fields && availableFilters.fields.length > 0 && (
+              <>
+                {availableFilters.fields.map((field) => (
+                  <div key={field.fieldId} className={styles.filterGroup}>
+                    <Typography className={styles.filterLabel}>
+                      {field.fieldName}
+                      {field.isRequired && (
+                        <span style={{ color: "red" }}> *</span>
+                      )}
+                    </Typography>
+                    <Select
+                      value={
+                        localFilters.fieldValues[field.fieldId.toString()] ?? ""
+                      }
+                      onValueChange={(value) =>
+                        handleFieldValueChange(field.fieldId.toString(), value)
+                      }
+                    >
+                      <Select.Trigger className={styles.selectTrigger}>
+                        <Select.Value placeholder="Все" />
+                      </Select.Trigger>
+                      <Select.Content>
+                        {field.values.map((value) => (
+                          <Select.Item key={value} value={value}>
+                            {value}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
+                  </div>
+                ))}
+              </>
+            )}
 
             <div className={styles.filterGroup}>
               <Typography className={styles.filterLabel}>Регион</Typography>
@@ -342,7 +345,10 @@ export const FiltersSheet = ({
                 type="text"
                 value={localFilters.region ?? ""}
                 onChange={(e) =>
-                  setLocalFilters((prev) => ({ ...prev, region: e.target.value }))
+                  setLocalFilters((prev) => ({
+                    ...prev,
+                    region: e.target.value,
+                  }))
                 }
                 placeholder="Введите регион"
               />

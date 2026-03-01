@@ -249,7 +249,6 @@ export const Filters = ({
                     <Select.Value placeholder="Все" />
                   </Select.Trigger>
                   <Select.Content>
-
                     {field.values.map((value) => (
                       <Select.Item key={value} value={value}>
                         {value}

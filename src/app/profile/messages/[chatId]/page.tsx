@@ -122,7 +122,6 @@ const ChatPage = ({ params }: ChatPageProps) => {
     markAsRead,
   ]);
 
-
   const handleSend = () => {
     if (message.trim() && isConnected) {
       console.log("Sending message:", {

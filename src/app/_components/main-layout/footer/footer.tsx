@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/contexts";
 
 import styles from "./footer.module.css";
 
-const SUPPORT_PHONE = "+7 (800) 555-35-35"; 
+const SUPPORT_PHONE = "+7 (800) 555-35-35";
 
 export const Footer = () => {
   const { user } = useAuth();

@@ -98,7 +98,7 @@ const SelectContent = ({
         <SelectPrimitive.Viewport
           className={clsx(
             styles.viewport,
-            position === "popper" && styles.viewportPopper
+            position === "popper" && styles.viewportPopper,
           )}
         >
           {children}

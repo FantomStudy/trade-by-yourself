@@ -7,8 +7,10 @@ interface RequestSearchParams {
   [key: string]: any;
 }
 
-export interface RequestOptions<T = undefined>
-  extends Omit<RequestInit, "body"> {
+export interface RequestOptions<T = undefined> extends Omit<
+  RequestInit,
+  "body"
+> {
   body?: T extends undefined ? RequestBody : T;
   method?: RequestMethod;
   query?: RequestSearchParams;

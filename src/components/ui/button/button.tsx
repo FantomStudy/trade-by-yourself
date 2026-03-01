@@ -11,7 +11,7 @@ export type ButtonVariant =
   | "ghost"
   | "link"
   | "secondary";
-  
+
 type ButtonSize = "default" | "icon";
 
 interface ButtonProps extends ComponentProps<"button"> {

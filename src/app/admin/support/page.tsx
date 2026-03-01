@@ -189,8 +189,9 @@ const SupportPage = () => {
                 {supportMessages.map((msg) => (
                   <div key={msg.id}>
                     {msg.isFromUser && (
-                      <div className="mb-1 text-xs text-gray-500 text-left ml-2">
-                        {msg.userName || "Пользователь"} (ID: {msg.userId || "N/A"})
+                      <div className="mb-1 ml-2 text-left text-xs text-gray-500">
+                        {msg.userName || "Пользователь"} (ID:{" "}
+                        {msg.userId || "N/A"})
                       </div>
                     )}
                     <div
@@ -281,8 +282,8 @@ const SupportPage = () => {
                 className="block w-full text-left transition-colors hover:bg-gray-50"
                 onClick={openSupportChat}
               >
-                <div className="flex items-start gap-4 p-4 border-2 border-purple-200">
-                  <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-purple-100 flex items-center justify-center">
+                <div className="flex items-start gap-4 border-2 border-purple-200 p-4">
+                  <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-purple-100">
                     <MessageSquare className="h-8 w-8 text-purple-600" />
                   </div>
 

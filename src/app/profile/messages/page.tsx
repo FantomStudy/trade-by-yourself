@@ -7,10 +7,7 @@ import { useEffect, useState } from "react";
 import { ChatsBanner } from "@/components/product-feed-banner";
 import { useChats } from "@/lib/api/hooks";
 import { formatPrice } from "@/lib/format";
-import {
-  getSupportMessages,
-  getSupportUnreadCount,
-} from "@/lib/support-chat";
+import { getSupportMessages, getSupportUnreadCount } from "@/lib/support-chat";
 
 const MessagesPage = () => {
   const { data: chats, isLoading } = useChats();
@@ -55,15 +52,17 @@ const MessagesPage = () => {
         {/* Чат тех поддержки */}
         <Link
           href="/profile/messages/support"
-          className="block rounded-lg bg-white p-4 shadow-sm transition-shadow hover:shadow-md border-2 border-purple-200"
+          className="block rounded-lg border-2 border-purple-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
         >
           <div className="mb-2 flex items-start gap-3">
-            <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-purple-100 flex items-center justify-center">
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-md bg-purple-100">
               <MessageSquare className="h-8 w-8 text-purple-600" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold">Техническая поддержка</h3>
-              <p className="text-sm text-purple-600">Задайте вопрос администрации</p>
+              <p className="text-sm text-purple-600">
+                Задайте вопрос администрации
+              </p>
             </div>
           </div>
           <div className="flex items-start gap-2">
@@ -117,15 +116,17 @@ const MessagesPage = () => {
         {/* Чат тех поддержки - всегда первый */}
         <Link
           href="/profile/messages/support"
-          className="block rounded-lg bg-white p-4 shadow-sm transition-shadow hover:shadow-md border-2 border-purple-200"
+          className="block rounded-lg border-2 border-purple-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
         >
           <div className="mb-2 flex items-start gap-3">
-            <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-purple-100 flex items-center justify-center">
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-md bg-purple-100">
               <MessageSquare className="h-8 w-8 text-purple-600" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold">Техническая поддержка</h3>
-              <p className="text-sm text-purple-600">Задайте вопрос администрации</p>
+              <p className="text-sm text-purple-600">
+                Задайте вопрос администрации
+              </p>
             </div>
           </div>
           <div className="flex items-start gap-2">
