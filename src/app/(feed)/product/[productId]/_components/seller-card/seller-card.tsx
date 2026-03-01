@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useStartChatMutation } from "@/api/hooks";
-import { Avatar, Badge, Typography } from "@/components/ui";
+import { Badge, Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 import styles from "./seller-card.module.css";
+import { Avatar } from "@/components/ui-lab/Avatar";
 
 interface SellerCardProps {
   product: ExtendedProduct;

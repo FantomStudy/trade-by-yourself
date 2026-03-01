@@ -4,7 +4,8 @@ import type { User } from "@/types";
 import { CircleSmall, Phone, StarIcon } from "lucide-react";
 import { useState } from "react";
 
-import { Avatar, Badge, Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui-lab/Avatar";
+import { Badge, Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 import styles from "./seller-info.module.css";
 

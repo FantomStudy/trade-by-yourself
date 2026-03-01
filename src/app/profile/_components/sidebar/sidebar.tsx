@@ -6,7 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useIsAdmin, useUserInfo } from "@/api/hooks";
-import { Avatar, Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui-lab/Avatar";
+import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 import { useAuth } from "@/lib/contexts";
 import { formatFullName } from "@/lib/format";

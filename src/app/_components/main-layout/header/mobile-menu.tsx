@@ -15,7 +15,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { AuthDialog } from "@/components/auth-dialog";
-import { Avatar, Sheet } from "@/components/ui";
+import { Avatar } from "@/components/ui-lab/Avatar";
+import { Sheet } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 import { useAuth } from "@/lib/contexts";
 import styles from "./mobile-menu.module.css";

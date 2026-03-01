@@ -3,7 +3,8 @@ import type { CurrentUser } from "@/types";
 import { HeartIcon, MessageSquareIcon } from "lucide-react";
 import Link from "next/link";
 
-import { Avatar } from "@/components/ui";
+import { Avatar } from "@/components/ui-lab/Avatar";
+
 import { Button } from "@/components/ui-lab/Button";
 import { useAuth } from "@/lib/contexts";
 import styles from "./header.module.css";
