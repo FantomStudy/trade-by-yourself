@@ -1,9 +1,9 @@
 import type { AuthScreenProps } from "../types";
 
-import { Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 
 import { VerifyCodeForm } from "./verify-code-form";
-
 import styles from "../screens.module.css";
 
 export const VerifyCodeScreen = ({

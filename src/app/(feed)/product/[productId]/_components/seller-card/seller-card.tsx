@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useStartChatMutation } from "@/api/hooks";
-import { Avatar, Badge, Button, Typography } from "@/components/ui";
-
+import { Avatar, Badge, Typography } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 import styles from "./seller-card.module.css";
 
 interface SellerCardProps {
@@ -73,7 +73,7 @@ export const SellerCard = ({ product }: SellerCardProps) => {
       <div className={styles.actions}>
         <Button
           disabled={startChatMutation.isPending}
-          variant="secondary"
+          variant="success"
           onClick={handleStartChat}
         >
           {startChatMutation.isPending ? "Загрузка..." : "Написать продавцу"}

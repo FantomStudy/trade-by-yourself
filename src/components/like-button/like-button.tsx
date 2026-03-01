@@ -1,28 +1,23 @@
 "use client";
 
-import type { ButtonVariant } from "@/components/ui";
-
+import type { ButtonProps } from "../ui-lab/Button";
 import clsx from "clsx";
 import { HeartIcon } from "lucide-react";
 import { useState } from "react";
-
 import { useFavoriteMutation } from "@/api/hooks";
-import { Button } from "@/components/ui";
-
+import { Button } from "../ui-lab/Button";
 import styles from "./like-button.module.css";
 
-interface LikeButtonProps {
-  className?: string;
+interface LikeButtonProps extends ButtonProps {
   initLiked?: boolean;
   productId: number;
-  variant?: ButtonVariant;
 }
 
 export const LikeButton = ({
   initLiked = false,
   variant = "ghost",
   productId,
-  className,
+  ...props
 }: LikeButtonProps) => {
   const [isLiked, setIsLiked] = useState(initLiked);
 
@@ -53,8 +48,8 @@ export const LikeButton = ({
 
   return (
     <Button
+      {...props}
       aria-label={isLiked ? "Убрать из избранного" : "Добавить в избранное"}
-      className={className}
       disabled={isPending}
       size="icon"
       variant={variant}

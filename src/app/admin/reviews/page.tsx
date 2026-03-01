@@ -4,7 +4,8 @@ import { Check, Star, X } from "lucide-react";
 import { useState } from "react";
 
 import { useModerateReviewMutation, useReviewsToModerate } from "@/api/hooks";
-import { Button, Dialog, Typography } from "@/components/ui";
+import { Dialog, Typography } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 
 import { MobileHeader } from "../_components/admin-sidebar";
 

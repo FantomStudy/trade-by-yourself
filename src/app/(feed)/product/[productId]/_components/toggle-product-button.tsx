@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useToggleProductMutation } from "@/api/hooks";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 import { useAuth } from "@/lib/contexts";
 
 interface ToggleProductButtonProps {
@@ -48,7 +48,7 @@ export const ToggleProductButton = ({
       <Button
         className="w-full"
         disabled={isToggling}
-        variant={isHidden ? "default" : "destructive"}
+        variant={isHidden ? "success" : "destructive"}
         onClick={handleToggle}
       >
         {isHidden ? (

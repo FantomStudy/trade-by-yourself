@@ -10,7 +10,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useRecoverMutation } from "@/api/hooks";
-import { Button, Field } from "@/components/ui";
+import { Field } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 import { forgotPasswordSchema } from "@/lib/api";
 
 import styles from "../forms.module.css";

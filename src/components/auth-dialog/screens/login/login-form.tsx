@@ -11,7 +11,8 @@ import { useForm } from "react-hook-form";
 
 import { useLoginMutation } from "@/api/hooks";
 import { loginSchema } from "@/api/types";
-import { Button, Field } from "@/components/ui";
+import { Field } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 
 import styles from "../forms.module.css";
 

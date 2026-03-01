@@ -3,9 +3,7 @@
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
-import { Button } from "@/components/ui";
-
+import { Button } from "@/components/ui-lab/Button";
 import styles from "./search-button.module.css";
 
 export const SearchButton = () => {

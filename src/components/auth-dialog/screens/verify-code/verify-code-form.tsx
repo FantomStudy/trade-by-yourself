@@ -10,9 +10,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useVerifyMobileCodeMutation } from "@/api/hooks";
-import { Button, Field } from "@/components/ui";
+import { Field } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 import { verifyMobileCodeSchema } from "@/lib/api";
-
 import styles from "../forms.module.css";
 
 interface VerifyCodeFormProps extends AuthFormProps {

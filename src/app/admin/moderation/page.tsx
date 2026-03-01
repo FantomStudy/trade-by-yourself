@@ -5,7 +5,8 @@ import { useState } from "react";
 
 import { useModerateProductMutation, useProductsToModerate } from "@/api/hooks";
 import { FeedWrapper } from "@/components/feed-wrapper";
-import { Button, Dialog, Textarea, Typography } from "@/components/ui";
+import { Dialog, Textarea, Typography } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 
 import { MobileHeader } from "../_components/admin-sidebar";
 

@@ -4,7 +4,6 @@ import { MapPin, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -13,11 +12,11 @@ import {
   DialogTitle,
   Input,
 } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 import {
   getAddressSuggestions,
   validateAddress,
 } from "@/lib/api/requests/address";
-
 import styles from "./region-picker.module.css";
 
 interface AddressSuggestion {

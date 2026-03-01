@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
+
 
 import styles from "./avatar-editor.module.css";
 

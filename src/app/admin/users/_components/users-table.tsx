@@ -16,7 +16,6 @@ import {
   updateUser,
 } from "@/api/requests";
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -25,6 +24,7 @@ import {
   Input,
   Typography,
 } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 
 interface UsersTableProps {
   searchQuery: string;

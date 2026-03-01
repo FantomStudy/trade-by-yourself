@@ -4,9 +4,9 @@ import { ChevronDown, ChevronRight, Edit, Plus, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { Button, Input, Typography } from "@/components/ui";
+import { Input, Typography } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 import { api } from "@/lib/api/instance";
-
 import { MobileHeader } from "../_components/admin-sidebar";
 
 interface Category {

@@ -1,6 +1,7 @@
 import type { AuthScreenProps } from "../types";
 
-import { Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 
 import { RegisterForm } from "./register-form";
 
