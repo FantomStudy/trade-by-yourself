@@ -10,9 +10,10 @@
   padding: 40px 0;
 }
 .nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  text-align: right;
 }
 
 .copyright {

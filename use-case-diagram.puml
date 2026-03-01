@@ -1,0 +1,66 @@
+@startuml Диаграмма прецедентов "Торгуй сам"
+skinparam BackgroundColor transparent
+skinparam defaultFontName Arial
+skinparam ActorBorderColor #000000
+skinparam ActorBackgroundColor #white
+skinparam UsecaseBorderColor #000000
+skinparam UsecaseBackgroundColor #white
+skinparam ArrowColor #000000
+left to right direction
+
+' ════════════════════════════════════════
+' АКТЕРЫ
+' ════════════════════════════════════════
+actor "Гость" as Guest #lightblue
+actor "Клиент" as Client #lightgreen
+actor "Администратор" as Admin #pink
+
+' ════════════════════════════════════════
+' ПРЕЦЕДЕНТЫ ДЛЯ ГОСТЯ
+' ════════════════════════════════════════
+usecase "Просмотр карточек\nтоваров" as UC1
+usecase "Просмотр каталога" as UC2
+usecase "Поиск и фильтрация" as UC3
+usecase "Добавление товаров в\nизбранное" as UC4
+
+Guest --> UC1
+Guest --> UC2
+Guest --> UC3
+Guest --> UC4
+
+' ════════════════════════════════════════
+' ПРЕЦЕДЕНТЫ ДЛЯ КЛИЕНТА
+' ════════════════════════════════════════
+usecase "Регистрация" as UC5
+usecase "Авторизация" as UC6
+usecase "Доступ к личному кабинету" as UC7
+usecase "Размещение объявления" as UC8
+usecase "Доступ к онлайн чату" as UC9
+
+Client --> UC7
+Client --> UC8
+Client --> UC9
+Client --> UC5
+UC5 ..> UC6 : <<include>>
+
+' Клиент наследует возможности Гостя
+Guest <|-- Client
+
+' ════════════════════════════════════════
+' ПРЕЦЕДЕНТЫ ДЛЯ АДМИНИСТРАТОРА
+' ════════════════════════════════════════
+usecase "Просмотр статистики" as UC10
+usecase "Модерация товаров" as UC11
+usecase "Управление категориями" as UC12
+usecase "Управление пользователями" as UC13
+
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC7
+
+' Администратор наследует возможности Клиента
+Client <|-- Admin
+
+@enduml

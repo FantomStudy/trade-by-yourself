@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/contexts";
 
 import styles from "./footer.module.css";
 
-const SUPPORT_PHONE = "+7 (800) 555-35-35";
+const SUPPORT_PHONE = "+7 (800) 555-35-35"; 
 
 export const Footer = () => {
   const { user } = useAuth();
@@ -29,8 +29,11 @@ export const Footer = () => {
           <Logo />
           <nav className={styles.nav}>
             <Link href="/">Разместить объявление</Link>
-            <Link href="/">Правила</Link>
-            <Link href="/">Политика конфиденциальности</Link>
+            <Link href="/terms">Пользовательское соглашение</Link>
+            <Link href="/oferta">Публичная оферта</Link>
+            <Link href="/privacy">Политика конфиденциальности</Link>
+            <Link href="/cookies">Политика cookies</Link>
+            <Link href="/consent">Согласие на обработку ПДн</Link>
             {user ? (
               <Link href="/profile/messages/support">
                 <Button variant="secondary">Тех поддержка</Button>
@@ -65,7 +68,7 @@ export const Footer = () => {
           </nav>
         </div>
       </div>
-      <p className={styles.copyright}>©ТоргуйСам - сайт объявлений 2025</p>
+      <p className={styles.copyright}>©ТоргуйСам - сайт объявлений 2026</p>
     </footer>
   );
 };
