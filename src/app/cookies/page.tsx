@@ -42,7 +42,7 @@ const CookiesPage = () => {
         </p>
         <p className="mb-3">
           1.4. Настоящая Политика является частью{" "}
-          <a className="text-blue-600 hover:underline" href="/privacy">
+          <a href="/privacy" className="text-blue-600 hover:underline">
             Политики конфиденциальности
           </a>
           .
@@ -356,8 +356,8 @@ const CookiesPage = () => {
           <li>
             <strong>Политика конфиденциальности:</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://yandex.ru/legal/confidential/"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -367,8 +367,8 @@ const CookiesPage = () => {
           <li>
             <strong>Отказ от отслеживания:</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://yandex.ru/support/metrica/general/opt-out.html"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -389,8 +389,8 @@ const CookiesPage = () => {
           <li>
             <strong>Управление рекламными предпочтениями:</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://yandex.ru/tune/adv/"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -415,8 +415,8 @@ const CookiesPage = () => {
           <li>
             <strong>Политика конфиденциальности:</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://vk.com/privacy"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -426,8 +426,8 @@ const CookiesPage = () => {
           <li>
             <strong>Управление настройками приватности:</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://vk.com/settings?act=privacy"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -542,8 +542,8 @@ const CookiesPage = () => {
             <p className="mt-1 text-sm">
               Подробнее:{" "}
               <a
-                className="text-blue-600 hover:underline"
                 href="https://support.google.com/chrome/answer/95647"
+                className="text-blue-600 hover:underline"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -562,8 +562,8 @@ const CookiesPage = () => {
             <p className="mt-1 text-sm">
               Подробнее:{" "}
               <a
-                className="text-blue-600 hover:underline"
                 href="https://support.mozilla.org/ru/kb/udalenie-kukov"
+                className="text-blue-600 hover:underline"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -582,8 +582,8 @@ const CookiesPage = () => {
             <p className="mt-1 text-sm">
               Подробнее:{" "}
               <a
-                className="text-blue-600 hover:underline"
                 href="https://support.apple.com/ru-ru/guide/safari/sfri11471/mac"
+                className="text-blue-600 hover:underline"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -616,8 +616,8 @@ const CookiesPage = () => {
             <p className="mt-1 text-sm">
               Подробнее:{" "}
               <a
-                className="text-blue-600 hover:underline"
                 href="https://yandex.ru/support/browser/personal-data-protection/cookies.html"
+                className="text-blue-600 hover:underline"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -635,8 +635,8 @@ const CookiesPage = () => {
           <li>
             Установите расширение для браузера:{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://yandex.ru/support/metrica/general/opt-out.html"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -650,8 +650,8 @@ const CookiesPage = () => {
           <li>
             Управление рекламными предпочтениями:{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://yandex.ru/tune/adv/"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -665,8 +665,8 @@ const CookiesPage = () => {
           <li>
             Перейдите в настройки приватности:{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://vk.com/settings?act=privacy"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >

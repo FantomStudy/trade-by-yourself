@@ -199,8 +199,8 @@ const ConsentPage = () => {
           <li>
             направив заявление на адрес электронной почты:{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="mailto:privacy@torguisam.ru"
+              className="text-blue-600 hover:underline"
             >
               privacy@torguisam.ru
             </a>
@@ -255,7 +255,7 @@ const ConsentPage = () => {
         </ul>
         <p className="mb-3">
           Порядок реализации прав изложен в{" "}
-          <a className="text-blue-600 hover:underline" href="/privacy">
+          <a href="/privacy" className="text-blue-600 hover:underline">
             Политике конфиденциальности
           </a>
           .
@@ -268,13 +268,13 @@ const ConsentPage = () => {
         <p className="mb-3">
           Полная информация о порядке обработки и защиты персональных данных
           содержится в{" "}
-          <a className="text-blue-600 hover:underline" href="/privacy">
+          <a href="/privacy" className="text-blue-600 hover:underline">
             Политике конфиденциальности
           </a>
           , размещённой по адресу:{" "}
           <a
-            className="text-blue-600 hover:underline"
             href="https://torguisam.ru/privacy"
+            className="text-blue-600 hover:underline"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -325,8 +325,8 @@ const ConsentPage = () => {
             <li>
               <strong>E-mail:</strong>{" "}
               <a
-                className="text-blue-600 hover:underline"
                 href="mailto:privacy@torguisam.ru"
+                className="text-blue-600 hover:underline"
               >
                 privacy@torguisam.ru
               </a>
@@ -334,8 +334,8 @@ const ConsentPage = () => {
             <li>
               <strong>Сайт:</strong>{" "}
               <a
-                className="text-blue-600 hover:underline"
                 href="https://torguisam.ru"
+                className="text-blue-600 hover:underline"
                 rel="noopener noreferrer"
                 target="_blank"
               >

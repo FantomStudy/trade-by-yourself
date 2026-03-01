@@ -62,8 +62,8 @@ const TermsPage = () => {
           <li>
             <strong>Сайт:</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://torguisam.ru"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -105,13 +105,13 @@ const TermsPage = () => {
         </p>
         <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
           <li>
-            <a className="text-blue-600 hover:underline" href="/oferta">
+            <a href="/oferta" className="text-blue-600 hover:underline">
               Публичная оферта
             </a>{" "}
             — условия оказания услуг Сервиса;
           </li>
           <li>
-            <a className="text-blue-600 hover:underline" href="/privacy">
+            <a href="/privacy" className="text-blue-600 hover:underline">
               Политика конфиденциальности
             </a>{" "}
             — порядок обработки персональных данных;
@@ -1238,8 +1238,8 @@ const TermsPage = () => {
           <li>
             по электронной почте:{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="mailto:support@torguisam.ru"
+              className="text-blue-600 hover:underline"
             >
               support@torguisam.ru
             </a>
@@ -1336,8 +1336,8 @@ const TermsPage = () => {
           <li>
             <strong>Электронная почта (общие вопросы):</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="mailto:info@torguisam.ru"
+              className="text-blue-600 hover:underline"
             >
               info@torguisam.ru
             </a>
@@ -1345,8 +1345,8 @@ const TermsPage = () => {
           <li>
             <strong>Электронная почта (служба поддержки):</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="mailto:support@torguisam.ru"
+              className="text-blue-600 hover:underline"
             >
               support@torguisam.ru
             </a>
@@ -1354,23 +1354,23 @@ const TermsPage = () => {
           <li>
             <strong>Электронная почта (юридические вопросы):</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="mailto:legal@torguisam.ru"
+              className="text-blue-600 hover:underline"
             >
               legal@torguisam.ru
             </a>
           </li>
           <li>
             <strong>Телефон:</strong>{" "}
-            <a className="text-blue-600 hover:underline" href="tel:+79058912222">
+            <a href="tel:+79058912222" className="text-blue-600 hover:underline">
               +7 (905) 891-22-22
             </a>
           </li>
           <li>
             <strong>Сайт:</strong>{" "}
             <a
-              className="text-blue-600 hover:underline"
               href="https://torguisam.ru"
+              className="text-blue-600 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
