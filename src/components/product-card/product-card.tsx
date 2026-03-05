@@ -1,13 +1,10 @@
-import type { Product } from "@/types";
+import type { Product } from "@/types/products";
 
 import Link from "next/link";
-
 import { Typography } from "@/components/ui";
 import { formatPrice } from "@/lib/format";
-
 import { LikeButton } from "../like-button";
 import { ProductPreview } from "./product-preview/product-preview";
-
 import styles from "./product-card.module.css";
 
 interface ProductCardProps {

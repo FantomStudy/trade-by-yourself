@@ -2,8 +2,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getCategory } from "@/api-lab/categories/getCategory";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui-lab/Breadcrumb";
 import { ProductFeed } from "../_features/feed";
-import { Breadcrumb } from "../_lib/ui/breadcrumb";
 import { safe } from "../_lib/utils/safe";
 import styles from "./page.module.css";
 
@@ -22,19 +29,19 @@ const Page = async ({ params }: PageProps<"/[categorySlug]">) => {
   return (
     <>
       <Breadcrumb>
-        <Breadcrumb.List className={styles.breadcrumb}>
-          <Breadcrumb.Item>
-            <Breadcrumb.Link asChild>
+        <BreadcrumbList className={styles.breadcrumb}>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
               <Link href="/">Главная</Link>
-            </Breadcrumb.Link>
-          </Breadcrumb.Item>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
 
-          <Breadcrumb.Separator />
+          <BreadcrumbSeparator />
 
-          <Breadcrumb.Item>
-            <Breadcrumb.Page>{category.name}</Breadcrumb.Page>
-          </Breadcrumb.Item>
-        </Breadcrumb.List>
+          <BreadcrumbItem>
+            <BreadcrumbPage>{category.name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
       </Breadcrumb>
 
       <ProductFeed filters={{ categorySlug }} />

@@ -8,6 +8,7 @@ if (!BASE_URL) {
 export const api = ofetch.create({
   baseURL: BASE_URL,
   credentials: "include",
+  retry: false,
   onRequest: async ({ options }) => {
     if (typeof window !== "undefined") return;
 

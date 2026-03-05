@@ -1,5 +1,5 @@
 import type { TypographyProps } from "@/app/(feed)/(search)/_lib/ui/typography";
-import type { Product } from "@/types/product";
+import type { Product } from "@/types/products";
 
 import clsx from "clsx";
 

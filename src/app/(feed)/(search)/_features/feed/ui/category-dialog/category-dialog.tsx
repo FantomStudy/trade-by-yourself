@@ -3,9 +3,14 @@
 import { TextSearch } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Dialog } from "@/app/(feed)/(search)/_lib/ui/dialog";
-import { Typography } from "@/app/(feed)/(search)/_lib/ui/typography";
+import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui-lab/Dialog";
 import { useCategories } from "@/hooks/useCategories";
 import styles from "./category-dialog.module.css";
 
@@ -23,14 +28,14 @@ export const CategoryDialog = () => {
 
   return (
     <Dialog onOpenChange={setIsOpen} open={isOpen}>
-      <Dialog.Trigger asChild>
+      <DialogTrigger asChild>
         <Button>
           <TextSearch /> Все категории
         </Button>
-      </Dialog.Trigger>
+      </DialogTrigger>
 
-      <Dialog.Content className={styles.dialog}>
-        <Dialog.Title className={styles.title}>Выбор категории</Dialog.Title>
+      <DialogContent className={styles.dialog}>
+        <DialogTitle className={styles.title}>Выбор категории</DialogTitle>
 
         <div className={styles.content}>
           <div className={styles.list}>
@@ -81,7 +86,7 @@ export const CategoryDialog = () => {
             </div>
           </div>
         </div>
-      </Dialog.Content>
+      </DialogContent>
     </Dialog>
   );
 };

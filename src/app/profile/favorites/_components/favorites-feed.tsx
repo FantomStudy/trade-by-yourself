@@ -1,7 +1,8 @@
 import { Heart } from "lucide-react";
 
-import { getFavorites } from "@/api/requests";
-import { FeedWrapper } from "@/components/feed-wrapper";
+import { getFavorites } from "@/api-lab/favorites/getFavorites";
+import { ProductCard } from "@/components/product-card";
+import { ProductGrid } from "@/components/ProductGrid";
 
 export const FavoritesFeed = async () => {
   const favorites = await getFavorites();
@@ -36,5 +37,11 @@ export const FavoritesFeed = async () => {
     );
   }
 
-  return <FeedWrapper products={favorites} />;
+  return (
+    <ProductGrid>
+      {favorites.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </ProductGrid>
+  );
 };

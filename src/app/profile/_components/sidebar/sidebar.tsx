@@ -17,7 +17,7 @@ import styles from "./sidebar.module.css";
 
 export const Sidebar = () => {
   const user = useCurrentUser();
-  const { data: userInfo } = useUserInfo(user?.id);
+  const { data: userInfo } = useUserInfo(user.data?.id);
   const { data: adminCheck } = useIsAdmin();
   const pathname = usePathname();
 
@@ -38,12 +38,12 @@ export const Sidebar = () => {
         <>
           <div className={styles.profileInfo}>
             <Avatar
-              fullName={user.fullName}
+              fullName={user.data.fullName}
               size="lg"
               src={userInfo?.photo ?? ""}
             />
             <Typography variant="h2">
-              {formatFullName(user.fullName)}
+              {formatFullName(user.data.fullName)}
             </Typography>
           </div>
 

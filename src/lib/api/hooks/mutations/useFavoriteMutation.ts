@@ -1,15 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { addToFavorites, removeFromFavorites } from "@/api/requests";
+import { addFavorite } from "@/api-lab/favorites/addFavorite";
+import { removeFavorite } from "@/api-lab/favorites/removeFavorite";
 
 export const useFavoriteMutation = (productId: number) => {
   return useMutation({
     mutationFn: async ({ isLiked }: { isLiked: boolean }) => {
       if (isLiked) {
-        await addToFavorites(productId);
+        await addFavorite(productId);
         return true;
       } else {
-        await removeFromFavorites(productId);
+        await removeFavorite(productId);
         return false;
       }
     },

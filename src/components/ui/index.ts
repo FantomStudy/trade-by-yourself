@@ -1,10 +1,7 @@
 export * from "./address-map-wrapper";
 export * from "./badge/badge";
-export * from "./breadcrumb/breadcrumb";
-export * from "./dialog/dialog";
 export * from "./field/field";
 export * from "./image-upload";
-
 export * from "./phone-field";
 export * from "./sheet/sheet";
 export * from "./textarea/textarea";

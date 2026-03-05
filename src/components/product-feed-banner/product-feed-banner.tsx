@@ -18,8 +18,8 @@ export const ProductFeedBanner = ({
     queryFn: async () => getBanners({ place: "PRODUCT_FEED" }),
   });
 
-  console.log("[ProductFeedBanner] Banners loaded:", banners?.length || 0);
-  console.log("[ProductFeedBanner] Banner index:", bannerIndex);
+  // console.log("[ProductFeedBanner] Banners loaded:", banners?.length || 0);
+  // console.log("[ProductFeedBanner] Banner index:", bannerIndex);
 
   const productFeedBanners =
     banners?.filter((b) => b.place === "PRODUCT_FEED") || [];
@@ -28,7 +28,7 @@ export const ProductFeedBanner = ({
       ? productFeedBanners[bannerIndex % productFeedBanners.length]
       : undefined;
 
-  console.log("[ProductFeedBanner] Selected banner:", banner?.id, banner?.name);
+  // console.log("[ProductFeedBanner] Selected banner:", banner?.id, banner?.name);
 
   useEffect(() => {
     if (banner?.id) {

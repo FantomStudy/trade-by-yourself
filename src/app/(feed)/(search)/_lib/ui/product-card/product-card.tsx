@@ -1,13 +1,10 @@
-import type { Product } from "../../types/product";
 import type { TypographyProps } from "../typography";
+import type { Product } from "@/types/products";
 
 import clsx from "clsx";
-
 import { formatPrice } from "../../utils/format";
 import { ProductPreview } from "../product-preview";
-import { Typography } from "../typography";
 import { ProductCardProvider, useProductCard } from "./product-card-context";
-
 import styles from "./product-card.module.css";
 
 export interface ProductCardProps extends React.ComponentProps<"article"> {

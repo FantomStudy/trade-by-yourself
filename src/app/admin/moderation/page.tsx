@@ -2,12 +2,12 @@
 
 import { Check, X } from "lucide-react";
 import { useState } from "react";
-
 import { useModerateProductMutation, useProductsToModerate } from "@/api/hooks";
-import { FeedWrapper } from "@/components/feed-wrapper";
-import { Dialog, Textarea, Typography } from "@/components/ui";
+import { ProductCard } from "@/components/product-card";
+import { ProductGrid } from "@/components/ProductGrid";
+import { Textarea, Typography } from "@/components/ui";
+import { Dialog } from "@/components/ui-lab/Dialog";
 import { Button } from "@/components/ui-lab/Button";
-
 import { MobileHeader } from "../_components/admin-sidebar";
 
 const ModerationPage = () => {
@@ -103,16 +103,10 @@ const ModerationPage = () => {
           </Typography>
         </div>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-            gap: "20px",
-          }}
-        >
+        <ProductGrid>
           {products.map((product) => (
             <div key={product.id} className="relative">
-              <FeedWrapper products={[product]} />
+              <ProductCard product={product} />
               <div className="absolute top-2 right-2 flex gap-1">
                 <button
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
@@ -135,7 +129,7 @@ const ModerationPage = () => {
               </div>
             </div>
           ))}
-        </div>
+        </ProductGrid>
       )}
 
       {/* Модалка для ввода причины отказа */}

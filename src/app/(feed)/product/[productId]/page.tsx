@@ -2,14 +2,14 @@ import Link from "next/link";
 
 import { getProductById } from "@/api/requests";
 import { LikeButton } from "@/components/like-button";
+import { Typography } from "@/components/ui";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-  Typography,
-} from "@/components/ui";
+} from "@/components/ui-lab/Breadcrumb";
 import { formatPrice } from "@/lib/format";
 
 import {
@@ -19,7 +19,6 @@ import {
   SellerCard,
   ToggleProductButton,
 } from "./_components";
-
 import styles from "./page.module.css";
 
 const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {

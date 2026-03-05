@@ -3,7 +3,6 @@ export * from "./analytic";
 export * from "./auth";
 export * from "./banner";
 export * from "./chat";
-export * from "./favorites";
 export * from "./log";
 export * from "./payment";
 export * from "./product";

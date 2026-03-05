@@ -2,6 +2,7 @@
 
 import { MapPin, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui-lab/Button";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui";
-import { Button } from "@/components/ui-lab/Button";
+} from "@/components/ui-lab/Dialog";
 import { Input } from "@/components/ui-lab/Input";
 import {
   getAddressSuggestions,

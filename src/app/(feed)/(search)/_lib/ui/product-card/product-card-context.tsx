@@ -1,7 +1,6 @@
 "use client";
 
-import type { Product } from "../../types/product";
-
+import type { Product } from "@/types/products";
 import { createContext, use, useMemo } from "react";
 
 interface ProductCardContextType {

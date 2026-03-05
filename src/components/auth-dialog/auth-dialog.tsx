@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui";
+} from "@/components/ui-lab/Dialog";
 
 import {
   LoginScreen,

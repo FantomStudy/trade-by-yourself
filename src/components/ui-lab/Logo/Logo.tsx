@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import styles from "./Logo.module.css";
 
 export interface LogoProps {

@@ -15,15 +15,15 @@ import {
   toggleUserBanned,
   updateUser,
 } from "@/api/requests";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui-lab/Button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  Typography,
-} from "@/components/ui";
-import { Button } from "@/components/ui-lab/Button";
+} from "@/components/ui-lab/Dialog";
 import { Input } from "@/components/ui-lab/Input";
 
 interface UsersTableProps {

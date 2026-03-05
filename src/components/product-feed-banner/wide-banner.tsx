@@ -17,8 +17,8 @@ export const WideBanner = ({ bannerIndex = 0 }: WideBannerProps) => {
     queryFn: async () => getBanners({ place: "PROFILE" }),
   });
 
-  console.log("[WideBanner] Banners loaded:", banners?.length || 0);
-  console.log("[WideBanner] Banner index:", bannerIndex);
+  // console.log("[WideBanner] Banners loaded:", banners?.length || 0);
+  // console.log("[WideBanner] Banner index:", bannerIndex);
 
   const profileBanners = banners?.filter((b) => b.place === "PROFILE") || [];
   const banner =
@@ -26,7 +26,7 @@ export const WideBanner = ({ bannerIndex = 0 }: WideBannerProps) => {
       ? profileBanners[bannerIndex % profileBanners.length]
       : undefined;
 
-  console.log("[WideBanner] Selected banner:", banner?.id, banner?.name);
+  // console.log("[WideBanner] Selected banner:", banner?.id, banner?.name);
 
   const handleBannerClick = () => {
     if (banner?.id) {

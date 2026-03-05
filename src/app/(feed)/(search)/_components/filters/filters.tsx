@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useAvailableFilters } from "@/api/hooks";
 import { Button } from "@/components/ui-lab/Button";
 import { Input } from "@/components/ui-lab/Input";
-import { Select } from "../../_lib/ui/select";
+import { Select } from "../../../../../components/ui-lab/Select";
 import { Typography } from "../../_lib/ui/typography";
 import styles from "./filters.module.css";
 

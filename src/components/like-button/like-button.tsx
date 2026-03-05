@@ -48,12 +48,12 @@ export const LikeButton = ({
 
   return (
     <Button
-      {...props}
       aria-label={isLiked ? "Убрать из избранного" : "Добавить в избранное"}
       disabled={isPending}
       size="icon"
       variant={variant}
       onClick={handleToggle}
+      {...props}
     >
       <HeartIcon
         className={clsx(styles.heart, isLiked ? styles.liked : styles.notLiked)}

@@ -4,11 +4,16 @@ import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import * as React from "react";
 
 import { useAvailableFilters } from "@/api/hooks";
-import { Select } from "@/app/(feed)/(search)/_lib/ui/select";
-import { Typography } from "@/app/(feed)/(search)/_lib/ui/typography";
-import { Sheet } from "@/components/ui";
+import { Sheet, Typography } from "@/components/ui";
 import { Button } from "@/components/ui-lab/Button";
 import { Input } from "@/components/ui-lab/Input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui-lab/Select";
 import styles from "./filters-sheet.module.css";
 
 interface FiltersSheetProps {
@@ -209,23 +214,23 @@ export const FiltersSheet = ({
                   setLocalFilters((prev) => ({ ...prev, state: value }))
                 }
               >
-                <Select.Trigger className={styles.selectTrigger}>
-                  <Select.Value placeholder="Все" />
-                </Select.Trigger>
-                <Select.Content>
+                <SelectTrigger className={styles.selectTrigger}>
+                  <SelectValue placeholder="Все" />
+                </SelectTrigger>
+                <SelectContent>
                   {availableFilters?.states.includes("NEW") && (
-                    <Select.Item value="new">Новый</Select.Item>
+                    <SelectItem value="new">Новый</SelectItem>
                   )}
                   {availableFilters?.states.includes("USED") && (
-                    <Select.Item value="used">Б/У</Select.Item>
+                    <SelectItem value="used">Б/У</SelectItem>
                   )}
                   {!availableFilters && (
                     <>
-                      <Select.Item value="new">Новый</Select.Item>
-                      <Select.Item value="used">Б/У</Select.Item>
+                      <SelectItem value="new">Новый</SelectItem>
+                      <SelectItem value="used">Б/У</SelectItem>
                     </>
                   )}
-                </Select.Content>
+                </SelectContent>
               </Select>
             </div>
 
@@ -239,27 +244,27 @@ export const FiltersSheet = ({
                   setLocalFilters((prev) => ({ ...prev, profileType: value }))
                 }
               >
-                <Select.Trigger className={styles.selectTrigger}>
-                  <Select.Value placeholder="Все" />
-                </Select.Trigger>
-                <Select.Content>
+                <SelectTrigger className={styles.selectTrigger}>
+                  <SelectValue placeholder="Все" />
+                </SelectTrigger>
+                <SelectContent>
                   {availableFilters?.profileTypes.includes("INDIVIDUAL") && (
-                    <Select.Item value="INDIVIDUAL">Физ. лицо</Select.Item>
+                    <SelectItem value="INDIVIDUAL">Физ. лицо</SelectItem>
                   )}
                   {availableFilters?.profileTypes.includes("OOO") && (
-                    <Select.Item value="OOO">ООО</Select.Item>
+                    <SelectItem value="OOO">ООО</SelectItem>
                   )}
                   {availableFilters?.profileTypes.includes("IP") && (
-                    <Select.Item value="IP">ИП</Select.Item>
+                    <SelectItem value="IP">ИП</SelectItem>
                   )}
                   {!availableFilters && (
                     <>
-                      <Select.Item value="INDIVIDUAL">Физ. лицо</Select.Item>
-                      <Select.Item value="OOO">ООО</Select.Item>
-                      <Select.Item value="IP">ИП</Select.Item>
+                      <SelectItem value="INDIVIDUAL">Физ. лицо</SelectItem>
+                      <SelectItem value="OOO">ООО</SelectItem>
+                      <SelectItem value="IP">ИП</SelectItem>
                     </>
                   )}
-                </Select.Content>
+                </SelectContent>
               </Select>
             </div>
 
@@ -321,16 +326,16 @@ export const FiltersSheet = ({
                         handleFieldValueChange(field.fieldId.toString(), value)
                       }
                     >
-                      <Select.Trigger className={styles.selectTrigger}>
-                        <Select.Value placeholder="Все" />
-                      </Select.Trigger>
-                      <Select.Content>
+                      <SelectTrigger className={styles.selectTrigger}>
+                        <SelectValue placeholder="Все" />
+                      </SelectTrigger>
+                      <SelectContent>
                         {field.values.map((value) => (
-                          <Select.Item key={value} value={value}>
+                          <SelectItem key={value} value={value}>
                             {value}
-                          </Select.Item>
+                          </SelectItem>
                         ))}
-                      </Select.Content>
+                      </SelectContent>
                     </Select>
                   </div>
                 ))}
@@ -363,15 +368,15 @@ export const FiltersSheet = ({
                   setLocalFilters((prev) => ({ ...prev, sortBy: value }))
                 }
               >
-                <Select.Trigger className={styles.selectTrigger}>
-                  <Select.Value placeholder="Не выбрано" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="relevance">По релевантности</Select.Item>
-                  <Select.Item value="price-desc">Сначала дорогие</Select.Item>
-                  <Select.Item value="price-asc">Сначала дешёвые</Select.Item>
-                  <Select.Item value="newest">По новизне</Select.Item>
-                </Select.Content>
+                <SelectTrigger className={styles.selectTrigger}>
+                  <SelectValue placeholder="Не выбрано" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="relevance">По релевантности</SelectItem>
+                  <SelectItem value="price-desc">Сначала дорогие</SelectItem>
+                  <SelectItem value="price-asc">Сначала дешёвые</SelectItem>
+                  <SelectItem value="newest">По новизне</SelectItem>
+                </SelectContent>
               </Select>
             </div>
 

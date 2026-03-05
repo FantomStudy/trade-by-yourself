@@ -3,11 +3,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Eye, Heart, MessageSquare, Package } from "lucide-react";
 import { useState } from "react";
+import { getFavorites } from "@/api-lab/favorites/getFavorites";
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
 import { Typography } from "@/components/ui";
 import { useCategories } from "@/hooks/useCategories";
 import { useChats } from "@/lib/api/hooks";
-import { getFavorites } from "@/lib/api/requests";
 import styles from "./page.module.css";
 
 const Analytics = () => {
