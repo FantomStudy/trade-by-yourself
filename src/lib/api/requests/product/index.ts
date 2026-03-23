@@ -2,6 +2,7 @@ export * from "./create-product";
 export * from "./delete-product";
 export * from "./get-available-filters";
 export * from "./get-current-user-products";
+export * from "./get-moderation-product";
 export * from "./get-product-by-id";
 export * from "./get-products";
 export * from "./get-products-to-moderate";

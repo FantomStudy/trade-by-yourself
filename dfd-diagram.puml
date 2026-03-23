@@ -1,0 +1,75 @@
+@startuml
+left to right direction
+
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor Black
+  BorderThickness 1.5
+  RoundCorner 0
+}
+skinparam actor {
+  BorderColor Black
+}
+skinparam note {
+  BackgroundColor LightYellow
+  BorderColor Gray
+}
+skinparam actorStyle awesome
+skinparam ArrowColor Black
+
+' === Ограничения сверху ===
+rectangle "Требования технического\nзадания и регламенты\nплатформы" as C1 #LightYellow
+rectangle "Разграничение прав\nдоступа" as C2 #LightYellow
+rectangle "Требования к безопасности\nи защите персональных\nданных" as C3 #LightYellow
+rectangle "Правила\nплатформы" as C4 #LightYellow
+
+' === Входные потоки данных ===
+rectangle "Регистрационные данные\nпользователя" as L1 #LightGray
+rectangle "Данные размещённых\nобъявлений" as L2 #LightGray
+rectangle "Параметры поиска\nи фильтров" as L3 #LightGray
+rectangle "Сообщения между\nучастниками" as L4 #LightGray
+rectangle "Действия с избранным" as L5 #LightGray
+
+' === Центральная система ===
+rectangle "Маркетплейс\n«Торгуй сам»" as SYS
+
+' === Выходные потоки данных ===
+rectangle "Результаты поиска и\nфильтрации объявлений" as R1 #LightGray
+rectangle "Отображение карточек товаров\nи страниц объявлений" as R2 #LightGray
+rectangle "Выходные данные администратора\nдля модерации и контроля" as R3 #LightGray
+rectangle "Информация о статусах\nпубликаций" as R4 #LightGray
+rectangle "Данные личного кабинета\nпользователя" as R5 #LightGray
+rectangle "Уведомления о новых\nсообщениях" as R6 #LightGray
+
+' === Внешние сущности снизу ===
+rectangle "Пользователи и\nадминистратор" as B1 #LightBlue
+rectangle "Интерфейс" as B2 #LightBlue
+rectangle "Сервер" as B3 #LightBlue
+
+' === Связи сверху ===
+C1 -down-> SYS
+C2 -down-> SYS
+C3 -down-> SYS
+C4 -down-> SYS
+
+' === Входные потоки ===
+L1 -right-> SYS
+L2 -right-> SYS
+L3 -right-> SYS
+L4 -right-> SYS
+L5 -right-> SYS
+
+' === Выходные потоки ===
+SYS -right-> R1
+SYS -right-> R2
+SYS -right-> R3
+SYS -right-> R4
+SYS -right-> R5
+SYS -right-> R6
+
+' === Связи снизу ===
+B1 -up-> SYS
+B2 -up-> SYS
+B3 -up-> SYS
+
+@enduml

@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   output: "standalone",
   typedRoutes: true,
 
+  turbopack: {
+    root: __dirname,
+  },
+
   images: {
     unoptimized: true,
     remotePatterns: [

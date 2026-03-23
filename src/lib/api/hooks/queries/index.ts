@@ -4,6 +4,8 @@ export * from "./useCategoryBySlug";
 export * from "./useChats";
 export * from "./useCurrentUser";
 export * from "./useIsAdmin";
+export * from "./useLogsQuery";
+export * from "./useModerationProduct";
 export * from "./usePaymentHistory";
 export * from "./useProductsToModerate";
 export * from "./useRandomProducts";
