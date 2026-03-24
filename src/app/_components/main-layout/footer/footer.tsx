@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/contexts";
 
 import styles from "./footer.module.css";
 
-const SUPPORT_PHONE = "+7 (800) 555-35-35"; 
+const SUPPORT_PHONE = "+7 (800) 555-35-35";
 
 export const Footer = () => {
   const { user } = useAuth();
@@ -18,7 +18,7 @@ export const Footer = () => {
     if (!user) {
       setShowPhone(true);
       // Скрываем номер через 5 секунд
-      setTimeout(() => setShowPhone(false), 5000);
+      setTimeout(setShowPhone, 5000, false);
     }
   };
 

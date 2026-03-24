@@ -28,13 +28,10 @@ export const InputMask = ({
       const extracted = extractValue(value, mask);
       return applyMask(extracted, mask, protectedPrefix);
     },
-    [mask, protectedPrefix]
+    [mask, protectedPrefix],
   );
 
-  const displayValue = useMemo(
-    () => getDisplayValue(value),
-    [value, getDisplayValue]
-  );
+  const displayValue = useMemo(() => getDisplayValue(value), [value, getDisplayValue]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,10 +39,7 @@ export const InputMask = ({
       let masked: string;
       let extracted: string;
 
-      if (
-        inputValue.length < protectedPrefix.length ||
-        !inputValue.startsWith(protectedPrefix)
-      ) {
+      if (inputValue.length < protectedPrefix.length || !inputValue.startsWith(protectedPrefix)) {
         masked = protectedPrefix;
         extracted = "";
       } else {
@@ -70,7 +64,7 @@ export const InputMask = ({
         externalOnChange(syntheticEvent);
       }
     },
-    [mask, protectedPrefix, externalOnChange]
+    [mask, protectedPrefix, externalOnChange],
   );
 
   const handleKeyDown = useCallback(
@@ -105,14 +99,14 @@ export const InputMask = ({
               if (internalRef.current) {
                 internalRef.current.setSelectionRange(
                   protectedPrefix.length,
-                  protectedPrefix.length
+                  protectedPrefix.length,
                 );
               }
             }, 0);
           } else {
             input.setSelectionRange(
               protectedPrefix.length,
-              Math.max(protectedPrefix.length, selectionEnd)
+              Math.max(protectedPrefix.length, selectionEnd),
             );
           }
         } else if (
@@ -125,15 +119,10 @@ export const InputMask = ({
         }
       }
     },
-    [protectedPrefix, externalOnChange]
+    [protectedPrefix, externalOnChange],
   );
 
   return (
-    <Input
-      {...props}
-      value={displayValue}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-    />
+    <Input {...props} value={displayValue} onChange={handleChange} onKeyDown={handleKeyDown} />
   );
 };

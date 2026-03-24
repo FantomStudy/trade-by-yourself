@@ -35,10 +35,7 @@ export const ProductCardPreview = (props: React.ComponentProps<"div">) => {
       onMouseLeave={() => setCurrentIndex(0)}
       onMouseMove={handleMouseMove}
     >
-      <div
-        className={styles.blur}
-        style={{ backgroundImage: `url(${images[currentIndex]})` }}
-      />
+      <div className={styles.blur} style={{ backgroundImage: `url(${images[currentIndex]})` }} />
       <Image
         key={currentIndex}
         alt={images[currentIndex]}
@@ -51,11 +48,7 @@ export const ProductCardPreview = (props: React.ComponentProps<"div">) => {
       {images.length > 1 && (
         <div className={styles.dotsWrapper}>
           {images.map((img, index) => (
-            <div
-              key={`dot-${img}`}
-              className={styles.dot}
-              data-active={index === currentIndex}
-            />
+            <div key={`dot-${img}`} className={styles.dot} data-active={index === currentIndex} />
           ))}
         </div>
       )}

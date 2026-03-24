@@ -4,10 +4,6 @@ import type { SubmitHandler } from "react-hook-form";
 
 import type { RegisterData } from "@/lib/api";
 
-interface RegisterFormProps {
-  onSuccess?: (phoneNumber: string) => void;
-}
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -17,6 +13,10 @@ import { Button, Field, PhoneField, usePhoneField } from "@/components/ui";
 import { registerSchema } from "@/lib/api";
 
 import styles from "../forms.module.css";
+
+interface RegisterFormProps {
+  onSuccess?: (phoneNumber: string) => void;
+}
 
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const registerMutation = useRegisterMutation();

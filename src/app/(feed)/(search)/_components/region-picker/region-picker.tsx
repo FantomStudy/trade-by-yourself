@@ -13,10 +13,7 @@ import {
   DialogTitle,
   Input,
 } from "@/components/ui";
-import {
-  getAddressSuggestions,
-  validateAddress,
-} from "@/lib/api/requests/address";
+import { getAddressSuggestions, validateAddress } from "@/lib/api/requests/address";
 
 import styles from "./region-picker.module.css";
 
@@ -33,12 +30,7 @@ interface RegionPickerProps {
   onSelect?: (region: string) => void;
 }
 
-export const RegionPicker = ({
-  open,
-  onOpenChange,
-  value,
-  onSelect,
-}: RegionPickerProps) => {
+export const RegionPicker = ({ open, onOpenChange, value, onSelect }: RegionPickerProps) => {
   const [address, setAddress] = useState(value || "");
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -56,10 +48,7 @@ export const RegionPicker = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node)
-      ) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
       }
     };
@@ -139,9 +128,7 @@ export const RegionPicker = ({
       <DialogContent className={styles.dialog}>
         <DialogHeader>
           <DialogTitle>Выбор региона</DialogTitle>
-          <DialogDescription>
-            Укажите регион для поиска товаров
-          </DialogDescription>
+          <DialogDescription>Укажите регион для поиска товаров</DialogDescription>
         </DialogHeader>
 
         <div className={styles.content}>
@@ -166,9 +153,7 @@ export const RegionPicker = ({
               )}
             </div>
 
-            {isLoadingSuggestions && (
-              <div className={styles.loading}>Загрузка подсказок...</div>
-            )}
+            {isLoadingSuggestions && <div className={styles.loading}>Загрузка подсказок...</div>}
 
             {showSuggestions && suggestions.length > 0 && (
               <div className={styles.suggestions}>
@@ -186,9 +171,7 @@ export const RegionPicker = ({
               </div>
             )}
 
-            {validationError && (
-              <div className={styles.error}>{validationError}</div>
-            )}
+            {validationError && <div className={styles.error}>{validationError}</div>}
           </div>
         </div>
 

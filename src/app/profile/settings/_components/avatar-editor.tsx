@@ -12,11 +12,7 @@ interface AvatarEditorProps {
   onSave: (blob: Blob) => void;
 }
 
-export const AvatarEditor = ({
-  image,
-  onCancel,
-  onSave,
-}: AvatarEditorProps) => {
+export const AvatarEditor = ({ image, onCancel, onSave }: AvatarEditorProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -153,17 +149,7 @@ export const AvatarEditor = ({
     ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
     ctx.clip();
 
-    ctx.drawImage(
-      imageObj,
-      sourceX,
-      sourceY,
-      sourceSize,
-      sourceSize,
-      0,
-      0,
-      size,
-      size,
-    );
+    ctx.drawImage(imageObj, sourceX, sourceY, sourceSize, sourceSize, 0, 0, size, size);
 
     // Конвертируем в blob
     finalCanvas.toBlob(

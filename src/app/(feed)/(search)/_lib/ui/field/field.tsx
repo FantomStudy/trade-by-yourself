@@ -27,12 +27,7 @@ const FieldError = ({ error, className, ...props }: FieldErrorProps) => {
   if (!error) return null;
 
   return (
-    <div
-      className={clsx("form-error", className)}
-      data-slot="field-error"
-      role="alert"
-      {...props}
-    >
+    <div className={clsx("form-error", className)} data-slot="field-error" role="alert" {...props}>
       {error.message}
     </div>
   );

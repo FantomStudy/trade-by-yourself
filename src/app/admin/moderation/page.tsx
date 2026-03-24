@@ -2,22 +2,14 @@
 
 import type { ModerationFilter, ModerationProduct, ModerationState } from "@/types";
 
-import {
-  AlertCircle,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-  Eye,
-  X,
-} from "lucide-react";
+import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import {
-  useModerationProduct,
   useModerateProductMutation,
+  useModerationProduct,
   useProductsToModerate,
 } from "@/api/hooks";
 import {
@@ -108,15 +100,11 @@ const ProductDetailDialog = ({
   onReject: (id: number) => void;
   isActing: boolean;
 }) => {
-  const { data: product, isLoading } = useModerationProduct(
-    open ? productId : null,
-  );
+  const { data: product, isLoading } = useModerationProduct(open ? productId : null);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="!max-w-5xl w-[calc(100vw-32px)] p-0 overflow-hidden"
-      >
+      <DialogContent className="!max-w-5xl w-[calc(100vw-32px)] p-0 overflow-hidden">
         {/* Inner wrapper owns height + flex so it's free from the CSS module's display:grid */}
         <div className="flex flex-col" style={{ height: "90vh" }}>
           {/* Header */}
@@ -199,7 +187,11 @@ const ProductDetailDialog = ({
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
                   {/* Status badge */}
                   <div>
-                    <ModerateBadge state={product.moderateState} reason={product.moderationRejectionReason} size="lg" />
+                    <ModerateBadge
+                      state={product.moderateState}
+                      reason={product.moderationRejectionReason}
+                      size="lg"
+                    />
                   </div>
 
                   {product.moderationRejectionReason && product.moderateState !== "APPROVED" && (
@@ -216,10 +208,7 @@ const ProductDetailDialog = ({
                     </p>
                     <div className="space-y-3 text-sm">
                       <InfoRow label="Название" value={product.name} />
-                      <InfoRow
-                        label="Цена"
-                        value={`${product.price.toLocaleString("ru-RU")} ₽`}
-                      />
+                      <InfoRow label="Цена" value={`${product.price.toLocaleString("ru-RU")} ₽`} />
                       <InfoRow
                         label="Категория"
                         value={`${product.category.name} / ${product.subCategory.name}${product.type ? ` / ${product.type.name}` : ""}`}
@@ -280,13 +269,7 @@ const ProductDetailDialog = ({
   );
 };
 
-const InfoRow = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => (
+const InfoRow = ({ label, value }: { label: string; value: string }) => (
   <div className="flex gap-2">
     <span className="min-w-24 flex-shrink-0 font-medium text-gray-500">{label}:</span>
     <span className="text-gray-900 break-all">{value}</span>
@@ -362,13 +345,7 @@ const ProductRow = ({
       {/* Thumbnail */}
       <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border bg-gray-100">
         {thumb ? (
-          <Image
-            alt={product.name}
-            className="object-cover"
-            fill
-            sizes="80px"
-            src={thumb}
-          />
+          <Image alt={product.name} className="object-cover" fill sizes="80px" src={thumb} />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
             Нет фото
@@ -493,9 +470,7 @@ const ModerationPage = () => {
       <MobileHeader title="Модерация товаров" />
 
       <div>
-        <Typography className="text-2xl font-bold sm:text-3xl">
-          Модерация товаров
-        </Typography>
+        <Typography className="text-2xl font-bold sm:text-3xl">Модерация товаров</Typography>
         <Typography className="mt-1 text-sm text-gray-600">
           {data ? `Всего: ${data.total}` : "Управление товарами на проверке"}
         </Typography>
@@ -507,9 +482,7 @@ const ModerationPage = () => {
           <button
             key={f.value}
             className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-              filter === f.value
-                ? "bg-gray-900 text-white"
-                : "text-gray-600 hover:bg-gray-100"
+              filter === f.value ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"
             }`}
             type="button"
             onClick={() => handleFilterChange(f.value)}
@@ -526,9 +499,7 @@ const ModerationPage = () => {
         </div>
       ) : !data?.items.length ? (
         <div className="rounded-lg bg-white p-16 text-center shadow-sm">
-          <Typography className="text-gray-500">
-            Нет товаров на модерации
-          </Typography>
+          <Typography className="text-gray-500">Нет товаров на модерации</Typography>
         </div>
       ) : (
         <div className="space-y-3">
@@ -594,4 +565,3 @@ const ModerationPage = () => {
 };
 
 export default ModerationPage;
-

@@ -1,11 +1,10 @@
 "use client";
 
+import type {SupportMessage} from "@/lib/support-chat";
 import type { Chat } from "@/types";
-
 import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-
 import { Button, Typography } from "@/components/ui";
 import { useChats } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
@@ -14,8 +13,8 @@ import {
   addSupportMessage,
   getAdminUnreadCount,
   getSupportMessages,
-  markSupportMessagesAsRead,
-  type SupportMessage,
+  markSupportMessagesAsRead
+  
 } from "@/lib/support-chat";
 
 import { MobileHeader } from "../_components/admin-sidebar";
@@ -128,17 +127,13 @@ const SupportPage = () => {
       <div className="space-y-6">
         <MobileHeader title="Чат поддержки" />
         <div>
-          <Typography className="text-xl font-bold sm:text-3xl">
-            Чат поддержки
-          </Typography>
+          <Typography className="text-xl font-bold sm:text-3xl">Чат поддержки</Typography>
           <Typography className="mt-2 text-gray-600">
             Общение с пользователями и поддержка
           </Typography>
         </div>
         <div className="rounded-lg bg-white p-6 shadow-sm">
-          <Typography className="text-center text-gray-500">
-            Загрузка чатов...
-          </Typography>
+          <Typography className="text-center text-gray-500">Загрузка чатов...</Typography>
         </div>
       </div>
     );
@@ -152,10 +147,7 @@ const SupportPage = () => {
         <div className={styles.chatContainer}>
           {/* Шапка */}
           <div className={styles.header}>
-            <button
-              className={styles.backButton}
-              onClick={() => setShowSupportChat(false)}
-            >
+            <button className={styles.backButton} onClick={() => setShowSupportChat(false)}>
               <ArrowLeft className="h-5 w-5" />
             </button>
 
@@ -177,12 +169,8 @@ const SupportPage = () => {
                 <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
                   <MessageSquare className="h-8 w-8 text-purple-600" />
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-gray-800">
-                  Нет сообщений
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Сообщения от пользователей появятся здесь
-                </p>
+                <h3 className="mb-2 text-lg font-semibold text-gray-800">Нет сообщений</h3>
+                <p className="text-sm text-gray-600">Сообщения от пользователей появятся здесь</p>
               </div>
             ) : (
               <div className={styles.messagesList}>
@@ -242,25 +230,17 @@ const SupportPage = () => {
     <div className="space-y-6">
       <MobileHeader title="Чат поддержки" />
       <div>
-        <Typography className="text-xl font-bold sm:text-3xl">
-          Чат поддержки
-        </Typography>
-        <Typography className="mt-2 text-gray-600">
-          Общение с пользователями и поддержка
-        </Typography>
+        <Typography className="text-xl font-bold sm:text-3xl">Чат поддержки</Typography>
+        <Typography className="mt-2 text-gray-600">Общение с пользователями и поддержка</Typography>
         <div className="mt-2 flex items-center gap-2">
-          <div
-            className={`h-3 w-3 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"}`}
-          />
+          <div className={`h-3 w-3 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"}`} />
           <Typography className="text-sm text-gray-500">
             {isConnected ? "Подключено" : "Отключено"}
           </Typography>
           {chats.length > 0 && (
             <>
               <span className="text-gray-300">•</span>
-              <Typography className="text-sm text-gray-500">
-                Всего чатов: {chats.length}
-              </Typography>
+              <Typography className="text-sm text-gray-500">Всего чатов: {chats.length}</Typography>
             </>
           )}
         </div>
@@ -269,9 +249,7 @@ const SupportPage = () => {
       <div className="rounded-lg bg-white shadow-sm">
         {chats.length === 0 && supportUnread === 0 ? (
           <div className="p-6">
-            <Typography className="text-center text-gray-500">
-              Нет активных чатов
-            </Typography>
+            <Typography className="text-center text-gray-500">Нет активных чатов</Typography>
           </div>
         ) : (
           <div className="divide-y">
@@ -301,7 +279,7 @@ const SupportPage = () => {
                     {supportMessages.length > 0 && (
                       <div className="mt-2 rounded bg-purple-50 p-2">
                         <Typography className="line-clamp-2 text-sm text-gray-600">
-                          {supportMessages[supportMessages.length - 1].content}
+                          {supportMessages.at(-1).content}
                         </Typography>
                       </div>
                     )}
@@ -311,9 +289,7 @@ const SupportPage = () => {
                         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-500 text-xs font-bold text-white">
                           {supportUnread}
                         </span>
-                        <Typography className="text-xs text-purple-600">
-                          непрочитанных
-                        </Typography>
+                        <Typography className="text-xs text-purple-600">непрочитанных</Typography>
                       </div>
                     )}
                   </div>
@@ -359,9 +335,7 @@ const SupportPage = () => {
                         </div>
                         <Typography className="text-xs text-gray-400">
                           {chat.lastMessage?.formattedDate ||
-                            new Date(chat.lastActivity).toLocaleDateString(
-                              "ru-RU",
-                            )}
+                            new Date(chat.lastActivity).toLocaleDateString("ru-RU")}
                         </Typography>
                       </div>
 
@@ -387,9 +361,7 @@ const SupportPage = () => {
                         >
                           <Typography
                             className={`line-clamp-2 text-sm ${
-                              hasUnread
-                                ? "font-semibold text-gray-900"
-                                : "text-gray-600"
+                              hasUnread ? "font-semibold text-gray-900" : "text-gray-600"
                             } ${isModeration ? "text-yellow-900" : ""}`}
                           >
                             {chat.lastMessage.content}
@@ -403,9 +375,7 @@ const SupportPage = () => {
                           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
                             {chat.unreadCount}
                           </span>
-                          <Typography className="text-xs text-red-600">
-                            непрочитанных
-                          </Typography>
+                          <Typography className="text-xs text-red-600">непрочитанных</Typography>
                         </div>
                       )}
                     </div>

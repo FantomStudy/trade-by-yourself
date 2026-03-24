@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
+import { useEffect, useState } from "react";
 
 import { useAvailableFilters } from "@/api/hooks";
 
@@ -19,12 +19,7 @@ interface FiltersProps {
   typeSlug?: string;
 }
 
-export const Filters = ({
-  children,
-  categorySlug,
-  subCategorySlug,
-  typeSlug,
-}: FiltersProps) => {
+export const Filters = ({ children, categorySlug, subCategorySlug, typeSlug }: FiltersProps) => {
   // Состояние для динамических характеристик
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
 
@@ -70,10 +65,7 @@ export const Filters = ({
     setFilters({ [field]: numValue });
   };
 
-  const handleRatingChange = (
-    field: "maxRating" | "minRating",
-    value: string,
-  ) => {
+  const handleRatingChange = (field: "maxRating" | "minRating", value: string) => {
     const numValue = value === "" ? null : Number.parseInt(value);
     setFilters({ [field]: numValue });
   };
@@ -192,9 +184,7 @@ export const Filters = ({
         </div>
 
         <div className={styles.filterGroup}>
-          <Typography className={styles.filterLabel}>
-            Рейтинг продавца
-          </Typography>
+          <Typography className={styles.filterLabel}>Рейтинг продавца</Typography>
           <div className={styles.priceInputs}>
             <div className={styles.priceField}>
               <Input
@@ -204,9 +194,7 @@ export const Filters = ({
                 max={availableFilters?.ratingRange?.max ?? 5}
                 step={0.1}
                 value={filters.minRating ?? ""}
-                onChange={(e) =>
-                  handleRatingChange("minRating", e.target.value)
-                }
+                onChange={(e) => handleRatingChange("minRating", e.target.value)}
                 placeholder={`От ${availableFilters?.ratingRange?.min ?? 1}`}
               />
             </div>
@@ -221,9 +209,7 @@ export const Filters = ({
                 max={availableFilters?.ratingRange?.max ?? 5}
                 step={0.1}
                 value={filters.maxRating ?? ""}
-                onChange={(e) =>
-                  handleRatingChange("maxRating", e.target.value)
-                }
+                onChange={(e) => handleRatingChange("maxRating", e.target.value)}
                 placeholder={`До ${availableFilters?.ratingRange?.max ?? 5}`}
               />
             </div>
@@ -241,15 +227,12 @@ export const Filters = ({
                 </Typography>
                 <Select
                   value={fieldValues[field.fieldId.toString()] ?? ""}
-                  onValueChange={(value) =>
-                    handleFieldValueChange(field.fieldId.toString(), value)
-                  }
+                  onValueChange={(value) => handleFieldValueChange(field.fieldId.toString(), value)}
                 >
                   <Select.Trigger className={styles.selectTrigger}>
                     <Select.Value placeholder="Все" />
                   </Select.Trigger>
                   <Select.Content>
-
                     {field.values.map((value) => (
                       <Select.Item key={value} value={value}>
                         {value}
@@ -292,11 +275,7 @@ export const Filters = ({
         </div>
 
         <div className={styles.buttonGroup}>
-          <Button
-            className={styles.resetButton}
-            onClick={handleReset}
-            variant="secondary"
-          >
+          <Button className={styles.resetButton} onClick={handleReset} variant="secondary">
             Сбросить
           </Button>
           <Button className={styles.applyButton} onClick={handleApply}>

@@ -7,13 +7,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useCreateProductMutation } from "@/api/hooks";
-import {
-  AddressMap,
-  Button,
-  ImageUpload,
-  Input,
-  Textarea,
-} from "@/components/ui";
+import { AddressMap, Button, ImageUpload, Input, Textarea } from "@/components/ui";
 import { api } from "@/lib/api/instance";
 
 import styles from "./page.module.css";
@@ -50,9 +44,7 @@ const CreateProductPage = () => {
     });
   }, []);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
     // Для поля цены разрешаем только цифры
@@ -120,7 +112,9 @@ const CreateProductPage = () => {
         {
           onSuccess: (data) => {
             console.log("Объявление создано:", data);
-            toast.success("Товар отправлен на модерацию. После проверки он появится в вашем списке объявлений.");
+            toast.success(
+              "Товар отправлен на модерацию. После проверки он появится в вашем списке объявлений.",
+            );
             setFormData({
               name: "",
               price: "",
@@ -145,15 +139,9 @@ const CreateProductPage = () => {
                 error.response?.data?.message ||
                 error.response?.data?.error ||
                 "Ошибка валидации данных";
-              setError(
-                Array.isArray(errorMessage)
-                  ? errorMessage.join(", ")
-                  : errorMessage,
-              );
+              setError(Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage);
             } else {
-              setError(
-                `Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`,
-              );
+              setError(`Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`);
             }
           },
         },
@@ -165,9 +153,7 @@ const CreateProductPage = () => {
   };
 
   // Получаем доступные подкатегории
-  const selectedCategory = categories.find(
-    (cat) => String(cat.id) === formData.categoryId,
-  );
+  const selectedCategory = categories.find((cat) => String(cat.id) === formData.categoryId);
   const availableSubcategories = selectedCategory?.subCategories || [];
 
   // Получаем доступные типы подкатегорий
@@ -177,9 +163,7 @@ const CreateProductPage = () => {
   const availableTypes = selectedSubcategory?.subcategoryTypes || [];
 
   // Получаем поля для выбранного типа
-  const selectedType = availableTypes.find(
-    (type) => String(type.id) === formData.typeId,
-  );
+  const selectedType = availableTypes.find((type) => String(type.id) === formData.typeId);
   const fields = selectedType?.fields || [];
 
   return (
@@ -353,11 +337,7 @@ const CreateProductPage = () => {
 
       {error && <div className={styles.error}>{error}</div>}
 
-      <Button
-        className={styles.button}
-        disabled={createProductMutation.isPending}
-        type="submit"
-      >
+      <Button className={styles.button} disabled={createProductMutation.isPending} type="submit">
         {createProductMutation.isPending ? "Создание..." : "Создать объявление"}
       </Button>
     </form>

@@ -23,10 +23,7 @@ const DialogClose = (props: DialogPrimitive.DialogCloseProps) => (
   <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 );
 
-const DialogOverlay = ({
-  className,
-  ...props
-}: DialogPrimitive.DialogOverlayProps) => (
+const DialogOverlay = ({ className, ...props }: DialogPrimitive.DialogOverlayProps) => (
   <DialogPrimitive.Overlay
     className={clsx(styles.overlay, className)}
     data-slot="dialog-overlay"
@@ -49,10 +46,7 @@ const DialogContent = ({
     >
       {children}
       {showCloseButton && (
-        <DialogPrimitive.Close
-          className={styles.closeButton}
-          data-slot="dialog-close"
-        >
+        <DialogPrimitive.Close className={styles.closeButton} data-slot="dialog-close">
           <XIcon />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -62,19 +56,11 @@ const DialogContent = ({
 );
 
 const DialogHeader = ({ className, ...props }: React.ComponentProps<"div">) => (
-  <div
-    className={clsx(styles.header, className)}
-    data-slot="dialog-header"
-    {...props}
-  />
+  <div className={clsx(styles.header, className)} data-slot="dialog-header" {...props} />
 );
 
 const DialogFooter = ({ className, ...props }: React.ComponentProps<"div">) => (
-  <div
-    className={clsx(styles.footer, className)}
-    data-slot="dialog-footer"
-    {...props}
-  />
+  <div className={clsx(styles.footer, className)} data-slot="dialog-footer" {...props} />
 );
 
 const DialogTitle = (props: DialogPrimitive.DialogTitleProps) => (

@@ -12,19 +12,10 @@ interface CityConfirmPopupProps {
   onReject: () => void;
 }
 
-export const CityConfirmPopup = ({
-  city,
-  onConfirm,
-  onReject,
-}: CityConfirmPopupProps) => {
+export const CityConfirmPopup = ({ city, onConfirm, onReject }: CityConfirmPopupProps) => {
   return (
     <div className={styles.popup}>
-      <button
-        aria-label="Закрыть"
-        className={styles.close}
-        type="button"
-        onClick={onReject}
-      >
+      <button aria-label="Закрыть" className={styles.close} type="button" onClick={onReject}>
         <X size={16} />
       </button>
       <div className={styles.content}>

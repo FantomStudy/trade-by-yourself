@@ -23,10 +23,7 @@ interface UseAnalyticsReturn {
   refetch: () => void;
 }
 
-export const useAnalytics = ({
-  period,
-  categoryId,
-}: AnalyticsParams): UseAnalyticsReturn => {
+export const useAnalytics = ({ period, categoryId }: AnalyticsParams): UseAnalyticsReturn => {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,16 +40,12 @@ export const useAnalytics = ({
         params.append("categoryId", categoryId.toString());
       }
 
-      const response = await api<AnalyticsData>(
-        `/statistics/analytic?${params.toString()}`,
-      );
+      const response = await api<AnalyticsData>(`/statistics/analytic?${params.toString()}`);
 
       setData(response);
     } catch (err) {
       console.error("Error fetching analytics:", err);
-      setError(
-        err instanceof Error ? err.message : "Ошибка загрузки аналитики",
-      );
+      setError(err instanceof Error ? err.message : "Ошибка загрузки аналитики");
     } finally {
       setIsLoading(false);
     }

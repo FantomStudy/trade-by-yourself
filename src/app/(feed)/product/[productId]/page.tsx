@@ -1,4 +1,3 @@
-import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 
 import { getProductById } from "@/api/requests";
@@ -9,18 +8,11 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-  Button,
   Typography,
 } from "@/components/ui";
 import { formatPrice } from "@/lib/format";
 
-import {
-  Gallery,
-  ProductMap,
-  ReviewForm,
-  SellerCard,
-  ToggleProductButton,
-} from "./_components";
+import { Gallery, ProductMap, ReviewForm, SellerCard, ToggleProductButton } from "./_components";
 
 import styles from "./page.module.css";
 
@@ -76,10 +68,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
                 {formatPrice(product.price)}
               </Typography>
 
-              <LikeButton
-                initLiked={product.isFavorited}
-                productId={product.id}
-              />
+              <LikeButton initLiked={product.isFavorited} productId={product.id} />
             </div>
           </div>
 
@@ -102,14 +91,9 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
                   <Typography variant="h2">Характеристики</Typography>
                   <div className={styles.sectionContent}>
                     {product.fieldValues.map((fieldValue) => {
-                      const entries = Object.entries(fieldValue).filter(
-                        ([key]) => key !== "id",
-                      );
+                      const entries = Object.entries(fieldValue).filter(([key]) => key !== "id");
                       return entries.map(([fieldName, value]) => (
-                        <div
-                          key={`${fieldValue.id}-${fieldName}`}
-                          className={styles.fieldItem}
-                        >
+                        <div key={`${fieldValue.id}-${fieldName}`} className={styles.fieldItem}>
                           {fieldName}: {value}
                         </div>
                       ));
@@ -127,10 +111,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
             )}
           </div>
 
-          <ReviewForm
-            sellerId={product.seller.id}
-            sellerName={product.seller.fullName}
-          />
+          <ReviewForm sellerId={product.seller.id} sellerName={product.seller.fullName} />
 
           <ToggleProductButton
             isHidden={product.isHide ?? false}

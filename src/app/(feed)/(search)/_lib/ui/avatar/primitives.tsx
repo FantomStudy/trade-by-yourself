@@ -11,11 +11,7 @@ export interface AvatarRootProps extends AvatarPrimitive.AvatarProps {
   size?: AvatarSize;
 }
 
-export const AvatarRoot = ({
-  size = "md",
-  className,
-  ...props
-}: AvatarRootProps) => {
+export const AvatarRoot = ({ size = "md", className, ...props }: AvatarRootProps) => {
   return (
     <AvatarPrimitive.Root
       className={clsx(styles.avatar, styles[size], className)}
@@ -25,10 +21,7 @@ export const AvatarRoot = ({
   );
 };
 
-export const AvatarImage = ({
-  className,
-  ...props
-}: AvatarPrimitive.AvatarImageProps) => {
+export const AvatarImage = ({ className, ...props }: AvatarPrimitive.AvatarImageProps) => {
   return (
     <AvatarPrimitive.Image
       className={clsx(styles.avatarImage, className)}
@@ -38,10 +31,7 @@ export const AvatarImage = ({
   );
 };
 
-export const AvatarFallback = ({
-  className,
-  ...props
-}: AvatarPrimitive.AvatarFallbackProps) => {
+export const AvatarFallback = ({ className, ...props }: AvatarPrimitive.AvatarFallbackProps) => {
   return (
     <AvatarPrimitive.Fallback
       className={clsx(styles.fallback, className)}

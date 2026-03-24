@@ -19,10 +19,6 @@ export const Badge = ({
 }: BadgeProps) => {
   const Comp = asChild ? Slot : "span";
   return (
-    <Comp
-      className={clsx(styles.badge, styles[variant], className)}
-      data-slot="badge"
-      {...props}
-    />
+    <Comp className={clsx(styles.badge, styles[variant], className)} data-slot="badge" {...props} />
   );
 };

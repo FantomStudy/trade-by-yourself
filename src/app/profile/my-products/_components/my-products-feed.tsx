@@ -13,9 +13,7 @@ export const MyProductsFeed = async () => {
         <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-50">
           <Package className="h-10 w-10 text-red-500" />
         </div>
-        <h3 className="mb-2 text-xl font-semibold text-gray-800">
-          Ошибка загрузки
-        </h3>
+        <h3 className="mb-2 text-xl font-semibold text-gray-800">Ошибка загрузки</h3>
         <p className="text-gray-600">Не удалось загрузить ваши объявления</p>
       </div>
     );
@@ -27,9 +25,7 @@ export const MyProductsFeed = async () => {
         <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
           <Package className="h-10 w-10 text-green-500" />
         </div>
-        <h3 className="mb-2 text-xl font-semibold text-gray-800">
-          У вас пока нет объявлений
-        </h3>
+        <h3 className="mb-2 text-xl font-semibold text-gray-800">У вас пока нет объявлений</h3>
         <p className="mb-4 text-gray-600">
           Создайте свое первое объявление, чтобы начать продавать
         </p>

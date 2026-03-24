@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import type { ModerateReviewData } from "@/api/types";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { moderateReview } from "@/api/requests";
 
 import { REVIEWS_TO_MODERATE_QUERY_KEY } from "../queries/useReviewsToModerate";

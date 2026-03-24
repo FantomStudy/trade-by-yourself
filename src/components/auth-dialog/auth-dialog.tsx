@@ -7,19 +7,9 @@ import type { AuthScreen } from "./screens/types";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui";
 
-import {
-  LoginScreen,
-  RecoverScreen,
-  RegisterScreen,
-  VerifyCodeScreen,
-} from "./screens";
+import { LoginScreen, RecoverScreen, RegisterScreen, VerifyCodeScreen } from "./screens";
 
 const AUTH_SCREENS = {
   login: {
@@ -44,10 +34,7 @@ const AUTH_SCREENS = {
   },
 };
 
-export const AuthDialog = ({
-  open,
-  onOpenChange,
-}: ComponentProps<typeof Dialog>) => {
+export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>) => {
   const [screen, setScreen] = useState<AuthScreen>("login");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
 

@@ -8,9 +8,7 @@ export default function NotFound() {
         <h1 className="mb-4 text-9xl font-bold text-blue-500">404</h1>
 
         {/* Заголовок */}
-        <h2 className="mb-2 text-3xl font-semibold text-gray-800">
-          Страница не найдена
-        </h2>
+        <h2 className="mb-2 text-3xl font-semibold text-gray-800">Страница не найдена</h2>
 
         {/* Описание */}
         <p className="mb-8 text-lg text-gray-600">

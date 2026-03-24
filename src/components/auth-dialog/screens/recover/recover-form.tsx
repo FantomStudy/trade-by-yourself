@@ -65,9 +65,7 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
       {error && <span className={styles.error}>{error}</span>}
 
       {codeSent && (
-        <span className="text-muted">
-          Код отправлен на указанный email. Проверьте почту.
-        </span>
+        <span className="text-muted">Код отправлен на указанный email. Проверьте почту.</span>
       )}
 
       <Button disabled={isSubmitting || codeSent} type="submit">

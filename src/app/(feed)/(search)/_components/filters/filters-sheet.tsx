@@ -101,10 +101,7 @@ export const FiltersSheet = ({
     setLocalFilters((prev) => ({ ...prev, [field]: numValue }));
   };
 
-  const handleRatingChange = (
-    field: "maxRating" | "minRating",
-    value: string,
-  ) => {
+  const handleRatingChange = (field: "maxRating" | "minRating", value: string) => {
     const numValue = value === "" ? null : Number.parseInt(value);
     setLocalFilters((prev) => ({ ...prev, [field]: numValue }));
   };
@@ -119,9 +116,10 @@ export const FiltersSheet = ({
   const handleApply = () => {
     const filtersToApply = {
       ...localFilters,
-      fieldValues: Object.keys(localFilters.fieldValues).length > 0
-        ? JSON.stringify(localFilters.fieldValues)
-        : null,
+      fieldValues:
+        Object.keys(localFilters.fieldValues).length > 0
+          ? JSON.stringify(localFilters.fieldValues)
+          : null,
     };
     setUrlFilters(filtersToApply as any);
     onOpenChange?.(false);
@@ -159,9 +157,7 @@ export const FiltersSheet = ({
       <Sheet.Content side="left">
         <Sheet.Header>
           <Sheet.Title>Фильтры</Sheet.Title>
-          <Sheet.Description>
-            Настройте параметры поиска товаров
-          </Sheet.Description>
+          <Sheet.Description>Настройте параметры поиска товаров</Sheet.Description>
         </Sheet.Header>
 
         <div className={styles.content}>
@@ -174,9 +170,7 @@ export const FiltersSheet = ({
                     className={styles.priceInput}
                     type="number"
                     value={localFilters.minPrice ?? ""}
-                    onChange={(e) =>
-                      handlePriceChange("minPrice", e.target.value)
-                    }
+                    onChange={(e) => handlePriceChange("minPrice", e.target.value)}
                     placeholder="От"
                   />
                 </div>
@@ -188,9 +182,7 @@ export const FiltersSheet = ({
                     className={styles.priceInput}
                     type="number"
                     value={localFilters.maxPrice ?? ""}
-                    onChange={(e) =>
-                      handlePriceChange("maxPrice", e.target.value)
-                    }
+                    onChange={(e) => handlePriceChange("maxPrice", e.target.value)}
                     placeholder="До"
                   />
                 </div>
@@ -201,9 +193,7 @@ export const FiltersSheet = ({
               <Typography className={styles.filterLabel}>Состояние</Typography>
               <Select
                 value={localFilters.state ?? ""}
-                onValueChange={(value) =>
-                  setLocalFilters((prev) => ({ ...prev, state: value }))
-                }
+                onValueChange={(value) => setLocalFilters((prev) => ({ ...prev, state: value }))}
               >
                 <Select.Trigger className={styles.selectTrigger}>
                   <Select.Value placeholder="Все" />
@@ -226,9 +216,7 @@ export const FiltersSheet = ({
             </div>
 
             <div className={styles.filterGroup}>
-              <Typography className={styles.filterLabel}>
-                Тип продавца
-              </Typography>
+              <Typography className={styles.filterLabel}>Тип продавца</Typography>
               <Select
                 value={localFilters.profileType ?? ""}
                 onValueChange={(value) =>
@@ -260,9 +248,7 @@ export const FiltersSheet = ({
             </div>
 
             <div className={styles.filterGroup}>
-              <Typography className={styles.filterLabel}>
-                Рейтинг продавца
-              </Typography>
+              <Typography className={styles.filterLabel}>Рейтинг продавца</Typography>
               <div className={styles.priceInputs}>
                 <div className={styles.priceField}>
                   <Input
@@ -272,9 +258,7 @@ export const FiltersSheet = ({
                     max={availableFilters?.ratingRange?.max ?? 5}
                     step={0.1}
                     value={localFilters.minRating ?? ""}
-                    onChange={(e) =>
-                      handleRatingChange("minRating", e.target.value)
-                    }
+                    onChange={(e) => handleRatingChange("minRating", e.target.value)}
                     placeholder={`От ${availableFilters?.ratingRange?.min ?? 1}`}
                   />
                 </div>
@@ -289,9 +273,7 @@ export const FiltersSheet = ({
                     max={availableFilters?.ratingRange?.max ?? 5}
                     step={0.1}
                     value={localFilters.maxRating ?? ""}
-                    onChange={(e) =>
-                      handleRatingChange("maxRating", e.target.value)
-                    }
+                    onChange={(e) => handleRatingChange("maxRating", e.target.value)}
                     placeholder={`До ${availableFilters?.ratingRange?.max ?? 5}`}
                   />
                 </div>
@@ -299,41 +281,35 @@ export const FiltersSheet = ({
             </div>
 
             {/* Динамические характеристики из available-filters */}
-            {availableFilters?.fields &&
-              availableFilters.fields.length > 0 && (
-                <>
-                  {availableFilters.fields.map((field) => (
-                    <div key={field.fieldId} className={styles.filterGroup}>
-                      <Typography className={styles.filterLabel}>
-                        {field.fieldName}
-                        {field.isRequired && (
-                          <span style={{ color: "red" }}> *</span>
-                        )}
-                      </Typography>
-                      <Select
-                        value={
-                          localFilters.fieldValues[field.fieldId.toString()] ??
-                          ""
-                        }
-                        onValueChange={(value) =>
-                          handleFieldValueChange(field.fieldId.toString(), value)
-                        }
-                      >
-                        <Select.Trigger className={styles.selectTrigger}>
-                          <Select.Value placeholder="Все" />
-                        </Select.Trigger>
-                        <Select.Content>
-                          {field.values.map((value) => (
-                            <Select.Item key={value} value={value}>
-                              {value}
-                            </Select.Item>
-                          ))}
-                        </Select.Content>
-                      </Select>
-                    </div>
-                  ))}
-                </>
-              )}
+            {availableFilters?.fields && availableFilters.fields.length > 0 && (
+              <>
+                {availableFilters.fields.map((field) => (
+                  <div key={field.fieldId} className={styles.filterGroup}>
+                    <Typography className={styles.filterLabel}>
+                      {field.fieldName}
+                      {field.isRequired && <span style={{ color: "red" }}> *</span>}
+                    </Typography>
+                    <Select
+                      value={localFilters.fieldValues[field.fieldId.toString()] ?? ""}
+                      onValueChange={(value) =>
+                        handleFieldValueChange(field.fieldId.toString(), value)
+                      }
+                    >
+                      <Select.Trigger className={styles.selectTrigger}>
+                        <Select.Value placeholder="Все" />
+                      </Select.Trigger>
+                      <Select.Content>
+                        {field.values.map((value) => (
+                          <Select.Item key={value} value={value}>
+                            {value}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
+                  </div>
+                ))}
+              </>
+            )}
 
             <div className={styles.filterGroup}>
               <Typography className={styles.filterLabel}>Регион</Typography>
@@ -341,22 +317,16 @@ export const FiltersSheet = ({
                 className={styles.priceInput}
                 type="text"
                 value={localFilters.region ?? ""}
-                onChange={(e) =>
-                  setLocalFilters((prev) => ({ ...prev, region: e.target.value }))
-                }
+                onChange={(e) => setLocalFilters((prev) => ({ ...prev, region: e.target.value }))}
                 placeholder="Введите регион"
               />
             </div>
 
             <div className={styles.filterGroup}>
-              <Typography className={styles.filterLabel}>
-                Сортировать по
-              </Typography>
+              <Typography className={styles.filterLabel}>Сортировать по</Typography>
               <Select
                 value={localFilters.sortBy ?? ""}
-                onValueChange={(value) =>
-                  setLocalFilters((prev) => ({ ...prev, sortBy: value }))
-                }
+                onValueChange={(value) => setLocalFilters((prev) => ({ ...prev, sortBy: value }))}
               >
                 <Select.Trigger className={styles.selectTrigger}>
                   <Select.Value placeholder="Не выбрано" />
@@ -370,19 +340,13 @@ export const FiltersSheet = ({
               </Select>
             </div>
 
-            {children && (
-              <div className={styles.additionalFilters}>{children}</div>
-            )}
+            {children && <div className={styles.additionalFilters}>{children}</div>}
           </div>
         </div>
 
         <Sheet.Footer>
           <div className={styles.footerButtons}>
-            <Button
-              className={styles.resetButton}
-              variant="destructive"
-              onClick={handleReset}
-            >
+            <Button className={styles.resetButton} variant="destructive" onClick={handleReset}>
               Сбросить
             </Button>
             <Button className={styles.applyButton} onClick={handleApply}>

@@ -149,10 +149,7 @@ const ProfileSettingsPage = () => {
 
     // Try to build a URL; allow relative URLs by using window.location as base
     try {
-      const base =
-        typeof window !== "undefined"
-          ? window.location.href
-          : "http://localhost";
+      const base = typeof window !== "undefined" ? window.location.href : "http://localhost";
       const _ = new URL(trimmed, base);
       return trimmed;
     } catch {
@@ -160,9 +157,7 @@ const ProfileSettingsPage = () => {
         const encoded = encodeURI(trimmed);
         const _2 = new URL(
           encoded,
-          typeof window !== "undefined"
-            ? window.location.href
-            : "http://localhost",
+          typeof window !== "undefined" ? window.location.href : "http://localhost",
         );
         return encoded;
       } catch {
@@ -181,12 +176,7 @@ const ProfileSettingsPage = () => {
       <div className="flex items-center gap-6">
         <div className="relative h-32 w-32 overflow-hidden rounded-full bg-gray-100">
           {previewUrl || photoSrc ? (
-            <Image
-              fill
-              alt="avatar"
-              className="object-cover"
-              src={previewUrl ?? photoSrc!}
-            />
+            <Image fill alt="avatar" className="object-cover" src={previewUrl ?? photoSrc!} />
           ) : (
             <div className="h-full w-full bg-gray-200" />
           )}
@@ -211,11 +201,7 @@ const ProfileSettingsPage = () => {
       </div>
 
       {showEditor && rawImageUrl && (
-        <AvatarEditor
-          image={rawImageUrl}
-          onCancel={handleEditorCancel}
-          onSave={handleEditorSave}
-        />
+        <AvatarEditor image={rawImageUrl} onCancel={handleEditorCancel} onSave={handleEditorSave} />
       )}
 
       <div>
@@ -231,10 +217,7 @@ const ProfileSettingsPage = () => {
       </div>
 
       <div>
-        <label
-          className="mb-1 block text-sm text-gray-600"
-          htmlFor="phoneNumber"
-        >
+        <label className="mb-1 block text-sm text-gray-600" htmlFor="phoneNumber">
           Номер телефона
         </label>
         <Input
@@ -246,9 +229,7 @@ const ProfileSettingsPage = () => {
       </div>
 
       <fieldset className="mb-4">
-        <legend className="mb-1 block text-sm text-gray-600">
-          Отвечаете ли вы на звонки?
-        </legend>
+        <legend className="mb-1 block text-sm text-gray-600">Отвечаете ли вы на звонки?</legend>
         <div className="flex items-center gap-4">
           <label className="inline-flex items-center gap-2">
             <input
@@ -274,10 +255,7 @@ const ProfileSettingsPage = () => {
       </fieldset>
 
       <div>
-        <label
-          className="mb-1 block text-sm text-gray-600"
-          htmlFor="profileType"
-        >
+        <label className="mb-1 block text-sm text-gray-600" htmlFor="profileType">
           Тип профиля
         </label>
         <select

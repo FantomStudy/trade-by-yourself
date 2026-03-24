@@ -6,13 +6,7 @@ import styles from "./button.module.css";
 export interface ButtonProps extends React.ComponentProps<"button"> {
   asChild?: boolean;
   size?: "default" | "icon-sm" | "icon";
-  variant?:
-    | "destructive"
-    | "ghost"
-    | "link"
-    | "primary"
-    | "secondary"
-    | "success";
+  variant?: "destructive" | "ghost" | "link" | "primary" | "secondary" | "success";
 }
 
 export const Button = ({

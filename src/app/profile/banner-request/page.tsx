@@ -62,13 +62,7 @@ const BannerRequestPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      !bannerName.trim() ||
-      !targetUrl.trim() ||
-      !bannerPlace ||
-      !days ||
-      !previewImage
-    ) {
+    if (!bannerName.trim() || !targetUrl.trim() || !bannerPlace || !days || !previewImage) {
       toast.error("Заполните все обязательные поля и загрузите изображение");
       return;
     }
@@ -89,9 +83,7 @@ const BannerRequestPage = () => {
   };
 
   const selectedPlace = bannerPlaces.find((p) => p.id === bannerPlace);
-  const totalPrice = selectedPlace
-    ? selectedPlace.price * Number(days || 0)
-    : 0;
+  const totalPrice = selectedPlace ? selectedPlace.price * Number(days || 0) : 0;
 
   return (
     <div className="w-full space-y-6">
@@ -100,8 +92,8 @@ const BannerRequestPage = () => {
           Заявка на размещение баннера
         </Typography>
         <Typography className="mt-2 text-gray-600">
-          Разместите рекламный баннер на нашей платформе. Заявка будет
-          рассмотрена в течение 24 часов.
+          Разместите рекламный баннер на нашей платформе. Заявка будет рассмотрена в течение 24
+          часов.
         </Typography>
       </div>
 
@@ -111,16 +103,11 @@ const BannerRequestPage = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b pb-3">
               <ImageIcon className="h-5 w-5 text-purple-500" />
-              <Typography className="text-lg font-semibold">
-                Информация о баннере
-              </Typography>
+              <Typography className="text-lg font-semibold">Информация о баннере</Typography>
             </div>
 
             <div>
-              <label
-                className="mb-2 block text-sm font-medium text-gray-700"
-                htmlFor="bannerName"
-              >
+              <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="bannerName">
                 Название баннера <span className="text-red-500">*</span>
               </label>
               <Input
@@ -132,10 +119,7 @@ const BannerRequestPage = () => {
             </div>
 
             <div>
-              <label
-                className="mb-2 block text-sm font-medium text-gray-700"
-                htmlFor="targetUrl"
-              >
+              <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="targetUrl">
                 URL для перехода <span className="text-red-500">*</span>
               </label>
               <Input
@@ -184,9 +168,7 @@ const BannerRequestPage = () => {
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <Upload className="h-8 w-8 text-gray-400" />
-                  <span className="text-sm text-gray-600">
-                    Нажмите для загрузки изображения
-                  </span>
+                  <span className="text-sm text-gray-600">Нажмите для загрузки изображения</span>
                   <span className="text-xs text-gray-400">PNG, JPG до 5MB</span>
                 </button>
               )}
@@ -197,9 +179,7 @@ const BannerRequestPage = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b pb-3">
               <ImageIcon className="h-5 w-5 text-green-500" />
-              <Typography className="text-lg font-semibold">
-                Место и срок размещения
-              </Typography>
+              <Typography className="text-lg font-semibold">Место и срок размещения</Typography>
             </div>
 
             <div>
@@ -220,19 +200,14 @@ const BannerRequestPage = () => {
                   >
                     <p className="font-semibold text-gray-900">{place.name}</p>
                     <p className="text-xs text-gray-500">{place.size} px</p>
-                    <p className="mt-1 text-sm text-purple-600">
-                      {place.price} ₽/день
-                    </p>
+                    <p className="mt-1 text-sm text-purple-600">{place.price} ₽/день</p>
                   </button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label
-                className="mb-2 block text-sm font-medium text-gray-700"
-                htmlFor="bannerDays"
-              >
+              <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="bannerDays">
                 Количество дней <span className="text-red-500">*</span>
               </label>
               <Input
@@ -249,9 +224,7 @@ const BannerRequestPage = () => {
               <div className="rounded-lg bg-purple-50 p-4">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-700">Итого к оплате:</span>
-                  <span className="text-2xl font-bold text-purple-600">
-                    {totalPrice} ₽
-                  </span>
+                  <span className="text-2xl font-bold text-purple-600">{totalPrice} ₽</span>
                 </div>
               </div>
             )}
@@ -259,10 +232,7 @@ const BannerRequestPage = () => {
 
           {/* Комментарий */}
           <div>
-            <label
-              className="mb-2 block text-sm font-medium text-gray-700"
-              htmlFor="bannerComment"
-            >
+            <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="bannerComment">
               Комментарий к заявке
             </label>
             <textarea
@@ -289,9 +259,7 @@ const BannerRequestPage = () => {
 
       {/* Информационный блок */}
       <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">
-        <Typography className="font-semibold text-purple-800">
-          Требования к баннерам
-        </Typography>
+        <Typography className="font-semibold text-purple-800">Требования к баннерам</Typography>
         <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-purple-700">
           <li>Изображение должно соответствовать выбранному размеру</li>
           <li>Формат: PNG или JPG, не более 5MB</li>

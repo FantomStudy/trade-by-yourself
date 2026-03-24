@@ -18,9 +18,7 @@ import styles from "./page.module.css";
 
 const SupportChatPage = () => {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<SupportMessage[]>(() =>
-    getSupportMessages(),
-  );
+  const [messages, setMessages] = useState<SupportMessage[]>(() => getSupportMessages());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { data: currentUser } = useCurrentUser();
 
@@ -44,12 +42,7 @@ const SupportChatPage = () => {
   const handleSend = () => {
     if (!message.trim()) return;
 
-    addSupportMessage(
-      message.trim(),
-      true,
-      currentUser?.id,
-      currentUser?.fullName,
-    );
+    addSupportMessage(message.trim(), true, currentUser?.id, currentUser?.fullName);
     setMessage("");
   };
 
@@ -86,12 +79,8 @@ const SupportChatPage = () => {
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
               <MessageSquare className="h-8 w-8 text-purple-600" />
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-gray-800">
-              Начните диалог
-            </h3>
-            <p className="text-sm text-gray-600">
-              Задайте вопрос нашей команде поддержки
-            </p>
+            <h3 className="mb-2 text-lg font-semibold text-gray-800">Начните диалог</h3>
+            <p className="text-sm text-gray-600">Задайте вопрос нашей команде поддержки</p>
           </div>
         ) : (
           <div className={styles.messagesList}>
@@ -128,11 +117,7 @@ const SupportChatPage = () => {
           placeholder="Напишите сообщение..."
           rows={1}
         />
-        <Button
-          className={styles.sendButton}
-          disabled={!message.trim()}
-          onClick={handleSend}
-        >
+        <Button className={styles.sendButton} disabled={!message.trim()} onClick={handleSend}>
           <Send className="h-5 w-5" />
         </Button>
       </div>

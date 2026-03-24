@@ -9,12 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import {
-  deleteUser,
-  findAllUsers,
-  toggleUserBanned,
-  updateUser,
-} from "@/api/requests";
+import { deleteUser, findAllUsers, toggleUserBanned, updateUser } from "@/api/requests";
 import {
   Button,
   Dialog,
@@ -43,8 +38,7 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateUserDto }) =>
-      updateUser(id, data),
+    mutationFn: ({ id, data }: { id: number; data: UpdateUserDto }) => updateUser(id, data),
     onSuccess: () => {
       toast.success("Пользователь успешно обновлен");
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
@@ -171,17 +165,10 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
           </thead>
           <tbody>
             {filteredUsers.map((user) => (
-              <tr
-                key={user.id}
-                className="border-b hover:bg-gray-50"
-                role="row"
-              >
+              <tr key={user.id} className="border-b hover:bg-gray-50" role="row">
                 <td className="px-2 py-2 text-xs text-gray-900">{user.id}</td>
-                <td
-                  className="max-w-[150px] truncate px-2 py-2 text-xs"
-                  title={user.fullName}
-                >
-                  <Link 
+                <td className="max-w-[150px] truncate px-2 py-2 text-xs" title={user.fullName}>
+                  <Link
                     href={`/seller/${user.id}`}
                     className="text-blue-600 hover:text-blue-800 hover:underline"
                   >
@@ -212,9 +199,7 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                 <td className="px-2 py-2 text-xs">
                   <span
                     className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap ${
-                      user.isBanned
-                        ? "bg-red-100 text-red-800"
-                        : "bg-green-100 text-green-800"
+                      user.isBanned ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"
                     }`}
                   >
                     {user.isBanned ? "Заблокирован" : "Активен"}
@@ -263,68 +248,48 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
 
           <div className="space-y-4">
             <div>
-              <label
-                className="mb-1 block text-sm font-medium text-gray-700"
-                htmlFor="fullName"
-              >
+              <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor="fullName">
                 ФИО
               </label>
               <Input
                 id="fullName"
                 value={editForm.fullName || ""}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, fullName: e.target.value })
-                }
+                onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
               />
             </div>
 
             <div>
-              <label
-                className="mb-1 block text-sm font-medium text-gray-700"
-                htmlFor="email"
-              >
+              <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor="email">
                 Email
               </label>
               <Input
                 id="email"
                 type="email"
                 value={editForm.email || ""}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, email: e.target.value })
-                }
+                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
               />
             </div>
 
             <div>
-              <label
-                className="mb-1 block text-sm font-medium text-gray-700"
-                htmlFor="phoneNumber"
-              >
+              <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor="phoneNumber">
                 Телефон
               </label>
               <Input
                 id="phoneNumber"
                 value={editForm.phoneNumber || ""}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, phoneNumber: e.target.value })
-                }
+                onChange={(e) => setEditForm({ ...editForm, phoneNumber: e.target.value })}
               />
             </div>
 
             <div>
-              <label
-                className="mb-1 block text-sm font-medium text-gray-700"
-                htmlFor="profileType"
-              >
+              <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor="profileType">
                 Тип профиля
               </label>
               <select
                 className="w-full rounded-md border border-gray-300 px-3 py-2"
                 id="profileType"
                 value={editForm.profileType || ""}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, profileType: e.target.value })
-                }
+                onChange={(e) => setEditForm({ ...editForm, profileType: e.target.value })}
               >
                 <option value="INDIVIDUAL">Физ лицо</option>
                 <option value="OOO">Юр лицо</option>
@@ -354,16 +319,10 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
           </div>
 
           <div className="mt-4 flex justify-end gap-2">
-            <Button
-              variant="secondary"
-              onClick={() => setIsEditDialogOpen(false)}
-            >
+            <Button variant="secondary" onClick={() => setIsEditDialogOpen(false)}>
               Отмена
             </Button>
-            <Button
-              disabled={updateMutation.isPending}
-              onClick={handleSaveEdit}
-            >
+            <Button disabled={updateMutation.isPending} onClick={handleSaveEdit}>
               {updateMutation.isPending ? "Сохранение..." : "Сохранить"}
             </Button>
           </div>
@@ -376,17 +335,13 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
           <DialogHeader>
             <DialogTitle>Удаление пользователя</DialogTitle>
             <DialogDescription>
-              Вы уверены, что хотите удалить пользователя{" "}
-              <strong>{selectedUser?.fullName}</strong>? Это действие нельзя
-              отменить.
+              Вы уверены, что хотите удалить пользователя <strong>{selectedUser?.fullName}</strong>?
+              Это действие нельзя отменить.
             </DialogDescription>
           </DialogHeader>
 
           <div className="mt-4 flex justify-end gap-2">
-            <Button
-              variant="secondary"
-              onClick={() => setIsDeleteDialogOpen(false)}
-            >
+            <Button variant="secondary" onClick={() => setIsDeleteDialogOpen(false)}>
               Отмена
             </Button>
             <Button

@@ -7,9 +7,7 @@ const PROTECTED_PREFIXES = ["/profile", "/admin"];
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const isProtected = PROTECTED_PREFIXES.some((prefix) =>
-    pathname.startsWith(prefix),
-  );
+  const isProtected = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
   if (!isProtected) return NextResponse.next();
 
   const sessionId = req.cookies.get("session_id")?.value;

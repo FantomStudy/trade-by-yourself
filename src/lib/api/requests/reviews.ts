@@ -1,8 +1,4 @@
-import type {
-  ModerateReviewData,
-  ModerateReviewResponse,
-  ReviewToModerate,
-} from "../types";
+import type { ModerateReviewData, ModerateReviewResponse, ReviewToModerate } from "../types";
 import { api } from "../instance";
 
 export interface SendReviewDto {
@@ -43,10 +39,7 @@ export const getAllReviewsToModerate = async () =>
   api<ReviewToModerate[]>("/review/all-reviews-to-moderate");
 
 // Модерировать отзыв (одобрить/отклонить)
-export const moderateReview = async ({
-  reviewId,
-  status,
-}: ModerateReviewData) =>
+export const moderateReview = async ({ reviewId, status }: ModerateReviewData) =>
   api<ModerateReviewResponse>(`/review/moderate-review/${reviewId}`, {
     method: "PUT",
     query: { status },

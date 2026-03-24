@@ -34,10 +34,7 @@ const TopActions = ({ className, ...props }: React.ComponentProps<"div">) => {
   return <div className={clsx(styles.topActions, className)} {...props} />;
 };
 
-const BottomActions = ({
-  className,
-  ...props
-}: React.ComponentProps<"div">) => {
+const BottomActions = ({ className, ...props }: React.ComponentProps<"div">) => {
   return <div className={clsx(styles.bottomActions, className)} {...props} />;
 };
 
@@ -47,13 +44,7 @@ const Preview = (props: React.ComponentProps<"div">) => {
 };
 
 const Content = ({ className, ...props }: React.ComponentProps<"div">) => {
-  return (
-    <div
-      className={clsx(styles.content, className)}
-      data-slot="content"
-      {...props}
-    />
-  );
+  return <div className={clsx(styles.content, className)} data-slot="content" {...props} />;
 };
 
 const Title = ({ className, ...props }: TypographyProps) => {

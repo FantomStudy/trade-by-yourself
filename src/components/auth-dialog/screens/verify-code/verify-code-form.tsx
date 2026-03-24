@@ -5,10 +5,6 @@ import type { SubmitHandler } from "react-hook-form";
 import type { AuthFormProps } from "../types";
 import type { VerifyMobileCodeData } from "@/lib/api";
 
-interface VerifyCodeFormProps extends AuthFormProps {
-  phoneNumber: string;
-}
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,10 +15,11 @@ import { verifyMobileCodeSchema } from "@/lib/api";
 
 import styles from "../forms.module.css";
 
-export const VerifyCodeForm = ({
-  phoneNumber,
-  onSuccess,
-}: VerifyCodeFormProps) => {
+interface VerifyCodeFormProps extends AuthFormProps {
+  phoneNumber: string;
+}
+
+export const VerifyCodeForm = ({ phoneNumber, onSuccess }: VerifyCodeFormProps) => {
   const verifyMutation = useVerifyMobileCodeMutation();
   const {
     register,
@@ -62,11 +59,7 @@ export const VerifyCodeForm = ({
 
       {error && <span className={styles.error}>{error}</span>}
 
-      <Button
-        disabled={isSubmitting || verifyMutation.isPending}
-        type="submit"
-        variant="secondary"
-      >
+      <Button disabled={isSubmitting || verifyMutation.isPending} type="submit" variant="secondary">
         Подтвердить
       </Button>
     </form>
