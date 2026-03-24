@@ -107,12 +107,8 @@ const ReviewsPage = () => {
             justifyContent: "space-between",
           }}
         >
-          <Typography className="text-2xl font-bold">
-            Модерация отзывов
-          </Typography>
-          <Typography className="text-gray-500">
-            Всего: {reviews?.length || 0}
-          </Typography>
+          <Typography className="text-2xl font-bold">Модерация отзывов</Typography>
+          <Typography className="text-gray-500">Всего: {reviews?.length || 0}</Typography>
         </div>
 
         {!reviews || reviews.length === 0 ? (
@@ -125,14 +121,10 @@ const ReviewsPage = () => {
               boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Typography className="text-gray-500">
-              Нет отзывов на модерации
-            </Typography>
+            <Typography className="text-gray-500">Нет отзывов на модерации</Typography>
           </div>
         ) : (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {reviews.map((review) => (
               <div
                 key={review.id}
@@ -156,12 +148,8 @@ const ReviewsPage = () => {
                   }}
                 >
                   <div style={{ flex: 1, minWidth: "250px" }}>
-                    <Typography className="mb-1 text-sm text-gray-500">
-                      Автор отзыва
-                    </Typography>
-                    <Typography className="font-semibold">
-                      {review.reviewedBy.fullName}
-                    </Typography>
+                    <Typography className="mb-1 text-sm text-gray-500">Автор отзыва</Typography>
+                    <Typography className="font-semibold">{review.reviewedBy.fullName}</Typography>
                     <Typography className="text-xs text-gray-400">
                       ID: {review.reviewedBy.id}
                     </Typography>
@@ -194,9 +182,7 @@ const ReviewsPage = () => {
                     borderRadius: "8px",
                   }}
                 >
-                  <Typography className="text-sm leading-relaxed">
-                    {review.text}
-                  </Typography>
+                  <Typography className="text-sm leading-relaxed">{review.text}</Typography>
                 </div>
 
                 <div
@@ -217,8 +203,7 @@ const ReviewsPage = () => {
                       color: "white",
                       padding: "8px 16px",
                       borderRadius: "8px",
-                      cursor:
-                        moderatingId === review.id ? "not-allowed" : "pointer",
+                      cursor: moderatingId === review.id ? "not-allowed" : "pointer",
                       opacity: moderatingId === review.id ? 0.5 : 1,
                     }}
                     disabled={moderatingId === review.id}
@@ -237,8 +222,7 @@ const ReviewsPage = () => {
                       color: "white",
                       padding: "8px 16px",
                       borderRadius: "8px",
-                      cursor:
-                        moderatingId === review.id ? "not-allowed" : "pointer",
+                      cursor: moderatingId === review.id ? "not-allowed" : "pointer",
                       opacity: moderatingId === review.id ? 0.5 : 1,
                     }}
                     disabled={moderatingId === review.id}
@@ -263,15 +247,11 @@ const ReviewsPage = () => {
             gap: "16px",
           }}
         >
-          <Typography className="text-lg font-semibold">
-            Подтверждение отклонения
-          </Typography>
+          <Typography className="text-lg font-semibold">Подтверждение отклонения</Typography>
           <Typography className="text-gray-600">
             Вы уверены, что хотите отклонить этот отзыв?
           </Typography>
-          <div
-            style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}
-          >
+          <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
             <Button
               style={{
                 padding: "8px 16px",

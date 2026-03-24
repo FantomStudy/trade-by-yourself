@@ -9,9 +9,7 @@ import { safe } from "../../../_lib/utils/safe";
 import styles from "../../page.module.css";
 
 // TODO: См. комментарий в src/features/categories/api/get-category-by-slug.ts
-const Page = async ({
-  params,
-}: PageProps<"/[categorySlug]/[subcategorySlug]/[typeSlug]">) => {
+const Page = async ({ params }: PageProps<"/[categorySlug]/[subcategorySlug]/[typeSlug]">) => {
   const { categorySlug, subcategorySlug, typeSlug } = await params;
 
   const request = await safe(getCategoryBySlug(`${categorySlug}`));
@@ -22,9 +20,7 @@ const Page = async ({
   }
 
   const category = request.data;
-  const subcategory = category?.subCategories.find(
-    (s) => s.slug === subcategorySlug,
-  );
+  const subcategory = category?.subCategories.find((s) => s.slug === subcategorySlug);
   const type = subcategory?.subcategoryTypes.find((t) => t.slug === typeSlug);
 
   if (!subcategory || !type) {
@@ -53,9 +49,7 @@ const Page = async ({
 
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
-              <Link href={`/${categorySlug}/${subcategorySlug}`}>
-                {subcategory.name}
-              </Link>
+              <Link href={`/${categorySlug}/${subcategorySlug}`}>{subcategory.name}</Link>
             </Breadcrumb.Link>
           </Breadcrumb.Item>
 

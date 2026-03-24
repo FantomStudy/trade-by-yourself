@@ -45,9 +45,7 @@ const LogsPage = () => {
   if (error) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <div className="text-lg text-red-600">
-          Ошибка загрузки логов: {String(error)}
-        </div>
+        <div className="text-lg text-red-600">Ошибка загрузки логов: {String(error)}</div>
       </div>
     );
   }
@@ -79,9 +77,7 @@ const LogsPage = () => {
         {filteredLogs.length === 0 ? (
           <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
             <p className="text-gray-500">
-              {searchQuery
-                ? "Логи не найдены по вашему запросу"
-                : "Логи отсутствуют"}
+              {searchQuery ? "Логи не найдены по вашему запросу" : "Логи отсутствуют"}
             </p>
           </div>
         ) : (
@@ -93,12 +89,8 @@ const LogsPage = () => {
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-medium text-gray-500">
-                      Log ID: {log.id}
-                    </span>
-                    <span className="text-xs font-medium text-gray-500">
-                      User ID: {log.userId}
-                    </span>
+                    <span className="text-xs font-medium text-gray-500">Log ID: {log.id}</span>
+                    <span className="text-xs font-medium text-gray-500">User ID: {log.userId}</span>
                   </div>
 
                   <div className="mt-2 rounded-md bg-blue-50 px-3 py-2">
@@ -114,9 +106,7 @@ const LogsPage = () => {
       </div>
 
       {filteredLogs.length > 0 && (
-        <div className="text-sm text-gray-600">
-          Показано {filteredLogs.length} записей
-        </div>
+        <div className="text-sm text-gray-600">Показано {filteredLogs.length} записей</div>
       )}
     </div>
   );

@@ -8,21 +8,10 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { CircleFadingArrowUpIcon } from "lucide-react";
 import Link from "next/link";
-import {
-  parseAsInteger,
-  parseAsString,
-  useQueryState,
-  useQueryStates,
-} from "nuqs";
+import { parseAsInteger, parseAsString, useQueryState, useQueryStates } from "nuqs";
 
-import {
-  ProductGrid,
-  SkeletonGrid,
-} from "@/app/(feed)/(search)/_lib/ui/product-grid";
-import {
-  ProductFeedBanner,
-  WideBanner,
-} from "@/components/product-feed-banner";
+import { ProductGrid, SkeletonGrid } from "@/app/(feed)/(search)/_lib/ui/product-grid";
+import { ProductFeedBanner, WideBanner } from "@/components/product-feed-banner";
 
 import { LikeButton } from "../../../favorites";
 import { getFeed } from "../../../product";
@@ -56,10 +45,7 @@ const mapSortByToApi = (
 };
 
 export interface FeedProps {
-  filters?: Omit<
-    FeedFilters,
-    "maxPrice" | "minPrice" | "search" | "sortBy" | "state"
-  >;
+  filters?: Omit<FeedFilters, "maxPrice" | "minPrice" | "search" | "sortBy" | "state">;
 }
 
 export const ProductFeed = ({ filters }: FeedProps) => {
@@ -95,13 +81,8 @@ export const ProductFeed = ({ filters }: FeedProps) => {
         ? (urlFilters.state.toUpperCase() as "NEW" | "USED")
         : undefined,
     sortBy:
-      urlFilters.sortBy && urlFilters.sortBy !== ""
-        ? mapSortByToApi(urlFilters.sortBy)
-        : undefined,
-    region:
-      urlFilters.region && urlFilters.region !== ""
-        ? urlFilters.region
-        : undefined,
+      urlFilters.sortBy && urlFilters.sortBy !== "" ? mapSortByToApi(urlFilters.sortBy) : undefined,
+    region: urlFilters.region && urlFilters.region !== "" ? urlFilters.region : undefined,
     profileType:
       urlFilters.profileType && urlFilters.profileType !== ""
         ? (urlFilters.profileType as "INDIVIDUAL" | "OOO" | "IP")
@@ -148,10 +129,7 @@ export const ProductFeed = ({ filters }: FeedProps) => {
       // Вставляем широкий баннер каждые 20 карточек (занимает место двух карточек)
       if (items.length > 0 && items.length % 20 === 0) {
         items.push(
-          <WideBanner
-            key={`wide-banner-${items.length}`}
-            bannerIndex={wideBannerIndex}
-          />,
+          <WideBanner key={`wide-banner-${items.length}`} bannerIndex={wideBannerIndex} />,
         );
         productIndex += 2; // Пропускаем 2 карточки
         bannersAdded++;
@@ -159,15 +137,9 @@ export const ProductFeed = ({ filters }: FeedProps) => {
         continue;
       }
       // Вставляем узкий баннер на позиции 1, затем через каждые 6 элементов
-      else if (
-        items.length === 1 ||
-        (items.length > 1 && (items.length - 1) % 6 === 0)
-      ) {
+      else if (items.length === 1 || (items.length > 1 && (items.length - 1) % 6 === 0)) {
         items.push(
-          <ProductFeedBanner
-            key={`banner-${items.length}`}
-            bannerIndex={narrowBannerIndex}
-          />,
+          <ProductFeedBanner key={`banner-${items.length}`} bannerIndex={narrowBannerIndex} />,
         );
         productIndex++; // Пропускаем 1 карточку
         bannersAdded++;
@@ -194,10 +166,7 @@ export const ProductFeed = ({ filters }: FeedProps) => {
               <ProductCardTitle />
             </Link>
             <ProductCardAction>
-              <LikeButton
-                initLiked={product.isFavorited}
-                productId={product.id}
-              />
+              <LikeButton initLiked={product.isFavorited} productId={product.id} />
             </ProductCardAction>
             <ProductCardAddress />
             <ProductCardPrice />

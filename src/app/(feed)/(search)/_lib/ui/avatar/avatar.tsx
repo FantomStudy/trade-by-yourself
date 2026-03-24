@@ -9,12 +9,7 @@ export interface AvatarProps extends AvatarRootProps {
   src?: string;
 }
 
-export const Avatar = ({
-  size = "md",
-  fullName,
-  src,
-  ...props
-}: AvatarProps) => {
+export const Avatar = ({ size = "md", fullName, src, ...props }: AvatarProps) => {
   return (
     <AvatarRoot size={size} {...props}>
       {src ? (

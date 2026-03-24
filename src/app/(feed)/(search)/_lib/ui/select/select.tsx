@@ -7,21 +7,15 @@ import * as React from "react";
 
 import styles from "./select.module.css";
 
-const SelectRoot = ({
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Root>) => {
+const SelectRoot = ({ ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) => {
   return <SelectPrimitive.Root data-slot="select" {...props} />;
 };
 
-const SelectGroup = ({
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Group>) => {
+const SelectGroup = ({ ...props }: React.ComponentProps<typeof SelectPrimitive.Group>) => {
   return <SelectPrimitive.Group data-slot="select-group" {...props} />;
 };
 
-const SelectValue = ({
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Value>) => {
+const SelectValue = ({ ...props }: React.ComponentProps<typeof SelectPrimitive.Value>) => {
   return <SelectPrimitive.Value data-slot="select-value" {...props} />;
 };
 
@@ -96,10 +90,7 @@ const SelectContent = ({
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
-          className={clsx(
-            styles.viewport,
-            position === "popper" && styles.viewportPopper
-          )}
+          className={clsx(styles.viewport, position === "popper" && styles.viewportPopper)}
         >
           {children}
         </SelectPrimitive.Viewport>

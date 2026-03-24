@@ -1,4 +1,4 @@
-import { isServer } from "./isServer";
+import { isServer } from "@/lib/is-server";
 
 type RequestMethod = "DELETE" | "GET" | "PATCH" | "POST" | "PUT";
 type RequestBody = BodyInit | Record<string, any> | null | undefined;
@@ -7,8 +7,7 @@ interface RequestSearchParams {
   [key: string]: any;
 }
 
-export interface RequestOptions<T = undefined>
-  extends Omit<RequestInit, "body"> {
+export interface RequestOptions<T = undefined> extends Omit<RequestInit, "body"> {
   body?: T extends undefined ? RequestBody : T;
   method?: RequestMethod;
   query?: RequestSearchParams;
@@ -23,10 +22,7 @@ export class ResponseError extends Error {
   request: RequestOptions;
   response: ErrorResponseData;
 
-  constructor(
-    message: string,
-    options: { request: RequestOptions; response: ErrorResponseData },
-  ) {
+  constructor(message: string, options: { request: RequestOptions; response: ErrorResponseData }) {
     super(message, { cause: options });
     this.request = options.request;
     this.response = options.response;
@@ -50,9 +46,7 @@ const createSearchParams = (query: RequestSearchParams) => {
       if (value === undefined || value === null) continue;
 
       if (Array.isArray(value)) {
-        value.forEach((currentValue) =>
-          searchParams.append(key, currentValue.toString()),
-        );
+        value.forEach((currentValue) => searchParams.append(key, currentValue.toString()));
       } else {
         searchParams.set(key, value.toString());
       }
@@ -62,10 +56,7 @@ const createSearchParams = (query: RequestSearchParams) => {
   return `?${searchParams.toString()}`;
 };
 
-export const fetcher = async <T>(
-  endpoint?: string,
-  options: RequestOptions = {},
-): Promise<T> => {
+export const fetcher = async <T>(endpoint?: string, options: RequestOptions = {}): Promise<T> => {
   const { body, query, method = "GET", headers, ...rest } = options;
 
   // TODO: сделать проксирование Next, чтобы не давать публичный доступ к API

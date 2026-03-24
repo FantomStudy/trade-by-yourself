@@ -9,7 +9,9 @@
   padding: 8px 16px;
   box-sizing: border-box;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
-  transition: color 150ms, box-shadow 150ms;
+  transition:
+    color 150ms,
+    box-shadow 150ms;
   outline: none;
 }
 

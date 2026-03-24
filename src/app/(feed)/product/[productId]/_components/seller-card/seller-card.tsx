@@ -56,15 +56,10 @@ export const SellerCard = ({ product }: SellerCardProps) => {
             <StarIcon fill="currentColor" />
           </Typography>
 
-          <Typography className={styles.reviews}>
-            {product.seller.reviewsCount} отзывов
-          </Typography>
+          <Typography className={styles.reviews}>{product.seller.reviewsCount} отзывов</Typography>
         </div>
 
-        <Badge
-          className={styles.profileType}
-          variant={isLegalEntity ? "secondary" : "primary"}
-        >
+        <Badge className={styles.profileType} variant={isLegalEntity ? "secondary" : "primary"}>
           <CircleSmall fill="currentColor" />
           {product.seller.profileType}
         </Badge>
@@ -81,9 +76,7 @@ export const SellerCard = ({ product }: SellerCardProps) => {
 
         <Button onClick={handleShowPhone}>
           <Phone className={styles.icon} />
-          {showPhone && product.seller.phoneNumber
-            ? product.seller.phoneNumber
-            : "Показать номер"}
+          {showPhone && product.seller.phoneNumber ? product.seller.phoneNumber : "Показать номер"}
         </Button>
       </div>
     </div>

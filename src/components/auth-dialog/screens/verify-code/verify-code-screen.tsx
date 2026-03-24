@@ -6,11 +6,7 @@ import { VerifyCodeForm } from "./verify-code-form";
 
 import styles from "../screens.module.css";
 
-export const VerifyCodeScreen = ({
-  onClose,
-  onChangeScreen,
-  phoneNumber,
-}: AuthScreenProps) => {
+export const VerifyCodeScreen = ({ onClose, onChangeScreen, phoneNumber }: AuthScreenProps) => {
   return (
     <>
       <Typography className={styles.description}>
@@ -22,9 +18,7 @@ export const VerifyCodeScreen = ({
       <div className={styles.actions}>
         <Typography>Не получили код?</Typography>
 
-        <Button onClick={() => onChangeScreen("register")}>
-          Отправить снова
-        </Button>
+        <Button onClick={() => onChangeScreen("register")}>Отправить снова</Button>
       </div>
     </>
   );

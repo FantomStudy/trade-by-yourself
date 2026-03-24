@@ -39,8 +39,6 @@ interface FeedProduct extends Product {
   hasPromotion: boolean;
 }
 
-export const getFeed = async (
-  options?: RequestOptions & { query?: FeedFilters },
-) => {
+export const getFeed = async (options?: RequestOptions & { query?: FeedFilters }) => {
   return fetcher<FeedProduct[]>("/product/all-products", options);
 };

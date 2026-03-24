@@ -26,10 +26,7 @@ export const FavoritesList = async () => {
             <ProductCard.Price />
 
             <ProductCard.Actions>
-              <LikeButton
-                initLiked={product.isFavorited}
-                productId={product.id}
-              />
+              <LikeButton initLiked={product.isFavorited} productId={product.id} />
             </ProductCard.Actions>
           </ProductCard.Content>
         </ProductCard>

@@ -1,14 +1,13 @@
 "use client";
 
-import { Plus, TrendingUp } from "lucide-react";
+import type { Product } from "@/types";
+import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import { Button, Input, Typography } from "@/components/ui";
-import { api } from "@/lib/api/instance";
 import { addPromotion, getCurrentUserProducts } from "@/lib/api";
 import { useCurrentUser } from "@/lib/api/hooks/queries";
-import type { Product } from "@/types";
+import { api } from "@/lib/api/instance";
 
 import { ProductSelector } from "./_components";
 
@@ -26,12 +25,8 @@ const PromotionPage = () => {
   // Модальное окно активации продвижения
   const [showActivatePromotion, setShowActivatePromotion] = useState(false);
   const [userProducts, setUserProducts] = useState<Product[]>([]);
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null,
-  );
-  const [selectedPromotionId, setSelectedPromotionId] = useState<number | null>(
-    null,
-  );
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [selectedPromotionId, setSelectedPromotionId] = useState<number | null>(null);
   const [days, setDays] = useState("");
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
@@ -44,9 +39,7 @@ const PromotionPage = () => {
   const loadData = async () => {
     try {
       setIsLoading(true);
-      const promotionsData = await api<Promotion[]>(
-        "/promotion/all-promotions",
-      );
+      const promotionsData = await api<Promotion[]>("/promotion/all-promotions");
       setPromotions(promotionsData);
     } catch (error) {
       console.error("Ошибка загрузки данных:", error);
@@ -110,8 +103,7 @@ const PromotionPage = () => {
       closeModals();
     } catch (error: any) {
       console.error("Ошибка активации продвижения:", error);
-      const errorMessage =
-        error.response?.data?.message || "Не удалось активировать продвижение";
+      const errorMessage = error.response?.data?.message || "Не удалось активировать продвижение";
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -130,9 +122,7 @@ const PromotionPage = () => {
     return (
       <div className="space-y-6">
         <div>
-          <Typography className="text-3xl font-bold">
-            Продвижение товаров
-          </Typography>
+          <Typography className="text-3xl font-bold">Продвижение товаров</Typography>
           <Typography className="mt-2 text-gray-600">
             Управление типами продвижения товаров
           </Typography>
@@ -149,9 +139,7 @@ const PromotionPage = () => {
       <div className="grid gap-6">
         {/* Заголовок */}
         <div>
-          <Typography className="text-3xl font-bold">
-            Продвижение товаров
-          </Typography>
+          <Typography className="text-3xl font-bold">Продвижение товаров</Typography>
           <Typography className="mt-2 text-gray-600">
             Выберите тип продвижения и товар для активации
           </Typography>
@@ -165,9 +153,7 @@ const PromotionPage = () => {
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {promotions.length === 0 ? (
-              <p className="col-span-full py-8 text-center text-gray-500">
-                Нет типов продвижения
-              </p>
+              <p className="col-span-full py-8 text-center text-gray-500">Нет типов продвижения</p>
             ) : (
               promotions.map((promotion) => (
                 <div
@@ -187,16 +173,12 @@ const PromotionPage = () => {
                         </p>
                       </div>
                     </div>
-                    <h4 className="mb-3 text-2xl font-bold text-gray-900">
-                      {promotion.name}
-                    </h4>
+                    <h4 className="mb-3 text-2xl font-bold text-gray-900">{promotion.name}</h4>
                     <div className="mb-4 flex items-baseline gap-1">
                       <span className="text-3xl font-bold text-blue-600">
                         {promotion.pricePerDay}
                       </span>
-                      <span className="text-sm font-medium text-gray-600">
-                        ₽ / день
-                      </span>
+                      <span className="text-sm font-medium text-gray-600">₽ / день</span>
                     </div>
                     <Button
                       className="w-full bg-blue-500 hover:bg-blue-600"
@@ -218,32 +200,19 @@ const PromotionPage = () => {
           <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-semibold">
-                  Активировать продвижение товара
-                </h3>
+                <h3 className="text-2xl font-semibold">Активировать продвижение товара</h3>
                 {selectedPromotionId && (
                   <p className="mt-1 text-sm text-gray-600">
                     Тариф:{" "}
                     <span className="font-semibold text-blue-600">
-                      {
-                        promotions.find((p) => p.id === selectedPromotionId)
-                          ?.name
-                      }
+                      {promotions.find((p) => p.id === selectedPromotionId)?.name}
                     </span>
                     {" — "}
-                    {
-                      promotions.find((p) => p.id === selectedPromotionId)
-                        ?.pricePerDay
-                    }{" "}
-                    ₽ / день
+                    {promotions.find((p) => p.id === selectedPromotionId)?.pricePerDay} ₽ / день
                   </p>
                 )}
               </div>
-              <button
-                className="rounded p-1 hover:bg-gray-100"
-                type="button"
-                onClick={closeModals}
-              >
+              <button className="rounded p-1 hover:bg-gray-100" type="button" onClick={closeModals}>
                 ✕
               </button>
             </div>
@@ -283,8 +252,8 @@ const PromotionPage = () => {
                       Итого:{" "}
                       <span className="font-semibold text-blue-600">
                         {(
-                          (promotions.find((p) => p.id === selectedPromotionId)
-                            ?.pricePerDay || 0) * Number.parseInt(days, 10)
+                          (promotions.find((p) => p.id === selectedPromotionId)?.pricePerDay || 0) *
+                          Number.parseInt(days, 10)
                         ).toFixed(0)}{" "}
                         ₽
                       </span>
@@ -300,12 +269,7 @@ const PromotionPage = () => {
               </Button>
               <Button
                 className="bg-green-500 hover:bg-green-600"
-                disabled={
-                  isSubmitting ||
-                  !selectedProductId ||
-                  !selectedPromotionId ||
-                  !days
-                }
+                disabled={isSubmitting || !selectedProductId || !selectedPromotionId || !days}
                 onClick={handleActivatePromotion}
               >
                 {isSubmitting ? "Активация..." : "Активировать"}

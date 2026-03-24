@@ -2,10 +2,7 @@ import type { UpdateProductData } from "@/api/types";
 
 import { api } from "@/api/instance";
 
-export const updateProduct = async (
-  productId: number,
-  data: UpdateProductData,
-) => {
+export const updateProduct = async (productId: number, data: UpdateProductData) => {
   const formData = new FormData();
 
   if (data.name) formData.append("name", data.name);

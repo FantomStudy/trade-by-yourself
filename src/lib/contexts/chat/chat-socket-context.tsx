@@ -5,14 +5,7 @@ import type { Socket } from "socket.io-client";
 
 import type { ChatSocketContextType, Message } from "./types";
 
-import {
-  createContext,
-  use,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
 
 import { useAuth } from "../auth";
@@ -115,9 +108,7 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
       // и если окно неактивно или вы не на странице этого чата
       if (data.senderId !== user.id) {
         const isWindowFocused = document.hasFocus();
-        const isOnChatPage = window.location.pathname.includes(
-          `/profile/messages/${data.chatId}`,
-        );
+        const isOnChatPage = window.location.pathname.includes(`/profile/messages/${data.chatId}`);
 
         // Показываем уведомление если окно неактивно или вы на другой странице
         if (!isWindowFocused || !isOnChatPage) {
@@ -188,15 +179,7 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
       sendTyping,
       socket,
     }),
-    [
-      isConnected,
-      joinChat,
-      leaveChat,
-      markAsRead,
-      sendMessage,
-      sendTyping,
-      socket,
-    ],
+    [isConnected, joinChat, leaveChat, markAsRead, sendMessage, sendTyping, socket],
   );
 
   return <ChatSocketContext value={value}>{children}</ChatSocketContext>;

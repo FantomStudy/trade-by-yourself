@@ -23,10 +23,7 @@ const SheetClose = (props: SheetPrimitive.DialogCloseProps) => (
   <SheetPrimitive.Close data-slot="sheet-close" {...props} />
 );
 
-const SheetOverlay = ({
-  className,
-  ...props
-}: SheetPrimitive.DialogOverlayProps) => (
+const SheetOverlay = ({ className, ...props }: SheetPrimitive.DialogOverlayProps) => (
   <SheetPrimitive.Overlay
     className={clsx(styles.overlay, className)}
     data-slot="sheet-overlay"
@@ -64,32 +61,15 @@ const SheetContent = ({
   </SheetPortal>
 );
 
-const SheetHeader = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={clsx(styles.header, className)}
-    data-slot="sheet-header"
-    {...props}
-  />
+const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={clsx(styles.header, className)} data-slot="sheet-header" {...props} />
 );
 
-const SheetFooter = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={clsx(styles.footer, className)}
-    data-slot="sheet-footer"
-    {...props}
-  />
+const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={clsx(styles.footer, className)} data-slot="sheet-footer" {...props} />
 );
 
-const SheetTitle = ({
-  className,
-  ...props
-}: SheetPrimitive.DialogTitleProps) => (
+const SheetTitle = ({ className, ...props }: SheetPrimitive.DialogTitleProps) => (
   <SheetPrimitive.Title
     className={clsx(styles.title, className)}
     data-slot="sheet-title"
@@ -97,10 +77,7 @@ const SheetTitle = ({
   />
 );
 
-const SheetDescription = ({
-  className,
-  ...props
-}: SheetPrimitive.DialogDescriptionProps) => (
+const SheetDescription = ({ className, ...props }: SheetPrimitive.DialogDescriptionProps) => (
   <SheetPrimitive.Description
     className={clsx(styles.description, className)}
     data-slot="sheet-description"

@@ -1,18 +1,16 @@
 "use client";
 
-import type {
-  FieldPath,
-  FieldValues,
-  UseControllerProps,
-} from "react-hook-form";
+import type { FieldPath, FieldValues, UseControllerProps } from "react-hook-form";
 
 import { useCallback } from "react";
 import { useController } from "react-hook-form";
 
 import { formatPhoneNumber, getCleanPhoneForSubmit } from "@/lib/phone";
 
-interface UsePhoneFieldOptions<T extends FieldValues, K extends FieldPath<T>>
-  extends UseControllerProps<T, K> {
+interface UsePhoneFieldOptions<
+  T extends FieldValues,
+  K extends FieldPath<T>,
+> extends UseControllerProps<T, K> {
   /**
    * Если true, то значение в форме будет храниться в чистом виде (+7xxxxxxxxxx)
    * Если false, то в отформатированном (+7 (XXX) XXX-XX-XX)

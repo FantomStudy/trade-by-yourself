@@ -5,12 +5,7 @@ import type { Banner, BannerPlace } from "@/api/types/banner";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-import {
-  createBanner,
-  deleteBanner,
-  getBanners,
-  updateBanner,
-} from "@/api/requests/banner";
+import { createBanner, deleteBanner, getBanners, updateBanner } from "@/api/requests/banner";
 import { Button, Typography } from "@/components/ui";
 
 interface BannerConfig {
@@ -51,9 +46,7 @@ export const BannerSelector = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
-  const [previewImages, setPreviewImages] = useState<
-    Record<string, string | null>
-  >({});
+  const [previewImages, setPreviewImages] = useState<Record<string, string | null>>({});
   const [bannerNames, setBannerNames] = useState<Record<string, string>>({});
   const [bannerUrls, setBannerUrls] = useState<Record<string, string>>({});
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -86,10 +79,7 @@ export const BannerSelector = () => {
     }
   };
 
-  const handleImageSelect = (
-    itemId: string,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleImageSelect = (itemId: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -98,11 +88,7 @@ export const BannerSelector = () => {
     setPreviewImages((prev) => ({ ...prev, [itemId]: imageUrl }));
   };
 
-  const handleUpload = async (
-    itemId: string,
-    place: BannerPlace,
-    bannerId?: number,
-  ) => {
+  const handleUpload = async (itemId: string, place: BannerPlace, bannerId?: number) => {
     const fileInput = fileInputRefs.current[itemId];
     const file = fileInput?.files?.[0];
 
@@ -212,20 +198,15 @@ export const BannerSelector = () => {
   return (
     <div className="space-y-6">
       <div>
-        <Typography className="text-xl font-semibold">
-          Управление баннерами
-        </Typography>
+        <Typography className="text-xl font-semibold">Управление баннерами</Typography>
         <Typography className="mt-1 text-sm text-gray-500">
-          Загрузите изображения точно указанных размеров для каждого типа
-          баннера
+          Загрузите изображения точно указанных размеров для каждого типа баннера
         </Typography>
       </div>
 
       <div className="flex flex-col gap-6">
         {BANNER_CONFIGS.map((config) => {
-          const existingBanners = banners.filter(
-            (b) => b.place === config.place,
-          );
+          const existingBanners = banners.filter((b) => b.place === config.place);
 
           // Создаем items: существующие баннеры + один новый слот
           const items = [
@@ -381,9 +362,7 @@ export const BannerSelector = () => {
                         <Button
                           className="flex-1"
                           disabled={isUploading}
-                          onClick={() =>
-                            handleUpload(itemId, config.place, item.banner?.id)
-                          }
+                          onClick={() => handleUpload(itemId, config.place, item.banner?.id)}
                         >
                           {isUploading ? "Загрузка..." : "Загрузить"}
                         </Button>

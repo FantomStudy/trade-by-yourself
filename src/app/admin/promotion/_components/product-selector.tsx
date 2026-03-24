@@ -27,9 +27,7 @@ export const ProductSelector = ({
   if (products.length === 0) {
     return (
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-        <p className="text-gray-600">
-          У вас нет активных товаров для продвижения
-        </p>
+        <p className="text-gray-600">У вас нет активных товаров для продвижения</p>
       </div>
     );
   }
@@ -54,20 +52,10 @@ export const ProductSelector = ({
             {/* Изображение товара */}
             <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
               {mainImage ? (
-                <Image
-                  fill
-                  alt={product.name}
-                  className="object-cover"
-                  src={mainImage}
-                />
+                <Image fill alt={product.name} className="object-cover" src={mainImage} />
               ) : (
                 <div className="flex h-full items-center justify-center text-gray-400">
-                  <svg
-                    className="h-8 w-8"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                       strokeLinecap="round"
@@ -84,13 +72,9 @@ export const ProductSelector = ({
               <h4 className="mb-1 line-clamp-2 text-sm font-semibold text-gray-900">
                 {product.name}
               </h4>
-              <p className="text-lg font-bold text-blue-600">
-                {formatPrice(product.price)}
-              </p>
+              <p className="text-lg font-bold text-blue-600">{formatPrice(product.price)}</p>
               {product.address && (
-                <p className="mt-1 line-clamp-1 text-xs text-gray-500">
-                  {product.address}
-                </p>
+                <p className="mt-1 line-clamp-1 text-xs text-gray-500">{product.address}</p>
               )}
             </div>
 

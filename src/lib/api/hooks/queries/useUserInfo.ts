@@ -7,10 +7,7 @@ import { getUserInfo } from "@/api/requests";
 
 export const USER_INFO_QUERY_KEY = (userId: number) => ["user", "info", userId];
 
-export const useUserInfo = (
-  userId: number | undefined,
-  options?: QueryHookOptions<User>,
-) => {
+export const useUserInfo = (userId: number | undefined, options?: QueryHookOptions<User>) => {
   return useQuery({
     queryKey: USER_INFO_QUERY_KEY(userId ?? 0),
     queryFn: () => getUserInfo(userId!),

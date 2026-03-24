@@ -6,10 +6,7 @@ import type { ExtendedProduct } from "@/types/product";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
-import {
-  useDeleteProductMutation,
-  useUpdateProductMutation,
-} from "@/api/hooks";
+import { useDeleteProductMutation, useUpdateProductMutation } from "@/api/hooks";
 import { getProductById } from "@/api/requests";
 import { AddressMap, Button, Input, Textarea } from "@/components/ui";
 import { api } from "@/lib/api/instance";
@@ -96,9 +93,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     loadData();
   }, [productId]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
     if (name === "price") {
@@ -245,8 +240,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           description: formData.description,
           address: formData.address,
           images: orderedImages.length > 0 ? orderedImages : undefined,
-          fieldValues:
-            Object.keys(fieldValues).length > 0 ? fieldValues : undefined,
+          fieldValues: Object.keys(fieldValues).length > 0 ? fieldValues : undefined,
           videoUrl: formData.videoUrl,
         },
         {
@@ -259,11 +253,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
               error.response?.data?.message ||
               error.response?.data?.error ||
               "Ошибка при обновлении объявления";
-            setError(
-              Array.isArray(errorMessage)
-                ? errorMessage.join(", ")
-                : errorMessage,
-            );
+            setError(Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage);
           },
         },
       );
@@ -497,9 +487,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
                 input.accept = "image/*";
                 input.multiple = true;
                 input.onchange = (e) => {
-                  const files = Array.from(
-                    (e.target as HTMLInputElement).files || [],
-                  );
+                  const files = Array.from((e.target as HTMLInputElement).files || []);
                   if (files.length > 0) {
                     handleImagesChange(files);
                   }
@@ -514,9 +502,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
                   input.accept = "image/*";
                   input.multiple = true;
                   input.onchange = (ev) => {
-                    const files = Array.from(
-                      (ev.target as HTMLInputElement).files || [],
-                    );
+                    const files = Array.from((ev.target as HTMLInputElement).files || []);
                     if (files.length > 0) {
                       handleImagesChange(files);
                     }
@@ -563,9 +549,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             disabled={updateProductMutation.isPending}
             type="submit"
           >
-            {updateProductMutation.isPending
-              ? "Сохранение..."
-              : "Сохранить изменения"}
+            {updateProductMutation.isPending ? "Сохранение..." : "Сохранить изменения"}
           </Button>
         </div>
       </div>

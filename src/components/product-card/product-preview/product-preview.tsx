@@ -69,11 +69,7 @@ export const ProductPreview = ({ images }: ProductPreviewProps) => {
         {images.length > 1 && (
           <div className={styles.dotsWrapper}>
             {images.map((img, index) => (
-              <div
-                key={`dot-${img}`}
-                className={styles.dot}
-                data-active={index === currentIndex}
-              />
+              <div key={`dot-${img}`} className={styles.dot} data-active={index === currentIndex} />
             ))}
           </div>
         )}
@@ -108,9 +104,7 @@ export const ProductPreview = ({ images }: ProductPreviewProps) => {
                 <button
                   key={`fullscreen-dot-${img}`}
                   className={`h-3 w-3 rounded-full transition-all ${
-                    index === currentIndex
-                      ? "bg-white"
-                      : "bg-white/50 hover:bg-white/75"
+                    index === currentIndex ? "bg-white" : "bg-white/50 hover:bg-white/75"
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();

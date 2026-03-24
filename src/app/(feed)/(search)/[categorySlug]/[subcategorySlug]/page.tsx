@@ -9,9 +9,7 @@ import { safe } from "../../_lib/utils/safe";
 import styles from "../page.module.css";
 
 // TODO: См. комментарий в src/features/categories/api/get-category-by-slug.ts
-const Page = async ({
-  params,
-}: PageProps<"/[categorySlug]/[subcategorySlug]">) => {
+const Page = async ({ params }: PageProps<"/[categorySlug]/[subcategorySlug]">) => {
   const { categorySlug, subcategorySlug } = await params;
 
   const request = await safe(getCategoryBySlug(`${categorySlug}`));
@@ -22,9 +20,7 @@ const Page = async ({
   }
 
   const category = request.data;
-  const subcategory = category?.subCategories.find(
-    (s) => s.slug === subcategorySlug,
-  );
+  const subcategory = category?.subCategories.find((s) => s.slug === subcategorySlug);
 
   if (!subcategory) {
     return notFound();

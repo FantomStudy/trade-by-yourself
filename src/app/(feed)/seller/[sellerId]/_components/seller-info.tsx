@@ -34,15 +34,10 @@ export const SellerInfo = ({ seller }: SellerInfoProps) => {
             <StarIcon fill="currentColor" />
           </Typography>
 
-          <Typography className={styles.reviews}>
-            {seller.reviewsCount || 0} отзывов
-          </Typography>
+          <Typography className={styles.reviews}>{seller.reviewsCount || 0} отзывов</Typography>
         </div>
 
-        <Badge
-          className={styles.profileType}
-          variant={isLegalEntity ? "secondary" : "primary"}
-        >
+        <Badge className={styles.profileType} variant={isLegalEntity ? "secondary" : "primary"}>
           <CircleSmall fill="currentColor" />
           {seller.profileType}
         </Badge>
@@ -51,9 +46,7 @@ export const SellerInfo = ({ seller }: SellerInfoProps) => {
       <div className={styles.actions}>
         <Button onClick={handleShowPhone}>
           <Phone className={styles.icon} />
-          {showPhone && seller.phoneNumber
-            ? seller.phoneNumber
-            : "Показать номер"}
+          {showPhone && seller.phoneNumber ? seller.phoneNumber : "Показать номер"}
         </Button>
       </div>
     </div>

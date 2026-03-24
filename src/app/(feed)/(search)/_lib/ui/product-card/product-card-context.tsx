@@ -8,19 +8,14 @@ interface ProductCardContextType {
   product: Product;
 }
 
-const ProductCardContext = createContext<ProductCardContextType | undefined>(
-  undefined,
-);
+const ProductCardContext = createContext<ProductCardContextType | undefined>(undefined);
 
 interface ProductCardProviderProps {
   children: React.ReactNode;
   product: Product;
 }
 
-export const ProductCardProvider = ({
-  children,
-  product,
-}: ProductCardProviderProps) => {
+export const ProductCardProvider = ({ children, product }: ProductCardProviderProps) => {
   const value = useMemo(() => ({ product }), [product]);
 
   return <ProductCardContext value={value}>{children}</ProductCardContext>;

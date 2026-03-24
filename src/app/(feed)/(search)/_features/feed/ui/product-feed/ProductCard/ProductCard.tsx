@@ -14,12 +14,7 @@ export interface ProductCardProps extends React.ComponentProps<"div"> {
   product: Product;
 }
 
-export const ProductCard = ({
-  product,
-  className,
-  children,
-  ...props
-}: ProductCardProps) => {
+export const ProductCard = ({ product, className, children, ...props }: ProductCardProps) => {
   return (
     <ProductCardProvider product={product}>
       <div className={clsx(styles.card, className)} {...props}>
@@ -50,34 +45,18 @@ export const ProductCardOverlay = ({
   className,
   ...props
 }: ProductCardOverlayProps) => {
-  return (
-    <div
-      className={clsx(styles.overlay, className)}
-      data-align={align}
-      {...props}
-    />
-  );
+  return <div className={clsx(styles.overlay, className)} data-align={align} {...props} />;
 };
 
-export const ProductCardContent = ({
-  className,
-  ...props
-}: React.ComponentProps<"div">) => {
+export const ProductCardContent = ({ className, ...props }: React.ComponentProps<"div">) => {
   return <div className={clsx(styles.content, className)} {...props} />;
 };
 
-export const ProductCardAction = ({
-  className,
-  ...props
-}: React.ComponentProps<"div">) => {
+export const ProductCardAction = ({ className, ...props }: React.ComponentProps<"div">) => {
   return <div className={clsx(styles.action, className)} {...props} />;
 };
 
-export const ProductCardTitle = ({
-  className,
-  children,
-  ...props
-}: TypographyProps) => {
+export const ProductCardTitle = ({ className, children, ...props }: TypographyProps) => {
   const { product } = useProductCard();
   return (
     <Typography className={clsx(styles.title, className)} {...props}>
@@ -86,10 +65,7 @@ export const ProductCardTitle = ({
   );
 };
 
-export const ProductCardAddress = ({
-  className,
-  ...props
-}: TypographyProps) => {
+export const ProductCardAddress = ({ className, ...props }: TypographyProps) => {
   const { product } = useProductCard();
   return (
     <Typography className={clsx(styles.address, className)} {...props}>

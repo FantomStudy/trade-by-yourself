@@ -40,17 +40,11 @@ const BalancePage = () => {
   // Логирование данных из /user/info/{id}
   useEffect(() => {
     console.log("[BALANCE PAGE] User info from /user/info:", userInfo);
-    console.log(
-      "[BALANCE PAGE] User balance from /user/info:",
-      userInfo?.balance,
-    );
+    console.log("[BALANCE PAGE] User balance from /user/info:", userInfo?.balance);
     console.log("[BALANCE PAGE] User bonus balance:", userInfo?.bonusBalance);
     if (userInfo) {
       console.log("[BALANCE PAGE] User info keys:", Object.keys(userInfo));
-      console.log(
-        "[BALANCE PAGE] Full user info:",
-        JSON.stringify(userInfo, null, 2),
-      );
+      console.log("[BALANCE PAGE] Full user info:", JSON.stringify(userInfo, null, 2));
     }
   }, [userInfo]);
 
@@ -177,9 +171,7 @@ const BalancePage = () => {
         <div className={styles["balance-decoration-bottom"]} />
 
         <div className={styles["balance-content"]}>
-          <Typography className={styles["balance-label"]}>
-            Текущий баланс
-          </Typography>
+          <Typography className={styles["balance-label"]}>Текущий баланс</Typography>
           <Typography className={styles["balance-amount"]}>
             {userInfo?.balance?.toFixed(2) || "0.00"} ₽
           </Typography>
@@ -199,10 +191,7 @@ const BalancePage = () => {
 
         <div className={styles["form-content"]}>
           <div>
-            <label
-              className="mb-2 block text-sm font-medium text-gray-700"
-              htmlFor="amount-input"
-            >
+            <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="amount-input">
               Сумма пополнения
             </label>
             <Input
@@ -250,8 +239,8 @@ const BalancePage = () => {
           </Button>
 
           <Typography className={styles["form-hint"]}>
-            Минимальная сумма пополнения: 100₽. После нажатия кнопки вы будете
-            перенаправлены на безопасную страницу оплаты Т-Банка.
+            Минимальная сумма пополнения: 100₽. После нажатия кнопки вы будете перенаправлены на
+            безопасную страницу оплаты Т-Банка.
           </Typography>
         </div>
       </div>
@@ -262,14 +251,8 @@ const BalancePage = () => {
           <Typography className={styles["history-title"]} variant="h2">
             История операций
           </Typography>
-          <Button
-            disabled={isLoading}
-            variant="secondary"
-            onClick={() => refetch()}
-          >
-            <RefreshCw
-              className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-            />
+          <Button disabled={isLoading} variant="secondary" onClick={() => refetch()}>
+            <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
           </Button>
         </div>
 
@@ -282,9 +265,7 @@ const BalancePage = () => {
             <div className={styles["empty-icon"]}>
               <ArrowDownLeft />
             </div>
-            <Typography className={styles["empty-title"]}>
-              История пуста
-            </Typography>
+            <Typography className={styles["empty-title"]}>История пуста</Typography>
             <Typography className={styles["empty-description"]}>
               Здесь будут отображаться ваши транзакции
             </Typography>
@@ -294,9 +275,7 @@ const BalancePage = () => {
             {payments.map((payment) => (
               <div key={payment.id} className={styles["payment-item"]}>
                 <div className={styles["payment-left"]}>
-                  <div className={styles["payment-icon"]}>
-                    {getStatusIcon(payment.status)}
-                  </div>
+                  <div className={styles["payment-icon"]}>{getStatusIcon(payment.status)}</div>
                   <div className={styles["payment-info"]}>
                     <div className={styles["payment-header"]}>
                       <Typography className={styles["payment-title"]}>
@@ -304,8 +283,7 @@ const BalancePage = () => {
                       </Typography>
                       <span
                         className={`${styles["payment-status"]} ${
-                          payment.status === "COMPLETED" ||
-                          payment.status === "CONFIRMED"
+                          payment.status === "COMPLETED" || payment.status === "CONFIRMED"
                             ? styles["payment-status-success"]
                             : payment.status === "PENDING"
                               ? styles["payment-status-pending"]
@@ -325,18 +303,14 @@ const BalancePage = () => {
                 </div>
 
                 <div className={styles["payment-right"]}>
-                  <Typography className={styles["payment-amount"]}>
-                    +{payment.amount} ₽
-                  </Typography>
+                  <Typography className={styles["payment-amount"]}>+{payment.amount} ₽</Typography>
                   {payment.status === "PENDING" && (
                     <Button
                       disabled={checkStatusMutation.isPending}
                       variant="secondary"
                       onClick={() => handleCheckStatus(payment.paymentId)}
                     >
-                      {checkStatusMutation.isPending
-                        ? "Проверка..."
-                        : "Проверить"}
+                      {checkStatusMutation.isPending ? "Проверка..." : "Проверить"}
                     </Button>
                   )}
                 </div>

@@ -1,34 +1,21 @@
 "use client";
 
-import {
-  Eye,
-  Heart,
-  MessageSquare,
-  Package,
-  Phone,
-} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Eye, Heart, MessageSquare, Package } from "lucide-react";
 import { useState } from "react";
-
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
 import { Typography } from "@/components/ui";
-import { getFavorites } from "@/lib/api/requests";
 import { useCategories, useChats } from "@/lib/api/hooks";
-import { useQuery } from "@tanstack/react-query";
+import { getFavorites } from "@/lib/api/requests";
 
 import styles from "./page.module.css";
 
 const Analytics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("year");
-  const [selectedCategoryId, setSelectedCategoryId] = useState<
-    number | undefined
-  >(undefined);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
 
   // Загружаем категории
-  const {
-    categories,
-    isLoading: categoriesLoading,
-    error: categoriesError,
-  } = useCategories();
+  const { categories, isLoading: categoriesLoading, error: categoriesError } = useCategories();
 
   // Загружаем чаты и избранное
   const { data: chats } = useChats();
@@ -54,9 +41,7 @@ const Analytics = () => {
     setSelectedPeriod(event.target.value);
   };
 
-  const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setSelectedCategoryId(value === "" ? undefined : Number.parseInt(value));
   };
@@ -78,10 +63,7 @@ const Analytics = () => {
         <div className={styles.error}>
           <h2>Ошибка</h2>
           <p>{error}</p>
-          <button
-            className={styles.retryButton}
-            onClick={() => window.location.reload()}
-          >
+          <button className={styles.retryButton} onClick={() => window.location.reload()}>
             Попробовать снова
           </button>
         </div>
@@ -127,10 +109,7 @@ const Analytics = () => {
       {/* Карточки метрик */}
       <div className={styles.metricsGrid}>
         <div className={styles.metricCard}>
-          <div
-            className={styles.metricIcon}
-            style={{ backgroundColor: "#dbeafe" }}
-          >
+          <div className={styles.metricIcon} style={{ backgroundColor: "#dbeafe" }}>
             <Eye className="h-6 w-6" style={{ color: "#3b82f6" }} />
           </div>
           <div className={styles.metricContent}>
@@ -138,55 +117,34 @@ const Analytics = () => {
             <Typography className={styles.metricValue}>
               {analyticsData?.views?.toString() || "0"}
             </Typography>
-            <Typography className={styles.metricPeriod}>
-              за выбранный период
-            </Typography>
+            <Typography className={styles.metricPeriod}>за выбранный период</Typography>
           </div>
         </div>
 
         <div className={styles.metricCard}>
-          <div
-            className={styles.metricIcon}
-            style={{ backgroundColor: "#d1fae5" }}
-          >
+          <div className={styles.metricIcon} style={{ backgroundColor: "#d1fae5" }}>
             <MessageSquare className="h-6 w-6" style={{ color: "#10b981" }} />
           </div>
           <div className={styles.metricContent}>
-            <Typography className={styles.metricLabel}>
-              Всего чатов
-            </Typography>
-            <Typography className={styles.metricValue}>
-              {chats?.length || 0}
-            </Typography>
-            <Typography className={styles.metricPeriod}>
-              активных диалогов
-            </Typography>
+            <Typography className={styles.metricLabel}>Всего чатов</Typography>
+            <Typography className={styles.metricValue}>{chats?.length || 0}</Typography>
+            <Typography className={styles.metricPeriod}>активных диалогов</Typography>
           </div>
         </div>
 
         <div className={styles.metricCard}>
-          <div
-            className={styles.metricIcon}
-            style={{ backgroundColor: "#fce7f3" }}
-          >
+          <div className={styles.metricIcon} style={{ backgroundColor: "#fce7f3" }}>
             <Heart className="h-6 w-6" style={{ color: "#ec4899" }} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>В избранном</Typography>
-            <Typography className={styles.metricValue}>
-              {favorites?.length || 0}
-            </Typography>
-            <Typography className={styles.metricPeriod}>
-              сохраненных товаров
-            </Typography>
+            <Typography className={styles.metricValue}>{favorites?.length || 0}</Typography>
+            <Typography className={styles.metricPeriod}>сохраненных товаров</Typography>
           </div>
         </div>
 
         <div className={styles.metricCard}>
-          <div
-            className={styles.metricIcon}
-            style={{ backgroundColor: "#e0e7ff" }}
-          >
+          <div className={styles.metricIcon} style={{ backgroundColor: "#e0e7ff" }}>
             <Package className="h-6 w-6" style={{ color: "#6366f1" }} />
           </div>
           <div className={styles.metricContent}>
@@ -194,9 +152,7 @@ const Analytics = () => {
             <Typography className={styles.metricValue}>
               {analyticsData?.phone?.toString() || "0"}
             </Typography>
-            <Typography className={styles.metricPeriod}>
-              за выбранный период
-            </Typography>
+            <Typography className={styles.metricPeriod}>за выбранный период</Typography>
           </div>
         </div>
       </div>

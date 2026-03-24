@@ -22,9 +22,7 @@ export const WideBanner = ({ bannerIndex = 0 }: WideBannerProps) => {
 
   const profileBanners = banners?.filter((b) => b.place === "PROFILE") || [];
   const banner =
-    profileBanners.length > 0
-      ? profileBanners[bannerIndex % profileBanners.length]
-      : undefined;
+    profileBanners.length > 0 ? profileBanners[bannerIndex % profileBanners.length] : undefined;
 
   console.log("[WideBanner] Selected banner:", banner?.id, banner?.name);
 

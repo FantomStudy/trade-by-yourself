@@ -9,30 +9,12 @@ const BreadcrumbRoot = (props: React.ComponentProps<"nav">) => {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 };
 
-const BreadcrumbList = ({
-  className,
-  ...props
-}: React.ComponentProps<"ol">) => {
-  return (
-    <ol
-      className={clsx(styles.list, className)}
-      data-slot="breadcrumb-list"
-      {...props}
-    />
-  );
+const BreadcrumbList = ({ className, ...props }: React.ComponentProps<"ol">) => {
+  return <ol className={clsx(styles.list, className)} data-slot="breadcrumb-list" {...props} />;
 };
 
-const BreadcrumbItem = ({
-  className,
-  ...props
-}: React.ComponentProps<"li">) => {
-  return (
-    <li
-      className={clsx(styles.item, className)}
-      data-slot="breadcrumb-item"
-      {...props}
-    />
-  );
+const BreadcrumbItem = ({ className, ...props }: React.ComponentProps<"li">) => {
+  return <li className={clsx(styles.item, className)} data-slot="breadcrumb-item" {...props} />;
 };
 
 const BreadcrumbLink = ({
@@ -44,19 +26,10 @@ const BreadcrumbLink = ({
 }) => {
   const Comp = asChild ? Slot : "a";
 
-  return (
-    <Comp
-      className={clsx(styles.link, className)}
-      data-slot="breadcrumb-link"
-      {...props}
-    />
-  );
+  return <Comp className={clsx(styles.link, className)} data-slot="breadcrumb-link" {...props} />;
 };
 
-const BreadcrumbPage = ({
-  className,
-  ...props
-}: React.ComponentProps<"span">) => {
+const BreadcrumbPage = ({ className, ...props }: React.ComponentProps<"span">) => {
   return (
     <span
       aria-current="page"
@@ -69,11 +42,7 @@ const BreadcrumbPage = ({
   );
 };
 
-const BreadcrumbSeparator = ({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"li">) => {
+const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => {
   return (
     <li
       aria-hidden="true"
@@ -87,10 +56,7 @@ const BreadcrumbSeparator = ({
   );
 };
 
-const BreadcrumbEllipsis = ({
-  className,
-  ...props
-}: React.ComponentProps<"span">) => {
+const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => {
   return (
     <span
       aria-hidden="true"

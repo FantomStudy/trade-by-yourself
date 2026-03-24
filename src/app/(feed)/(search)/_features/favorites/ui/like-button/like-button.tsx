@@ -17,11 +17,7 @@ interface LikeButtonProps {
   productId: number;
 }
 
-export const LikeButton = ({
-  initLiked = false,
-  productId,
-  className,
-}: LikeButtonProps) => {
+export const LikeButton = ({ initLiked = false, productId, className }: LikeButtonProps) => {
   const [isLiked, setIsLiked] = useState(initLiked);
 
   const toggle = async () => {

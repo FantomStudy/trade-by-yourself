@@ -7,10 +7,7 @@ import { useEffect, useState } from "react";
 import { ChatsBanner } from "@/components/product-feed-banner";
 import { useChats } from "@/lib/api/hooks";
 import { formatPrice } from "@/lib/format";
-import {
-  getSupportMessages,
-  getSupportUnreadCount,
-} from "@/lib/support-chat";
+import { getSupportMessages, getSupportUnreadCount } from "@/lib/support-chat";
 
 const MessagesPage = () => {
   const { data: chats, isLoading } = useChats();
@@ -22,7 +19,7 @@ const MessagesPage = () => {
       setSupportUnread(getSupportUnreadCount());
       const messages = getSupportMessages();
       if (messages.length > 0) {
-        setLastSupportMessage(messages[messages.length - 1].content);
+        setLastSupportMessage(messages.at(-1).content);
       }
     };
 
@@ -89,12 +86,9 @@ const MessagesPage = () => {
           <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
             <MessageSquare className="h-10 w-10 text-blue-500" />
           </div>
-          <h3 className="mb-2 text-xl font-semibold text-gray-800">
-            У вас пока нет сообщений
-          </h3>
+          <h3 className="mb-2 text-xl font-semibold text-gray-800">У вас пока нет сообщений</h3>
           <p className="mb-4 text-gray-600">
-            Сообщения появятся здесь, когда вы начнете общение с продавцами или
-            покупателями
+            Сообщения появятся здесь, когда вы начнете общение с продавцами или покупателями
           </p>
           <a
             href="/"
@@ -175,21 +169,16 @@ const MessagesPage = () => {
                 )}
                 <div className="flex-1">
                   <h3 className="font-semibold">{chat.product.name}</h3>
-                  <p className="text-sm text-blue-600">
-                    {formatPrice(chat.product.price)}
-                  </p>
+                  <p className="text-sm text-blue-600">{formatPrice(chat.product.price)}</p>
                   {chat.lastMessage && (
                     <span className="text-xs text-gray-500">
-                      {new Date(chat.lastMessage.createdAt).toLocaleString(
-                        "ru-RU",
-                        {
-                          day: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          month: "2-digit",
-                          year: "2-digit",
-                        },
-                      )}
+                      {new Date(chat.lastMessage.createdAt).toLocaleString("ru-RU", {
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                      })}
                     </span>
                   )}
                 </div>
@@ -200,12 +189,8 @@ const MessagesPage = () => {
                 </div>
                 {chat.lastMessage ? (
                   <p className="flex-1 text-sm text-gray-600">
-                    <span className="font-medium text-gray-800">
-                      {companion.fullName}:
-                    </span>{" "}
-                    <span className="line-clamp-2">
-                      {chat.lastMessage.content}
-                    </span>
+                    <span className="font-medium text-gray-800">{companion.fullName}:</span>{" "}
+                    <span className="line-clamp-2">{chat.lastMessage.content}</span>
                   </p>
                 ) : (
                   <p className="flex-1 text-sm text-gray-400">Нет сообщений</p>

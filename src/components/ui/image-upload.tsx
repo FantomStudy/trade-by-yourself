@@ -1,17 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import * as React from "react";
+import { useRef, useState } from "react";
 
 interface ImageUploadProps {
   maxImages?: number;
   onImagesChange?: (images: File[]) => void;
 }
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({
-  maxImages = 6,
-  onImagesChange,
-}) => {
+export const ImageUpload: React.FC<ImageUploadProps> = ({ maxImages = 6, onImagesChange }) => {
   const [images, setImages] = useState<File[]>([]);
   const [mainImageIndex, setMainImageIndex] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);

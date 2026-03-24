@@ -20,11 +20,7 @@ export const FiltersButton = () => {
 
   return (
     <>
-      <Button
-        type="button"
-        onClick={() => setFiltersOpen(true)}
-        aria-label="Открыть фильтры"
-      >
+      <Button type="button" onClick={() => setFiltersOpen(true)} aria-label="Открыть фильтры">
         <Filter size={20} />
       </Button>
       <FiltersSheet

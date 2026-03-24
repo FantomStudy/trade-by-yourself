@@ -26,11 +26,7 @@ interface AuthenticatedMenuProps {
   onLogout: () => void;
 }
 
-const AuthenticatedMenu = ({
-  user,
-  onClose,
-  onLogout,
-}: AuthenticatedMenuProps) => {
+const AuthenticatedMenu = ({ user, onClose, onLogout }: AuthenticatedMenuProps) => {
   const handleLogout = () => {
     onLogout();
     onClose();
@@ -49,49 +45,29 @@ const AuthenticatedMenu = ({
           <span>Главная</span>
         </Link>
 
-        <Link
-          href="/profile/my-products"
-          className={styles.menuItem}
-          onClick={onClose}
-        >
+        <Link href="/profile/my-products" className={styles.menuItem} onClick={onClose}>
           <UserIcon size={20} />
           <span>Мои объявления</span>
         </Link>
 
-        <Link
-          href="/profile/messages"
-          className={styles.menuItem}
-          onClick={onClose}
-        >
+        <Link href="/profile/messages" className={styles.menuItem} onClick={onClose}>
           <MessageSquareIcon size={20} />
           <span>Сообщения</span>
         </Link>
 
-        <Link
-          href="/profile/favorites"
-          className={styles.menuItem}
-          onClick={onClose}
-        >
+        <Link href="/profile/favorites" className={styles.menuItem} onClick={onClose}>
           <HeartIcon size={20} />
           <span>Избранное</span>
         </Link>
 
-        <Link
-          href="/profile/create-product"
-          className={styles.menuItemHighlight}
-          onClick={onClose}
-        >
+        <Link href="/profile/create-product" className={styles.menuItemHighlight} onClick={onClose}>
           <PlusCircleIcon size={20} />
           <span>Разместить объявление</span>
         </Link>
       </div>
 
       <div className={styles.footer}>
-        <button
-          className={styles.logoutButton}
-          type="button"
-          onClick={handleLogout}
-        >
+        <button className={styles.logoutButton} type="button" onClick={handleLogout}>
           <LogOutIcon size={20} />
           <span>Выйти</span>
         </button>
@@ -116,18 +92,10 @@ const GuestMenu = ({ onAuthClick, onClose }: GuestMenuProps) => {
       </div>
 
       <div className={styles.guestActions}>
-        <Button
-          className={styles.authButton}
-          variant="default"
-          onClick={onAuthClick}
-        >
+        <Button className={styles.authButton} variant="default" onClick={onAuthClick}>
           Вход / Регистрация
         </Button>
-        <Button
-          className={styles.authButton}
-          variant="secondary"
-          onClick={onAuthClick}
-        >
+        <Button className={styles.authButton} variant="secondary" onClick={onAuthClick}>
           Разместить объявление
         </Button>
       </div>
@@ -167,11 +135,7 @@ export const MobileMenu = () => {
 
           <nav className={styles.nav}>
             {user ? (
-              <AuthenticatedMenu
-                user={user}
-                onClose={handleClose}
-                onLogout={logout}
-              />
+              <AuthenticatedMenu user={user} onClose={handleClose} onLogout={logout} />
             ) : (
               <GuestMenu onAuthClick={handleAuthClick} onClose={handleClose} />
             )}

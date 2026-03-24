@@ -60,9 +60,7 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
   if (!user) {
     return (
       <div className="mb-8 rounded-lg bg-white p-6">
-        <Typography className="text-gray-600">
-          Войдите в систему, чтобы оставить отзыв
-        </Typography>
+        <Typography className="text-gray-600">Войдите в систему, чтобы оставить отзыв</Typography>
       </div>
     );
   }
@@ -77,9 +75,7 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
         <Typography className="mb-2 text-lg font-semibold" variant="h2">
           Отзыв о продавце {sellerName}
         </Typography>
-        <Typography className="text-gray-600">
-          Вы уже оставили отзыв об этом продавце
-        </Typography>
+        <Typography className="text-gray-600">Вы уже оставили отзыв об этом продавце</Typography>
       </div>
     );
   }
@@ -92,9 +88,7 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <Typography className="mb-2 text-sm font-medium">
-            Ваша оценка *
-          </Typography>
+          <Typography className="mb-2 text-sm font-medium">Ваша оценка *</Typography>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((value) => (
               <button
@@ -118,9 +112,7 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
         </div>
 
         <div className="mb-4">
-          <Typography className="mb-2 text-sm font-medium">
-            Ваш отзыв *
-          </Typography>
+          <Typography className="mb-2 text-sm font-medium">Ваш отзыв *</Typography>
           <Textarea
             value={text}
             onChange={(e) => setText(e.target.value)}

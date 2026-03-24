@@ -10,9 +10,7 @@ export interface ProductFeedBannerProps {
   bannerIndex?: number;
 }
 
-export const ProductFeedBanner = ({
-  bannerIndex = 0,
-}: ProductFeedBannerProps) => {
+export const ProductFeedBanner = ({ bannerIndex = 0 }: ProductFeedBannerProps) => {
   const { data: banners, isLoading } = useQuery({
     queryKey: ["banners", "PRODUCT_FEED"],
     queryFn: async () => getBanners({ place: "PRODUCT_FEED" }),
@@ -21,8 +19,7 @@ export const ProductFeedBanner = ({
   console.log("[ProductFeedBanner] Banners loaded:", banners?.length || 0);
   console.log("[ProductFeedBanner] Banner index:", bannerIndex);
 
-  const productFeedBanners =
-    banners?.filter((b) => b.place === "PRODUCT_FEED") || [];
+  const productFeedBanners = banners?.filter((b) => b.place === "PRODUCT_FEED") || [];
   const banner =
     productFeedBanners.length > 0
       ? productFeedBanners[bannerIndex % productFeedBanners.length]
@@ -62,15 +59,11 @@ export const ProductFeedBanner = ({
           src={banner.photoUrl}
         />
         <div className="absolute bottom-2 left-2 inline-flex rounded-full bg-gray-200/80 px-2 py-0.5">
-          <span className="text-[10px] font-medium text-gray-700 uppercase">
-            Реклама
-          </span>
+          <span className="text-[10px] font-medium text-gray-700 uppercase">Реклама</span>
         </div>
       </div>
       <div className="p-3">
-        <p className="text-sm font-medium text-[var(--foreground)]">
-          {banner.name}
-        </p>
+        <p className="text-sm font-medium text-[var(--foreground)]">{banner.name}</p>
       </div>
     </a>
   );

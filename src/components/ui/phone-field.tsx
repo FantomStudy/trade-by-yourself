@@ -71,21 +71,14 @@ export const PhoneField = ({
     }
 
     const formatted = formatPhoneNumber(inputValue);
-    const newCursorPosition = getNewCursorPosition(
-      value,
-      formatted,
-      cursorPosition,
-    );
+    const newCursorPosition = getNewCursorPosition(value, formatted, cursorPosition);
 
     onChange?.(formatted);
 
     // Устанавливаем новую позицию курсора после форматирования
     setTimeout(() => {
       if (inputRef.current) {
-        inputRef.current.setSelectionRange(
-          newCursorPosition,
-          newCursorPosition,
-        );
+        inputRef.current.setSelectionRange(newCursorPosition, newCursorPosition);
       }
     }, 0);
   };

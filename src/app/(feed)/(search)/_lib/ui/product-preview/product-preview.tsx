@@ -51,11 +51,7 @@ export const ProductPreview = ({ images, ...props }: ProductPreviewProps) => {
       {images.length > 1 && (
         <div className={styles.dotsWrapper}>
           {images.map((img, index) => (
-            <div
-              key={`dot-${img}`}
-              className={styles.dot}
-              data-active={index === currentIndex}
-            />
+            <div key={`dot-${img}`} className={styles.dot} data-active={index === currentIndex} />
           ))}
         </div>
       )}

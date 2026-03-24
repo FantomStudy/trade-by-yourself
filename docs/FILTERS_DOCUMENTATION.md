@@ -134,11 +134,7 @@ interface FeedFilters {
 ```tsx
 import { Filters } from "@/app/(feed)/(search)/_components/filters";
 
-<Filters
-  typeSlug="smartfony"
-  categorySlug="elektronika"
-  subCategorySlug="telefony"
->
+<Filters typeSlug="smartfony" categorySlug="elektronika" subCategorySlug="telefony">
   {/* Контент страницы */}
 </Filters>;
 ```
@@ -162,22 +158,8 @@ import { Filters } from "@/app/(feed)/(search)/_components/filters";
 <div className={styles.filterGroup}>
   <Typography className={styles.filterLabel}>Рейтинг продавца</Typography>
   <div className={styles.priceInputs}>
-    <Input
-      max={5}
-      min={1}
-      step={0.1}
-      type="number"
-      value={filters.minRating}
-      placeholder="От 1"
-    />
-    <Input
-      max={5}
-      min={1}
-      step={0.1}
-      type="number"
-      value={filters.maxRating}
-      placeholder="До 5"
-    />
+    <Input max={5} min={1} step={0.1} type="number" value={filters.minRating} placeholder="От 1" />
+    <Input max={5} min={1} step={0.1} type="number" value={filters.maxRating} placeholder="До 5" />
   </div>
 </div>
 ```
@@ -213,11 +195,7 @@ const { data: products } = useQuery({
 
 ```typescript
 // Категории
-import {
-  useAvailableFilters,
-  useCategories,
-  useCategoryBySlug,
-} from "@/api/hooks";
+import { useAvailableFilters, useCategories, useCategoryBySlug } from "@/api/hooks";
 
 // Получить все категории
 const { data: categories } = useCategories();

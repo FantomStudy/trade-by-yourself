@@ -87,9 +87,7 @@ export function getNewCursorPosition(
   if (!oldValue) return newValue.length;
 
   // Подсчитываем количество цифр до позиции курсора в старом значении
-  const digitsBeforeCursor = oldValue
-    .slice(0, oldCursorPos)
-    .replace(/\D/g, "").length;
+  const digitsBeforeCursor = oldValue.slice(0, oldCursorPos).replace(/\D/g, "").length;
 
   // Находим позицию в новом значении, где будет такое же количество цифр
   let digitCount = 0;

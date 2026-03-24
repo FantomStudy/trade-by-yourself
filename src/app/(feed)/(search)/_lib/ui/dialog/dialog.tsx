@@ -30,10 +30,7 @@ const DialogContent = ({
 }: DialogContentProps) => {
   return (
     <DialogPrimitive.Portal data-slot="dialog-portal">
-      <DialogPrimitive.Overlay
-        className={styles.overlay}
-        data-slot="dialog-overlay"
-      />
+      <DialogPrimitive.Overlay className={styles.overlay} data-slot="dialog-overlay" />
       <DialogPrimitive.Content
         className={clsx(styles.content, className)}
         data-slot="dialog-content"
@@ -52,19 +49,10 @@ const DialogContent = ({
 };
 
 const DialogHeader = ({ className, ...props }: React.ComponentProps<"div">) => {
-  return (
-    <div
-      className={clsx(styles.header, className)}
-      data-slot="dialog-header"
-      {...props}
-    />
-  );
+  return <div className={clsx(styles.header, className)} data-slot="dialog-header" {...props} />;
 };
 
-const DialogTitle = ({
-  className,
-  ...props
-}: DialogPrimitive.DialogTitleProps) => {
+const DialogTitle = ({ className, ...props }: DialogPrimitive.DialogTitleProps) => {
   return (
     <DialogPrimitive.Title
       className={clsx(styles.title, className)}
@@ -74,10 +62,7 @@ const DialogTitle = ({
   );
 };
 
-const DialogDescription = ({
-  className,
-  ...props
-}: DialogPrimitive.DialogDescriptionProps) => {
+const DialogDescription = ({ className, ...props }: DialogPrimitive.DialogDescriptionProps) => {
   return (
     <DialogPrimitive.Description
       className={clsx(styles.description, className)}

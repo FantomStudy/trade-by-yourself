@@ -1,7 +1,4 @@
-import type {
-  VerifyMobileCodeData,
-  VerifyMobileCodeResponse,
-} from "@/api/types";
+import type { VerifyMobileCodeData, VerifyMobileCodeResponse } from "@/api/types";
 
 import { api } from "@/api/instance";
 

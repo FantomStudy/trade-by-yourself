@@ -1,10 +1,4 @@
-import type {
-  Chat,
-  ChatDetail,
-  MessagesResponse,
-  StartChatData,
-  StartChatResponse,
-} from "@/types";
+import type { Chat, ChatDetail, MessagesResponse, StartChatData, StartChatResponse } from "@/types";
 
 import { api } from "../instance";
 
@@ -25,14 +19,10 @@ export const getAllChats = async () => api<Chat[]>("/chat");
 /**
  * Возвращает подробную информацию о чате, товаре и собеседнике
  */
-export const getChatById = async (chatId: number) =>
-  api<ChatDetail>(`/chat/${chatId}`);
+export const getChatById = async (chatId: number) => api<ChatDetail>(`/chat/${chatId}`);
 
 /**
  * Возвращает сообщения чата с пагинацией
  */
-export const getChatMessages = async (
-  chatId: number,
-  page: number = 1,
-  limit: number = 50,
-) => api<MessagesResponse>(`/chat/${chatId}/messages`);
+export const getChatMessages = async (chatId: number, page: number = 1, limit: number = 50) =>
+  api<MessagesResponse>(`/chat/${chatId}/messages`);

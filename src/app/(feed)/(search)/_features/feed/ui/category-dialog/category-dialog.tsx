@@ -54,11 +54,7 @@ export const CategoryDialog = () => {
           </div>
 
           <div className={styles.details}>
-            <Link
-              href={`/${activeCategory?.slug}`}
-              className={styles.link}
-              onClick={handleClose}
-            >
+            <Link href={`/${activeCategory?.slug}`} className={styles.link} onClick={handleClose}>
               <Typography variant="h2">{activeCategory?.name}</Typography>
             </Link>
 

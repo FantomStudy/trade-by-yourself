@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useUserInfo, useIsAdmin } from "@/api/hooks";
+import { useIsAdmin, useUserInfo } from "@/api/hooks";
 import { Avatar, Button, Typography } from "@/components/ui";
 import { useAuth } from "@/lib/contexts";
 import { formatFullName } from "@/lib/format";
@@ -22,28 +22,19 @@ export const Sidebar = () => {
 
   const getProfileTypeLabel = (type?: string | null) => {
     if (!type) return "Физическое лицо";
-    return type === "OOO" || type === "Юридическое лицо"
-      ? "Юридическое лицо"
-      : "Физическое лицо";
+    return type === "OOO" || type === "Юридическое лицо" ? "Юридическое лицо" : "Физическое лицо";
   };
 
   const isLegalEntity =
-    userInfo?.profileType === "OOO" ||
-    userInfo?.profileType === "Юридическое лицо";
+    userInfo?.profileType === "OOO" || userInfo?.profileType === "Юридическое лицо";
 
   return (
     <div className={styles.sidebar}>
       {user && (
         <>
           <div className={styles.profileInfo}>
-            <Avatar
-              fullName={user.fullName}
-              size="lg"
-              src={userInfo?.photo ?? ""}
-            />
-            <Typography variant="h2">
-              {formatFullName(user.fullName)}
-            </Typography>
+            <Avatar fullName={user.fullName} size="lg" src={userInfo?.photo ?? ""} />
+            <Typography variant="h2">{formatFullName(user.fullName)}</Typography>
           </div>
 
           <div className={styles.stats}>
@@ -58,25 +49,15 @@ export const Sidebar = () => {
               </Typography>
             </div>
 
-            <div
-              className={
-                isLegalEntity
-                  ? styles.profileTypeLegal
-                  : styles.profileTypePhysical
-              }
-            >
+            <div className={isLegalEntity ? styles.profileTypeLegal : styles.profileTypePhysical}>
               <div
                 className={
-                  isLegalEntity
-                    ? styles.profileTypeDotLegal
-                    : styles.profileTypeDotPhysical
+                  isLegalEntity ? styles.profileTypeDotLegal : styles.profileTypeDotPhysical
                 }
               />
               <span
                 className={
-                  isLegalEntity
-                    ? styles.profileTypeTextLegal
-                    : styles.profileTypeTextPhysical
+                  isLegalEntity ? styles.profileTypeTextLegal : styles.profileTypeTextPhysical
                 }
               >
                 {getProfileTypeLabel(userInfo?.profileType)}
@@ -116,11 +97,7 @@ export const Sidebar = () => {
                   <Link
                     href={link.href}
                     key={link.label}
-                    className={
-                      isActive
-                        ? `${styles.link} ${styles.linkActive}`
-                        : styles.link
-                    }
+                    className={isActive ? `${styles.link} ${styles.linkActive}` : styles.link}
                   >
                     {link.label}
                   </Link>

@@ -9,11 +9,7 @@ export const LinkComponent = ({ children, ...props }: LinkProps<unknown>) => {
   const [active, setActive] = useState(false);
 
   return (
-    <Link
-      {...props}
-      prefetch={active ? null : false}
-      onMouseEnter={() => setActive(true)}
-    >
+    <Link {...props} prefetch={active ? null : false} onMouseEnter={() => setActive(true)}>
       {children}
     </Link>
   );

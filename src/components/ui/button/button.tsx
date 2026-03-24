@@ -5,13 +5,8 @@ import clsx from "clsx";
 
 import styles from "./button.module.css";
 
-export type ButtonVariant =
-  | "default"
-  | "destructive"
-  | "ghost"
-  | "link"
-  | "secondary";
-  
+export type ButtonVariant = "default" | "destructive" | "ghost" | "link" | "secondary";
+
 type ButtonSize = "default" | "icon";
 
 interface ButtonProps extends ComponentProps<"button"> {
@@ -36,12 +31,7 @@ export const Button = ({
 
   return (
     <Comp
-      className={clsx(
-        styles.button,
-        styles[variant],
-        sizeStyles[size],
-        className,
-      )}
+      className={clsx(styles.button, styles[variant], sizeStyles[size], className)}
       data-slot="button"
       {...props}
     />

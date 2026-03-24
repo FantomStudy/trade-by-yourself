@@ -16,11 +16,7 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
   function isValidVkEmbedUrl(url?: string | null) {
     if (!url) return false;
     // embed-URL должен содержать video_ext.php и параметры oid, id
-    return (
-      url.includes("video_ext.php") &&
-      url.includes("oid=") &&
-      url.includes("id=")
-    );
+    return url.includes("video_ext.php") && url.includes("oid=") && url.includes("id=");
   }
   // Преобразуем vkvideo.ru ссылку в embed-URL для VK
   function getVkEmbedUrl(url?: string | null) {
@@ -81,12 +77,7 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
                       <PlayIcon className={styles.thumbnailIcon} />
                     </div>
                   ) : (
-                    <Image
-                      fill
-                      alt={slide}
-                      src={slide}
-                      style={{ objectFit: "cover" }}
-                    />
+                    <Image fill alt={slide} src={slide} style={{ objectFit: "cover" }} />
                   )}
                 </button>
               );
@@ -181,18 +172,10 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
           )}
           {slides.length > 1 ? (
             <div className={styles.controls}>
-              <button
-                className={styles.controlItem}
-                type="button"
-                onClick={prevSlide}
-              >
+              <button className={styles.controlItem} type="button" onClick={prevSlide}>
                 <MoveLeft />
               </button>
-              <button
-                className={styles.controlItem}
-                type="button"
-                onClick={nextSlide}
-              >
+              <button className={styles.controlItem} type="button" onClick={nextSlide}>
                 <MoveRight />
               </button>
             </div>
@@ -257,9 +240,7 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
                 <button
                   key={`fullscreen-dot-${slide}-${index}`}
                   className={`h-3 w-3 rounded-full transition-all ${
-                    index === currentIndex
-                      ? "bg-white"
-                      : "bg-white/50 hover:bg-white/75"
+                    index === currentIndex ? "bg-white" : "bg-white/50 hover:bg-white/75"
                   }`}
                   type="button"
                   onClick={(e) => {

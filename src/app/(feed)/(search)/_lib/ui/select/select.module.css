@@ -11,7 +11,9 @@
   font-size: var(--text-sm);
   padding: 8px 12px;
   white-space: nowrap;
-  transition: color 150ms, box-shadow 150ms;
+  transition:
+    color 150ms,
+    box-shadow 150ms;
   box-sizing: border-box;
 }
 

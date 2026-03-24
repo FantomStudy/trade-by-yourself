@@ -60,9 +60,7 @@ export const LikeButton = ({
       variant={variant}
       onClick={handleToggle}
     >
-      <HeartIcon
-        className={clsx(styles.heart, isLiked ? styles.liked : styles.notLiked)}
-      />
+      <HeartIcon className={clsx(styles.heart, isLiked ? styles.liked : styles.notLiked)} />
     </Button>
   );
 };

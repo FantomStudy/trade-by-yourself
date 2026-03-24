@@ -18,11 +18,7 @@ export const getProtectedPrefix = (mask: string): string => {
   return prefix;
 };
 
-export const applyMask = (
-  value: string,
-  mask: string,
-  protectedPrefix?: string
-) => {
+export const applyMask = (value: string, mask: string, protectedPrefix?: string) => {
   const prefix = protectedPrefix || getProtectedPrefix(mask);
   let result = prefix;
   let valueIndex = 0;

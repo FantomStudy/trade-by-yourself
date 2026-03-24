@@ -33,16 +33,9 @@ export const ChatsBanner = () => {
       onClick={handleBannerClick}
     >
       <div className="relative h-[160px] w-full sm:h-[220px] lg:h-[280px]">
-        <Image
-          fill
-          alt={banner.name}
-          className="object-cover"
-          src={banner.photoUrl}
-        />
+        <Image fill alt={banner.name} className="object-cover" src={banner.photoUrl} />
         <div className="absolute bottom-2 left-2 inline-flex rounded-full bg-gray-200/80 px-2 py-0.5">
-          <span className="text-[10px] font-medium text-gray-700 uppercase">
-            Реклама
-          </span>
+          <span className="text-[10px] font-medium text-gray-700 uppercase">Реклама</span>
         </div>
       </div>
     </div>

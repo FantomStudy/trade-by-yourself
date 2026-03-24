@@ -7,17 +7,14 @@ import { useEffect, useMemo, useState } from "react";
 import { getBanners, trackBannerView } from "@/api/requests/banner";
 
 export const FavoritesBanner = () => {
-  const [selectedBannerIndex, setSelectedBannerIndex] = useState<number | null>(
-    null,
-  );
+  const [selectedBannerIndex, setSelectedBannerIndex] = useState<number | null>(null);
 
   const { data: banners, isLoading } = useQuery({
     queryKey: ["banners", "FAVORITES"],
     queryFn: async () => getBanners({ place: "FAVORITES" }),
   });
 
-  const favoritesBanners =
-    banners?.filter((b) => b.place === "FAVORITES") || [];
+  const favoritesBanners = banners?.filter((b) => b.place === "FAVORITES") || [];
 
   // Выбираем рандомный баннер при первой загрузке
   useEffect(() => {
@@ -64,9 +61,7 @@ export const FavoritesBanner = () => {
           priority
         />
         <div className="absolute bottom-2 left-2 inline-flex rounded-full bg-gray-200/80 px-2 py-0.5">
-          <span className="text-[10px] font-medium text-gray-700 uppercase">
-            Реклама
-          </span>
+          <span className="text-[10px] font-medium text-gray-700 uppercase">Реклама</span>
         </div>
       </div>
     </div>

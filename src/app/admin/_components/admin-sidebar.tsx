@@ -14,13 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from "react";
+import { createContext, use, useCallback, useEffect, useState } from "react";
 
 import { Typography } from "@/components/ui";
 
@@ -80,18 +74,14 @@ interface SidebarContextValue {
 const SidebarContext = createContext<SidebarContextValue | null>(null);
 
 export const useSidebar = () => {
-  const context = useContext(SidebarContext);
+  const context = use(SidebarContext);
   if (!context) {
     throw new Error("useSidebar must be used within SidebarProvider");
   }
   return context;
 };
 
-export const SidebarProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -105,9 +95,9 @@ export const SidebarProvider = ({
   }, [pathname, close]);
 
   return (
-    <SidebarContext.Provider value={{ isOpen, open, close, toggle }}>
+    <SidebarContext value={{ isOpen, open, close, toggle }}>
       {children}
-    </SidebarContext.Provider>
+    </SidebarContext>
   );
 };
 
@@ -118,15 +108,10 @@ export const AdminSidebar = () => {
   return (
     <>
       {/* Overlay */}
-      <div
-        className={`${styles.overlay} ${isOpen ? styles.overlayVisible : ""}`}
-        onClick={close}
-      />
+      <div className={`${styles.overlay} ${isOpen ? styles.overlayVisible : ""}`} onClick={close} />
 
       {/* Sidebar */}
-      <aside
-        className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}
-      >
+      <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}>
         {/* Кнопка закрытия для мобильных */}
         <button className={styles.closeButton} onClick={close} type="button">
           <X className="h-5 w-5" />

@@ -35,9 +35,7 @@ export const SellerProductFeed = ({ sellerId }: SellerProductFeedProps) => {
   if (!data || data.length === 0) {
     return (
       <div className={styles.empty}>
-        <Typography variant="h2">
-          У продавца пока нет активных объявлений
-        </Typography>
+        <Typography variant="h2">У продавца пока нет активных объявлений</Typography>
       </div>
     );
   }

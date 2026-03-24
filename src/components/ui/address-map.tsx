@@ -6,22 +6,16 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 
 import { Input } from "@/components/ui";
-import {
-  getAddressSuggestions,
-  validateAddress,
-} from "@/lib/api/requests/address";
+import { getAddressSuggestions, validateAddress } from "@/lib/api/requests/address";
 
 import "leaflet/dist/leaflet.css";
 
 // Исправляем проблему с иконками маркеров в Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
 interface AddressSuggestion {
@@ -50,11 +44,7 @@ function MapClickHandler({
   return null;
 }
 
-export const AddressMap = ({
-  value = "",
-  onChange,
-  onCoordinatesChange,
-}: AddressMapProps) => {
+export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: AddressMapProps) => {
   // Координаты Оренбурга
   const ORENBURG_CENTER: [number, number] = [51.7687, 55.0963];
 
@@ -62,13 +52,10 @@ export const AddressMap = ({
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
-  const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(
-    null,
-  );
+  const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-  const [_locationPermission, setLocationPermission] =
-    useState<PermissionState | null>(null);
+  const [_locationPermission, setLocationPermission] = useState<PermissionState | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -84,15 +71,13 @@ export const AddressMap = ({
     try {
       setIsLoadingLocation(true);
 
-      const position = await new Promise<GeolocationPosition>(
-        (resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 300000, // 5 минут
-          });
-        },
-      );
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000, // 5 минут
+        });
+      });
 
       const { latitude, longitude } = position.coords;
       console.log("Получены координаты:", latitude, longitude);
@@ -144,7 +129,7 @@ export const AddressMap = ({
     };
 
     initializeLocation();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   // Функция для получения адреса по координатам (обратное геокодирование)
   const getAddressFromCoordinates = async (lat: number, lng: number) => {
@@ -243,10 +228,7 @@ export const AddressMap = ({
   // Закрытие списка предложений при клике вне компонента
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node)
-      ) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
       }
     };
@@ -325,13 +307,8 @@ export const AddressMap = ({
                     console.log("Address validation result:", validationResult);
 
                     if (!validationResult.valid) {
-                      setValidationError(
-                        validationResult.message || "Адрес не прошел валидацию",
-                      );
-                      console.warn(
-                        "Address is not valid:",
-                        validationResult.message,
-                      );
+                      setValidationError(validationResult.message || "Адрес не прошел валидацию");
+                      console.warn("Address is not valid:", validationResult.message);
                     }
                   } catch (error) {
                     console.error("Error validating address:", error);
@@ -350,9 +327,7 @@ export const AddressMap = ({
 
       {/* Ошибка валидации */}
       {validationError && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">
-          {validationError}
-        </div>
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">{validationError}</div>
       )}
 
       {/* Карта */}
@@ -376,9 +351,7 @@ export const AddressMap = ({
         </MapContainer>
       </div>
 
-      <p className="text-sm text-gray-500">
-        Кликните на карту, чтобы выбрать местоположение
-      </p>
+      <p className="text-sm text-gray-500">Кликните на карту, чтобы выбрать местоположение</p>
     </div>
   );
 };

@@ -45,11 +45,7 @@ export const LoginForm = ({ onSuccess }: AuthFormProps) => {
         error={errors.login?.message}
         placeholder="Почта / Номер телефона"
       />
-      <Field
-        error={errors.password?.message}
-        {...register("password")}
-        placeholder="Пароль"
-      />
+      <Field error={errors.password?.message} {...register("password")} placeholder="Пароль" />
 
       {error && <span className={styles.error}>{error}</span>}
 

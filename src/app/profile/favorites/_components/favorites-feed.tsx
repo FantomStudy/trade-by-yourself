@@ -12,9 +12,7 @@ export const FavoritesFeed = async () => {
         <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-50">
           <Heart className="h-10 w-10 text-red-500" />
         </div>
-        <h3 className="mb-2 text-xl font-semibold text-gray-800">
-          Ошибка загрузки
-        </h3>
+        <h3 className="mb-2 text-xl font-semibold text-gray-800">Ошибка загрузки</h3>
         <p className="text-gray-600">Не удалось загрузить избранные товары</p>
       </div>
     );
@@ -26,9 +24,7 @@ export const FavoritesFeed = async () => {
         <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
           <Heart className="h-10 w-10 text-blue-500" />
         </div>
-        <h3 className="mb-2 text-xl font-semibold text-gray-800">
-          Избранное пусто
-        </h3>
+        <h3 className="mb-2 text-xl font-semibold text-gray-800">Избранное пусто</h3>
         <p className="text-gray-600">
           Здесь будут отображаться товары, которые вы добавите в избранное
         </p>

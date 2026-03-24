@@ -3,7 +3,7 @@
 import type { Message as SocketMessage } from "@/lib/contexts/chat";
 import type { Message } from "@/types";
 
-import { ArrowLeft, Phone, Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import Link from "next/link";
 import { use, useEffect, useMemo, useRef, useState } from "react";
 
@@ -12,7 +12,6 @@ import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
 
-import styles from "./page.module.css";
 
 interface ChatPageProps {
   params: Promise<{ chatId: string }>;
@@ -30,8 +29,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
 
   const { data: currentUser } = useCurrentUser();
   const { data: chat, isLoading: isChatLoading } = useChat(chatIdNum);
-  const { data: messagesData, isLoading: isMessagesLoading } =
-    useChatMessages(chatIdNum);
+  const { data: messagesData, isLoading: isMessagesLoading } = useChatMessages(chatIdNum);
   const {
     isConnected,
     joinChat,
@@ -81,11 +79,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
     };
 
     // Обработчик индикатора печати
-    const handleUserTyping = (data: {
-      chatId: number;
-      isTyping: boolean;
-      userId: number;
-    }) => {
+    const handleUserTyping = (data: { chatId: number; isTyping: boolean; userId: number }) => {
       if (data.chatId === chatIdNum && data.userId !== currentUser?.id) {
         setOtherUserTyping(data.isTyping);
       }
@@ -95,9 +89,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
     const handleMessagesRead = (data: { chatId: number; readBy: number }) => {
       if (data.chatId === chatIdNum) {
         setNewMessages((prev) =>
-          prev.map((msg) =>
-            msg.senderId === currentUser?.id ? { ...msg, isRead: true } : msg,
-          ),
+          prev.map((msg) => (msg.senderId === currentUser?.id ? { ...msg, isRead: true } : msg)),
         );
       }
     };
@@ -112,16 +104,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
       socket.off("messagesRead", handleMessagesRead);
       leaveChat(chatIdNum);
     };
-  }, [
-    socket,
-    isConnected,
-    chatIdNum,
-    currentUser?.id,
-    joinChat,
-    leaveChat,
-    markAsRead,
-  ]);
-
+  }, [socket, isConnected, chatIdNum, currentUser?.id, joinChat, leaveChat, markAsRead]);
 
   const handleSend = () => {
     if (message.trim() && isConnected) {
@@ -214,20 +197,13 @@ const ChatPage = ({ params }: ChatPageProps) => {
           </div>
           <div>
             <h1 className="text-base font-semibold">{chat.product.name}</h1>
-            <p className="text-sm text-blue-600">
-              {formatPrice(chat.product.price)}
-            </p>
+            <p className="text-sm text-blue-600">{formatPrice(chat.product.price)}</p>
           </div>
         </div>
 
         <div className="ml-auto">
-          <Button
-            className="bg-blue-500 px-6 hover:bg-blue-600"
-            onClick={handleShowPhone}
-          >
-            {showPhone && otherUser?.phoneNumber
-              ? otherUser.phoneNumber
-              : "Показать номер"}
+          <Button className="bg-blue-500 px-6 hover:bg-blue-600" onClick={handleShowPhone}>
+            {showPhone && otherUser?.phoneNumber ? otherUser.phoneNumber : "Показать номер"}
           </Button>
         </div>
       </div>
@@ -235,10 +211,8 @@ const ChatPage = ({ params }: ChatPageProps) => {
       {/* Область сообщений */}
       <div className="flex-1 space-y-4 overflow-y-auto bg-gray-50 p-6">
         {messages.map((msg) => {
-          const isCurrentUser =
-            msg.isFromMe ?? msg.senderId === currentUser?.id;
-          const sender =
-            msg.sender || (isCurrentUser ? currentUser : otherUser);
+          const isCurrentUser = msg.isFromMe ?? msg.senderId === currentUser?.id;
+          const sender = msg.sender || (isCurrentUser ? currentUser : otherUser);
           const senderInitials =
             sender?.fullName
               ?.split(" ")
@@ -250,10 +224,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
           const messageText = msg.content || msg.text || "";
 
           return (
-            <div
-              key={msg.id}
-              className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
-            >
+            <div key={msg.id} className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
               <div
                 className={`flex max-w-[70%] flex-col gap-1 ${isCurrentUser ? "items-end" : "items-start"}`}
               >
@@ -263,25 +234,19 @@ const ChatPage = ({ params }: ChatPageProps) => {
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-medium text-white">
                       {senderInitials}
                     </div>
-                    <span className="text-sm font-medium text-gray-700">
-                      {sender?.fullName}
-                    </span>
+                    <span className="text-sm font-medium text-gray-700">{sender?.fullName}</span>
                   </div>
                 )}
 
                 {/* Имя для своих сообщений */}
                 {isCurrentUser && (
-                  <span className="mr-2 text-sm font-medium text-gray-700">
-                    {sender?.fullName}
-                  </span>
+                  <span className="mr-2 text-sm font-medium text-gray-700">{sender?.fullName}</span>
                 )}
 
                 {/* Сообщение */}
                 <div
                   className={`rounded-2xl px-4 py-3 ${
-                    isCurrentUser
-                      ? "bg-blue-400 text-white"
-                      : "bg-white text-gray-800"
+                    isCurrentUser ? "bg-blue-400 text-white" : "bg-white text-gray-800"
                   }`}
                 >
                   <p className="text-sm">{messageText}</p>
