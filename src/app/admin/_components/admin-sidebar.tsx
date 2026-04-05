@@ -94,11 +94,7 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
     close();
   }, [pathname, close]);
 
-  return (
-    <SidebarContext value={{ isOpen, open, close, toggle }}>
-      {children}
-    </SidebarContext>
-  );
+  return <SidebarContext value={{ isOpen, open, close, toggle }}>{children}</SidebarContext>;
 };
 
 export const AdminSidebar = () => {

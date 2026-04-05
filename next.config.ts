@@ -23,12 +23,12 @@ const nextConfig: NextConfig = {
         port: "3000",
         pathname: "/**",
       },
-      // {
-      //   protocol: "https",
-      //   hostname: S3_HOSTNAME,
-      //   port: "",
-      //   pathname: "/**",
-      // },
+      {
+        protocol: "https",
+        hostname: S3_HOSTNAME,
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

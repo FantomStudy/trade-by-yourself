@@ -129,7 +129,7 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
     };
 
     initializeLocation();
-  }, []);  
+  }, []);
 
   // Функция для получения адреса по координатам (обратное геокодирование)
   const getAddressFromCoordinates = async (lat: number, lng: number) => {
