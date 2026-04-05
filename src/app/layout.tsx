@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-
 import { Montserrat } from "next/font/google";
-
 import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
 import { getCurrentUser } from "@/api/requests";
+import { Sonner } from "@/components/ui/Sonner";
 import { getQueryClient } from "@/lib/get-query-client";
-
 import { MainLayout } from "./_components";
 import { Providers } from "./providers";
-
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -35,6 +32,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
       <body className={montserrat.variable} suppressHydrationWarning>
         <Providers>
           <MainLayout>{children}</MainLayout>
+          <Sonner />
         </Providers>
       </body>
     </html>
