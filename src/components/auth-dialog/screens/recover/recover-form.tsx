@@ -2,14 +2,14 @@
 
 import type { SubmitHandler } from "react-hook-form";
 import type { AuthFormProps } from "../types";
-import type { ForgotPasswordData } from "@/lib/api";
+import type { ForgotPasswordData } from "@/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoverMutation } from "@/api/hooks";
 import { Field } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { forgotPasswordSchema } from "@/lib/api";
+import { forgotPasswordSchema } from "@/api";
 import styles from "../forms.module.css";
 
 export const RecoverForm = ({ onSuccess }: AuthFormProps) => {

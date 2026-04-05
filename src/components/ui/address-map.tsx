@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 
 import { Input } from "@/components/ui";
-import { getAddressSuggestions, validateAddress } from "@/lib/api/requests/address";
+import { getAddressSuggestions, validateAddress } from "@/api/requests/address";
 
 import "leaflet/dist/leaflet.css";
 

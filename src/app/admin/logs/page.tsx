@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { Input } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { useLogsQuery } from "@/lib/api/hooks/queries/useLogsQuery";
+import { useLogsQuery } from "@/api/hooks/queries/useLogsQuery";
 import { MobileHeader } from "../_components/admin-sidebar";
 
 const LogsPage = () => {

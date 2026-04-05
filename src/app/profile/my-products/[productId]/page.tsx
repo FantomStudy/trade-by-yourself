@@ -8,7 +8,7 @@ import { useDeleteProductMutation, useUpdateProductMutation } from "@/api/hooks"
 import { getProductById } from "@/api/requests";
 import { AddressMap, Input, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { api } from "@/lib/api/instance";
+import { api } from "@/api/instance";
 
 import styles from "../../create-product/page.module.css";
 

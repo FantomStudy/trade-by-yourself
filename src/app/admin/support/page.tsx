@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { useChats } from "@/lib/api/hooks";
+import { useChats } from "@/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
 import {

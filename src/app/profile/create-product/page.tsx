@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useCreateProductMutation } from "@/api/hooks";
 import { AddressMap, ImageUpload, Input, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { api } from "@/lib/api/instance";
+import { api } from "@/api/instance";
 import styles from "./page.module.css";
 
 const CreateProductPage = () => {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { api } from "@/lib/api/instance";
+import { api } from "@/api/instance";
 
 interface AnalyticsParams {
   categoryId?: number;

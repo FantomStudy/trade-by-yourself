@@ -2,14 +2,14 @@
 
 import type { SubmitHandler } from "react-hook-form";
 import type { AuthFormProps } from "../types";
-import type { VerifyMobileCodeData } from "@/lib/api";
+import type { VerifyMobileCodeData } from "@/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useVerifyMobileCodeMutation } from "@/api/hooks";
 import { Field } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { verifyMobileCodeSchema } from "@/lib/api";
+import { verifyMobileCodeSchema } from "@/api";
 import styles from "../forms.module.css";
 
 interface VerifyCodeFormProps extends AuthFormProps {

@@ -4,7 +4,7 @@ import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ChatsBanner } from "@/components/product-feed-banner";
-import { useChats } from "@/lib/api/hooks";
+import { useChats } from "@/api/hooks";
 import { formatPrice } from "@/lib/format";
 import { getSupportMessages, getSupportUnreadCount } from "@/lib/support-chat";
 

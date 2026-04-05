@@ -1,14 +1,14 @@
 "use client";
 
 import type { SubmitHandler } from "react-hook-form";
-import type { RegisterData } from "@/lib/api";
+import type { RegisterData } from "@/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRegisterMutation } from "@/api/hooks";
 import { Field, PhoneField, usePhoneField } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { registerSchema } from "@/lib/api";
+import { registerSchema } from "@/api";
 import styles from "../forms.module.css";
 
 interface RegisterFormProps {

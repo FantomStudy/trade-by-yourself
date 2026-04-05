@@ -5,7 +5,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
-import { getCityByIp } from "@/lib/api/requests/address";
+import { getCityByIp } from "@/api/requests/address";
 
 import { CityConfirmPopup } from "../city-confirm-popup";
 import { RegionPicker } from "../region-picker";

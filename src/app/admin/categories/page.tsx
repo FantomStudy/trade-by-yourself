@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Input, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { api } from "@/lib/api/instance";
+import { api } from "@/api/instance";
 import { MobileHeader } from "../_components/admin-sidebar";
 
 interface Category {

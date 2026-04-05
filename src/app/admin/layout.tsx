@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { checkIsAdmin } from "@/lib/api";
+import { checkIsAdmin } from "@/api";
 
 import { AdminSidebar, SidebarProvider } from "./_components/admin-sidebar";
 import styles from "./admin.module.css";

@@ -12,7 +12,7 @@ import {
   Input,
 } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { getAddressSuggestions, validateAddress } from "@/lib/api/requests/address";
+import { getAddressSuggestions, validateAddress } from "@/api/requests/address";
 import styles from "./region-picker.module.css";
 
 interface AddressSuggestion {

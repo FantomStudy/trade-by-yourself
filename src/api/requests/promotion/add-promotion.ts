@@ -1,4 +1,4 @@
-import { api } from "@/lib/api/instance";
+import { api } from "@/api/instance";
 
 interface AddPromotionData {
   productId: number;

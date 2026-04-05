@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Input, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { addPromotion, getCurrentUserProducts } from "@/lib/api";
-import { useCurrentUser } from "@/lib/api/hooks/queries";
-import { api } from "@/lib/api/instance";
+import { addPromotion, getCurrentUserProducts } from "@/api";
+import { useCurrentUser } from "@/api/hooks/queries";
+import { api } from "@/api/instance";
 import { ProductSelector } from "./_components";
 
 interface Promotion {
