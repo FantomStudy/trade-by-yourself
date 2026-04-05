@@ -1,9 +1,6 @@
 import type { Product } from "@/types";
-
-import { cn } from "@/lib/utils";
-
+import clsx from "clsx";
 import { ProductCard } from "../product-card";
-
 import styles from "./feed-wrapper.module.css";
 
 interface FeedWrapperProps {
@@ -13,7 +10,7 @@ interface FeedWrapperProps {
 
 export const FeedWrapper = ({ products, className }: FeedWrapperProps) => {
   return (
-    <div className={cn(styles.grid, className)}>
+    <div className={clsx(styles.grid, className)}>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
