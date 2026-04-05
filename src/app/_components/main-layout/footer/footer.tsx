@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Logo } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { Logo } from "@/components/ui/Logo";
 import { useAuth } from "@/lib/contexts";
 import styles from "./footer.module.css";
 
