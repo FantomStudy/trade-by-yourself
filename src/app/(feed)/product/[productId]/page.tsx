@@ -1,19 +1,16 @@
 import Link from "next/link";
-
 import { getProductById } from "@/api/requests";
 import { LikeButton } from "@/components/like-button";
+import { Typography } from "@/components/ui";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-  Typography,
-} from "@/components/ui";
+} from "@/components/ui/Breadcrumb";
 import { formatPrice } from "@/lib/format";
-
 import { Gallery, ProductMap, ReviewForm, SellerCard, ToggleProductButton } from "./_components";
-
 import styles from "./page.module.css";
 
 const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
@@ -25,29 +22,23 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
       <Breadcrumb className={styles.breadcrumb}>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Главная</Link>
-            </BreadcrumbLink>
+            <BreadcrumbLink render={<Link href="/" />}>Главная</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">{product.category.name}</Link>
-            </BreadcrumbLink>
+            <BreadcrumbLink render={<Link href="/" />}>{product.category.name}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">{product.subCategory.name}</Link>
-            </BreadcrumbLink>
+            <BreadcrumbLink render={<Link href="/" />}>{product.subCategory.name}</BreadcrumbLink>
           </BreadcrumbItem>
           {product.type && (
             <>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink asChild>
+                <BreadcrumbLink render={<Link href="/" />}>
                   {/* @ts-expect-error - type will be fixed later */}
-                  <Link href="/">{product.type.name}</Link>
+                  {product.type.name}
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </>
