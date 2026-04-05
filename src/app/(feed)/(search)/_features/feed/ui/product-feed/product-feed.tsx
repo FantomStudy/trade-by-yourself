@@ -1,18 +1,15 @@
 "use client";
 
 import type { JSX } from "react";
-
 import type { FeedFilters } from "../../../product";
-
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { CircleFadingArrowUpIcon } from "lucide-react";
 import Link from "next/link";
 import { parseAsInteger, parseAsString, useQueryState, useQueryStates } from "nuqs";
-
 import { ProductGrid, SkeletonGrid } from "@/app/(feed)/(search)/_lib/ui/product-grid";
 import { ProductFeedBanner, WideBanner } from "@/components/product-feed-banner";
-
+import { Grid } from "@/components/ui/Grid";
 import { LikeButton } from "../../../favorites";
 import { getFeed } from "../../../product";
 import {
@@ -25,7 +22,6 @@ import {
   ProductCardPrice,
   ProductCardTitle,
 } from "./ProductCard";
-
 import styles from "./product-card.module.css";
 
 const mapSortByToApi = (
@@ -185,5 +181,5 @@ export const ProductFeed = ({ filters }: FeedProps) => {
     return items;
   };
 
-  return <div className={styles.grid}>{renderProductsWithBanners()}</div>;
+  return <Grid>{renderProductsWithBanners()}</Grid>;
 };
