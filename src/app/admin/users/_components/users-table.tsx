@@ -2,7 +2,6 @@
 
 import type { UpdateUserDto } from "@/api/requests";
 import type { User } from "@/types";
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Ban, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -15,10 +14,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  Input,
   Typography,
 } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 
 interface UsersTableProps {
   searchQuery: string;

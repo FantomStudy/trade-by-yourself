@@ -3,8 +3,7 @@
 import { Filter } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
+import { Button } from "@/components/ui/Button";
 import { FiltersSheet } from "../filters";
 
 export const FiltersButton = () => {

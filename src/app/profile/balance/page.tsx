@@ -11,17 +11,16 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import {
   useCheckPaymentStatusMutation,
   useCreatePaymentMutation,
   usePaymentHistory,
   useUserInfo,
 } from "@/api/hooks";
-import { Input, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/lib/contexts";
-
 import styles from "./page.module.css";
 
 const BalancePage = () => {

@@ -1,10 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-import { Input } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
 import { useLogsQuery } from "@/api/hooks/queries/useLogsQuery";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { MobileHeader } from "../_components/admin-sidebar";
 
 const LogsPage = () => {

@@ -2,14 +2,11 @@
 
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { useEffect, useState } from "react";
-
 import { useAvailableFilters } from "@/api/hooks";
-
-import { Button } from "../../_lib/ui/button";
-import { Input } from "../../_lib/ui/input";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { Select } from "../../_lib/ui/select";
 import { Typography } from "../../_lib/ui/typography";
-
 import styles from "./filters.module.css";
 
 interface FiltersProps {
@@ -54,7 +51,7 @@ export const Filters = ({ children, categorySlug, subCategorySlug, typeSlug }: F
   }, [filters.fieldValues]);
 
   // Получаем доступные фильтры для выбранной категории
-  const { data: availableFilters, isLoading } = useAvailableFilters({
+  const { data: availableFilters } = useAvailableFilters({
     categorySlug,
     subCategorySlug,
     typeSlug,
@@ -275,7 +272,7 @@ export const Filters = ({ children, categorySlug, subCategorySlug, typeSlug }: F
         </div>
 
         <div className={styles.buttonGroup}>
-          <Button className={styles.resetButton} onClick={handleReset} variant="secondary">
+          <Button className={styles.resetButton} onClick={handleReset} variant="success">
             Сбросить
           </Button>
           <Button className={styles.applyButton} onClick={handleApply}>

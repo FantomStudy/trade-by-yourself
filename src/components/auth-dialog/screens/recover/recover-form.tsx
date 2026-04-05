@@ -6,10 +6,10 @@ import type { ForgotPasswordData } from "@/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { forgotPasswordSchema } from "@/api";
 import { useRecoverMutation } from "@/api/hooks";
 import { Field } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { forgotPasswordSchema } from "@/api";
 import styles from "../forms.module.css";
 
 export const RecoverForm = ({ onSuccess }: AuthFormProps) => {

@@ -5,11 +5,11 @@ import type { ExtendedProduct } from "@/types/product";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { useDeleteProductMutation, useUpdateProductMutation } from "@/api/hooks";
-import { getProductById } from "@/api/requests";
-import { AddressMap, Input, Textarea } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
 import { api } from "@/api/instance";
-
+import { getProductById } from "@/api/requests";
+import { AddressMap, Textarea } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import styles from "../../create-product/page.module.css";
 
 interface EditProductPageProps {

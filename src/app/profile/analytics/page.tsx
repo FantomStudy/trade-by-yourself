@@ -3,10 +3,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { Eye, Heart, MessageSquare, Package } from "lucide-react";
 import { useState } from "react";
-import { useAnalytics } from "@/components/_deprecated/useAnalytics";
-import { Typography } from "@/components/ui";
 import { useCategories, useChats } from "@/api/hooks";
 import { getFavorites } from "@/api/requests";
+import { useAnalytics } from "@/components/_deprecated/useAnalytics";
+import { Typography } from "@/components/ui";
 
 import styles from "./page.module.css";
 

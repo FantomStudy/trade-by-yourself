@@ -1,9 +1,6 @@
 import type { ComponentProps } from "react";
-
 import clsx from "clsx";
-
-import { Input } from "../input/input";
-
+import { Input } from "../Input";
 import styles from "./field.module.css";
 
 interface FieldProps extends ComponentProps<"input"> {

@@ -1,7 +1,7 @@
 import { Package } from "lucide-react";
 
-import { MyProductCard } from "@/components/product-card";
 import { getCurrentUser, getCurrentUserProducts } from "@/api";
+import { MyProductCard } from "@/components/product-card";
 
 export const MyProductsFeed = async () => {
   const currentUser = await getCurrentUser();

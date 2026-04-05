@@ -4,8 +4,8 @@ import type { SupportMessage } from "@/lib/support-chat";
 import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/Button";
 import { useCurrentUser } from "@/api/hooks";
+import { Button } from "@/components/ui/Button";
 import {
   addSupportMessage,
   getSupportMessages,

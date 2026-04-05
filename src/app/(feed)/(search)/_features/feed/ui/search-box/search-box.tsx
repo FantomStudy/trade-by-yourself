@@ -2,10 +2,8 @@
 
 import { useQueryState } from "nuqs";
 import { useState } from "react";
-
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
-import { Input } from "@/app/(feed)/(search)/_lib/ui/input";
-
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import styles from "./search-box.module.css";
 
 export const SearchBox = () => {

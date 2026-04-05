@@ -4,13 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { TextSearch } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
 import { Dialog } from "@/app/(feed)/(search)/_lib/ui/dialog";
 import { Typography } from "@/app/(feed)/(search)/_lib/ui/typography";
-
+import { Button } from "@/components/ui/Button";
 import { getCategories } from "../../../category";
-
 import styles from "./category-dialog.module.css";
 
 export const CategoryDialog = () => {

@@ -3,9 +3,10 @@
 import { ChevronDown, ChevronRight, Edit, Plus, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Input, Typography } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
 import { api } from "@/api/instance";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { MobileHeader } from "../_components/admin-sidebar";
 
 interface Category {

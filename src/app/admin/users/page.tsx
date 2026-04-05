@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
-import { Input, Typography } from "@/components/ui";
-
+import { Typography } from "@/components/ui";
+import { Input } from "@/components/ui/Input";
 import { MobileHeader } from "../_components/admin-sidebar";
 import { UsersTable } from "./_components/users-table";
 

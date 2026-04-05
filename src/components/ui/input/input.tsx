@@ -1,11 +1,7 @@
-import type { ComponentProps } from "react";
-
+import { Input as InputBase } from "@base-ui/react/input";
 import clsx from "clsx";
+import styles from "./Input.module.css";
 
-import styles from "./input.module.css";
-
-export const Input = ({ className, type = "text", ...props }: ComponentProps<"input">) => {
-  return (
-    <input className={clsx(styles.input, className)} type={type} data-slot="input" {...props} />
-  );
+export const Input = ({ className, ...props }: InputBase.Props) => {
+  return <InputBase className={clsx(styles.input, className)} {...props} />;
 };

@@ -3,12 +3,9 @@
 import clsx from "clsx";
 import { Heart } from "lucide-react";
 import { useState } from "react";
-
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
 import { safe } from "@/app/(feed)/(search)/_lib/utils/safe";
-
+import { Button } from "@/components/ui/Button";
 import { toggleFavorite } from "../../api";
-
 import styles from "./like-button.module.css";
 
 interface LikeButtonProps {

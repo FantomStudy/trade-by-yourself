@@ -1,15 +1,13 @@
 "use client";
 
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
-import * as React from "react";
-
+import { useEffect, useState } from "react";
 import { useAvailableFilters } from "@/api/hooks";
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
-import { Input } from "@/app/(feed)/(search)/_lib/ui/input";
 import { Select } from "@/app/(feed)/(search)/_lib/ui/select";
 import { Typography } from "@/app/(feed)/(search)/_lib/ui/typography";
 import { Sheet } from "@/components/ui";
-
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import styles from "./filters-sheet.module.css";
 
 interface FiltersSheetProps {
@@ -60,14 +58,14 @@ export const FiltersSheet = ({
   );
 
   // Получаем доступные фильтры для выбранной категории
-  const { data: availableFilters, isLoading } = useAvailableFilters({
+  const { data: availableFilters } = useAvailableFilters({
     categorySlug,
     subCategorySlug,
     typeSlug,
   });
 
   // Локальное состояние для фильтров
-  const [localFilters, setLocalFilters] = React.useState<FiltersState>({
+  const [localFilters, setLocalFilters] = useState<FiltersState>({
     minPrice: urlFilters.minPrice,
     maxPrice: urlFilters.maxPrice,
     minRating: urlFilters.minRating,
@@ -80,7 +78,7 @@ export const FiltersSheet = ({
   });
 
   // Синхронизация локального состояния с URL при открытии
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       setLocalFilters({
         minPrice: urlFilters.minPrice,

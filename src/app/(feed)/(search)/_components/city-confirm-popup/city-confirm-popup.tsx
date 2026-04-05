@@ -1,9 +1,7 @@
 "use client";
 
 import { MapPin, X } from "lucide-react";
-
-import { Button } from "@/app/(feed)/(search)/_lib/ui/button";
-
+import { Button } from "@/components/ui/Button";
 import styles from "./city-confirm-popup.module.css";
 
 interface CityConfirmPopupProps {
@@ -24,7 +22,7 @@ export const CityConfirmPopup = ({ city, onConfirm, onReject }: CityConfirmPopup
       </div>
       <div className={styles.actions}>
         <Button onClick={onConfirm}>Да</Button>
-        <Button variant="secondary" onClick={onReject}>
+        <Button variant="success" onClick={onReject}>
           Нет
         </Button>
       </div>

@@ -5,8 +5,9 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { Input, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 
 const BannerRequestPage = () => {
   const [bannerName, setBannerName] = useState("");

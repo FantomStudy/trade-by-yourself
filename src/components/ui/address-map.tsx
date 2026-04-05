@@ -4,10 +4,8 @@ import L from "leaflet";
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
-
-import { Input } from "@/components/ui";
 import { getAddressSuggestions, validateAddress } from "@/api/requests/address";
-
+import { Input } from "@/components/ui/Input";
 import "leaflet/dist/leaflet.css";
 
 // Исправляем проблему с иконками маркеров в Leaflet
