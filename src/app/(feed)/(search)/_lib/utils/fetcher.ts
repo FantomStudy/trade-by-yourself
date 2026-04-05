@@ -1,5 +1,3 @@
-import { isServer } from "@/lib/is-server";
-
 type RequestMethod = "DELETE" | "GET" | "PATCH" | "POST" | "PUT";
 type RequestBody = BodyInit | Record<string, any> | null | undefined;
 
@@ -66,7 +64,7 @@ export const fetcher = async <T>(endpoint?: string, options: RequestOptions = {}
   }
 
   let cookiesHeader: string | undefined;
-  if (isServer()) {
+  if (typeof window === "undefined") {
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
 

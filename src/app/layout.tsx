@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
-import { getCurrentUser } from "@/api/requests";
 import { Sonner } from "@/components/ui/Sonner";
-import { getQueryClient } from "@/lib/get-query-client";
 import { MainLayout } from "./_components";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -20,16 +17,9 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: CURRENT_USER_QUERY_KEY,
-    queryFn: getCurrentUser,
-  });
-
   return (
-    <html lang="en">
-      <body className={montserrat.variable} suppressHydrationWarning>
+    <html lang="ru">
+      <body className={montserrat.variable}>
         <Providers>
           <MainLayout>{children}</MainLayout>
           <Sonner />
