@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { Footer } from "@/components/Footer";
 import { Sonner } from "@/components/ui/Sonner";
 import { MainLayout } from "./_components";
 import { Providers } from "./providers";
@@ -22,6 +23,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
       <body className={montserrat.variable}>
         <Providers>
           <MainLayout>{children}</MainLayout>
+          <Footer />
           <Sonner />
         </Providers>
       </body>

@@ -11,9 +11,43 @@
 }
 .nav {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px 24px;
   text-align: right;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 20px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 24px;
+}
+
+.supportWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.supportBadge {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .copyright {
@@ -36,9 +70,16 @@
   }
 
   .nav {
+    display: flex;
     flex-direction: column;
     gap: 16px;
     text-align: center;
+  }
+  .column {
+    align-items: center;
+  }
+  .content {
+    align-items: center;
   }
 }
 

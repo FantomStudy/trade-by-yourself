@@ -1,4 +1,3 @@
-import { Footer } from "./footer";
 import { Header } from "./header";
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
@@ -6,7 +5,6 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
     <>
       <Header />
       <main>{children}</main>
-      <Footer />
     </>
   );
 };
