@@ -1,36 +1,36 @@
 import Link from "next/link";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
+import styles from "./not-found.module.css";
 
-export default function NotFound() {
+const NotFoundPage = () => {
   return (
-    <div className="flex min-h-[calc(100vh-200px)] flex-col items-center justify-center px-4">
-      <div className="text-center">
-        {/* 404 число */}
-        <h1 className="mb-4 text-9xl font-bold text-blue-500">404</h1>
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.code}>404</div>
 
-        {/* Заголовок */}
-        <h2 className="mb-2 text-3xl font-semibold text-gray-800">Страница не найдена</h2>
+        <Typography className={styles.title} variant="h1">
+          Страница не найдена
+        </Typography>
 
-        {/* Описание */}
-        <p className="mb-8 text-lg text-gray-600">
+        <Typography className={styles.description} variant="p">
           К сожалению, запрашиваемая страница не существует или была удалена
-        </p>
+        </Typography>
 
-        {/* Кнопки навигации */}
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <Link
-            href="/"
-            className="rounded-lg bg-blue-500 px-6 py-3 text-white transition-colors hover:bg-blue-600"
-          >
-            На главную
-          </Link>
-          <Link
-            href="/profile/my-products"
-            className="rounded-lg border border-gray-300 bg-white px-6 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+        <div className={styles.actions}>
+          <Button nativeButton={false} render={<Link href="/">На главную</Link>} />
+
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href="/profile/my-products" />}
           >
             Мои объявления
-          </Link>
+          </Button>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default NotFoundPage;
