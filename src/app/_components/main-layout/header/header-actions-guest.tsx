@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { AuthDialog } from "@/components/auth-dialog";
-import { Button } from "@/components/ui";
-
+import { Button } from "@/components/ui/Button";
 import styles from "./header.module.css";
 
 export const HeaderActionsGuest = () => {
@@ -30,7 +28,7 @@ export const HeaderActionsGuest = () => {
         Вход / Регистрация
       </Button>
 
-      <Button variant="secondary" onClick={openAuthDialog}>
+      <Button variant="success" onClick={openAuthDialog}>
         Разместить объявление
       </Button>
 

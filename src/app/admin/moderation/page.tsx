@@ -1,19 +1,16 @@
 "use client";
 
 import type { ModerationFilter, ModerationProduct, ModerationState } from "@/types";
-
 import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
-
 import {
   useModerateProductMutation,
   useModerationProduct,
   useProductsToModerate,
 } from "@/api/hooks";
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -21,7 +18,7 @@ import {
   Textarea,
   Typography,
 } from "@/components/ui";
-
+import { Button } from "@/components/ui/Button";
 import { MobileHeader } from "../_components/admin-sidebar";
 
 // ─── State badge ──────────────────────────────────────────────────────────────
@@ -307,7 +304,7 @@ const RejectModal = ({
           onChange={(e) => setReason(e.target.value)}
         />
         <div className="flex gap-2 pt-1">
-          <Button className="flex-1" variant="secondary" onClick={onClose}>
+          <Button className="flex-1" variant="success" onClick={onClose}>
             Отмена
           </Button>
           <Button

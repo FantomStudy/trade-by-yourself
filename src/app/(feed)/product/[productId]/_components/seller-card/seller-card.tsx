@@ -1,14 +1,13 @@
 "use client";
-import type { ExtendedProduct } from "@/types";
 
+import type { ExtendedProduct } from "@/types";
 import { CircleSmall, Phone, StarIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { useStartChatMutation } from "@/api/hooks";
-import { Avatar, Badge, Button, Typography } from "@/components/ui";
-
+import { Avatar, Badge, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import styles from "./seller-card.module.css";
 
 interface SellerCardProps {
@@ -66,11 +65,7 @@ export const SellerCard = ({ product }: SellerCardProps) => {
       </div>
 
       <div className={styles.actions}>
-        <Button
-          disabled={startChatMutation.isPending}
-          variant="secondary"
-          onClick={handleStartChat}
-        >
+        <Button variant="success" onClick={handleStartChat} disabled={startChatMutation.isPending}>
           {startChatMutation.isPending ? "Загрузка..." : "Написать продавцу"}
         </Button>
 

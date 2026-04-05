@@ -1,9 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-
-import { Button } from "@/components/ui";
-
+import { Button } from "@/components/ui/Button";
 import styles from "./avatar-editor.module.css";
 
 interface AvatarEditorProps {
@@ -200,7 +198,7 @@ export const AvatarEditor = ({ image, onCancel, onSave }: AvatarEditorProps) => 
         </div>
 
         <div className={styles.actions}>
-          <Button type="button" variant="secondary" onClick={onCancel}>
+          <Button type="button" variant="success" onClick={onCancel}>
             Отмена
           </Button>
           <Button type="button" onClick={handleSave}>

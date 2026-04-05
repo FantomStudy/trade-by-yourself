@@ -5,7 +5,8 @@ import type { Chat } from "@/types";
 import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useChats } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
@@ -15,9 +16,7 @@ import {
   getSupportMessages,
   markSupportMessagesAsRead,
 } from "@/lib/support-chat";
-
 import { MobileHeader } from "../_components/admin-sidebar";
-
 import styles from "./support.module.css";
 
 const SupportPage = () => {
@@ -278,7 +277,7 @@ const SupportPage = () => {
                     {supportMessages.length > 0 && (
                       <div className="mt-2 rounded bg-purple-50 p-2">
                         <Typography className="line-clamp-2 text-sm text-gray-600">
-                          {supportMessages.at(-1).content}
+                          {supportMessages.at(-1)?.content}
                         </Typography>
                       </div>
                     )}

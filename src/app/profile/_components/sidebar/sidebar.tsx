@@ -4,14 +4,12 @@ import { Gift, ShieldCheck, StarIcon, WalletIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { useIsAdmin, useUserInfo } from "@/api/hooks";
-import { Avatar, Button, Typography } from "@/components/ui";
+import { Avatar, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
 import { formatFullName } from "@/lib/format";
-
 import { LINKS } from "./constants";
-
 import styles from "./sidebar.module.css";
 
 export const Sidebar = () => {
@@ -76,7 +74,7 @@ export const Sidebar = () => {
 
           {adminCheck?.isAdmin && (
             <Link href="/admin">
-              <Button className={styles.adminButton} variant="secondary">
+              <Button className={styles.adminButton} variant="success">
                 <ShieldCheck size={20} />
                 Панель администратора
               </Button>

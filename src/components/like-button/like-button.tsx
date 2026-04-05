@@ -1,29 +1,19 @@
 "use client";
 
-import type { ButtonVariant } from "@/components/ui";
-
 import clsx from "clsx";
 import { HeartIcon } from "lucide-react";
 import { useState } from "react";
-
 import { useFavoriteMutation } from "@/api/hooks";
-import { Button } from "@/components/ui";
-
+import { Button } from "@/components/ui/Button";
 import styles from "./like-button.module.css";
 
 interface LikeButtonProps {
   className?: string;
   initLiked?: boolean;
   productId: number;
-  variant?: ButtonVariant;
 }
 
-export const LikeButton = ({
-  initLiked = false,
-  variant = "ghost",
-  productId,
-  className,
-}: LikeButtonProps) => {
+export const LikeButton = ({ initLiked = false, productId, className }: LikeButtonProps) => {
   const [isLiked, setIsLiked] = useState(initLiked);
 
   const { mutate, isPending } = useFavoriteMutation(productId);
@@ -57,7 +47,7 @@ export const LikeButton = ({
       className={className}
       disabled={isPending}
       size="icon"
-      variant={variant}
+      variant="ghost"
       onClick={handleToggle}
     >
       <HeartIcon className={clsx(styles.heart, isLiked ? styles.liked : styles.notLiked)} />

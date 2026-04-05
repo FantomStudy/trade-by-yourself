@@ -1,9 +1,7 @@
 import type { AuthScreenProps } from "../types";
-
-import { Button, Typography } from "@/components/ui";
-
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { RecoverForm } from "./recover-form";
-
 import styles from "../screens.module.css";
 
 export const RecoverScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
@@ -14,7 +12,7 @@ export const RecoverScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
       <div className={styles.actions}>
         <Typography>У вас нет аккаунта?</Typography>
 
-        <Button variant="secondary" onClick={() => onChangeScreen("register")}>
+        <Button variant="success" onClick={() => onChangeScreen("register")}>
           Зарегистрироваться
         </Button>
       </div>

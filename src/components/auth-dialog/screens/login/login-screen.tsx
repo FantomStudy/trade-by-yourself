@@ -1,9 +1,7 @@
 import type { AuthScreenProps } from "../types";
-
-import { Button, Typography } from "@/components/ui";
-
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { LoginForm } from "./login-form";
-
 import styles from "../screens.module.css";
 
 export const LoginScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
@@ -21,7 +19,7 @@ export const LoginScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
 
       <div className={styles.actions}>
         <Typography>У вас нет аккаунта?</Typography>
-        <Button variant="secondary" onClick={() => onChangeScreen("register")}>
+        <Button variant="success" onClick={() => onChangeScreen("register")}>
           Зарегистрироваться
         </Button>
       </div>

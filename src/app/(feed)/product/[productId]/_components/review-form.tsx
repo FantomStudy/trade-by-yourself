@@ -1,14 +1,13 @@
 "use client";
 
 import type { SendReviewDto } from "@/api/requests";
-
 import { useMutation } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-
 import { sendReview } from "@/api/requests";
-import { Button, Textarea, Typography } from "@/components/ui";
+import { Textarea, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
 
 interface ReviewFormProps {
@@ -121,7 +120,7 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
           />
         </div>
 
-        <Button disabled={mutation.isPending} type="submit">
+        <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? "Отправка..." : "Отправить отзыв"}
         </Button>
       </form>

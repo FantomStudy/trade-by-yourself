@@ -1,18 +1,15 @@
 "use client";
 
 import type { SubmitHandler } from "react-hook-form";
-
 import type { AuthFormProps } from "../types";
 import type { LoginData } from "@/api/types";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import { useLoginMutation } from "@/api/hooks";
 import { loginSchema } from "@/api/types";
-import { Button, Field } from "@/components/ui";
-
+import { Field } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import styles from "../forms.module.css";
 
 export const LoginForm = ({ onSuccess }: AuthFormProps) => {

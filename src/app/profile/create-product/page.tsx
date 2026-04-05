@@ -1,15 +1,13 @@
 "use client";
 
 import type { Category } from "@/types";
-
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import { useCreateProductMutation } from "@/api/hooks";
-import { AddressMap, Button, ImageUpload, Input, Textarea } from "@/components/ui";
+import { AddressMap, ImageUpload, Input, Textarea } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
-
 import styles from "./page.module.css";
 
 const CreateProductPage = () => {

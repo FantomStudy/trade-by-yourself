@@ -1,11 +1,10 @@
 "use client";
-import type { User } from "@/types";
 
+import type { User } from "@/types";
 import { CircleSmall, Phone, StarIcon } from "lucide-react";
 import { useState } from "react";
-
-import { Avatar, Badge, Button, Typography } from "@/components/ui";
-
+import { Avatar, Badge, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import styles from "./seller-info.module.css";
 
 interface SellerInfoProps {

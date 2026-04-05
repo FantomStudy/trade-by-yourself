@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-
-import { Button, Input } from "@/components/ui";
+import { Input } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
 
 import { AvatarEditor } from "./_components/avatar-editor";

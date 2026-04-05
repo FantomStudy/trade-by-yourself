@@ -1,18 +1,15 @@
 "use client";
 
 import type { SubmitHandler } from "react-hook-form";
-
 import type { AuthFormProps } from "../types";
 import type { VerifyMobileCodeData } from "@/lib/api";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import { useVerifyMobileCodeMutation } from "@/api/hooks";
-import { Button, Field } from "@/components/ui";
+import { Field } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { verifyMobileCodeSchema } from "@/lib/api";
-
 import styles from "../forms.module.css";
 
 interface VerifyCodeFormProps extends AuthFormProps {
@@ -59,7 +56,7 @@ export const VerifyCodeForm = ({ phoneNumber, onSuccess }: VerifyCodeFormProps) 
 
       {error && <span className={styles.error}>{error}</span>}
 
-      <Button disabled={isSubmitting || verifyMutation.isPending} type="submit" variant="secondary">
+      <Button disabled={isSubmitting || verifyMutation.isPending} type="submit" variant="success">
         Подтвердить
       </Button>
     </form>

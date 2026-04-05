@@ -1,7 +1,6 @@
 "use client";
 
 import type { CurrentUser } from "@/types";
-
 import {
   HeartIcon,
   HomeIcon,
@@ -13,11 +12,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
 import { AuthDialog } from "@/components/auth-dialog";
-import { Avatar, Button, Sheet } from "@/components/ui";
+import { Avatar, Sheet } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
-
 import styles from "./mobile-menu.module.css";
 
 interface AuthenticatedMenuProps {
@@ -92,10 +90,10 @@ const GuestMenu = ({ onAuthClick, onClose }: GuestMenuProps) => {
       </div>
 
       <div className={styles.guestActions}>
-        <Button className={styles.authButton} variant="default" onClick={onAuthClick}>
+        <Button className={styles.authButton} variant="primary" onClick={onAuthClick}>
           Вход / Регистрация
         </Button>
-        <Button className={styles.authButton} variant="secondary" onClick={onAuthClick}>
+        <Button className={styles.authButton} variant="success" onClick={onAuthClick}>
           Разместить объявление
         </Button>
       </div>

@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from "react";
 
-import { Button, Input } from "@/components/ui";
+import { Input } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useLogsQuery } from "@/lib/api/hooks/queries/useLogsQuery";
-
 import { MobileHeader } from "../_components/admin-sidebar";
 
 const LogsPage = () => {
@@ -55,9 +55,7 @@ const LogsPage = () => {
       <MobileHeader title="Логи системы" />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold sm:text-2xl">Логи системы</h1>
-        <Button type="button" onClick={() => refetch()}>
-          Обновить
-        </Button>
+        <Button onClick={() => refetch()}>Обновить</Button>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

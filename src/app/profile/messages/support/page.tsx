@@ -1,19 +1,16 @@
 "use client";
 
 import type { SupportMessage } from "@/lib/support-chat";
-
 import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useCurrentUser } from "@/lib/api/hooks";
 import {
   addSupportMessage,
   getSupportMessages,
   markSupportMessagesAsRead,
 } from "@/lib/support-chat";
-
 import styles from "./page.module.css";
 
 const SupportChatPage = () => {

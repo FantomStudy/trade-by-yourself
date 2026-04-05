@@ -1,0 +1,127 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button > svg {
+  pointer-events: none;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.default {
+  height: 48px;
+  padding: 15px 20px;
+}
+
+.button:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.button[aria-invalid="true"] {
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 3px rgba(vae(--destructive), 0.2);
+}
+
+.button > svg {
+  pointer-events: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+/* Sizes */
+.md {
+  height: 48px;
+  padding: 16px 20px;
+}
+.md:has(> svg) {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.sm {
+  height: 32px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+}
+
+.icon-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.icon-sm > svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Variants */
+.primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.primary:hover {
+  background-color: color-mix(in srgb, var(--primary), #000 10%);
+}
+
+.outline {
+  border: 1px solid var(--border);
+  background-color: var(--background);
+}
+.outline:hover {
+  background-color: var(--accent);
+}
+
+.success {
+  background-color: var(--success);
+  color: white;
+}
+.success:hover {
+  background-color: color-mix(in srgb, var(--success), #000 15%);
+}
+
+.destructive {
+  background-color: var(--destructive);
+  color: white;
+}
+.destructive:hover {
+  background-color: color-mix(in srgb, var(--destructive), #000 15%);
+}
+.destructive:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+.link {
+  height: auto;
+  padding: 0;
+  font-size: 16px;
+  text-decoration: none;
+  color: var(--primary);
+}
+
+.ghost {
+  color: inherit;
+  background: transparent;
+}
+.ghost:hover {
+  background-color: color-mix(in srgb, transparent, #000 5%);
+}

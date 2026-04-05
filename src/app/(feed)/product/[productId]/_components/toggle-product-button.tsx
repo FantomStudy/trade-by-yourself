@@ -4,9 +4,8 @@ import { Eye, EyeOff, PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { useToggleProductMutation } from "@/api/hooks";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
 
 interface ToggleProductButtonProps {
@@ -48,7 +47,7 @@ export const ToggleProductButton = ({
       <Button
         className="w-full"
         disabled={isToggling}
-        variant={isHidden ? "default" : "destructive"}
+        variant={isHidden ? "primary" : "destructive"}
         onClick={handleToggle}
       >
         {isHidden ? (
@@ -63,10 +62,8 @@ export const ToggleProductButton = ({
           </>
         )}
       </Button>
-      <Button asChild>
-        <Link href={`/profile/my-products/${productId}`}>
-          <PencilIcon className="size-4" /> Редактировать
-        </Link>
+      <Button nativeButton={false} render={<Link href={`/profile/my-products/${productId}`} />}>
+        <PencilIcon className="size-4" /> Редактировать
       </Button>
     </>
   );

@@ -2,13 +2,12 @@
 
 import type { Category } from "@/types";
 import type { ExtendedProduct } from "@/types/product";
-
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
-
 import { useDeleteProductMutation, useUpdateProductMutation } from "@/api/hooks";
 import { getProductById } from "@/api/requests";
-import { AddressMap, Button, Input, Textarea } from "@/components/ui";
+import { AddressMap, Input, Textarea } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
 
 import styles from "../../create-product/page.module.css";

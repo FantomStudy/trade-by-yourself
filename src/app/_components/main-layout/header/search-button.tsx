@@ -3,9 +3,7 @@
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
-import { Button } from "@/components/ui";
-
+import { Button } from "@/components/ui/Button";
 import styles from "./search-button.module.css";
 
 export const SearchButton = () => {
@@ -62,7 +60,6 @@ export const SearchButton = () => {
               aria-label="Закрыть поиск"
               className={styles.closeButton}
               size="icon"
-              type="button"
               variant="ghost"
               onClick={handleClose}
             >

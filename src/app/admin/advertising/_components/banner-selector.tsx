@@ -1,12 +1,11 @@
 "use client";
 
 import type { Banner, BannerPlace } from "@/api/types/banner";
-
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-
 import { createBanner, deleteBanner, getBanners, updateBanner } from "@/api/requests/banner";
-import { Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 
 interface BannerConfig {
   description: string;
@@ -353,7 +352,7 @@ export const BannerSelector = () => {
                       <Button
                         className="flex-1"
                         disabled={isUploading}
-                        variant="secondary"
+                        variant="success"
                         onClick={() => triggerFileInput(itemId)}
                       >
                         {item.banner ? "Изменить изображение" : "Выбрать файл"}
