@@ -1,0 +1,117 @@
+@startuml Организационная структура компании "Торгуй сам"
+skinparam BackgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam RectangleFontSize 10
+skinparam RectangleBorderColor #000000
+skinparam RectangleBorderThickness 2
+skinparam roundcorner 10
+hide stereotype
+
+' Стиль для генерального директора
+skinparam rectangle<<ceo>> {
+  BackgroundColor #FFA500
+  BorderColor #000000
+}
+
+' Стиль для отделов
+skinparam rectangle<<department>> {
+  BackgroundColor #F4D03F
+  BorderColor #000000
+}
+
+' Стиль для руководителей отделов
+skinparam rectangle<<head>> {
+  BackgroundColor #F9E79F
+  BorderColor #000000
+}
+
+' Стиль для сотрудников
+skinparam rectangle<<employee>> {
+  BackgroundColor #FFFFFF
+  BorderColor #000000
+}
+
+rectangle "Генеральный директор" <<ceo>> as ceo
+
+' Отделы верхнего уровня
+rectangle "Отдел разработки" <<department>> as devDept
+rectangle "Отдел модерации\nи контента" <<department>> as contentDept
+rectangle "Административный\nотдел" <<department>> as adminDept
+rectangle "Отдел продаж\nи маркетинга" <<department>> as salesDept
+rectangle "Служба поддержки\nпользователей" <<department>> as supportDept
+
+ceo --> devDept
+ceo --> contentDept
+ceo --> adminDept
+ceo --> salesDept
+ceo --> supportDept
+
+' Отдел разработки
+rectangle "Руководитель отдела\nразработки" <<head>> as devHead
+rectangle "Технический директор" <<employee>> as cto
+rectangle "Фронтенд разработчик" <<employee>> as frontend
+rectangle "Бэкенд разработчик" <<employee>> as backend
+rectangle "Инженер по\nразвертыванию" <<employee>> as devops
+rectangle "Тестировщик" <<employee>> as qa
+
+devDept -down-> devHead
+devHead -down-> cto
+cto -down-> frontend
+frontend -down-> backend
+backend -down-> devops
+devops -down-> qa
+
+' Отдел модерации и контента
+rectangle "Руководитель отдела\nмодерации" <<head>> as contentHead
+rectangle "Старший модератор" <<employee>> as seniorModerator
+rectangle "Модератор объявлений" <<employee>> as contentModerator
+rectangle "Модератор отзывов" <<employee>> as reviewModerator
+rectangle "Специалист по\nкатегориям товаров" <<employee>> as categorySpecialist
+
+contentDept -down-> contentHead
+contentHead -down-> seniorModerator
+seniorModerator -down-> contentModerator
+contentModerator -down-> reviewModerator
+reviewModerator -down-> categorySpecialist
+
+' Административный отдел
+rectangle "Руководитель\nадминистративного отдела" <<head>> as adminHead
+rectangle "Системный\nадминистратор" <<employee>> as sysadmin
+rectangle "Аналитик данных" <<employee>> as dataAnalyst
+rectangle "Специалист по\nбезопасности" <<employee>> as securityEngineer
+rectangle "Бухгалтер-финансист" <<employee>> as accountant
+
+adminDept -down-> adminHead
+adminHead -down-> sysadmin
+sysadmin -down-> dataAnalyst
+dataAnalyst -down-> securityEngineer
+securityEngineer -down-> accountant
+
+' Отдел продаж и маркетинга
+rectangle "Руководитель отдела\nпродаж" <<head>> as salesHead
+rectangle "Менеджер по рекламе" <<employee>> as adsManager
+rectangle "Специалист по\nпродвижению" <<employee>> as promotionSpecialist
+rectangle "Аналитик продаж" <<employee>> as salesAnalyst
+rectangle "Контент-маркетолог" <<employee>> as contentMarketer
+
+salesDept -down-> salesHead
+salesHead -down-> adsManager
+adsManager -down-> promotionSpecialist
+promotionSpecialist -down-> salesAnalyst
+salesAnalyst -down-> contentMarketer
+
+' Служба поддержки пользователей
+rectangle "Руководитель службы\nподдержки" <<head>> as supportHead
+rectangle "Старший специалист\nподдержки" <<employee>> as seniorSupport
+rectangle "Специалист поддержки\nпродавцов" <<employee>> as sellerSupport
+rectangle "Специалист поддержки\nпокупателей" <<employee>> as buyerSupport
+rectangle "Технический специалист\nподдержки" <<employee>> as techSupport
+
+supportDept -down-> supportHead
+supportHead -down-> seniorSupport
+seniorSupport -down-> sellerSupport
+sellerSupport -down-> buyerSupport
+buyerSupport -down-> techSupport
+
+@enduml

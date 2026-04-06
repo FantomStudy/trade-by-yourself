@@ -1,0 +1,27 @@
+.toaster {
+  background-color: var(--normal-bg);
+  color: var(--normal-text);
+  border: 1px solid var(--normal-border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+/* Размеры иконок */
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.loading {
+  animation: spin 1s linear infinite;
+}
+
+/* Анимация вращения */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

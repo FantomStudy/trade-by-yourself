@@ -1,0 +1,143 @@
+.burgerButton {
+  display: none;
+  color: var(--foreground);
+}
+
+@media (max-width: 768px) {
+  .burgerButton {
+    display: flex;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+}
+
+.header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 0;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.menuItems {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--foreground);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.menuItem:hover {
+  background-color: var(--muted);
+}
+
+.menuItem svg {
+  color: var(--muted-foreground);
+  flex-shrink: 0;
+}
+
+.menuItemHighlight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+}
+
+.menuItemHighlight:hover {
+  background-color: var(--muted);
+}
+
+.menuItemHighlight svg {
+  color: var(--secondary);
+  flex-shrink: 0;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 0;
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--destructive);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.logoutButton:hover {
+  opacity: 0.8;
+}
+
+.logoutButton svg {
+  flex-shrink: 0;
+}
+
+.guestActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  margin-top: auto;
+}
+
+.authButton {
+  width: 100%;
+  justify-content: center;
+}

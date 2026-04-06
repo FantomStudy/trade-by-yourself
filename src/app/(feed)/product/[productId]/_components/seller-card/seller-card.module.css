@@ -1,0 +1,167 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.userInfo:hover {
+  opacity: 0.8;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.reviews {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.ratingSection {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+.rating svg {
+  width: 16px;
+  height: 16px;
+}
+
+.profileType {
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .card {
+    padding: 16px;
+    gap: 14px;
+    border-radius: 12px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .userInfo {
+    flex: 1;
+    flex-direction: row;
+    text-align: left;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .userInfo h2 {
+    font-size: 17px;
+    margin: 0;
+  }
+
+  .stats {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    padding-bottom: 0;
+    border-bottom: none;
+    width: auto;
+  }
+
+  .ratingSection {
+    font-size: 13px;
+  }
+
+  .profileType {
+    font-size: 11px;
+  }
+
+  .actions {
+    width: 100%;
+    flex-direction: row;
+    gap: 10px;
+    padding-top: 4px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 2px;
+  }
+
+  .actions button {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .userInfo h2 {
+    font-size: 16px;
+  }
+
+  .stats {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 10px;
+    padding-top: 0;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .actions button {
+    padding: 14px 16px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+}
