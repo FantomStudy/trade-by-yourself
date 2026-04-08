@@ -12,7 +12,6 @@ import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
 
-
 interface ChatPageProps {
   params: Promise<{ chatId: string }>;
 }

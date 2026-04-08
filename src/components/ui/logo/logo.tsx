@@ -11,7 +11,7 @@ interface LogoProps {
 export const Logo = ({ hiddenText = false }: LogoProps) => {
   return (
     <div className={styles.root}>
-      <Image alt="Logo" height={49} src="/3-b.png" width={68} priority />
+      <Image alt="Logo" height={49} src="/logo.png" width={68} priority />
       {!hiddenText && <Typography variant="h2">ТоргуйСам</Typography>}
     </div>
   );
