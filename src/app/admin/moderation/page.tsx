@@ -10,15 +10,9 @@ import {
   useModerationProduct,
   useProductsToModerate,
 } from "@/api/hooks";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  Textarea,
-  Typography,
-} from "@/components/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 import { MobileHeader } from "../_components/admin-sidebar";
 
 // ─── State badge ──────────────────────────────────────────────────────────────

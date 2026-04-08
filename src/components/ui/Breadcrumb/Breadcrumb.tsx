@@ -4,19 +4,19 @@ import clsx from "clsx";
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 import styles from "./Breadcrumb.module.css";
 
-export const Breadcrumb = ({ className, ...props }: React.ComponentProps<"nav">) => {
+const BreadcrumbRoot = ({ className, ...props }: React.ComponentProps<"nav">) => {
   return <nav aria-label="breadcrumb" className={clsx(className)} {...props} />;
 };
 
-export const BreadcrumbList = ({ className, ...props }: React.ComponentProps<"ol">) => {
+const BreadcrumbList = ({ className, ...props }: React.ComponentProps<"ol">) => {
   return <ol className={clsx(styles.list, className)} {...props} />;
 };
 
-export const BreadcrumbItem = ({ className, ...props }: React.ComponentProps<"li">) => {
+const BreadcrumbItem = ({ className, ...props }: React.ComponentProps<"li">) => {
   return <li className={clsx(styles.item, className)} {...props} />;
 };
 
-export const BreadcrumbLink = ({ className, render, ...props }: useRender.ComponentProps<"a">) => {
+const BreadcrumbLink = ({ className, render, ...props }: useRender.ComponentProps<"a">) => {
   return useRender({
     defaultTagName: "a",
     props: mergeProps<"a">(
@@ -29,7 +29,7 @@ export const BreadcrumbLink = ({ className, render, ...props }: useRender.Compon
   });
 };
 
-export const BreadcrumbPage = ({ className, ...props }: React.ComponentProps<"span">) => {
+const BreadcrumbPage = ({ className, ...props }: React.ComponentProps<"span">) => {
   return (
     <span
       role="link"
@@ -41,11 +41,7 @@ export const BreadcrumbPage = ({ className, ...props }: React.ComponentProps<"sp
   );
 };
 
-export const BreadcrumbSeparator = ({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"li">) => {
+const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => {
   return (
     <li
       role="presentation"
@@ -58,7 +54,7 @@ export const BreadcrumbSeparator = ({
   );
 };
 
-export const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => {
+const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => {
   return (
     <span
       role="presentation"
@@ -71,3 +67,12 @@ export const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps
     </span>
   );
 };
+
+export const Breadcrumb = Object.assign(BreadcrumbRoot, {
+  List: BreadcrumbList,
+  Item: BreadcrumbItem,
+  Link: BreadcrumbLink,
+  Page: BreadcrumbPage,
+  Separator: BreadcrumbSeparator,
+  Ellipsis: BreadcrumbEllipsis,
+});

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ProductFilters } from "@/api/products/getProducts";
+import type { ProductFilters } from "@/api/products";
 import { useBanners } from "@/hooks/useBanners";
 import { useProducts } from "@/hooks/useProducts";
 import { mergeFeed } from "@/lib/mergeFeed";

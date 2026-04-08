@@ -3,11 +3,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Eye, Heart, MessageSquare, Package } from "lucide-react";
 import { useState } from "react";
-import { useCategories, useChats } from "@/api/hooks";
+import { useChats } from "@/api/hooks";
 import { getFavorites } from "@/api/requests";
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
 import { Typography } from "@/components/ui";
-
+import { useCategories } from "@/hooks/useCategories";
 import styles from "./page.module.css";
 
 const Analytics = () => {
@@ -15,7 +15,11 @@ const Analytics = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
 
   // Загружаем категории
-  const { categories, isLoading: categoriesLoading, error: categoriesError } = useCategories();
+  const {
+    data: categories,
+    isLoading: categoriesLoading,
+    error: categoriesError,
+  } = useCategories();
 
   // Загружаем чаты и избранное
   const { data: chats } = useChats();
@@ -70,6 +74,8 @@ const Analytics = () => {
       </div>
     );
   }
+
+  if (!categories) return null;
 
   return (
     <div className={styles.page}>

@@ -3,9 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/api/instance";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-
+import { Button, Input } from "@/components/ui";
 import { AvatarEditor } from "./_components/avatar-editor";
 
 interface ProfileSettings {

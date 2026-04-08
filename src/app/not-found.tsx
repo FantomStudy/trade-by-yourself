@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { Typography } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
+import { Button, Typography } from "@/components/ui";
 import styles from "./not-found.module.css";
 
 const NotFoundPage = () => {
@@ -9,16 +8,18 @@ const NotFoundPage = () => {
       <div className={styles.content}>
         <div className={styles.code}>404</div>
 
-        <Typography className={styles.title} variant="h1">
+        <Typography variant="h1" className={styles.title}>
           Страница не найдена
         </Typography>
 
-        <Typography className={styles.description} variant="p">
+        <Typography variant="p" className={styles.description}>
           К сожалению, запрашиваемая страница не существует или была удалена
         </Typography>
 
         <div className={styles.actions}>
-          <Button nativeButton={false} render={<Link href="/">На главную</Link>} />
+          <Button nativeButton={false} render={<Link href="/" />}>
+            На главную
+          </Button>
 
           <Button
             variant="outline"

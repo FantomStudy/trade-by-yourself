@@ -14,10 +14,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  Typography,
 } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Typography } from "@/components/ui/Typography";
 
 interface UsersTableProps {
   searchQuery: string;

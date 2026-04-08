@@ -7,7 +7,7 @@
   line-height: 1.25rem;
   overflow-wrap: break-word;
   color: var(--muted-foreground);
-  margin-bottom: 0.875rem;
+  margin: 0.875rem 0;
 }
 
 .item {

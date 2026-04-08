@@ -38,5 +38,38 @@ export interface Product {
   typeSlug: string;
 }
 
+interface ProductCategory {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface DetailedProduct {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  isHide: boolean;
+  images: string[];
+  address: string;
+  videoUrl: string | null;
+  category: ProductCategory;
+  subCategory: ProductCategory;
+  type: ProductCategory | null;
+  fieldValues: Record<string, string>[];
+  isFavorited: boolean;
+  seller: ProductUser;
+}
+
+export interface ProductUser {
+  id: number;
+  fullName: string;
+  profileType: string;
+  phoneNumber: string;
+  photo: string | null;
+  rating: number;
+  reviewsCount: number;
+}
+
 export const getProducts = (query?: ProductFilters) =>
   api<Product[]>("/product/all-products", { query });

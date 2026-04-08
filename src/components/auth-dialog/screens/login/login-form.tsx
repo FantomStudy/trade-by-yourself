@@ -7,10 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLoginMutation } from "@/api/hooks";
-import { loginSchema } from "@/api/types";
-import { Field } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
+import { Button, Field } from "@/components/ui";
 import styles from "../forms.module.css";
+import { loginSchema } from "@/api/auth";
 
 export const LoginForm = ({ onSuccess }: AuthFormProps) => {
   const loginMutation = useLoginMutation();

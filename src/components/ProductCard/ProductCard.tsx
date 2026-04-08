@@ -1,5 +1,5 @@
 import type { Route } from "next";
-import type { Product } from "@/api/products/getProducts";
+import type { Product } from "@/api/products";
 import clsx from "clsx";
 import { CircleFadingArrowUpIcon } from "lucide-react";
 import Link from "next/link";

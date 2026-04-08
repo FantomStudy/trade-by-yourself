@@ -6,9 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useCreateProductMutation } from "@/api/hooks";
 import { api } from "@/api/instance";
-import { AddressMap, ImageUpload, Textarea } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { AddressMap, Button, ImageUpload, Input, Textarea } from "@/components/ui";
 import styles from "./page.module.css";
 
 const CreateProductPage = () => {

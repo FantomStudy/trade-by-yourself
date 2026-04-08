@@ -1,6 +1,5 @@
 import type { AuthScreenProps } from "../types";
-import { Typography } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
+import { Button, Typography } from "@/components/ui";
 import { RecoverForm } from "./recover-form";
 import styles from "../screens.module.css";
 

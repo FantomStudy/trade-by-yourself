@@ -8,8 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { forgotPasswordSchema } from "@/api";
 import { useRecoverMutation } from "@/api/hooks";
-import { Field } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
+import { Button, Field } from "@/components/ui";
 import styles from "../forms.module.css";
 
 export const RecoverForm = ({ onSuccess }: AuthFormProps) => {

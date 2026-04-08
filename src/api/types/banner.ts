@@ -1,15 +1,4 @@
-export type BannerPlace = "PRODUCT_FEED" | "PROFILE" | "CHATS" | "FAVORITES";
-
-export interface Banner {
-  id: number;
-  photoUrl: string;
-  place: BannerPlace;
-  name: string;
-  navigateToUrl: string;
-  userId: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { BannerPlace } from "@/types/banner";
 
 export interface BannerStats {
   bannerId: number;

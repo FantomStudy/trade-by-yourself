@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-
 import styles from "./TrendCard.module.css";
 
 interface TrendCardProps {

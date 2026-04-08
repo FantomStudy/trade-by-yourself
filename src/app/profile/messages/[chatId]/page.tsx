@@ -5,8 +5,9 @@ import type { Message } from "@/types";
 import { ArrowLeft, Send } from "lucide-react";
 import Link from "next/link";
 import { use, useEffect, useMemo, useRef, useState } from "react";
-import { useChat, useChatMessages, useCurrentUser } from "@/api/hooks";
-import { Button } from "@/components/ui/Button";
+import { useChat, useChatMessages } from "@/api/hooks";
+import { Button } from "@/components/ui";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
 

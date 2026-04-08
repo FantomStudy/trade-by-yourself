@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
-import { getBanners, trackBannerView } from "@/api/requests/banner";
+import { getBanners } from "@/api/banners";
+import { trackBannerView } from "@/api/requests/banner";
 
 export const FavoritesBanner = () => {
   const [selectedBannerIndex, setSelectedBannerIndex] = useState<number | null>(null);

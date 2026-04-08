@@ -4,9 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { checkPaymentStatus, createPayment } from "@/api/requests";
 
-import { CURRENT_USER_QUERY_KEY } from "../queries/useCurrentUser";
 import { PAYMENT_HISTORY_QUERY_KEY } from "../queries/usePaymentHistory";
-import { USER_INFO_QUERY_KEY } from "../queries/useUserInfo";
 
 export const useCreatePaymentMutation = () => {
   return useMutation({
@@ -24,14 +22,14 @@ export const useCheckPaymentStatusMutation = (userId?: number) => {
       queryClient.invalidateQueries({ queryKey: PAYMENT_HISTORY_QUERY_KEY });
 
       // Если платеж подтвержден, обновляем баланс пользователя
-      if (data.status === "CONFIRMED" || data.status === "COMPLETED") {
-        queryClient.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY });
-        if (userId) {
-          queryClient.invalidateQueries({
-            queryKey: USER_INFO_QUERY_KEY(userId),
-          });
-        }
-      }
+      // if (data.status === "CONFIRMED" || data.status === "COMPLETED") {
+      //   // queryClient.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY });
+      //   if (userId) {
+      //     queryClient.invalidateQueries({
+      //       queryKey: USER_INFO_QUERY_KEY(userId),
+      //     });
+      //   }
+      // }
     },
   });
 };

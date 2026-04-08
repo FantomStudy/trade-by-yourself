@@ -1,7 +1,9 @@
-export const formatFullName = (fullName: string) => {
+const SPLIT_WHITESPACE = /\s+/;
+
+export const toShortName = (fullName: string) => {
   if (!fullName) return "";
 
-  const parts = fullName.trim().split(/\s+/);
+  const parts = fullName.trim().split(SPLIT_WHITESPACE);
   if (parts.length === 0) return "";
 
   const surname = parts[0];

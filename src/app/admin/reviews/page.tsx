@@ -3,8 +3,9 @@
 import { Check, Star, X } from "lucide-react";
 import { useState } from "react";
 import { useModerateReviewMutation, useReviewsToModerate } from "@/api/hooks";
-import { Dialog, Typography } from "@/components/ui";
+import { Dialog } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 import { MobileHeader } from "../_components/admin-sidebar";
 
 const ReviewsPage = () => {

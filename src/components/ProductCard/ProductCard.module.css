@@ -5,6 +5,7 @@
   flex-direction: column;
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
 
   --product-card-accent: var(--primary);
 }

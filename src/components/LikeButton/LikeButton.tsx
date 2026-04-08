@@ -1,11 +1,11 @@
 "use client";
 
-import type { ButtonProps } from "@/components/ui/Button";
+import type { ButtonProps } from "@/components/ui";
 import clsx from "clsx";
 import { HeartIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { useLike } from "@/hooks/useLike";
+import { Button } from "@/components/ui";
+import { useLike } from "./useLike";
 import styles from "./LikeButton.module.css";
 
 interface LikeButtonProps extends ButtonProps {

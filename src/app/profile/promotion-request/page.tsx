@@ -5,11 +5,9 @@ import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { addPromotion, getCurrentUserProducts } from "@/api";
-import { useCurrentUser } from "@/api/hooks/queries";
 import { api } from "@/api/instance";
-import { Typography } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { Button, Input, Typography } from "@/components/ui";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { ProductSelector } from "./_components";
 
 interface Promotion {

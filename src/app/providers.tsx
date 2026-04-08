@@ -3,7 +3,7 @@
 import { environmentManager, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { AuthProvider, ChatSocketProvider } from "@/lib/contexts";
+// import { ChatSocketProvider } from "@/lib/contexts";
 
 const makeQueryClient = () => {
   return new QueryClient({
@@ -37,9 +37,9 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <NuqsAdapter>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ChatSocketProvider>{children}</ChatSocketProvider>
-        </AuthProvider>
+        {/* <ChatSocketProvider> */}
+        {children}
+        {/* </ChatSocketProvider> */}
         <ReactQueryDevtools />
       </QueryClientProvider>
     </NuqsAdapter>

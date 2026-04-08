@@ -1,11 +1,12 @@
 "use client";
 
-import type { Banner, BannerPlace } from "@/api/types/banner";
+import type { Banner, BannerPlace } from "@/types/banner";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { createBanner, deleteBanner, getBanners, updateBanner } from "@/api/requests/banner";
-import { Typography } from "@/components/ui";
+import { getBanners } from "@/api/banners";
+import { createBanner, deleteBanner, updateBanner } from "@/api/requests/banner";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 
 interface BannerConfig {
   description: string;

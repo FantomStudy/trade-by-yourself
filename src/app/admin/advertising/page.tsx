@@ -1,7 +1,6 @@
 "use client";
 
-import { Typography } from "@/components/ui";
-
+import { Typography } from "@/components/ui/Typography";
 import { MobileHeader } from "../_components/admin-sidebar";
 import { BannerSelector } from "./_components/banner-selector";
 

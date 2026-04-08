@@ -8,7 +8,7 @@ import type { ChatSocketContextType, Message } from "./types";
 import { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
 
-import { useAuth } from "../auth";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const ChatSocketContext = createContext<ChatSocketContextType | null>(null);
 
@@ -60,7 +60,7 @@ const showNotification = (message: Message) => {
 export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const { user } = useAuth();
+  const user = useCurrentUser();
 
   // Запрос разрешения на уведомления при монтировании
   useEffect(() => {
@@ -106,7 +106,7 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
     socketInstance.on("newMessage", (data: Message) => {
       // Показываем уведомление только если это не ваше сообщение
       // и если окно неактивно или вы не на странице этого чата
-      if (data.senderId !== user.id) {
+      if (data.senderId !== user.data.id) {
         const isWindowFocused = document.hasFocus();
         const isOnChatPage = window.location.pathname.includes(`/profile/messages/${data.chatId}`);
 

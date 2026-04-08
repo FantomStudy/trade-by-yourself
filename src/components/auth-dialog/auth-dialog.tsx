@@ -1,14 +1,10 @@
 "use client";
 
 import type { ComponentProps } from "react";
-
 import type { AuthScreen } from "./screens/types";
-
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui";
-
 import { LoginScreen, RecoverScreen, RegisterScreen, VerifyCodeScreen } from "./screens";
 
 const AUTH_SCREENS = {

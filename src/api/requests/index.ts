@@ -2,7 +2,6 @@ export * from "./address";
 export * from "./analytic";
 export * from "./auth";
 export * from "./banner";
-export * from "./category";
 export * from "./chat";
 export * from "./favorites";
 export * from "./log";

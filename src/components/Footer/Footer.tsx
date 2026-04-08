@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/contexts";
-import { Button } from "../ui/Button";
-import { Logo } from "../ui/Logo";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Button, Logo } from "../ui";
 import styles from "./Footer.module.css";
 
 const SUPPORT_PHONE = "+7 (800) 555-35-35";
@@ -12,8 +11,7 @@ const SUPPORT_PHONE = "+7 (800) 555-35-35";
 export const Footer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // TODO: replace with useCurrentUser
-  const user = useAuth();
+  const user = useCurrentUser();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -41,7 +39,7 @@ export const Footer = () => {
               <Link href="/cookies">Политика cookies</Link>
               <Link href="/consent">Согласие на обработку ПДн</Link>
             </nav>
-            {user ? (
+            {user.data ? (
               <Button variant="success">
                 <Link href="/profile/messages/support">Тех поддержка</Link>
               </Button>

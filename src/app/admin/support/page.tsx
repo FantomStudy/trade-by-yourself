@@ -6,8 +6,8 @@ import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useChats } from "@/api/hooks";
-import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 import { useChatSocket } from "@/lib/contexts";
 import { formatPrice } from "@/lib/format";
 import {

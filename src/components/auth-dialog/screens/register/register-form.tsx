@@ -7,8 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { registerSchema } from "@/api";
 import { useRegisterMutation } from "@/api/hooks";
-import { Field, PhoneField, usePhoneField } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
+import { Button, Field, PhoneField, usePhoneField } from "@/components/ui";
 import styles from "../forms.module.css";
 
 interface RegisterFormProps {

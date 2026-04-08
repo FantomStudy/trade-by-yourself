@@ -1,7 +1,6 @@
 "use client";
 
 import type { Product } from "@/types";
-
 import { Check } from "lucide-react";
 import Image from "next/image";
 

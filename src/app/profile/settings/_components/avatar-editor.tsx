@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui";
 import styles from "./avatar-editor.module.css";
 
 interface AvatarEditorProps {

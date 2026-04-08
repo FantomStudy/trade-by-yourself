@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Footer } from "@/components/Footer";
-import { Sonner } from "@/components/ui/Sonner";
-import { MainLayout } from "./_components";
+import { Header } from "@/components/Header";
+import { Sonner } from "@/components/ui";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -20,9 +20,10 @@ export const metadata: Metadata = {
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="ru">
-      <body className={montserrat.variable}>
+      <body className={`${montserrat.variable} layout`}>
         <Providers>
-          <MainLayout>{children}</MainLayout>
+          <Header />
+          <div className="content">{children}</div>
           <Footer />
           <Sonner />
         </Providers>

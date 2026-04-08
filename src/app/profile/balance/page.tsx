@@ -15,17 +15,15 @@ import {
   useCheckPaymentStatusMutation,
   useCreatePaymentMutation,
   usePaymentHistory,
-  useUserInfo,
 } from "@/api/hooks";
-import { Typography } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { useAuth } from "@/lib/contexts";
+import { Button, Input, Typography } from "@/components/ui";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useUser } from "@/hooks/useUser";
 import styles from "./page.module.css";
 
 const BalancePage = () => {
-  const { user } = useAuth();
-  const { data: userInfo } = useUserInfo(user?.id);
+  const user = useCurrentUser();
+  const { data: userInfo } = useUser(user?.id);
   const [amount, setAmount] = useState("");
   const { data: payments = [], isLoading, refetch } = usePaymentHistory();
   const createPaymentMutation = useCreatePaymentMutation();

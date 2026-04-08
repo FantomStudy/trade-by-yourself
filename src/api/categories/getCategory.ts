@@ -1,29 +1,4 @@
+import type { Category } from "@/types";
 import { api } from "../instance";
 
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  subCategories: Subcategory[];
-}
-
-interface Subcategory {
-  id: number;
-  name: string;
-  slug: string;
-  subcategoryTypes: SubcategoryType[];
-}
-
-interface SubcategoryType {
-  id: number;
-  name: string;
-  slug: string;
-  fields: Field[];
-}
-
-interface Field {
-  id: number;
-  name: string;
-}
-
-export const getCategory = async (slug: string) => api<Category>(`/category/slug/${slug}`);
+export const getCategory = (slug: string) => api<Category>(`/category/slug/${slug}`);

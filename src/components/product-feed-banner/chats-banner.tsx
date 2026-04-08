@@ -3,7 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 
-import { getBanners, trackBannerView } from "@/api/requests/banner";
+import { getBanners } from "@/api/banners";
+import { trackBannerView } from "@/api/requests/banner";
 
 export const ChatsBanner = () => {
   const { data: banners, isLoading } = useQuery({

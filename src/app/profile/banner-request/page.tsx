@@ -4,10 +4,7 @@ import { Image as ImageIcon, Send, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-
-import { Typography } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { Button, Input, Typography } from "@/components/ui";
 
 const BannerRequestPage = () => {
   const [bannerName, setBannerName] = useState("");

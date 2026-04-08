@@ -15,9 +15,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createContext, use, useCallback, useEffect, useState } from "react";
-
-import { Typography } from "@/components/ui";
-
+import { Typography } from "@/components/ui/Typography";
 import styles from "../admin.module.css";
 
 const menuItems = [

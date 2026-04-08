@@ -16,18 +16,23 @@
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
 }
 
+.input::placeholder {
+  color: var(--muted-foreground);
+}
+
 .input::selection {
   background: var(--primary);
   color: var(--primary-foreground);
 }
 
+.input:focus-visible {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent);
+}
+
 .input[aria-invalid="true"] {
   border-color: var(--destructive);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent);
-}
-
-.input::placeholder {
-  color: var(--muted-foreground);
 }
 
 .input:disabled {
