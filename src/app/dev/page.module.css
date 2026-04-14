@@ -1,0 +1,145 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+.hero,
+.section {
+  border: 1px solid color-mix(in srgb, var(--border) 88%, white);
+  background:
+    radial-gradient(circle at top right, rgb(70 123 239 / 0.14), transparent 28%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.96), rgb(255 255 255 / 0.9));
+  border-radius: 28px;
+  box-shadow: 0 18px 45px rgb(15 23 42 / 0.06);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
+  gap: 24px;
+  padding: 32px;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.eyebrow {
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgb(70 123 239 / 0.12);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.heroDescription,
+.sectionDescription {
+  max-width: 720px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.heroAside {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid rgb(70 123 239 / 0.12);
+  background: rgb(245 248 255 / 0.8);
+  border-radius: 24px;
+}
+
+.heroActions,
+.group,
+.logoRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.typographyStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formLayout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.brandingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card,
+.gridCard,
+.sheetBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card,
+.gridCard {
+  padding: 18px;
+  border: 1px solid var(--border);
+  background: rgb(255 255 255 / 0.88);
+  border-radius: 20px;
+}
+
+.demoGrid {
+  gap: 16px;
+}
+
+.sheetBody {
+  padding-top: 12px;
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .formLayout,
+  .brandingGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-top: 16px;
+    padding-bottom: 32px;
+  }
+
+  .hero,
+  .section {
+    padding: 20px;
+    border-radius: 22px;
+  }
+}

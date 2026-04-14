@@ -1,0 +1,9 @@
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.compact {
+  gap: 4px;
+}

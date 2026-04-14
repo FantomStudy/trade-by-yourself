@@ -6,7 +6,7 @@
   font-size: 1rem;
   line-height: 1.25rem;
   overflow-wrap: break-word;
-  color: var(--muted-foreground);
+  color: var(--muted);
   margin: 0.875rem 0;
 }
 

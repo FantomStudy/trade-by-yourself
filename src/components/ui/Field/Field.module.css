@@ -1,0 +1,55 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field > * {
+  width: 100%;
+}
+
+.field > :global(.sr-only) {
+  width: auto;
+}
+
+.label {
+  display: flex;
+  width: fit-content;
+  gap: 0.5rem;
+  line-height: 1.375;
+}
+
+.field[data-disabled="true"] .label {
+  opacity: 0.5;
+}
+
+/* .label:has(> [data-slot="field"]) {
+  width: 100%;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.label > [data-slot="field"] {
+  padding: 0.625rem;
+} */
+
+.label:has([data-checked]) {
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  background-color: color-mix(in srgb, var(--primary) 5%, transparent);
+}
+
+.error {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  color: var(--danger);
+}
+
+.errorList {
+  margin: 0 0 0 1rem;
+  display: flex;
+  list-style: disc;
+  flex-direction: column;
+  gap: 0.25rem;
+}

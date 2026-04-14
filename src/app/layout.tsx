@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: "Сайт для продажи вещей",
 };
 
-const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="ru">
       <body className={`${montserrat.variable} layout`}>

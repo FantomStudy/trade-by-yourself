@@ -7,12 +7,8 @@ interface TypographyProps {
   variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span";
 }
 
-export const Typography = ({ variant = "p", children, className, ...props }: TypographyProps) => {
+export const Typography = ({ variant = "p", className, ...props }: TypographyProps) => {
   const Comp = variant;
 
-  return (
-    <Comp className={clsx(styles[variant], className)} {...props}>
-      {children}
-    </Comp>
-  );
+  return <Comp className={clsx(styles[variant], className)} {...props} />;
 };

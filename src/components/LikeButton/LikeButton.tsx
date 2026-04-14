@@ -1,11 +1,12 @@
 "use client";
 
 import type { ButtonProps } from "@/components/ui";
+import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { HeartIcon } from "lucide-react";
 import { useState } from "react";
+import { addFavorite, deleteFavorite } from "@/api/products";
 import { Button } from "@/components/ui";
-import { useLike } from "./useLike";
 import styles from "./LikeButton.module.css";
 
 interface LikeButtonProps extends ButtonProps {
@@ -16,7 +17,15 @@ interface LikeButtonProps extends ButtonProps {
 export const LikeButton = ({ initLiked, productId, ...props }: LikeButtonProps) => {
   const [isLiked, setIsLiked] = useState(initLiked);
 
-  const like = useLike(productId);
+  const like = useMutation({
+    mutationFn: async (isLiked: boolean) => {
+      if (isLiked) {
+        await addFavorite(productId);
+      } else {
+        await deleteFavorite(productId);
+      }
+    },
+  });
 
   const handleToggle = (e: React.MouseEvent) => {
     e.preventDefault();

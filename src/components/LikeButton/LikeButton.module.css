@@ -3,7 +3,7 @@
   transition: all 0.2s;
   stroke-width: 2;
   fill: none;
-  color: var(--muted-foreground);
+  color: var(--muted);
 }
 
 .liked {

@@ -4,33 +4,24 @@ import styles from "./not-found.module.css";
 
 const NotFoundPage = () => {
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.code}>404</div>
+    <main className={styles.container}>
+      <span className={styles.code}>404</span>
+      <Typography variant="h1" className={styles.title}>
+        Страница не найдена
+      </Typography>
+      <Typography className={styles.description}>
+        К сожалению, запрашиваемая страница не существует или была удалена
+      </Typography>
 
-        <Typography variant="h1" className={styles.title}>
-          Страница не найдена
-        </Typography>
-
-        <Typography variant="p" className={styles.description}>
-          К сожалению, запрашиваемая страница не существует или была удалена
-        </Typography>
-
-        <div className={styles.actions}>
-          <Button nativeButton={false} render={<Link href="/" />}>
-            На главную
-          </Button>
-
-          <Button
-            variant="outline"
-            nativeButton={false}
-            render={<Link href="/profile/my-products" />}
-          >
-            Мои объявления
-          </Button>
-        </div>
+      <div className={styles.actions}>
+        <Button render={<Link href="/" />} nativeButton={false}>
+          На главную
+        </Button>
+        <Button variant="outline" render={<Link href="/" />} nativeButton={false}>
+          Мои объявления
+        </Button>
       </div>
-    </div>
+    </main>
   );
 };
 

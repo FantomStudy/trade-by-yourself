@@ -1,4 +1,4 @@
-import type { Product } from "./getProducts";
+import type { Product } from "./types";
 import { api } from "../instance";
 
 export const getUserProducts = (userId: number) =>

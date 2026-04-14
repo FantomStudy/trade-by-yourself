@@ -1,5 +1,5 @@
 .card {
-  background-color: var(--background);
+  background-color: var(--surface);
   color: var(--foreground);
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@
 .address {
   flex: 1;
   font-size: 12px;
-  color: var(--muted-foreground);
+  color: var(--muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;

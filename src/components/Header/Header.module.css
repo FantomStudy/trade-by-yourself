@@ -1,27 +1,28 @@
 .header {
-  background: var(--background);
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
 }
 
 .wrapper {
-  display: flex;
   height: 72px;
+  display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.rightSection {
+.actions {
   display: flex;
   align-items: center;
   gap: var(--space-md);
 }
 
-.desktopActions {
+.desktop {
   display: flex;
   align-items: center;
 }
 
-.actions {
+.actionsWrapper {
   display: flex;
   align-items: center;
   gap: var(--space-md);
@@ -32,11 +33,11 @@
     height: 60px;
   }
 
-  .desktopActions {
+  .desktop {
     display: none;
   }
 
-  .rightSection {
+  .actions {
     gap: 8px;
   }
 }

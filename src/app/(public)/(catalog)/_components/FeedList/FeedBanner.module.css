@@ -1,0 +1,41 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: var(--surface);
+  transition: opacity 0.2s;
+  overflow: hidden;
+}
+
+.card:hover {
+  opacity: 0.9;
+}
+
+.card[data-size="wide"] {
+  grid-column: span 2;
+}
+
+.imageWrapper {
+  flex: 1;
+  position: relative;
+}
+
+.imageWrapper img {
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+}
+
+.content {
+  padding: 12px;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+}

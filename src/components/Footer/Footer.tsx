@@ -1,35 +1,19 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { getCurrentUser } from "@/api/auth";
 import { Button, Logo } from "../ui";
+import { SupportButton } from "./SupportButton";
 import styles from "./Footer.module.css";
 
-const SUPPORT_PHONE = "+7 (800) 555-35-35";
-
-export const Footer = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const user = useCurrentUser();
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const timer = setTimeout(setIsOpen, 5000, false);
-
-    return () => clearTimeout(timer);
-  }, [isOpen]);
-
-  const handleSupportClick = () => {
-    setIsOpen((prev) => !prev);
-  };
+export const Footer = async () => {
+  const user = await getCurrentUser().catch(() => null);
 
   return (
     <footer className={styles.footer}>
-      <div className="global-container">
+      <div className="container">
         <div className={styles.wrapper}>
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
           <div className={styles.column}>
             <nav className={styles.nav}>
               <Link href="/">Разместить объявление</Link>
@@ -39,21 +23,16 @@ export const Footer = () => {
               <Link href="/cookies">Политика cookies</Link>
               <Link href="/consent">Согласие на обработку ПДн</Link>
             </nav>
-            {user.data ? (
-              <Button variant="success">
-                <Link href="/profile/messages/support">Тех поддержка</Link>
+            {user ? (
+              <Button
+                variant="success"
+                render={<Link href="/profile/messages/support" />}
+                nativeButton={false}
+              >
+                Тех поддержка
               </Button>
             ) : (
-              <div className={styles.supportWrapper}>
-                <Button
-                  variant="success"
-                  className={styles.supportButton}
-                  onClick={handleSupportClick}
-                >
-                  Тех поддержка
-                </Button>
-                {isOpen && <div className={styles.supportBadge}>{SUPPORT_PHONE}</div>}
-              </div>
+              <SupportButton />
             )}
           </div>
         </div>

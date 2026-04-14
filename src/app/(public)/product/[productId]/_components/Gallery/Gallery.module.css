@@ -1,0 +1,307 @@
+.imageGallery {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.thumbnails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.thumbnail {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.thumbnail:hover {
+  border-color: #ccc;
+  transform: scale(1.03);
+}
+
+.active {
+  border-color: #3498db;
+  box-shadow: 0 0 0 1px rgb(52 152 219 / 30%);
+}
+
+.thumbnailContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #f4f4f5;
+}
+
+.thumbnailIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.mainImageWrapper {
+  position: relative;
+  flex: 1;
+  max-width: 650px;
+  min-height: 500px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+}
+
+.mainImage {
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.videoWrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.videoFrame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+  object-fit: cover;
+}
+
+.videoFallback {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  color: #fff;
+  font-size: 14px;
+}
+
+.controls {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.controlItem {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.controlItem svg {
+  stroke-width: 1.5;
+}
+
+.fullscreenOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 95%);
+}
+
+.fullscreenClose,
+.fullscreenNav {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.fullscreenClose:hover,
+.fullscreenNav:hover {
+  background: rgb(255 255 255 / 20%);
+}
+
+.fullscreenClose {
+  top: 16px;
+  right: 16px;
+}
+
+.fullscreenNav {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.fullscreenNavPrev {
+  left: 16px;
+}
+
+.fullscreenNavNext {
+  right: 16px;
+}
+
+.fullscreenImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 64px;
+}
+
+.fullscreenImage {
+  object-fit: contain;
+}
+
+.fullscreenDots {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+}
+
+.fullscreenDot {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 50%);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.fullscreenDot:hover {
+  background: rgb(255 255 255 / 75%);
+}
+
+.fullscreenDot[data-active] {
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .imageGallery {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .thumbnails {
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+
+  .mainImageWrapper {
+    max-width: 100%;
+    min-height: 300px;
+    aspect-ratio: 4 / 3;
+  }
+
+  .controlItem {
+    width: 36px;
+    height: 36px;
+    margin: 8px;
+  }
+
+  .fullscreenClose,
+  .fullscreenNav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .fullscreenImageWrapper {
+    padding: 48px 24px;
+  }
+
+  .fullscreenDots {
+    bottom: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageGallery {
+    gap: 8px;
+  }
+
+  .thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+
+  .mainImageWrapper {
+    min-height: 250px;
+    border-radius: 8px;
+  }
+
+  .controlItem {
+    width: 32px;
+    height: 32px;
+    margin: 6px;
+  }
+
+  .fullscreenClose {
+    top: 12px;
+    right: 12px;
+  }
+
+  .fullscreenNavPrev {
+    left: 12px;
+  }
+
+  .fullscreenNavNext {
+    right: 12px;
+  }
+
+  .fullscreenImageWrapper {
+    padding: 40px 16px;
+  }
+
+  .fullscreenDots {
+    bottom: 16px;
+    gap: 6px;
+  }
+
+  .fullscreenDot {
+    width: 10px;
+    height: 10px;
+  }
+}

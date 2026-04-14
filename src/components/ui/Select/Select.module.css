@@ -1,26 +1,23 @@
-/* Group */
 .group {
   scroll-margin: 0.25rem 0;
   padding: 0.25rem;
 }
 
-/* Value */
 .value {
   display: flex;
   flex: 1;
   text-align: left;
 }
 
-/* Trigger */
 .trigger {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: space-between;
   gap: 0.375rem;
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: transparent;
+  background: var(--surface);
   padding: 0.5rem 0.5rem 0.5rem 0.625rem;
   font-size: 1rem;
   line-height: 1.25rem;
@@ -41,7 +38,7 @@
 }
 
 .trigger[data-placeholder] {
-  color: var(--muted-foreground);
+  color: var(--muted);
 }
 
 .trigger:disabled {
@@ -61,7 +58,7 @@
   pointer-events: none;
   width: 1rem;
   height: 1rem;
-  color: var(--muted-foreground);
+  color: var(--muted);
 }
 
 /* Separator */
@@ -107,7 +104,7 @@
   transform-origin: var(--transform-origin);
   overflow-x: hidden;
   overflow-y: auto;
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: var(--radius);
   background-color: var(--popover);
   color: var(--popover-foreground);
   box-shadow:
@@ -152,7 +149,7 @@
   padding: 0.25rem 0.375rem;
   font-size: 0.75rem;
   line-height: 1rem;
-  color: var(--muted-foreground);
+  color: var(--muted);
 }
 
 /* Item */
@@ -163,7 +160,7 @@
   cursor: default;
   align-items: center;
   gap: 0.375rem;
-  border-radius: calc(var(--radius) - 4px);
+  border-radius: var(--radius);
   padding: 0.25rem 2rem 0.25rem 0.375rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -173,7 +170,7 @@
 
 .item:focus {
   background-color: var(--accent);
-  color: var(--accent-foreground);
+  color: var(--foreground);
 }
 
 .item[data-disabled] {

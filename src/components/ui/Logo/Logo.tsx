@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Typography } from "../Typography";
 import styles from "./Logo.module.css";
 
 interface LogoProps {
@@ -9,8 +8,8 @@ interface LogoProps {
 export const Logo = ({ hiddenText = false }: LogoProps) => {
   return (
     <div className={styles.logo}>
-      <Image alt="Logo" height={49} src="/logo.png" width={68} priority />
-      {!hiddenText && <Typography variant="h2">ТоргуйСам</Typography>}
+      <Image src="/logo.png" alt="Logo" width={58} height={50} priority />
+      {!hiddenText && <span className={styles.text}>ТоргуйСам</span>}
     </div>
   );
 };

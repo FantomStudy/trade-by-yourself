@@ -1,4 +1,4 @@
-import type { BannerPlace } from "@/types/banner";
+import type { BannerPlace } from "@/api/banners/types";
 import { useQuery } from "@tanstack/react-query";
 import { getBanners } from "@/api/banners/getBanners";
 

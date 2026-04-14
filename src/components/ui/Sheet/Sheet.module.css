@@ -1,9 +1,8 @@
-/* Overlay */
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background-color: rgb(0 0 0 / 0.25);
+  background-color: rgb(0 0 0 / 0.4);
   transition: opacity 150ms;
 }
 
@@ -12,13 +11,12 @@
   opacity: 0;
 }
 
-@supports (backdrop-filter: blur(1px)) {
+/* @supports (backdrop-filter: blur(1px)) {
   .overlay {
     backdrop-filter: blur(4px);
   }
-}
+} */
 
-/* ─── Content */
 .content {
   position: fixed;
   z-index: 50;
@@ -41,7 +39,6 @@
   opacity: 0;
 }
 
-/* bottom */
 .content[data-side="bottom"] {
   left: 0;
   right: 0;
@@ -55,7 +52,6 @@
   transform: translateY(2.5rem);
 }
 
-/* left */
 .content[data-side="left"] {
   top: 0;
   bottom: 0;
@@ -70,7 +66,6 @@
   transform: translateX(-2.5rem);
 }
 
-/* right */
 .content[data-side="right"] {
   top: 0;
   bottom: 0;
@@ -85,7 +80,6 @@
   transform: translateX(2.5rem);
 }
 
-/* top */
 .content[data-side="top"] {
   top: 0;
   left: 0;
@@ -106,14 +100,12 @@
   }
 }
 
-/* Close button */
 .closeButton {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
 }
 
-/* Header */
 .header {
   display: flex;
   flex-direction: column;
@@ -121,7 +113,6 @@
   padding: 1rem;
 }
 
-/* Footer */
 .footer {
   margin-top: auto;
   display: flex;
@@ -130,7 +121,6 @@
   padding: 1rem;
 }
 
-/* Title */
 .title {
   font-size: 1.25rem;
   line-height: 1.5rem;
@@ -138,9 +128,8 @@
   color: var(--foreground);
 }
 
-/* Description */
 .description {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--muted-foreground);
+  color: var(--muted);
 }

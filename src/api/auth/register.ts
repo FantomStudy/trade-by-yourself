@@ -1,5 +1,5 @@
 import z from "zod";
-import { validatePhone } from "@/lib/validatePhone";
+import { isValidPhone } from "@/lib/phone";
 import { api } from "../instance";
 
 export const registerSchema = z.object({
@@ -9,21 +9,22 @@ export const registerSchema = z.object({
     .string()
     .min(1, "Номер телефона обязателен")
     .refine(
-      (value) => validatePhone(value),
+      (value) => isValidPhone(value),
       "Введите корректный российский номер телефона в формате +7 (XXX) XXX-XX-XX",
     ),
   password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
+  where: z.enum(["telegram", "sms"]).default("sms"),
 });
 
 export type RegisterBody = z.infer<typeof registerSchema>;
 
-export type RegisterProvider = "telegram" | "sms";
+// export type RegisterProvider = "telegram" | "sms";
 
 export interface RegisterResponse {
   message: string;
 }
 
 export const register = (
-  body: RegisterBody,
-  query: { where: RegisterProvider } = { where: "sms" },
-) => api<RegisterResponse>(`/auth/sign-up`, { method: "POST", body, query });
+  { where, ...body }: RegisterBody,
+  // query: { where: RegisterProvider } = { where: "sms" },
+) => api<RegisterResponse>(`/auth/sign-up`, { method: "POST", body, query: { where } });

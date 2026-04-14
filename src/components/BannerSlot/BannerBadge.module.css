@@ -1,0 +1,10 @@
+.badge {
+  display: inline-flex;
+  border-radius: 1000px;
+  background-color: color-mix(in lab, oklch(92.8% 0.006 264.531) 80%, transparent);
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 500;
+  color: oklch(37.3% 0.034 259.733);
+  text-transform: uppercase;
+}

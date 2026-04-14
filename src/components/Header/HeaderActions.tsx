@@ -1,37 +1,38 @@
 "use client";
 
 import type { Route } from "next";
+import type { CurrentUser } from "@/api/user";
 import { HeartIcon, MessageSquareIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logout } from "@/api/auth";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { AuthDialog } from "../auth-dialog";
 import { Avatar, Button } from "../ui";
+import { AuthDialog } from "./AuthDialog";
 import styles from "./Header.module.css";
 
 const GuestActions = () => {
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const openAuthDialog = () => {
-    setIsAuthOpen(true);
+    setIsOpen(true);
   };
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     if (params.get("auth")) {
-      setIsAuthOpen(true);
+      setIsOpen(true);
     }
+
     router.push(pathname as Route);
   }, []);
 
   return (
-    <div className={styles.actions}>
+    <div className={styles.actionsWrapper}>
       <Button variant="ghost" onClick={openAuthDialog}>
         Вход / Регистрация
       </Button>
@@ -40,18 +41,23 @@ const GuestActions = () => {
         Разместить объявление
       </Button>
 
-      <AuthDialog onOpenChange={setIsAuthOpen} open={isAuthOpen} />
+      <AuthDialog open={isOpen} onOpenChange={setIsOpen} />
     </div>
   );
 };
 
-export const HeaderActions = () => {
-  const user = useCurrentUser();
+export const HeaderActions = ({ user }: { user: CurrentUser | null }) => {
+  const router = useRouter();
 
-  if (!user.data) return <GuestActions />;
+  const handleLogout = async () => {
+    await logout();
+    router.refresh();
+  };
+
+  if (!user) return <GuestActions />;
 
   return (
-    <div className={styles.actions}>
+    <nav className={styles.actionsWrapper}>
       <Link href="/profile/messages">
         <MessageSquareIcon color="var(--primary)" />
       </Link>
@@ -60,17 +66,21 @@ export const HeaderActions = () => {
         <HeartIcon color="var(--pink)" />
       </Link>
 
-      <Link href="/profile/my-products">
-        <Avatar src={user.data.photo} fallback={user.data.fullName[0]} />
+      <Link href="/profile/products">
+        <Avatar src={user.photo} fallback={user.fullName[0]} />
       </Link>
 
-      <Button variant="success">
-        <Link href="/profile/create-product">Разместить объявление</Link>
+      <Button
+        variant="success"
+        render={<Link href="/profile/create-product" />}
+        nativeButton={false}
+      >
+        Разместить объявление
       </Button>
 
-      <Button variant="ghost" onClick={logout}>
+      <Button variant="ghost" onClick={handleLogout}>
         Выйти
       </Button>
-    </div>
+    </nav>
   );
 };

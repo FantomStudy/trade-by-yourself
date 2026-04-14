@@ -1,6 +1,6 @@
 import { api } from "../instance";
 
-export interface LogoutResponse {
+interface LogoutResponse {
   message: string;
 }
 

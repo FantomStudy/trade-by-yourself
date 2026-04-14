@@ -10,19 +10,8 @@ const nextConfig: NextConfig = {
   output: "standalone",
   typedRoutes: true,
 
-  turbopack: {
-    root: __dirname,
-  },
-
   images: {
-    unoptimized: true,
     remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "3000",
-        pathname: "/**",
-      },
       {
         protocol: "https",
         hostname: S3_HOSTNAME,

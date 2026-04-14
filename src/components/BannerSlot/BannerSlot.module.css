@@ -1,0 +1,26 @@
+.banner {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.banner[data-place="FAVORITES"] {
+  aspect-ratio: 1200 / 200;
+}
+
+.banner[data-place="CHATS"] {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/4;
+  border-radius: var(--radius);
+}
+
+.banner img {
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+}
