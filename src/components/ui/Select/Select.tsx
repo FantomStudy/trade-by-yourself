@@ -22,7 +22,6 @@ const SelectTrigger = ({
   ...props
 }: SelectBase.Trigger.Props & {
   size?: "sm" | "default";
-  autoComplete?: "off" | "on";
 }) => {
   return (
     <SelectBase.Trigger className={clsx(styles.trigger, styles[size], className)} {...props}>
