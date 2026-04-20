@@ -1,0 +1,209 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wrapper h1 {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.purple {
+  color: #7b46e4;
+}
+
+.blue {
+  color: #3b82f6;
+}
+
+.green {
+  color: #10b981;
+}
+
+.orange {
+  color: #f97316;
+}
+
+.previewWrap {
+  position: relative;
+}
+
+.previewImageFrame {
+  position: relative;
+  width: 100%;
+  height: 192px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+}
+
+.previewImage {
+  object-fit: contain;
+}
+
+.removeImageButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: none;
+  background: #ef4444;
+  color: #ffffff;
+  padding: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.removeImageButton:hover {
+  background: #dc2626;
+}
+
+.removeImageIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.uploadPlaceholder {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  border: 2px dashed #d1d5db;
+  background: white;
+  padding: 32px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.uploadPlaceholder:hover {
+  border-color: #60a5fa;
+  background: #f8fbff;
+}
+
+.uploadIcon {
+  width: 32px;
+  height: 32px;
+  color: #9ca3af;
+}
+
+.uploadTitle {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.uploadHint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.placesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.placeOption {
+  border-radius: 12px;
+  border-width: 2px;
+  border-style: solid;
+  padding: 16px;
+  text-align: left;
+  background: #ffffff;
+  border-color: #ccd0d4;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.placeOption:hover {
+  border-color: #9da1a9;
+}
+
+.placeOptionActive {
+  border-color: #a855f7;
+  background: #faf5ff;
+}
+
+.placeName {
+  font-weight: 600;
+  color: #111827;
+}
+
+.placeSize {
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.placePrice {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: #9333ea;
+}
+
+.button {
+  margin-top: 30px;
+  max-width: 280px;
+}
+
+.infoCard {
+  margin-top: 20px;
+  border-radius: 12px;
+  border: 1px solid #e9d5ff;
+  background: #faf5ff;
+  padding: 16px;
+}
+
+.infoTitle {
+  font-weight: 600;
+  color: #6b21a8;
+}
+
+.infoList {
+  margin-top: 8px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: #7e22ce;
+}
+
+.inputError {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 1px rgb(239 68 68 / 35%);
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent);
+}
+
+.errorText {
+  font-size: 13px;
+  color: var(--danger);
+}
