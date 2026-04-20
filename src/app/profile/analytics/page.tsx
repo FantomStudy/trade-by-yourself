@@ -3,51 +3,72 @@
 import { useQuery } from "@tanstack/react-query";
 import { Eye, Heart, MessageSquare, Package } from "lucide-react";
 import { useState } from "react";
-import { useChats } from "@/api/hooks";
+import { getAnalytics } from "@/api/analytics";
+import { getChats } from "@/api/chats";
 import { getFavorites } from "@/api/products";
-import { useAnalytics } from "@/components/_deprecated/useAnalytics";
-import { Typography } from "@/components/ui";
+import { Select, Typography } from "@/components/ui";
 import { useCategories } from "@/hooks/useCategories";
 import styles from "./page.module.css";
+
+const PERIOD_VALUES = {
+  day: "День",
+  week: "Неделя",
+  month: "Месяц",
+  quarter: "Квартал",
+  "half-year": "Полгода",
+  year: "Год",
+} as const;
 
 const Analytics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("year");
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
 
-  // Загружаем категории
   const {
     data: categories,
     isLoading: categoriesLoading,
     error: categoriesError,
   } = useCategories();
 
-  // Загружаем чаты и избранное
-  const { data: chats } = useChats();
+  const { data: chats } = useQuery({
+    queryKey: ["chats", "list"],
+    queryFn: getChats,
+  });
   const { data: favorites } = useQuery({
     queryKey: ["favorites"],
     queryFn: getFavorites,
   });
 
-  // Загружаем аналитику
   const {
     data: analyticsData,
     isLoading: analyticsLoading,
     error: analyticsError,
-  } = useAnalytics({
-    period: selectedPeriod,
-    categoryId: selectedCategoryId,
+  } = useQuery({
+    queryKey: ["analytics", selectedPeriod, selectedCategoryId],
+    queryFn: () =>
+      getAnalytics({
+        period: selectedPeriod,
+        categoryId: selectedCategoryId,
+      }),
   });
 
   const isLoading = categoriesLoading || analyticsLoading;
   const error = categoriesError || analyticsError;
 
-  const handlePeriodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedPeriod(event.target.value);
+  const formatError = (value: unknown) => {
+    if (typeof value === "string") return value;
+    if (value && typeof value === "object" && "message" in value) {
+      const message = (value as { message?: unknown }).message;
+      if (typeof message === "string") return message;
+    }
+    return "Не удалось загрузить аналитику";
   };
 
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    setSelectedCategoryId(value === "" ? undefined : Number.parseInt(value));
+  const handlePeriodChange = (value: string | null) => {
+    setSelectedPeriod(value!);
+  };
+
+  const handleCategoryChange = (value: string | null) => {
+    setSelectedCategoryId(value === "" ? undefined : Number.parseInt(value!));
   };
 
   if (isLoading) {
@@ -66,7 +87,7 @@ const Analytics = () => {
       <div className={styles.page}>
         <div className={styles.error}>
           <h2>Ошибка</h2>
-          <p>{error}</p>
+          <p>{formatError(error)}</p>
           <button className={styles.retryButton} onClick={() => window.location.reload()}>
             Попробовать снова
           </button>
@@ -85,38 +106,47 @@ const Analytics = () => {
           Аналитика
         </Typography>
         <div className={styles.filters}>
-          <select
-            className={styles.filterSelect}
-            value={selectedPeriod}
-            onChange={handlePeriodChange}
+          <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
+            <Select.Trigger className={styles.filterSelect}>
+              <Select.Value>
+                {PERIOD_VALUES[selectedPeriod as keyof typeof PERIOD_VALUES]}
+              </Select.Value>
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Item value="day">День</Select.Item>
+              <Select.Item value="week">Неделя</Select.Item>
+              <Select.Item value="month">Месяц</Select.Item>
+              <Select.Item value="quarter">Квартал</Select.Item>
+              <Select.Item value="half-year">Полгода</Select.Item>
+              <Select.Item value="year">Год</Select.Item>
+            </Select.Content>
+          </Select>
+          <Select
+            value={selectedCategoryId ? String(selectedCategoryId) : ""}
+            onValueChange={handleCategoryChange}
           >
-            <option value="day">День</option>
-            <option value="week">Неделя</option>
-            <option value="month">Месяц</option>
-            <option value="quarter">Квартал</option>
-            <option value="half-year">Полгода</option>
-            <option value="year">Год</option>
-          </select>
-          <select
-            className={styles.filterSelect}
-            value={selectedCategoryId || ""}
-            onChange={handleCategoryChange}
-          >
-            <option value="">Все категории</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+            <Select.Trigger className={styles.filterSelect}>
+              <Select.Value placeholder="Все категории">
+                {categories.find((el) => el.id === selectedCategoryId)?.name}
+              </Select.Value>
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Item value="">Все категории</Select.Item>
+              {categories.map((category) => (
+                <Select.Item key={category.id} value={category.id}>
+                  {category.name}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select>
         </div>
       </div>
 
       {/* Карточки метрик */}
       <div className={styles.metricsGrid}>
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: "#dbeafe" }}>
-            <Eye className="h-6 w-6" style={{ color: "#3b82f6" }} />
+          <div className={`${styles.metricIcon} ${styles.metricIconViews}`}>
+            <Eye className={styles.metricIconSvg} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Просмотры</Typography>
@@ -128,8 +158,8 @@ const Analytics = () => {
         </div>
 
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: "#d1fae5" }}>
-            <MessageSquare className="h-6 w-6" style={{ color: "#10b981" }} />
+          <div className={`${styles.metricIcon} ${styles.metricIconChats}`}>
+            <MessageSquare className={styles.metricIconSvg} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Всего чатов</Typography>
@@ -139,8 +169,8 @@ const Analytics = () => {
         </div>
 
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: "#fce7f3" }}>
-            <Heart className="h-6 w-6" style={{ color: "#ec4899" }} />
+          <div className={`${styles.metricIcon} ${styles.metricIconFavorites}`}>
+            <Heart className={styles.metricIconSvg} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>В избранном</Typography>
@@ -150,8 +180,8 @@ const Analytics = () => {
         </div>
 
         <div className={styles.metricCard}>
-          <div className={styles.metricIcon} style={{ backgroundColor: "#e0e7ff" }}>
-            <Package className="h-6 w-6" style={{ color: "#6366f1" }} />
+          <div className={`${styles.metricIcon} ${styles.metricIconPhone}`}>
+            <Package className={styles.metricIconSvg} />
           </div>
           <div className={styles.metricContent}>
             <Typography className={styles.metricLabel}>Телефон</Typography>

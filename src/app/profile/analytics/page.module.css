@@ -1,4 +1,4 @@
-﻿.page {
+.page {
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -32,7 +32,9 @@
 }
 
 .filterSelect {
-  padding: 8px 12px;
+  padding: 4px 12px;
+  height: 42px;
+  width: 150px;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   background-color: white;
@@ -95,6 +97,43 @@
   width: 48px;
   border-radius: 12px;
   flex-shrink: 0;
+}
+
+.metricIconViews {
+  background-color: #dbeafe;
+}
+
+.metricIconViews .metricIconSvg {
+  color: #3b82f6;
+}
+
+.metricIconChats {
+  background-color: #d1fae5;
+}
+
+.metricIconChats .metricIconSvg {
+  color: #10b981;
+}
+
+.metricIconFavorites {
+  background-color: #fce7f3;
+}
+
+.metricIconFavorites .metricIconSvg {
+  color: #ec4899;
+}
+
+.metricIconPhone {
+  background-color: #e0e7ff;
+}
+
+.metricIconPhone .metricIconSvg {
+  color: #6366f1;
+}
+
+.metricIconSvg {
+  width: 24px;
+  height: 24px;
 }
 
 .metricContent {
