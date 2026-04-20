@@ -23,7 +23,56 @@
   height: 2.5rem;
   width: 2.5rem;
   padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.backIcon {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.headerContent {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.supportAvatar {
+  display: flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #ede9fe;
+}
+
+.supportIcon {
+  height: 1.25rem;
+  width: 1.25rem;
+  color: #7c3aed;
+}
+
+.headerText {
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  color: #111827;
+}
+
+.subtitle {
+  margin: 0.125rem 0 0;
+  font-size: 0.75rem;
+  color: #6b7280;
 }
 
 /* Контейнер сообщений */
@@ -38,6 +87,45 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.emptyIconWrap {
+  display: flex;
+  height: 4rem;
+  width: 4rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border-radius: 9999px;
+  background-color: #ede9fe;
+}
+
+.emptyIcon {
+  height: 2rem;
+  width: 2rem;
+  color: #7c3aed;
+}
+
+.emptyTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.emptyDescription {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #4b5563;
 }
 
 /* Обертка сообщения */
@@ -126,6 +214,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
+}
+
+.sendIcon {
+  height: 1.25rem;
+  width: 1.25rem;
 }
 
 @media (max-width: 640px) {

@@ -1,30 +1,45 @@
 "use client";
 
-import type { SupportMessage } from "@/lib/support-chat";
+import type { SupportMessage } from "@/api/chats";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 import {
   addSupportMessage,
   getSupportMessages,
   markSupportMessagesAsRead,
-} from "@/lib/support-chat";
+} from "@/api/chats";
+import { Button } from "@/components/ui";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import styles from "./page.module.css";
 
 const SupportChatPage = () => {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<SupportMessage[]>(() => getSupportMessages());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
   const { data: currentUser } = useCurrentUser();
 
+  const { data: messages = [] } = useQuery<SupportMessage[]>({
+    queryKey: ["supportMessages"],
+    queryFn: getSupportMessages,
+  });
+
+  const sendMessageMutation = useMutation({
+    mutationFn: async (payload: { content: string; userId?: number; userName?: string }) =>
+      addSupportMessage(payload.content, true, payload.userId, payload.userName),
+    onSuccess: () => {
+      setMessage("");
+      queryClient.invalidateQueries({ queryKey: ["supportMessages"] });
+    },
+  });
+
   useEffect(() => {
-    // Помечаем сообщения как прочитанные для пользователя
     markSupportMessagesAsRead(true);
+    queryClient.invalidateQueries({ queryKey: ["supportMessages"] });
 
     const handleUpdate = () => {
-      setMessages(getSupportMessages());
+      queryClient.invalidateQueries({ queryKey: ["supportMessages"] });
     };
 
     window.addEventListener("supportMessageAdded", handleUpdate);
@@ -34,13 +49,23 @@ const SupportChatPage = () => {
       window.removeEventListener("supportMessageAdded", handleUpdate);
       window.removeEventListener("supportMessagesRead", handleUpdate);
     };
-  }, []);
+  }, [queryClient]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSend = () => {
-    if (!message.trim()) return;
+    const content = message.trim();
+    if (!content) {
+      return;
+    }
 
-    addSupportMessage(message.trim(), true, currentUser?.id, currentUser?.fullName);
-    setMessage("");
+    sendMessageMutation.mutate({
+      content,
+      userId: currentUser?.id,
+      userName: currentUser?.fullName,
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -55,16 +80,16 @@ const SupportChatPage = () => {
       {/* Шапка */}
       <div className={styles.header}>
         <Link href="/profile/messages" className={styles.backButton}>
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className={styles.backIcon} />
         </Link>
 
-        <div className="flex flex-1 items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
-            <MessageSquare className="h-5 w-5 text-purple-600" />
+        <div className={styles.headerContent}>
+          <div className={styles.supportAvatar}>
+            <MessageSquare className={styles.supportIcon} />
           </div>
-          <div className="flex-1">
-            <h2 className="font-semibold">Техническая поддержка</h2>
-            <p className="text-xs text-gray-500">Команда поддержки</p>
+          <div className={styles.headerText}>
+            <h2 className={styles.title}>Техническая поддержка</h2>
+            <p className={styles.subtitle}>Команда поддержки</p>
           </div>
         </div>
       </div>
@@ -72,12 +97,12 @@ const SupportChatPage = () => {
       {/* Сообщения */}
       <div className={styles.messagesContainer}>
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
-              <MessageSquare className="h-8 w-8 text-purple-600" />
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIconWrap}>
+              <MessageSquare className={styles.emptyIcon} />
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-gray-800">Начните диалог</h3>
-            <p className="text-sm text-gray-600">Задайте вопрос нашей команде поддержки</p>
+            <h3 className={styles.emptyTitle}>Начните диалог</h3>
+            <p className={styles.emptyDescription}>Задайте вопрос нашей команде поддержки</p>
           </div>
         ) : (
           <div className={styles.messagesList}>
@@ -110,12 +135,16 @@ const SupportChatPage = () => {
           className={styles.textarea}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           placeholder="Напишите сообщение..."
           rows={1}
         />
-        <Button className={styles.sendButton} disabled={!message.trim()} onClick={handleSend}>
-          <Send className="h-5 w-5" />
+        <Button
+          className={styles.sendButton}
+          disabled={!message.trim() || sendMessageMutation.isPending}
+          onClick={handleSend}
+        >
+          <Send className={styles.sendIcon} />
         </Button>
       </div>
     </div>
