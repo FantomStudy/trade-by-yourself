@@ -2,10 +2,12 @@
 
 import L from "leaflet";
 import { Search } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
-import { getAddressSuggestions, validateAddress } from "@/api/requests/address";
+import { getAddressSuggestions, validateAddress } from "@/api/address";
 import { Input } from "@/components/ui/Input";
+import { DEBOUNCE_TIMEOUT, ORENBURG_CENTER } from "./constants";
+import styles from "./AddressMap.module.css";
 import "leaflet/dist/leaflet.css";
 
 // Исправляем проблему с иконками маркеров в Leaflet
@@ -28,24 +30,22 @@ interface AddressMapProps {
   onCoordinatesChange?: (lat: number, lng: number) => void;
 }
 
-// Компонент для обработки кликов по карте
-function MapClickHandler({
-  onLocationSelect,
-}: {
+interface MapClickHandlerProps {
   onLocationSelect: (lat: number, lng: number) => void;
-}) {
+}
+
+// Компонент для обработки кликов по карте
+function MapClickHandler({ onLocationSelect }: MapClickHandlerProps) {
   useMapEvents({
     click: (e) => {
       onLocationSelect(e.latlng.lat, e.latlng.lng);
     },
   });
+
   return null;
 }
 
 export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: AddressMapProps) => {
-  // Координаты Оренбурга
-  const ORENBURG_CENTER: [number, number] = [51.7687, 55.0963];
-
   const [address, setAddress] = useState(value);
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -56,11 +56,36 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
   const [_locationPermission, setLocationPermission] = useState<PermissionState | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
+  // Функция для получения адреса по координатам (обратное геокодирование)
+  const getAddressFromCoordinates = useCallback(
+    async (lat: number, lng: number) => {
+      try {
+        setIsLoadingAddress(true);
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ru&addressdetails=1`,
+        );
+
+        const data = await response.json();
+
+        if (data && data.display_name) {
+          const formattedAddress = data.display_name;
+          setAddress(formattedAddress);
+          onChange?.(formattedAddress);
+        }
+      } catch (error) {
+        console.error("Ошибка при получении адреса:", error);
+      } finally {
+        setIsLoadingAddress(false);
+      }
+    },
+    [onChange],
+  );
+
   // Функция для получения текущей геолокации пользователя
-  const getCurrentLocation = async () => {
+  const getCurrentLocation = useCallback(async () => {
     if (!navigator.geolocation) {
       console.error("Геолокация не поддерживается браузером");
       return;
@@ -78,7 +103,6 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
       });
 
       const { latitude, longitude } = position.coords;
-      console.log("Получены координаты:", latitude, longitude);
 
       // Устанавливаем маркер на карте
       setMarkerPosition([latitude, longitude]);
@@ -87,20 +111,16 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
       // Получаем адрес по координатам
       await getAddressFromCoordinates(latitude, longitude);
     } catch (error: any) {
-      console.error("Ошибка получения геолокации:", error);
-
       if (error.code === error.PERMISSION_DENIED) {
         setLocationPermission("denied");
         console.log("Пользователь запретил доступ к геолокации");
-      } else if (error.code === error.POSITION_UNAVAILABLE) {
-        console.log("Информация о местоположении недоступна");
-      } else if (error.code === error.TIMEOUT) {
-        console.log("Превышено время ожидания получения геолокации");
+      } else {
+        console.error("Ошибка получения геолокации:", error);
       }
     } finally {
       setIsLoadingLocation(false);
     }
-  };
+  }, [getAddressFromCoordinates, onCoordinatesChange]);
 
   // Проверяем разрешения на геолокацию и автоматически определяем местоположение при монтировании
   useEffect(() => {
@@ -110,7 +130,6 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
           name: "geolocation",
         });
         setLocationPermission(result.state);
-        console.log("Статус разрешения геолокации:", result.state);
 
         result.onchange = () => {
           setLocationPermission(result.state);
@@ -127,35 +146,11 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
     };
 
     initializeLocation();
-  }, []);
-
-  // Функция для получения адреса по координатам (обратное геокодирование)
-  const getAddressFromCoordinates = async (lat: number, lng: number) => {
-    try {
-      setIsLoadingAddress(true);
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ru&addressdetails=1`,
-      );
-      const data = await response.json();
-
-      if (data && data.display_name) {
-        const formattedAddress = data.display_name;
-        setAddress(formattedAddress);
-        onChange?.(formattedAddress);
-      }
-    } catch (error) {
-      console.error("Ошибка при получении адреса:", error);
-    } finally {
-      setIsLoadingAddress(false);
-    }
-  };
+  }, [getCurrentLocation]);
 
   // Функция для поиска адресов (автодополнение)
-  const searchAddresses = async (query: string) => {
-    console.log("Starting searchAddresses with query:", query);
-
+  const searchAddresses = useCallback(async (query: string) => {
     if (!query.trim() || query.length < 2) {
-      console.log("Query too short, clearing suggestions");
       setSuggestions([]);
       setShowSuggestions(false);
       return;
@@ -163,19 +158,15 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
 
     try {
       setIsLoadingSuggestions(true);
-      console.log("Loading suggestions set to true");
 
       const data = await getAddressSuggestions(query);
-      console.log("API response:", data);
 
       if (!Array.isArray(data) || data.length === 0) {
-        console.log("No suggestions received");
         setSuggestions([]);
         setShowSuggestions(false);
         return;
       }
 
-      console.log("Received suggestions:", data);
       setSuggestions(data);
       setShowSuggestions(true);
     } catch (error) {
@@ -184,36 +175,28 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
       setShowSuggestions(false);
     } finally {
       setIsLoadingSuggestions(false);
-      console.log("Loading suggestions set to false");
     }
-  };
+  }, []);
 
   // Обработка изменения текста в поле адреса
   const handleAddressChange = (newAddress: string) => {
-    console.log("Address changed to:", newAddress);
     setAddress(newAddress);
     onChange?.(newAddress);
     setValidationError(null); // Сбрасываем ошибку валидации при изменении
+
+    // Дебаунс для поиска адресов
+    if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
 
     // Если поле очистили, скрываем подсказки
     if (!newAddress.trim()) {
       setSuggestions([]);
       setShowSuggestions(false);
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
       return;
     }
 
-    // Дебаунс для поиска адресов
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
-
-    debounceTimeout.current = setTimeout(() => {
-      console.log("Debounced search starting for:", newAddress);
+    debounceTimeoutRef.current = setTimeout(() => {
       searchAddresses(newAddress);
-    }, 300);
+    }, DEBOUNCE_TIMEOUT);
   };
 
   // Обработка клика по карте
@@ -226,12 +209,11 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
   // Закрытие списка предложений при клике вне компонента
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node))
         setShowSuggestions(false);
-      }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -240,20 +222,18 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
   // Очистка таймера при размонтировании
   useEffect(() => {
     return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
+      if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
     };
   }, []);
 
   return (
-    <div className="space-y-4">
+    <div className={styles.addressMap}>
       {/* Поле ввода адреса с автодополнением */}
-      <div ref={suggestionsRef} className="relative">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
+      <div ref={suggestionsRef} className={styles.inputDropdown}>
+        <div className={styles.inputContainer}>
+          <div className={styles.inputGroup}>
             <Input
-              className="pr-10"
+              className={styles.input}
               value={address}
               onChange={(e) => handleAddressChange(e.target.value)}
               onFocus={() => {
@@ -263,11 +243,11 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
               }}
               placeholder="Введите адрес для поиска"
             />
-            <div className="absolute top-1/2 right-3 -translate-y-1/2">
+            <div className={styles.inputIconWrapper}>
               {isLoadingSuggestions || isLoadingAddress || isLoadingLocation ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-500" />
+                <div className={styles.spinnerIcon} />
               ) : (
-                <Search className="h-4 w-4 text-gray-400" />
+                <Search className={styles.searchIcon} />
               )}
             </div>
           </div>
@@ -275,11 +255,11 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
 
         {/* Список подсказок */}
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg">
+          <div className={styles.suggestionsList}>
             {suggestions.map((suggestion, index) => (
               <div
                 key={`${suggestion.value}-${index}`}
-                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                className={styles.suggestion}
                 onClick={async () => {
                   setAddress(suggestion.value);
                   onChange?.(suggestion.value);
@@ -291,25 +271,22 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
                     const lng = Number.parseFloat(suggestion.lon);
                     setMarkerPosition([lat, lng]);
                     onCoordinatesChange?.(lat, lng);
-                    console.log("Marker set from suggestion at:", lat, lng);
                   }
 
                   // Валидация адреса после установки координат
                   try {
                     setValidationError(null);
-                    console.log("Validating address:", suggestion.value);
                     const validationResult = await validateAddress({
                       address: suggestion.value,
                       addressDetails: {},
                     });
-                    console.log("Address validation result:", validationResult);
 
                     if (!validationResult.valid) {
                       setValidationError(validationResult.message || "Адрес не прошел валидацию");
-                      console.warn("Address is not valid:", validationResult.message);
+                      console.warn("Невалидный адрес:", validationResult.message);
                     }
                   } catch (error) {
-                    console.error("Error validating address:", error);
+                    console.error("Ошибка при валидации адреса:", error);
                     setValidationError(
                       "Указанный адрес не найден. Пожалуйста, выберите адрес из предложенных вариантов.",
                     );
@@ -324,18 +301,11 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
       </div>
 
       {/* Ошибка валидации */}
-      {validationError && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">{validationError}</div>
-      )}
+      {validationError && <div className={styles.validationError}>{validationError}</div>}
 
       {/* Карта */}
-      <div className="h-80 w-full overflow-hidden rounded-lg border border-gray-200">
-        <MapContainer
-          center={ORENBURG_CENTER}
-          className="z-0 [&_.leaflet-control-attribution]:hidden"
-          style={{ height: "100%", width: "100%" }}
-          zoom={12}
-        >
+      <div className={styles.map}>
+        <MapContainer center={ORENBURG_CENTER} className={styles.mapContainer} zoom={12}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -348,8 +318,6 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
           {markerPosition && <Marker position={markerPosition} />}
         </MapContainer>
       </div>
-
-      <p className="text-sm text-gray-500">Кликните на карту, чтобы выбрать местоположение</p>
     </div>
   );
 };

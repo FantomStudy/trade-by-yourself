@@ -17,7 +17,6 @@ interface ProductImageEditorProps {
   onSelectMainImage: (index: number) => void;
 }
 
-// TODO: Понять как работает данный компонент
 export const ProductImageEditor = ({
   existingImages = [],
   newImages = [],
@@ -31,15 +30,18 @@ export const ProductImageEditor = ({
   const totalImages = existingImages.length + newImages.length;
   const canAddMoreImages = totalImages < maxImages;
 
+  // Собирает все изображения, даёт им ключ и приводит к единому виду
   const imageItems = useMemo(
     () => [
+      // Существующие изображения
       ...existingImages.map((src, index) => ({
-        kind: "existing" as const,
+        type: "existing" as const,
         key: `existing-${src}-${index}`,
         src,
       })),
+      // Новый изображения
       ...newImages.map((file, index) => ({
-        kind: "new" as const,
+        type: "new" as const,
         key: `new-${file.name}-${file.lastModified}-${index}`,
         src: URL.createObjectURL(file),
       })),
@@ -47,21 +49,27 @@ export const ProductImageEditor = ({
     [existingImages, newImages],
   );
 
+  // Удаление лишних URL при размонтировании
   useEffect(() => {
     return () => {
       imageItems.forEach((image) => {
-        if (image.kind === "new") {
-          URL.revokeObjectURL(image.src);
-        }
+        if (image.type === "new") URL.revokeObjectURL(image.src);
       });
     };
   }, [imageItems]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Преобразование файлов в array
     const files = Array.from(event.target.files || []);
+    // Если нет файлов
     if (files.length === 0) return;
 
-    onAddImages(files.slice(0, Math.max(0, maxImages - totalImages)));
+    // Сколько ещё изображений можно добавить
+    const canAddImages = Math.max(0, maxImages - totalImages);
+
+    onAddImages(files.slice(0, canAddImages));
+
+    // Очищаем поле выбора файлов
     event.target.value = "";
   };
 
@@ -73,9 +81,8 @@ export const ProductImageEditor = ({
 
       <div className={styles.grid}>
         {imageItems.map((image, index) => (
-          <button
+          <div
             key={image.key}
-            type="button"
             className={clsx(
               styles.imageCard,
               index === mainImageIndex ? styles.imageCardActive : styles.imageCardIdle,
@@ -88,7 +95,7 @@ export const ProductImageEditor = ({
               alt={`Фото ${index + 1}`}
               width={320}
               height={320}
-              unoptimized={image.kind === "new"}
+              unoptimized={image.type === "new"}
             />
             <span
               className={clsx(
@@ -96,7 +103,7 @@ export const ProductImageEditor = ({
                 index === mainImageIndex ? styles.badgePrimary : styles.badgeSecondary,
               )}
             >
-              {index === mainImageIndex ? "Основное" : image.kind === "new" ? "Новое" : "Текущее"}
+              {index === mainImageIndex ? "Основное" : image.type === "new" ? "Новое" : "Текущее"}
             </span>
             <Button
               type="button"
@@ -111,7 +118,7 @@ export const ProductImageEditor = ({
             >
               <Trash2Icon />
             </Button>
-          </button>
+          </div>
         ))}
 
         {canAddMoreImages && (
