@@ -1,8 +1,9 @@
 "use client";
 
+import type { MouseEvent, TouchEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui";
-import styles from "./avatar-editor.module.css";
+import styles from "./AvatarEditor.module.css";
 
 interface AvatarEditorProps {
   image: string;
@@ -81,12 +82,12 @@ export const AvatarEditor = ({ image, onCancel, onSave }: AvatarEditorProps) => 
     draw();
   }, [draw]);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
     setIsDragging(true);
     setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
     if (!isDragging) return;
     setPosition({
       x: e.clientX - dragStart.x,
@@ -98,7 +99,7 @@ export const AvatarEditor = ({ image, onCancel, onSave }: AvatarEditorProps) => 
     setIsDragging(false);
   };
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+  const handleTouchStart = (e: TouchEvent<HTMLCanvasElement>) => {
     const touch = e.touches[0];
     setIsDragging(true);
     setDragStart({
@@ -107,7 +108,7 @@ export const AvatarEditor = ({ image, onCancel, onSave }: AvatarEditorProps) => 
     });
   };
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+  const handleTouchMove = (e: TouchEvent<HTMLCanvasElement>) => {
     if (!isDragging) return;
     const touch = e.touches[0];
     setPosition({
