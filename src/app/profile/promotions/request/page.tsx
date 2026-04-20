@@ -1,14 +1,15 @@
 "use client";
 
-import type { Product } from "@/types";
+import type { Product } from "@/api/products";
 import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { addPromotion, getCurrentUserProducts } from "@/api";
-import { api } from "@/api/instance";
+import { getUserProducts } from "@/api/products";
+import { addPromotion, getPromotions } from "@/api/promotions";
 import { Button, Input, Typography } from "@/components/ui";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { ProductSelector } from "./_components";
+import { ProductSelector } from "../_components/ProductSelector";
+import styles from "./page.module.css";
 
 interface Promotion {
   id: number;
@@ -31,14 +32,10 @@ const PromotionPage = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const loadData = async () => {
     try {
       setIsLoading(true);
-      const promotionsData = await api<Promotion[]>("/promotion/all-promotions");
+      const promotionsData = await getPromotions();
       setPromotions(promotionsData);
     } catch (error) {
       console.error("Ошибка загрузки данных:", error);
@@ -47,6 +44,10 @@ const PromotionPage = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const closeModals = () => {
     setShowActivatePromotion(false);
@@ -68,7 +69,7 @@ const PromotionPage = () => {
       setShowActivatePromotion(true);
 
       // Получаем товары пользователя
-      const products = await getCurrentUserProducts(currentUser.id);
+      const products = await getUserProducts(currentUser.id);
       setUserProducts(products || []);
     } catch (error: any) {
       console.error("Ошибка загрузки товаров:", error);
@@ -86,7 +87,7 @@ const PromotionPage = () => {
     }
 
     const daysNum = Number.parseInt(days, 10);
-    if (isNaN(daysNum) || daysNum < 1) {
+    if (Number.isNaN(daysNum) || daysNum < 1) {
       toast.error("Введите корректное количество дней (минимум 1)");
       return;
     }
@@ -109,78 +110,61 @@ const PromotionPage = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("ru-RU", {
-      style: "currency",
-      currency: "RUB",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div>
-          <Typography className="text-3xl font-bold">Продвижение товаров</Typography>
-          <Typography className="mt-2 text-gray-600">
-            Управление типами продвижения товаров
-          </Typography>
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <Typography className={styles.title}>Продвижение товаров</Typography>
+          <Typography className={styles.subtitle}>Управление типами продвижения товаров</Typography>
         </div>
-        <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-white p-8 shadow-sm">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500" />
+        <div className={styles.loadingCard}>
+          <div className={styles.spinner} />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-6">
+    <div className={styles.page}>
+      <div className={styles.contentGrid}>
         {/* Заголовок */}
-        <div>
-          <Typography className="text-3xl font-bold">Продвижение товаров</Typography>
-          <Typography className="mt-2 text-gray-600">
+        <div className={styles.header}>
+          <Typography className={styles.title}>Продвижение товаров</Typography>
+          <Typography className={styles.subtitle}>
             Выберите тип продвижения и товар для активации
           </Typography>
         </div>
 
         {/* Типы продвижения */}
-        <div className="rounded-lg bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-xl font-semibold">Типы продвижения</h3>
+        <div className={styles.promotionsCard}>
+          <div className={styles.promotionsHeader}>
+            <h3 className={styles.promotionsTitle}>Типы продвижения</h3>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className={styles.promotionsGrid}>
             {promotions.length === 0 ? (
-              <p className="col-span-full py-8 text-center text-gray-500">Нет типов продвижения</p>
+              <p className={styles.emptyPromotions}>Нет типов продвижения</p>
             ) : (
               promotions.map((promotion) => (
-                <div
-                  key={promotion.id}
-                  className="group relative overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
-                >
-                  <div className="absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-blue-100/50 blur-2xl transition-all group-hover:bg-blue-200/60" />
-                  <div className="relative">
-                    <div className="mb-4 flex items-center gap-3">
-                      <div className="rounded-lg bg-blue-100 p-2.5">
-                        <TrendingUp className="h-5 w-5 text-blue-600" />
+                <div key={promotion.id} className={styles.promotionItem}>
+                  <div className={styles.promotionGlow} />
+                  <div className={styles.promotionInner}>
+                    <div className={styles.promotionHeadRow}>
+                      <div className={styles.promotionIconWrap}>
+                        <TrendingUp className={styles.promotionIcon} />
                       </div>
-                      <div className="h-8 w-px bg-gray-200" />
+                      <div className={styles.promotionDivider} />
                       <div>
-                        <p className="text-xs font-medium tracking-wide text-gray-500 uppercase">
-                          Тариф
-                        </p>
+                        <p className={styles.promotionLabel}>Тариф</p>
                       </div>
                     </div>
-                    <h4 className="mb-3 text-2xl font-bold text-gray-900">{promotion.name}</h4>
-                    <div className="mb-4 flex items-baseline gap-1">
-                      <span className="text-3xl font-bold text-blue-600">
-                        {promotion.pricePerDay}
-                      </span>
-                      <span className="text-sm font-medium text-gray-600">₽ / день</span>
+                    <h4 className={styles.promotionName}>{promotion.name}</h4>
+                    <div className={styles.promotionPriceRow}>
+                      <span className={styles.promotionPriceValue}>{promotion.pricePerDay}</span>
+                      <span className={styles.promotionPriceUnit}>₽ / день</span>
                     </div>
                     <Button
-                      className="w-full bg-blue-500 hover:bg-blue-600"
+                      className={styles.selectProductButton}
                       onClick={() => openActivatePromotionModal(promotion.id)}
                     >
                       Выбрать товар
@@ -195,15 +179,15 @@ const PromotionPage = () => {
 
       {/* Модальное окно активации продвижения */}
       {showActivatePromotion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
-            <div className="mb-6 flex items-center justify-between">
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
               <div>
-                <h3 className="text-2xl font-semibold">Активировать продвижение товара</h3>
+                <h3 className={styles.modalTitle}>Активировать продвижение товара</h3>
                 {selectedPromotionId && (
-                  <p className="mt-1 text-sm text-gray-600">
+                  <p className={styles.modalSubtitle}>
                     Тариф:{" "}
-                    <span className="font-semibold text-blue-600">
+                    <span className={styles.modalTariffName}>
                       {promotions.find((p) => p.id === selectedPromotionId)?.name}
                     </span>
                     {" — "}
@@ -211,22 +195,20 @@ const PromotionPage = () => {
                   </p>
                 )}
               </div>
-              <button className="rounded p-1 hover:bg-gray-100" type="button" onClick={closeModals}>
+              <button className={styles.modalCloseButton} type="button" onClick={closeModals}>
                 ✕
               </button>
             </div>
 
             {isLoadingProducts ? (
-              <div className="flex min-h-[200px] items-center justify-center">
-                <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500" />
+              <div className={styles.modalLoadingWrap}>
+                <div className={styles.spinner} />
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className={styles.modalSteps}>
                 {/* Шаг 1: Выбор товара */}
                 <div>
-                  <label className="mb-3 block text-base font-semibold text-gray-700">
-                    1. Выберите товар для продвижения
-                  </label>
+                  <label className={styles.stepLabel}>1. Выберите товар для продвижения</label>
                   <ProductSelector
                     products={userProducts}
                     selectedProductId={selectedProductId}
@@ -236,9 +218,7 @@ const PromotionPage = () => {
 
                 {/* Шаг 2: Количество дней */}
                 <div>
-                  <label className="mb-3 block text-base font-semibold text-gray-700">
-                    2. Укажите количество дней
-                  </label>
+                  <label className={styles.stepLabel}>2. Укажите количество дней</label>
                   <Input
                     min="1"
                     type="number"
@@ -247,9 +227,9 @@ const PromotionPage = () => {
                     placeholder="Например: 7"
                   />
                   {selectedPromotionId && days && (
-                    <p className="mt-2 text-sm text-gray-600">
+                    <p className={styles.totalHint}>
                       Итого:{" "}
-                      <span className="font-semibold text-blue-600">
+                      <span className={styles.totalHintValue}>
                         {(
                           (promotions.find((p) => p.id === selectedPromotionId)?.pricePerDay || 0) *
                           Number.parseInt(days, 10)
@@ -262,12 +242,12 @@ const PromotionPage = () => {
               </div>
             )}
 
-            <div className="mt-6 flex justify-end gap-2 border-t pt-4">
+            <div className={styles.modalActions}>
               <Button variant="danger" onClick={closeModals}>
                 Отмена
               </Button>
               <Button
-                className="bg-green-500 hover:bg-green-600"
+                className={styles.activateButton}
                 disabled={isSubmitting || !selectedProductId || !selectedPromotionId || !days}
                 onClick={handleActivatePromotion}
               >

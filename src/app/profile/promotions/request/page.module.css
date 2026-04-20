@@ -1,0 +1,315 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contentGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.875rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin-top: 8px;
+  color: #4b5563;
+}
+
+.loadingCard {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  animation: spin 0.9s linear infinite;
+}
+
+.promotionsCard {
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.promotionsHeader {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.promotionsTitle {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.promotionsGrid {
+  display: grid;
+  gap: 16px;
+}
+
+.emptyPromotions {
+  grid-column: 1 / -1;
+  padding: 32px 0;
+  text-align: center;
+  color: #6b7280;
+}
+
+.promotionItem {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.promotionItem:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12);
+  transform: translateY(-1px);
+}
+
+.promotionGlow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 96px;
+  height: 96px;
+  transform: translate(32px, -32px);
+  border-radius: 9999px;
+  background: rgba(191, 219, 254, 0.6);
+  filter: blur(24px);
+  transition: background-color 0.2s ease;
+}
+
+.promotionItem:hover .promotionGlow {
+  background: rgba(147, 197, 253, 0.7);
+}
+
+.promotionInner {
+  position: relative;
+}
+
+.promotionHeadRow {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.promotionIconWrap {
+  border-radius: 10px;
+  background: #dbeafe;
+  padding: 10px;
+}
+
+.promotionIcon {
+  width: 20px;
+  height: 20px;
+  color: #2563eb;
+}
+
+.promotionDivider {
+  width: 1px;
+  height: 32px;
+  background: #e5e7eb;
+}
+
+.promotionLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+}
+
+.promotionName {
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #111827;
+}
+
+.promotionPriceRow {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.promotionPriceValue {
+  font-size: 1.875rem;
+  line-height: 1;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.promotionPriceUnit {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.selectProductButton {
+  width: 100%;
+  background: #3b82f6;
+}
+
+.selectProductButton:hover {
+  background: #2563eb;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 16px;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 768px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.modalSubtitle {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.modalTariffName {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.modalCloseButton {
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.modalCloseButton:hover {
+  background: #f3f4f6;
+}
+
+.modalLoadingWrap {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stepLabel {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.totalHint {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.totalHintValue {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.modalActions {
+  margin-top: 24px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.activateButton {
+  background: #22c55e;
+}
+
+.activateButton:hover {
+  background: #16a34a;
+}
+
+@media (min-width: 768px) {
+  .promotionsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .promotionsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
