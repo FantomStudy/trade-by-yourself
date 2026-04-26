@@ -24,10 +24,12 @@ const GuestActions = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    if (params.get("auth")) setIsOpen(true);
+    if (params.get("auth")) {
+      setIsOpen(true);
+    }
 
     router.push(pathname as Route);
-  }, [pathname, router, searchParams]);
+  }, []);
 
   return (
     <div className={styles.actionsWrapper}>
