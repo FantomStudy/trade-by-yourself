@@ -6,4 +6,3 @@ export const createPayment = (data: CreatePaymentDto) =>
     method: "POST",
     body: data,
   });
-

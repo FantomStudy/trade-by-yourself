@@ -96,4 +96,3 @@ export const markSupportMessagesAsRead = (forUser: boolean) => {
 
   return updatedMessages;
 };
-

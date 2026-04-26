@@ -31,4 +31,3 @@ export interface CheckPaymentStatusResponse {
   amount: number;
   orderId: string;
 }
-

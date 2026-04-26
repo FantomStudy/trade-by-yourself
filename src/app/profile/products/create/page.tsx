@@ -18,10 +18,7 @@ import styles from "./page.module.css";
 
 // Спорный динамический импорт
 const AddressMap = dynamic(
-  () =>
-    import("@/app/profile/products/_components/AddressMap").then(
-      (mod) => mod.AddressMap,
-    ),
+  () => import("@/app/profile/products/_components/AddressMap").then((mod) => mod.AddressMap),
   {
     ssr: false,
     loading: () => (
@@ -63,10 +60,7 @@ const schema = z.object({
     .min(1, "Введите цену")
     .refine((v) => Number(v) > 0, "Цена должна быть больше 0"),
 
-  description: z
-    .string()
-    .trim()
-    .min(10, "Описание должно содержать минимум 10 символов"),
+  description: z.string().trim().min(10, "Описание должно содержать минимум 10 символов"),
 
   state: z.enum(["NEW", "USED"]),
 
@@ -78,10 +72,7 @@ const schema = z.object({
 
   videoUrl: z
     .string()
-    .refine(
-      (value) => !value || z.url().safeParse(value).success,
-      "Введите корректную ссылку",
-    ),
+    .refine((value) => !value || z.url().safeParse(value).success, "Введите корректную ссылку"),
   images: z.array(z.instanceof(File)).min(1, "Добавьте хотя бы один файл"),
   mainImageIndex: z.number(),
 
@@ -181,11 +172,9 @@ const CreateProductPage = () => {
     categories.find((el) => el.id === Number(categoryId))?.subCategories || [];
 
   const availableTypes =
-    availableSubcategories.find((el) => el.id === Number(subCategoryId))
-      ?.subcategoryTypes || [];
+    availableSubcategories.find((el) => el.id === Number(subCategoryId))?.subcategoryTypes || [];
 
-  const availableFields =
-    availableTypes.find((el) => el.id === Number(typeId))?.fields || [];
+  const availableFields = availableTypes.find((el) => el.id === Number(typeId))?.fields || [];
 
   const onSubmit = handleSubmit(async (data: FormValues) => {
     clearErrors("root");
@@ -212,9 +201,7 @@ const CreateProductPage = () => {
         fieldValues:
           data.fieldValues && Object.keys(data.fieldValues).length > 0
             ? Object.fromEntries(
-                Object.entries(data.fieldValues).filter(
-                  ([, v]) => v?.trim() !== "",
-                ),
+                Object.entries(data.fieldValues).filter(([, v]) => v?.trim() !== ""),
               )
             : undefined,
         ...{
@@ -224,10 +211,7 @@ const CreateProductPage = () => {
       });
     } catch (e: any) {
       const message =
-        e?.response?.data?.message ||
-        e?.response?.data?.error ||
-        e?.message ||
-        "Ошибка";
+        e?.response?.data?.message || e?.response?.data?.error || e?.message || "Ошибка";
 
       setError("root", {
         type: "server",
@@ -250,9 +234,7 @@ const CreateProductPage = () => {
               {...register("name")}
               placeholder="Например, iPhone 15 Pro 256 GB"
             />
-            <Field.Error className={styles.errorText}>
-              {errors.name?.message}
-            </Field.Error>
+            <Field.Error className={styles.errorText}>{errors.name?.message}</Field.Error>
           </Field>
 
           <div className={styles.row}>
@@ -266,9 +248,7 @@ const CreateProductPage = () => {
                 pattern="[0-9]*"
                 {...register("price")}
               />
-              <Field.Error className={styles.errorText}>
-                {errors.price?.message}
-              </Field.Error>
+              <Field.Error className={styles.errorText}>{errors.price?.message}</Field.Error>
             </Field>
 
             <Field>
@@ -314,9 +294,7 @@ const CreateProductPage = () => {
               rows={6}
               {...register("description")}
             />
-            <Field.Error className={styles.errorText}>
-              {errors.description?.message}
-            </Field.Error>
+            <Field.Error className={styles.errorText}>{errors.description?.message}</Field.Error>
           </Field>
         </section>
 
@@ -344,10 +322,7 @@ const CreateProductPage = () => {
                 id="product-category"
               >
                 <Select.Value placeholder="Выберите категорию">
-                  {
-                    categories.find((value) => String(value.id) === categoryId)
-                      ?.name
-                  }
+                  {categories.find((value) => String(value.id) === categoryId)?.name}
                 </Select.Value>
               </Select.Trigger>
               <Select.Content>
@@ -359,15 +334,11 @@ const CreateProductPage = () => {
                 ))}
               </Select.Content>
             </Select>
-            <Field.Error className={styles.errorText}>
-              {errors.categoryId?.message}
-            </Field.Error>
+            <Field.Error className={styles.errorText}>{errors.categoryId?.message}</Field.Error>
           </Field>
 
           <Field>
-            <Field.Label htmlFor="product-subcategory">
-              Подкатегория
-            </Field.Label>
+            <Field.Label htmlFor="product-subcategory">Подкатегория</Field.Label>
             <Select
               value={subCategoryId}
               onValueChange={(value) => {
@@ -386,28 +357,19 @@ const CreateProductPage = () => {
                 id="product-subcategory"
               >
                 <Select.Value placeholder="Выберите подкатегорию">
-                  {
-                    availableSubcategories.find(
-                      (value) => String(value.id) === subCategoryId,
-                    )?.name
-                  }
+                  {availableSubcategories.find((value) => String(value.id) === subCategoryId)?.name}
                 </Select.Value>
               </Select.Trigger>
               <Select.Content>
                 <Select.Item value="">Выберите подкатегорию</Select.Item>
                 {availableSubcategories.map((subcategory) => (
-                  <Select.Item
-                    key={subcategory.id}
-                    value={String(subcategory.id)}
-                  >
+                  <Select.Item key={subcategory.id} value={String(subcategory.id)}>
                     {subcategory.name}
                   </Select.Item>
                 ))}
               </Select.Content>
             </Select>
-            <Field.Error className={styles.errorText}>
-              {errors.subcategoryId?.message}
-            </Field.Error>
+            <Field.Error className={styles.errorText}>{errors.subcategoryId?.message}</Field.Error>
           </Field>
 
           <Field>
@@ -425,15 +387,9 @@ const CreateProductPage = () => {
               }}
               disabled={!subCategoryId}
             >
-              <Select.Trigger
-                className={errors.typeId && styles.inputError}
-                id="product-type"
-              >
+              <Select.Trigger className={errors.typeId && styles.inputError} id="product-type">
                 <Select.Value placeholder="Выберите тип">
-                  {
-                    availableTypes.find((value) => String(value.id) === typeId)
-                      ?.name
-                  }
+                  {availableTypes.find((value) => String(value.id) === typeId)?.name}
                 </Select.Value>
               </Select.Trigger>
               <Select.Content>
@@ -445,28 +401,20 @@ const CreateProductPage = () => {
                 ))}
               </Select.Content>
             </Select>
-            <Field.Error className={styles.errorText}>
-              {errors.typeId?.message}
-            </Field.Error>
+            <Field.Error className={styles.errorText}>{errors.typeId?.message}</Field.Error>
           </Field>
 
           <div className={styles.fieldGrid}>
             {availableFields.map((field) => (
               <Field key={field.id}>
-                <Field.Label htmlFor={`field-${field.id}`}>
-                  {field.name}
-                </Field.Label>
+                <Field.Label htmlFor={`field-${field.id}`}>{field.name}</Field.Label>
                 <Input
                   id={`field-${field.id}`}
                   {...register(`fieldValues.${field.id}`)}
                   placeholder={field.name}
-                  className={
-                    errors.fieldValues?.[field.id] && styles.inputError
-                  }
+                  className={errors.fieldValues?.[field.id] && styles.inputError}
                 />
-                <Field.Error>
-                  {errors.fieldValues?.[field.id]?.message}
-                </Field.Error>
+                <Field.Error>{errors.fieldValues?.[field.id]?.message}</Field.Error>
               </Field>
             ))}
           </div>
@@ -505,9 +453,7 @@ const CreateProductPage = () => {
             }}
             onSelectMainImage={(index) => setValue("mainImageIndex", index)}
           />
-          <Field.Error className={styles.errorText}>
-            {errors.images?.message}
-          </Field.Error>
+          <Field.Error className={styles.errorText}>{errors.images?.message}</Field.Error>
         </section>
 
         <section className={styles.section}>
@@ -521,9 +467,7 @@ const CreateProductPage = () => {
               {...register("videoUrl")}
               placeholder="https://youtube.com/..."
             />
-            <Field.Error className={styles.errorText}>
-              {errors.videoUrl?.message}
-            </Field.Error>
+            <Field.Error className={styles.errorText}>{errors.videoUrl?.message}</Field.Error>
           </Field>
 
           <Field>
@@ -539,28 +483,18 @@ const CreateProductPage = () => {
                     shouldValidate: true,
                   })
                 }
-                onCoordinatesChange={(lat, lng) =>
-                  setValue("coordinates", { lat, lng })
-                }
+                onCoordinatesChange={(lat, lng) => setValue("coordinates", { lat, lng })}
               />
             </div>
-            <p className={styles.caption}>
-              Кликните на карту, чтобы выбрать местоположение
-            </p>
-            <Field.Error className={styles.errorText}>
-              {errors.address?.message}
-            </Field.Error>
+            <p className={styles.caption}>Кликните на карту, чтобы выбрать местоположение</p>
+            <Field.Error className={styles.errorText}>{errors.address?.message}</Field.Error>
           </Field>
         </section>
       </div>
 
       {errors.root && <div className={styles.error}>{errors.root.message}</div>}
 
-      <Button
-        className={styles.button}
-        disabled={createProductMutation.isPending}
-        type="submit"
-      >
+      <Button className={styles.button} disabled={createProductMutation.isPending} type="submit">
         {createProductMutation.isPending ? "Создание..." : "Создать объявление"}
       </Button>
     </form>

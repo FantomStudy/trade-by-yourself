@@ -7,4 +7,3 @@ export interface Promotion {
 }
 
 export const getPromotions = () => api<Promotion[]>("/promotion/all-promotions");
-

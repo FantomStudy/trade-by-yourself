@@ -21,5 +21,5 @@ export interface ChatMessagesResponse {
   messages: ChatMessage[];
 }
 
-export const getChatMessages = (chatId: number) => api<ChatMessagesResponse>(`/chat/${chatId}/messages`);
-
+export const getChatMessages = (chatId: number) =>
+  api<ChatMessagesResponse>(`/chat/${chatId}/messages`);

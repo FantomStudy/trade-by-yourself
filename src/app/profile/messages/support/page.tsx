@@ -5,11 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import {
-  addSupportMessage,
-  getSupportMessages,
-  markSupportMessagesAsRead,
-} from "@/api/chats";
+import { addSupportMessage, getSupportMessages, markSupportMessagesAsRead } from "@/api/chats";
 import { Button } from "@/components/ui";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import styles from "./page.module.css";

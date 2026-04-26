@@ -27,4 +27,3 @@ export interface Chat {
 }
 
 export const getChats = () => api<Chat[]>("/chat");
-

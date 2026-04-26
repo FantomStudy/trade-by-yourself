@@ -9,4 +9,3 @@ export interface ChatDetail {
 }
 
 export const getChatById = (chatId: number) => api<ChatDetail>(`/chat/${chatId}`);
-

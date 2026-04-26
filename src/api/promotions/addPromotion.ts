@@ -11,4 +11,3 @@ export const addPromotion = (data: AddPromotionPayload) =>
     method: "POST",
     body: data,
   });
-

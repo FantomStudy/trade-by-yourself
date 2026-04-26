@@ -7,4 +7,3 @@ export const useUser = (id?: number) =>
     queryFn: () => getUser(id as number),
     enabled: typeof id === "number" && id > 0,
   });
-

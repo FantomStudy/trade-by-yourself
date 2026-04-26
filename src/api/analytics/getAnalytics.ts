@@ -26,4 +26,3 @@ export const getAnalytics = ({ period, categoryId }: GetAnalyticsParams = {}) =>
 
   return api<AnalyticsData>(endpoint);
 };
-
