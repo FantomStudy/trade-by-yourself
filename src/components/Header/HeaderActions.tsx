@@ -1,7 +1,7 @@
 "use client";
 
 import type { Route } from "next";
-import type { CurrentUser } from "@/api/user";
+import type { CurrentUser } from "@/api/users";
 import { HeartIcon, MessageSquareIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -72,7 +72,7 @@ export const HeaderActions = ({ user }: { user: CurrentUser | null }) => {
 
       <Button
         variant="success"
-        render={<Link href="/profile/create-product" />}
+        render={<Link href="/profile/products/create" />}
         nativeButton={false}
       >
         Разместить объявление

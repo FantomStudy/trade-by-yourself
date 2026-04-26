@@ -47,15 +47,15 @@ export const LINK_GROUPS: LinkGroup[] = [
     name: "Заявки",
     links: [
       {
-        href: "/profile/promotion-request",
+        href: "/profile/promotions/request",
         label: "Продвижение товара",
       },
       {
-        href: "/profile/banner-request",
+        href: "/profile/banners/request",
         label: "Размещение баннера",
       },
       {
-        href: "/profile/banner-stats",
+        href: "/profile/banners/stats",
         label: "Статистика баннеров",
       },
     ],

@@ -1,0 +1,101 @@
+.addressMap > * + * {
+  margin-top: 16px;
+}
+
+.inputDropdown {
+  position: relative;
+}
+
+.inputContainer {
+  display: flex;
+  gap: 8px;
+}
+
+.inputGroup {
+  position: relative;
+  flex: 1 1 0%;
+}
+
+.input {
+  padding-right: 40px;
+}
+
+.inputIconWrapper {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+}
+
+.spinnerIcon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  border-top-color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+.searchIcon {
+  width: 16px;
+  height: 16px;
+  color: #9ca3af;
+}
+
+.suggestionsList {
+  position: absolute;
+  z-index: 50;
+  margin-top: 4px;
+  max-height: 240px;
+  width: 100%;
+  overflow: auto;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion {
+  cursor: pointer;
+  padding: 8px 16px;
+}
+
+.suggestion:hover {
+  background-color: #f3f4f6;
+}
+
+.validationError {
+  border-radius: 6px;
+  background-color: #fef2f2;
+  padding: 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #dc2626;
+}
+
+.map {
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.mapContainer {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Скрытие атрибуции Leaflet внутри mapContainer */
+.mapContainer :global(.leaflet-control-attribution) {
+  display: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
