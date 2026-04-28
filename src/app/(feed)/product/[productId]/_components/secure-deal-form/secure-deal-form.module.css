@@ -1,0 +1,113 @@
+.dealButton {
+  width: 100%;
+}
+
+.dialogContent {
+  width: min(760px, calc(100vw - 24px));
+  max-width: 760px;
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  gap: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.dialogContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dialogContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dialogContent::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #d1d5db 0%, #94a3b8 100%);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.dialogContent::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9ca3af 0%, #64748b 100%);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.searchRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.select {
+  width: 100%;
+  height: 38px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metaText {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.footer {
+  margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+  .dialogContent {
+    top: 12px;
+    transform: translateX(-50%);
+    max-height: calc(100vh - 24px);
+    padding: 16px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

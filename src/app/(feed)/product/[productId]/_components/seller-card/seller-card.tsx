@@ -9,6 +9,9 @@ import { useState } from "react";
 import { useStartChatMutation } from "@/api/hooks";
 import { Avatar, Badge, Button, Typography } from "@/components/ui";
 
+import { ReservationForm } from "../reservation-form/reservation-form";
+import { SecureDealForm } from "../secure-deal-form/secure-deal-form";
+
 import styles from "./seller-card.module.css";
 
 interface SellerCardProps {
@@ -66,6 +69,9 @@ export const SellerCard = ({ product }: SellerCardProps) => {
       </div>
 
       <div className={styles.actions}>
+        <ReservationForm product={product} />
+        <SecureDealForm product={product} />
+
         <Button
           disabled={startChatMutation.isPending}
           variant="secondary"

@@ -3,6 +3,8 @@
 import type { CurrentUser } from "@/types";
 
 import {
+  BookmarkCheckIcon,
+  CreditCardIcon,
   HeartIcon,
   HomeIcon,
   LogOutIcon,
@@ -53,6 +55,16 @@ const AuthenticatedMenu = ({ user, onClose, onLogout }: AuthenticatedMenuProps) 
         <Link href="/profile/messages" className={styles.menuItem} onClick={onClose}>
           <MessageSquareIcon size={20} />
           <span>Сообщения</span>
+        </Link>
+
+        <Link href="/profile/deals" className={styles.menuItem} onClick={onClose}>
+          <CreditCardIcon size={20} />
+          <span>Безопасные сделки</span>
+        </Link>
+
+        <Link href="/profile/reservations" className={styles.menuItem} onClick={onClose}>
+          <BookmarkCheckIcon size={20} />
+          <span>Мои резервы</span>
         </Link>
 
         <Link href="/profile/favorites" className={styles.menuItem} onClick={onClose}>

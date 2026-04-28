@@ -2,7 +2,12 @@ import { ofetch } from "ofetch";
 
 import { isServer } from "../is-server";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const RAW_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = RAW_BASE_URL
+  ?.trim()
+  // Защита от случайных кавычек в .env, чтобы запросы не уходили в относительный путь.
+  .replace(/^['"]+|['"]+$/g, "")
+  .replace(/\/+$/g, "");
 
 if (!BASE_URL) {
   throw new Error("API_URL is not defined");

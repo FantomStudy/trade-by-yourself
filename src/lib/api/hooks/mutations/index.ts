@@ -6,6 +6,7 @@ export * from "./useModerateProductMutation";
 export * from "./useModerateReviewMutation";
 export * from "./usePaymentMutations";
 export * from "./useRecoverMutation";
+export * from "./useReservationMutations";
 export * from "./useRegisterMutation";
 export * from "./useStartChatMutation";
 export * from "./useToggleProductMutation";
