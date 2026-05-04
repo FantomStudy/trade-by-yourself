@@ -278,7 +278,7 @@ const SupportPage = () => {
                     {supportMessages.length > 0 && (
                       <div className="mt-2 rounded bg-purple-50 p-2">
                         <Typography className="line-clamp-2 text-sm text-gray-600">
-                          {supportMessages.at(-1).content}
+                          {supportMessages.at(-1)?.content ?? ""}
                         </Typography>
                       </div>
                     )}

@@ -128,7 +128,7 @@
 
 @layer base {
   * {
-    font-family: var(--font-montserrat);
+    font-family: "Montserrat", "Inter", "Segoe UI", Arial, sans-serif;
   }
   body {
     display: flex;

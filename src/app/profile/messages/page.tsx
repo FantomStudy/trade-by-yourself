@@ -19,7 +19,7 @@ const MessagesPage = () => {
       setSupportUnread(getSupportUnreadCount());
       const messages = getSupportMessages();
       if (messages.length > 0) {
-        setLastSupportMessage(messages.at(-1).content);
+        setLastSupportMessage(messages.at(-1)?.content ?? "");
       }
     };
 

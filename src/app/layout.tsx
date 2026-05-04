@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import { Montserrat } from "next/font/google";
-
 import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
 import { getCurrentUserOrNull } from "@/api/requests";
 import { getQueryClient } from "@/lib/get-query-client";
@@ -10,12 +8,6 @@ import { MainLayout } from "./_components";
 import { Providers } from "./providers";
 
 import "./globals.css";
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  weight: ["400", "500", "600", "700"],
-  subsets: ["cyrillic"],
-});
 
 export const metadata: Metadata = {
   title: "Торгуй сам",
@@ -32,7 +24,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <html lang="en">
-      <body className={montserrat.variable} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Providers>
           <MainLayout>{children}</MainLayout>
         </Providers>

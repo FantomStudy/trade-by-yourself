@@ -11,6 +11,7 @@ export interface Product {
   images: string[];
   isFavorited: boolean;
   price: number;
+  quantity: number;
   userId: number;
   videoUrl: null;
 }
