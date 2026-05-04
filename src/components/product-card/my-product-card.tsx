@@ -156,6 +156,9 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
           <Typography className={product.isHide ? styles.hiddenText : ""}>
             {product.createdAt}
           </Typography>
+          <Typography className={product.isHide ? styles.hiddenText : ""}>
+            В наличии: {product.quantity ?? 1} шт.
+          </Typography>
         </div>
 
         <Typography className={`${styles.price} ${product.isHide ? styles.hiddenText : ""}`}>

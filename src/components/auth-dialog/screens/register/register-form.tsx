@@ -15,6 +15,7 @@ import { registerSchema } from "@/lib/api";
 import styles from "../forms.module.css";
 
 interface RegisterFormProps {
+  /** После sign-up переходим на ввод SMS — передаём номер в форму кода */
   onSuccess?: (phoneNumber: string) => void;
 }
 

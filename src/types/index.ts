@@ -3,6 +3,7 @@ export * from "./cdek";
 export * from "./chat";
 export * from "./deal";
 export * from "./log";
+export * from "./market";
 export * from "./payment";
 export * from "./product";
 export * from "./reservation";

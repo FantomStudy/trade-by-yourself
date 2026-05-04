@@ -244,9 +244,8 @@ const ChatPage = ({ params }: ChatPageProps) => {
 
                 {/* Сообщение */}
                 <div
-                  className={`rounded-2xl px-4 py-3 ${
-                    isCurrentUser ? "bg-blue-400 text-white" : "bg-white text-gray-800"
-                  }`}
+                  className={`rounded-2xl px-4 py-3 ${isCurrentUser ? "bg-blue-400 text-white" : "bg-white text-gray-800"
+                    }`}
                 >
                   <p className="text-sm">{messageText}</p>
                 </div>

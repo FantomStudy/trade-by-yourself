@@ -14,6 +14,8 @@ export interface Reservation {
     id: number;
     name: string;
     images: string[];
+    /** Если бэк отдаёт цену в списке резервов — показываем в карточке */
+    price?: number;
   };
   buyer?: {
     id: number;
@@ -39,14 +41,13 @@ export interface ProductReservationInfo {
   expiresAt?: string | null;
 }
 
+/** Срок резерва на бэке всегда 24 ч — hours не передаём */
 export interface CreateReservationRequest {
   productId: number;
-  hours?: number;
   note?: string;
 }
 
 export interface UpdateReservationProductSettingsRequest {
   productId: number;
   allowReservations: boolean;
-  reservationHours: number;
 }

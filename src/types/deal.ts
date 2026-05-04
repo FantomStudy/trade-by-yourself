@@ -13,6 +13,16 @@ export interface Deal {
   id: number;
   myRole: "buyer" | "seller";
   status: string;
+  statusCode:
+    | "CREATED"
+    | "PAID"
+    | "SHIPPED"
+    | "DELIVERED"
+    | "COMPLETED"
+    | "CANCELLED"
+    | "REFUNDED"
+    | "DISPUTE"
+    | string;
   amounts: {
     deliveryCost: number;
     platformFee: number;

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 
 import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
-import { getCurrentUser } from "@/api/requests";
+import { getCurrentUserOrNull } from "@/api/requests";
 import { getQueryClient } from "@/lib/get-query-client";
 
 import { MainLayout } from "./_components";
@@ -27,7 +27,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
 
   await queryClient.prefetchQuery({
     queryKey: CURRENT_USER_QUERY_KEY,
-    queryFn: getCurrentUser,
+    queryFn: getCurrentUserOrNull,
   });
 
   return (

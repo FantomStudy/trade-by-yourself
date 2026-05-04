@@ -2,7 +2,8 @@
 
 import type { CdekCity, CdekPvz, ExtendedProduct } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { MapPin, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   calculateCdekDelivery,
@@ -10,6 +11,7 @@ import {
   getCdekCities,
   getCdekDeliveryPoints,
 } from "@/api/requests";
+import { AuthDialog } from "@/components/auth-dialog";
 import {
   Button,
   Dialog,
@@ -21,8 +23,8 @@ import {
   Input,
   Typography,
 } from "@/components/ui";
-import { AuthDialog } from "@/components/auth-dialog";
 import { useCurrentUser } from "@/lib/api/hooks/queries";
+import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
 import { MY_RESERVATIONS_QUERY_KEY } from "@/lib/api/hooks/queries/useMyReservations";
 import { PRODUCT_RESERVATION_QUERY_KEY } from "@/lib/api/hooks/queries/useProductReservation";
 import { formatPrice } from "@/lib/format";
@@ -30,6 +32,101 @@ import { formatPrice } from "@/lib/format";
 import styles from "./secure-deal-form.module.css";
 
 const DEFAULT_CDEK_TARIFF_CODE = 136;
+type ParcelInputMode = "approximate" | "exact";
+
+interface ParcelPreset {
+  id: string;
+  name: string;
+  dimensions: string;
+  weightText: string;
+  length: number;
+  width: number;
+  height: number;
+  weight: number;
+}
+
+const PARCEL_PRESETS: ParcelPreset[] = [
+  {
+    id: "envelope",
+    name: "Конверт",
+    dimensions: "34x27x2 см",
+    weightText: "до 0.5 кг",
+    length: 34,
+    width: 27,
+    height: 2,
+    weight: 500,
+  },
+  {
+    id: "box-xs",
+    name: "Короб XS",
+    dimensions: "17x12x9 см",
+    weightText: "до 0.5 кг",
+    length: 17,
+    width: 12,
+    height: 9,
+    weight: 500,
+  },
+  {
+    id: "box-s",
+    name: "Короб S",
+    dimensions: "23x19x10 см",
+    weightText: "до 2 кг",
+    length: 23,
+    width: 19,
+    height: 10,
+    weight: 2000,
+  },
+  {
+    id: "box-m",
+    name: "Короб M",
+    dimensions: "33x25x15 см",
+    weightText: "до 5 кг",
+    length: 33,
+    width: 25,
+    height: 15,
+    weight: 5000,
+  },
+  {
+    id: "box-l",
+    name: "Короб L",
+    dimensions: "31x25x38 см",
+    weightText: "до 12 кг",
+    length: 31,
+    width: 25,
+    height: 38,
+    weight: 12000,
+  },
+  {
+    id: "box-xl",
+    name: "Короб XL",
+    dimensions: "60x35x30 см",
+    weightText: "до 18 кг",
+    length: 60,
+    width: 35,
+    height: 30,
+    weight: 18000,
+  },
+  {
+    id: "suitcase",
+    name: "Чемодан",
+    dimensions: "55x35x77 см",
+    weightText: "до 30 кг",
+    length: 55,
+    width: 35,
+    height: 77,
+    weight: 30000,
+  },
+  {
+    id: "pallet",
+    name: "Паллета",
+    dimensions: "120x120x80 см",
+    weightText: "до 200 кг",
+    length: 120,
+    width: 120,
+    height: 80,
+    weight: 200000,
+  },
+];
 
 function getApiErrorMessage(error: unknown, fallback: string) {
   if (typeof error === "object" && error !== null && "data" in error) {
@@ -62,6 +159,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   const [toCityQuery, setToCityQuery] = useState("");
   const [toCities, setToCities] = useState<CdekCity[]>([]);
   const [toCityCode, setToCityCode] = useState<number | null>(null);
+  const [showCitySuggestions, setShowCitySuggestions] = useState(false);
 
   const [toPvzList, setToPvzList] = useState<CdekPvz[]>([]);
   const [toPvzCode, setToPvzCode] = useState("");
@@ -71,7 +169,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
+  const [parcelMode, setParcelMode] = useState<ParcelInputMode>("approximate");
+  const [selectedPresetId, setSelectedPresetId] = useState<string | null>(null);
   const [deliveryCost, setDeliveryCost] = useState<number | null>(null);
+  const citySearchRef = useRef<HTMLDivElement>(null);
+  const citySearchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const totalPrice = useMemo(() => {
     const currentDelivery = deliveryCost ?? 0;
@@ -82,6 +184,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     setToCityQuery("");
     setToCities([]);
     setToCityCode(null);
+    setShowCitySuggestions(false);
     setToPvzList([]);
     setToPvzCode("");
     setTariffName("");
@@ -89,19 +192,49 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     setLength("");
     setWidth("");
     setHeight("");
+    setParcelMode("approximate");
+    setSelectedPresetId(null);
     setDeliveryCost(null);
   };
 
-  const handleSearchCities = async () => {
-    if (!toCityQuery.trim()) {
-      toast.error("Введите город для поиска");
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (citySearchRef.current && !citySearchRef.current.contains(event.target as Node)) {
+        setShowCitySuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      if (citySearchDebounceRef.current) {
+        clearTimeout(citySearchDebounceRef.current);
+      }
+    };
+  }, []);
+
+  const applyPreset = (preset: ParcelPreset) => {
+    setSelectedPresetId(preset.id);
+    setLength(String(preset.length));
+    setWidth(String(preset.width));
+    setHeight(String(preset.height));
+    setWeight(String(preset.weight));
+    setDeliveryCost(null);
+  };
+
+  const handleSearchCities = async (query: string) => {
+    const normalizedQuery = query.trim();
+    if (!normalizedQuery) {
+      setToCities([]);
+      setShowCitySuggestions(false);
       return;
     }
 
     try {
       setIsLoadingCities(true);
-      const cities = await getCdekCities(toCityQuery, 10);
+      const cities = await getCdekCities(normalizedQuery, 10);
       setToCities(cities);
+      setShowCitySuggestions(true);
     } catch (error) {
       console.error("Ошибка поиска городов CDEK:", error);
       toast.error(getApiErrorMessage(error, "Не удалось получить список городов CDEK"));
@@ -114,7 +247,12 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     try {
       setIsLoadingPvz(true);
       const pvzList = await getCdekDeliveryPoints(code);
+      const selectedCity = toCities.find((city) => city.code === code);
       setToCityCode(code);
+      if (selectedCity?.city) {
+        setToCityQuery(selectedCity.city);
+      }
+      setShowCitySuggestions(false);
       setToPvzList(pvzList);
       setToPvzCode("");
 
@@ -188,6 +326,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       return;
     }
 
+    if (!toPvzCode) {
+      toast.error("Выбери ПВЗ получателя");
+      return;
+    }
+
     if (deliveryCost === null) {
       toast.error("Сначала рассчитай доставку");
       return;
@@ -209,6 +352,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       toast.success(`Сделка #${deal.id} создана`);
       queryClient.invalidateQueries({ queryKey: MY_RESERVATIONS_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: PRODUCT_RESERVATION_QUERY_KEY(product.id) });
+      queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["chat"] });
       setOpen(false);
       resetState();
     } catch (error) {
@@ -226,6 +371,34 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     }
 
     setOpen(true);
+  };
+
+  const handleCityInputChange = (value: string) => {
+    setToCityQuery(value);
+
+    // При ручном изменении текста сбрасываем ранее выбранный город и ПВЗ.
+    setToCityCode(null);
+    setToPvzList([]);
+    setToPvzCode("");
+    setDeliveryCost(null);
+
+    if (citySearchDebounceRef.current) {
+      clearTimeout(citySearchDebounceRef.current);
+    }
+
+    citySearchDebounceRef.current = setTimeout(() => {
+      void handleSearchCities(value);
+    }, 300);
+  };
+
+  const handleClearCity = () => {
+    setToCityQuery("");
+    setToCities([]);
+    setToCityCode(null);
+    setShowCitySuggestions(false);
+    setToPvzList([]);
+    setToPvzCode("");
+    setDeliveryCost(null);
   };
 
   return (
@@ -255,33 +428,47 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
           <div className={styles.form}>
             <div className={styles.block}>
               <Typography variant="h2">Город получателя</Typography>
-              <div className={styles.searchRow}>
-                <Input
-                  value={toCityQuery}
-                  onChange={(event) => setToCityQuery(event.target.value)}
-                  placeholder="Введите название города"
-                />
-                <Button
-                  disabled={isLoadingCities}
-                  type="button"
-                  variant="secondary"
-                  onClick={handleSearchCities}
-                >
-                  Найти
-                </Button>
+              <div ref={citySearchRef} className={styles.searchSection}>
+                <div className={styles.inputWrapper}>
+                  <Input
+                    value={toCityQuery}
+                    onChange={(event) => handleCityInputChange(event.target.value)}
+                    placeholder="Введите название города"
+                  />
+                  {toCityQuery ? (
+                    <button
+                      aria-label="Очистить город"
+                      className={styles.clearButton}
+                      type="button"
+                      onClick={handleClearCity}
+                    >
+                      <X size={16} />
+                    </button>
+                  ) : null}
+                </div>
+
+                {showCitySuggestions && toCities.length > 0 ? (
+                  <div className={styles.suggestions}>
+                    {toCities.map((city) => (
+                      <button
+                        key={city.code}
+                        className={styles.suggestionItem}
+                        type="button"
+                        onClick={() => handleSelectCity(city.code)}
+                      >
+                        <MapPin className={styles.suggestionIcon} size={16} />
+                        <span>
+                          {city.city ?? "Город без названия"} ({city.code})
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+
+                {isLoadingCities ? (
+                  <Typography className={styles.metaText}>Ищем города...</Typography>
+                ) : null}
               </div>
-              <select
-                className={styles.select}
-                value={toCityCode ?? ""}
-                onChange={(event) => handleSelectCity(Number(event.target.value))}
-              >
-                <option value="">Выбери город получателя</option>
-                {toCities.map((city) => (
-                  <option key={city.code} value={city.code}>
-                    {city.city ?? "Город без названия"} ({city.code})
-                  </option>
-                ))}
-              </select>
 
               <select
                 className={styles.select}
@@ -289,7 +476,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                 value={toPvzCode}
                 onChange={(event) => setToPvzCode(event.target.value)}
               >
-                <option value="">ПВЗ получателя (опционально)</option>
+                <option value="">Выбери ПВЗ получателя</option>
                 {toPvzList.map((pvz) => (
                   <option key={pvz.code} value={pvz.code}>
                     {pvz.name ?? "ПВЗ"} - {pvz.location?.address ?? "Без адреса"}
@@ -303,48 +490,98 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
               <Typography className={styles.metaText}>
                 Тариф CDEK определяется автоматически по выбранному городу получателя.
               </Typography>
-              <div className={styles.grid}>
-                <label className={styles.inputGroup}>
-                  <span className={styles.inputLabel}>Вес, г</span>
-                  <Input
-                    min={1}
-                    type="number"
-                    value={weight}
-                    onChange={(event) => setWeight(event.target.value)}
-                    placeholder="Введите значение"
-                  />
-                </label>
-                <label className={styles.inputGroup}>
-                  <span className={styles.inputLabel}>Длина, см</span>
-                  <Input
-                    min={1}
-                    type="number"
-                    value={length}
-                    onChange={(event) => setLength(event.target.value)}
-                    placeholder="Введите значение"
-                  />
-                </label>
-                <label className={styles.inputGroup}>
-                  <span className={styles.inputLabel}>Ширина, см</span>
-                  <Input
-                    min={1}
-                    type="number"
-                    value={width}
-                    onChange={(event) => setWidth(event.target.value)}
-                    placeholder="Введите значение"
-                  />
-                </label>
-                <label className={styles.inputGroup}>
-                  <span className={styles.inputLabel}>Высота, см</span>
-                  <Input
-                    min={1}
-                    type="number"
-                    value={height}
-                    onChange={(event) => setHeight(event.target.value)}
-                    placeholder="Введите значение"
-                  />
-                </label>
+              <div className={styles.modeSwitch}>
+                <button
+                  className={`${styles.modeButton} ${parcelMode === "approximate" ? styles.modeButtonActive : ""}`}
+                  type="button"
+                  onClick={() => setParcelMode("approximate")}
+                >
+                  Примерно
+                </button>
+                <button
+                  className={`${styles.modeButton} ${parcelMode === "exact" ? styles.modeButtonActive : ""}`}
+                  type="button"
+                  onClick={() => setParcelMode("exact")}
+                >
+                  Точные
+                </button>
               </div>
+
+              {parcelMode === "approximate" ? (
+                <div className={styles.presetsList}>
+                  {PARCEL_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      className={`${styles.presetCard} ${selectedPresetId === preset.id ? styles.presetCardActive : ""}`}
+                      type="button"
+                      onClick={() => applyPreset(preset)}
+                    >
+                      <div className={styles.presetIcon}>📦</div>
+                      <div className={styles.presetContent}>
+                        <Typography className={styles.presetTitle}>{preset.name}</Typography>
+                        <Typography className={styles.presetMeta}>
+                          {preset.dimensions}, {preset.weightText}
+                        </Typography>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.grid}>
+                  <label className={styles.inputGroup}>
+                    <span className={styles.inputLabel}>Вес, г</span>
+                    <Input
+                      min={1}
+                      type="number"
+                      value={weight}
+                      onChange={(event) => {
+                        setSelectedPresetId(null);
+                        setWeight(event.target.value);
+                      }}
+                      placeholder="Введите значение"
+                    />
+                  </label>
+                  <label className={styles.inputGroup}>
+                    <span className={styles.inputLabel}>Длина, см</span>
+                    <Input
+                      min={1}
+                      type="number"
+                      value={length}
+                      onChange={(event) => {
+                        setSelectedPresetId(null);
+                        setLength(event.target.value);
+                      }}
+                      placeholder="Введите значение"
+                    />
+                  </label>
+                  <label className={styles.inputGroup}>
+                    <span className={styles.inputLabel}>Ширина, см</span>
+                    <Input
+                      min={1}
+                      type="number"
+                      value={width}
+                      onChange={(event) => {
+                        setSelectedPresetId(null);
+                        setWidth(event.target.value);
+                      }}
+                      placeholder="Введите значение"
+                    />
+                  </label>
+                  <label className={styles.inputGroup}>
+                    <span className={styles.inputLabel}>Высота, см</span>
+                    <Input
+                      min={1}
+                      type="number"
+                      value={height}
+                      onChange={(event) => {
+                        setSelectedPresetId(null);
+                        setHeight(event.target.value);
+                      }}
+                      placeholder="Введите значение"
+                    />
+                  </label>
+                </div>
+              )}
 
               <Button disabled={isCalculating} type="button" onClick={handleCalculate}>
                 {isCalculating ? "Считаем..." : "Рассчитать доставку"}

@@ -27,6 +27,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
+    quantity: "1",
     description: "",
     state: "",
     address: "",
@@ -63,6 +64,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         setFormData({
           name: productData.name,
           price: productData.price.toString(),
+          quantity: String(productData.quantity ?? 1),
           description: productData.description || "",
           state: "NEW", // TODO: добавить state в ExtendedProduct
           address: productData.address,
@@ -96,7 +98,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
-    if (name === "price") {
+    if (name === "price" || name === "quantity") {
       const numericValue = value.replace(/\D/g, "");
       setFormData((prev) => ({ ...prev, [name]: numericValue }));
     } else {
@@ -207,13 +209,19 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     e.preventDefault();
     setError(null);
 
-    if (!formData.name || !formData.price) {
+    if (!formData.name || !formData.price || !formData.quantity) {
       setError("Пожалуйста, заполните обязательные поля");
       return;
     }
 
     if (Number(formData.price) <= 0) {
       setError("Цена должна быть больше нуля");
+      return;
+    }
+
+    const parsedQuantity = Number(formData.quantity || "1");
+    if (!Number.isInteger(parsedQuantity) || parsedQuantity < 1) {
+      setError("Количество должно быть целым числом больше 0");
       return;
     }
 
@@ -236,6 +244,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         {
           name: formData.name,
           price: Number(formData.price),
+          quantity: parsedQuantity,
           state: formData.state as "NEW" | "USED",
           description: formData.description,
           address: formData.address,
@@ -253,7 +262,12 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
               error.response?.data?.message ||
               error.response?.data?.error ||
               "Ошибка при обновлении объявления";
-            setError(Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage);
+            const formattedMessage = Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage;
+            setError(
+              formattedMessage.includes("Количество должно быть целым числом больше 0")
+                ? "Количество должно быть целым числом больше 0"
+                : formattedMessage,
+            );
           },
         },
       );
@@ -320,6 +334,18 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           inputMode="numeric"
           onChange={handleInputChange}
           placeholder="Цена"
+        />
+        <Input
+          required
+          className="bg-white"
+          min={1}
+          name="quantity"
+          pattern="[0-9]*"
+          type="text"
+          value={formData.quantity}
+          inputMode="numeric"
+          onChange={handleInputChange}
+          placeholder="Количество (шт.)"
         />
         <Textarea
           className="bg-white"

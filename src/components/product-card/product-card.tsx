@@ -35,6 +35,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className={styles.meta}>
           <Typography className={styles.address}>{product.address}</Typography>
           <Typography>{product.createdAt}</Typography>
+          <Typography>В наличии: {product.quantity ?? 1} шт.</Typography>
         </div>
 
         <Typography className={styles.price} data-slot="product-price">

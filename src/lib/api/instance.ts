@@ -13,6 +13,9 @@ if (!BASE_URL) {
   throw new Error("API_URL is not defined");
 }
 
+/** База REST и Socket.IO (namespace `/chat`) — один хост с `NEXT_PUBLIC_API_URL`. */
+export const API_BASE_URL = BASE_URL;
+
 export const api = ofetch.create({
   baseURL: BASE_URL,
   credentials: "include",
@@ -21,9 +24,12 @@ export const api = ofetch.create({
 
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
+    const all = cookieStore.getAll();
+    if (all.length === 0) return;
 
-    if (cookieStore) {
-      options.headers.append("cookie", cookieStore.toString());
+    const cookieHeader = all.map((c) => `${c.name}=${encodeURIComponent(c.value)}`).join("; ");
+    if (options.headers instanceof Headers) {
+      options.headers.set("cookie", cookieHeader);
     }
   },
   onResponseError: async ({ response }) => {

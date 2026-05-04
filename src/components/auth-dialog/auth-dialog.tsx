@@ -4,10 +4,12 @@ import type { ComponentProps } from "react";
 
 import type { AuthScreen } from "./screens/types";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui";
+import { CURRENT_USER_QUERY_KEY } from "@/lib/api/hooks/queries/useCurrentUser";
 
 import { LoginScreen, RecoverScreen, RegisterScreen, VerifyCodeScreen } from "./screens";
 
@@ -35,6 +37,7 @@ const AUTH_SCREENS = {
 };
 
 export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>) => {
+  const queryClient = useQueryClient();
   const [screen, setScreen] = useState<AuthScreen>("login");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
 
@@ -53,17 +56,18 @@ export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>
     handleOpenChange(false);
   }, [handleOpenChange]);
 
-  const handleVerifyCodeSuccess = useCallback(() => {
+  const completeAuthFlow = useCallback(() => {
     toast("Регистрация прошла успешно!");
-    setScreen("login");
-  }, []);
+    void queryClient.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY });
+    handleOpenChange(false);
+  }, [queryClient, handleOpenChange]);
 
   const getOnCloseHandler = useCallback(() => {
     if (screen === "verify-code") {
-      return handleVerifyCodeSuccess;
+      return completeAuthFlow;
     }
     return handleClose;
-  }, [screen, handleVerifyCodeSuccess, handleClose]);
+  }, [screen, completeAuthFlow, handleClose]);
 
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
@@ -77,6 +81,7 @@ export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>
           onClose: getOnCloseHandler(),
           phoneNumber,
           onPhoneNumberChange: setPhoneNumber,
+          onAuthComplete: completeAuthFlow,
         })}
       </DialogContent>
     </Dialog>

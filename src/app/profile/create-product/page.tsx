@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useCreateProductMutation } from "@/api/hooks";
+import { useCreateDraftMutation, useCreateProductMutation } from "@/api/hooks";
 import { AddressMap, Button, ImageUpload, Input, Textarea } from "@/components/ui";
 import { api } from "@/lib/api/instance";
 
@@ -19,6 +19,7 @@ const CreateProductPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
+    quantity: "1",
     description: "",
     state: "",
     address: "",
@@ -37,6 +38,7 @@ const CreateProductPage = () => {
   } | null>(null);
 
   const createProductMutation = useCreateProductMutation();
+  const createDraftMutation = useCreateDraftMutation();
 
   useEffect(() => {
     api<Category[]>("/category/find-all").then((response) => {
@@ -47,8 +49,8 @@ const CreateProductPage = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
-    // Для поля цены разрешаем только цифры
-    if (name === "price") {
+    // Для числовых полей разрешаем только цифры
+    if (name === "price" || name === "quantity") {
       const numericValue = value.replace(/\D/g, "");
       setFormData((prev) => ({ ...prev, [name]: numericValue }));
     } else {
@@ -71,6 +73,7 @@ const CreateProductPage = () => {
     if (
       !formData.name ||
       !formData.price ||
+      !formData.quantity ||
       !formData.state ||
       !formData.categoryId ||
       !formData.subcategoryId ||
@@ -85,6 +88,12 @@ const CreateProductPage = () => {
       return;
     }
 
+    const parsedQuantity = Number(formData.quantity || "1");
+    if (!Number.isInteger(parsedQuantity) || parsedQuantity < 1) {
+      setError("Количество должно быть целым числом больше 0");
+      return;
+    }
+
     if (images.length === 0) {
       setError("Добавьте хотя бы одно изображение");
       return;
@@ -95,6 +104,7 @@ const CreateProductPage = () => {
         {
           name: formData.name,
           price: Number(formData.price),
+          quantity: parsedQuantity,
           state: formData.state as "NEW" | "USED",
           categoryId: Number(formData.categoryId),
           subcategoryId: Number(formData.subcategoryId),
@@ -118,6 +128,7 @@ const CreateProductPage = () => {
             setFormData({
               name: "",
               price: "",
+              quantity: "1",
               description: "",
               state: "",
               address: "",
@@ -139,7 +150,12 @@ const CreateProductPage = () => {
                 error.response?.data?.message ||
                 error.response?.data?.error ||
                 "Ошибка валидации данных";
-              setError(Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage);
+              const formattedMessage = Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage;
+              setError(
+                formattedMessage.includes("Количество должно быть целым числом больше 0")
+                  ? "Количество должно быть целым числом больше 0"
+                  : formattedMessage,
+              );
             } else {
               setError(`Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`);
             }
@@ -149,6 +165,83 @@ const CreateProductPage = () => {
       router.replace("/profile/my-products");
     } catch (err) {
       console.error("Submit error:", err);
+    }
+  };
+
+  /** Черновик: те же поля, но без обязательных фото (multipart как у create). */
+  const handleSaveDraft = async () => {
+    setError(null);
+
+    if (
+      !formData.name ||
+      !formData.price ||
+      !formData.quantity ||
+      !formData.state ||
+      !formData.categoryId ||
+      !formData.subcategoryId ||
+      !formData.typeId
+    ) {
+      setError("Пожалуйста, заполните все обязательные поля");
+      return;
+    }
+
+    if (Number(formData.price) <= 0) {
+      setError("Цена должна быть больше нуля");
+      return;
+    }
+
+    const parsedQuantity = Number(formData.quantity || "1");
+    if (!Number.isInteger(parsedQuantity) || parsedQuantity < 1) {
+      setError("Количество должно быть целым числом больше 0");
+      return;
+    }
+
+    try {
+      await createDraftMutation.mutateAsync(
+        {
+          name: formData.name,
+          price: Number(formData.price),
+          quantity: parsedQuantity,
+          state: formData.state as "NEW" | "USED",
+          categoryId: Number(formData.categoryId),
+          subcategoryId: Number(formData.subcategoryId),
+          typeId: Number(formData.typeId),
+          description: formData.description,
+          address: formData.address,
+          images: images.length > 0 ? images : undefined,
+          fieldValues,
+          videoUrl: formData.videoUrl,
+          ...(coordinates && {
+            latitude: coordinates.lat,
+            longitude: coordinates.lng,
+          }),
+        },
+        {
+          onSuccess: () => {
+            toast.success("Черновик сохранён");
+          },
+          onError: (error: any) => {
+            console.error("Ошибка сохранения черновика:", error);
+            if (error.response?.status === 400) {
+              const errorMessage =
+                error.response?.data?.message ||
+                error.response?.data?.error ||
+                "Ошибка валидации данных";
+              const formattedMessage = Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage;
+              setError(
+                formattedMessage.includes("Количество должно быть целым числом больше 0")
+                  ? "Количество должно быть целым числом больше 0"
+                  : formattedMessage,
+              );
+            } else {
+              setError(`Ошибка: ${error.message || "Неизвестная ошибка"}`);
+            }
+          },
+        },
+      );
+      router.replace("/profile/my-products?tab=drafts");
+    } catch (err) {
+      console.error("Draft save error:", err);
     }
   };
 
@@ -188,6 +281,18 @@ const CreateProductPage = () => {
           inputMode="numeric"
           onChange={handleInputChange}
           placeholder="Цена"
+        />
+        <Input
+          required
+          className="bg-white"
+          min={1}
+          name="quantity"
+          pattern="[0-9]*"
+          type="text"
+          value={formData.quantity}
+          inputMode="numeric"
+          onChange={handleInputChange}
+          placeholder="Количество (шт.)"
         />
         <Textarea
           className="bg-white"
@@ -337,9 +442,24 @@ const CreateProductPage = () => {
 
       {error && <div className={styles.error}>{error}</div>}
 
-      <Button className={styles.button} disabled={createProductMutation.isPending} type="submit">
-        {createProductMutation.isPending ? "Создание..." : "Создать объявление"}
-      </Button>
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <Button
+          className={styles.button}
+          disabled={createProductMutation.isPending || createDraftMutation.isPending}
+          type="submit"
+        >
+          {createProductMutation.isPending ? "Создание..." : "Создать объявление"}
+        </Button>
+        <Button
+          className={styles.button}
+          disabled={createProductMutation.isPending || createDraftMutation.isPending}
+          type="button"
+          variant="secondary"
+          onClick={handleSaveDraft}
+        >
+          {createDraftMutation.isPending ? "Сохранение..." : "Сохранить черновик"}
+        </Button>
+      </div>
     </form>
   );
 };

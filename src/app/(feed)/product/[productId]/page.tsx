@@ -70,6 +70,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
 
               <LikeButton initLiked={product.isFavorited} productId={product.id} />
             </div>
+            <Typography>В наличии: {product.quantity ?? 1} шт.</Typography>
           </div>
 
           <Gallery images={product.images} videoUrl={product.videoUrl} />

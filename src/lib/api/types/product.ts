@@ -9,6 +9,7 @@ export const createProductSchema = z.object({
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   price: z.number().min(0, "Цена должна быть положительным числом"),
+  quantity: z.number().int().min(1, "Количество должно быть целым числом больше 0"),
   state: z.enum(["NEW", "USED"]),
   subcategoryId: z.number(),
   typeId: z.number(),
@@ -21,6 +22,7 @@ export type CreateProductData = z.infer<typeof createProductSchema>;
 export const updateProductSchema = z.object({
   name: z.string().optional(),
   price: z.number().optional(),
+  quantity: z.number().int().min(1).optional(),
   state: z.enum(["NEW", "USED"]).optional(),
   description: z.string().optional(),
   address: z.string().optional(),

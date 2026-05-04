@@ -7,6 +7,7 @@ export const updateProduct = async (productId: number, data: UpdateProductData) 
 
   if (data.name) formData.append("name", data.name);
   if (data.price !== undefined) formData.append("price", data.price.toString());
+  if (data.quantity !== undefined) formData.append("quantity", data.quantity.toString());
   if (data.state) formData.append("state", data.state);
   if (data.description) formData.append("description", data.description);
   if (data.address) formData.append("address", data.address);

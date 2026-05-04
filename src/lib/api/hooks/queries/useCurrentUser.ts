@@ -3,14 +3,14 @@ import type { CurrentUser } from "@/types";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getCurrentUser } from "../../requests";
+import { getCurrentUserOrNull } from "../../requests";
 
 export const CURRENT_USER_QUERY_KEY = ["user", "current"];
 
-export const useCurrentUser = (options?: QueryHookOptions<CurrentUser>) => {
+export const useCurrentUser = (options?: QueryHookOptions<CurrentUser | null>) => {
   return useQuery({
     queryKey: CURRENT_USER_QUERY_KEY,
-    queryFn: getCurrentUser,
+    queryFn: getCurrentUserOrNull,
     retry: false,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

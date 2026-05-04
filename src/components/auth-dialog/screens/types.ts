@@ -5,6 +5,8 @@ export interface AuthScreenProps {
   onClose: () => void;
   phoneNumber?: string;
   onPhoneNumberChange?: (phoneNumber: string) => void;
+  /** После регистрации/подтверждения: сессия уже в cookie — закрываем диалог и обновляем юзера */
+  onAuthComplete?: () => void;
 }
 
 export interface AuthFormProps {

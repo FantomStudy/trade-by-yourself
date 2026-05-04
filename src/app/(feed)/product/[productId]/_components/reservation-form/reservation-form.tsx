@@ -19,7 +19,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  Input,
   Textarea,
   Typography,
 } from "@/components/ui";
@@ -54,7 +53,6 @@ function getApiErrorMessage(error: unknown, fallback: string) {
 export const ReservationForm = ({ product }: ReservationFormProps) => {
   const [open, setOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [hours, setHours] = useState(24);
   const [note, setNote] = useState("");
 
   const { data: currentUser } = useCurrentUser();
@@ -86,13 +84,11 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
     try {
       await createReservationMutation.mutateAsync({
         productId: product.id,
-        hours,
         note: note.trim() || undefined,
       });
-      toast.success("Резерв создан");
+      toast.success("Резерв на 24 часа создан");
       setOpen(false);
       setNote("");
-      setHours(24);
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось создать резерв"));
     }
@@ -103,7 +99,7 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
       <div className={styles.container}>
         {isReserved && (
           <Typography className={styles.reservedText}>
-            Зарезервировано{reservedUntil ? ` до ${reservedUntil}` : ""}
+            Зарезервировано{reservedUntil ? ` до ${reservedUntil}` : ""} (24 ч)
           </Typography>
         )}
         <Button
@@ -124,20 +120,11 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
           <DialogHeader>
             <DialogTitle>Резервация товара</DialogTitle>
             <DialogDescription>
-              Укажи срок резерва и комментарий для продавца (необязательно).
+              Срок резерва фиксирован: 24 часа. Можно добавить комментарий для продавца.
             </DialogDescription>
           </DialogHeader>
 
           <div className={styles.form}>
-            <label className={styles.fieldGroup}>
-              <span className={styles.label}>Срок резерва, часов</span>
-              <Input
-                min={1}
-                type="number"
-                value={hours}
-                onChange={(event) => setHours(Number(event.target.value))}
-              />
-            </label>
             <label className={styles.fieldGroup}>
               <span className={styles.label}>Комментарий</span>
               <Textarea
@@ -153,7 +140,7 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
               Отмена
             </Button>
             <Button
-              disabled={createReservationMutation.isPending || hours < 1}
+              disabled={createReservationMutation.isPending}
               type="button"
               onClick={handleCreateReservation}
             >

@@ -5,14 +5,23 @@ import type { Socket } from "socket.io-client";
 
 import type { ChatSocketContextType, Message } from "./types";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
-import { io } from "socket.io-client";
+import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
+import { createChatSocket, getChatSocketUrl } from "@/lib/chat-socket";
 
 import { useAuth } from "../auth";
 
 const ChatSocketContext = createContext<ChatSocketContextType | null>(null);
 
-const API_URL = process.env.NEXT_PUBLIC_API_WS_URL || "http://localhost:3000";
+/** Ответ ack от Go: joinChat / sendMessage / markAsRead */
+type SocketAck = { success?: boolean; message?: string } | undefined;
+
+function logAckFailed(op: string, ack: SocketAck) {
+  if (ack && ack.success === false && ack.message) {
+    console.warn(`[chat socket] ${op}:`, ack.message);
+  }
+}
 
 // Функция для запроса разрешения на уведомления
 const requestNotificationPermission = async () => {
@@ -58,6 +67,7 @@ const showNotification = (message: Message) => {
 };
 
 export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
+  const queryClient = useQueryClient();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const { user } = useAuth();
@@ -79,13 +89,8 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
       return;
     }
 
-    console.log("Initializing Socket.IO connection to:", API_URL);
-
-    const socketInstance = io(`${API_URL}/chat`, {
-      path: "/socket.io/",
-      transports: ["websocket", "polling"],
-      withCredentials: true,
-    });
+    // Тот же хост, что REST: session_id уходит в handshake благодаря withCredentials (см. chat-socket.ts).
+    const socketInstance = createChatSocket();
 
     socketInstance.on("connect", () => {
       console.log("WebSocket connected");
@@ -97,8 +102,14 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
       setIsConnected(false);
     });
 
-    socketInstance.on("connect_error", (error) => {
-      console.error("WebSocket connection error:", error);
+    socketInstance.on("connect_error", (error: Error) => {
+      const url = getChatSocketUrl();
+      console.error("Chat Socket connect_error:", error?.message ?? error, { url });
+      if (process.env.NODE_ENV === "development") {
+        console.info(
+          "[chat] Если xhr poll error: проверь Network → запрос к /socket.io; на бэке CORS с credentials для origin фронта. Либо в .env: NEXT_PUBLIC_CHAT_SOCKET_RELATIVE=true и NEXT_PUBLIC_CHAT_SOCKET_POLLING_ONLY=true (прокси через Next, см. next.config rewrites).",
+        );
+      }
       setIsConnected(false);
     });
 
@@ -117,17 +128,22 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
       }
     });
 
+    // Событие для списка чатов (сайдбар / «Сообщения»)
+    socketInstance.on("newChatMessage", () => {
+      void queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
+    });
+
     setSocket(socketInstance);
 
     return () => {
       socketInstance.disconnect();
     };
-  }, [user]);
+  }, [user, queryClient]);
 
   const joinChat = useCallback(
     (chatId: number) => {
       if (socket?.connected) {
-        socket.emit("joinChat", { chatId });
+        socket.emit("joinChat", { chatId }, (ack: SocketAck) => logAckFailed("joinChat", ack));
       }
     },
     [socket],
@@ -145,7 +161,11 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
   const sendMessage = useCallback(
     (chatId: number, content: string) => {
       if (socket?.connected) {
-        socket.emit("sendMessage", { chatId, content });
+        socket.emit(
+          "sendMessage",
+          { chatId, content },
+          (ack: SocketAck) => logAckFailed("sendMessage", ack),
+        );
       }
     },
     [socket],
@@ -163,7 +183,7 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
   const markAsRead = useCallback(
     (chatId: number) => {
       if (socket?.connected) {
-        socket.emit("markAsRead", { chatId });
+        socket.emit("markAsRead", { chatId }, (ack: SocketAck) => logAckFailed("markAsRead", ack));
       }
     },
     [socket],

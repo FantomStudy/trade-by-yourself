@@ -48,10 +48,73 @@
   border-radius: 10px;
 }
 
-.searchRow {
-  display: grid;
-  grid-template-columns: 1fr auto;
+.searchSection {
+  position: relative;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.clearButton {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.clearButton:hover {
+  background: #f3f4f6;
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 0.1);
+  max-height: 260px;
+  overflow: auto;
+}
+
+.suggestionItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
   gap: 8px;
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 1px solid #f3f4f6;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestionItem:last-child {
+  border-bottom: none;
+}
+
+.suggestionItem:hover {
+  background: #f8fafc;
+}
+
+.suggestionIcon {
+  flex-shrink: 0;
+  color: #3b82f6;
 }
 
 .select {
@@ -67,6 +130,86 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+}
+
+.modeSwitch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #f3f4f6;
+}
+
+.modeButton {
+  height: 36px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #4b5563;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.modeButtonActive {
+  background: #fff;
+  color: #16a34a;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
+}
+
+.presetsList {
+  max-height: 280px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 2px;
+}
+
+.presetCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.presetCardActive {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.presetIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  font-size: 22px;
+}
+
+.presetContent {
+  min-width: 0;
+}
+
+.presetTitle {
+  font-weight: 700;
+}
+
+.presetMeta {
+  font-size: 13px;
+  color: #4b5563;
 }
 
 .metaText {
