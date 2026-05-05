@@ -1,25 +1,40 @@
-"use client";
+﻿"use client";
 
 import { toast } from "sonner";
 
-import { getVkOAuthUrl } from "@/api/requests";
 import { Button } from "@/components/ui";
 import { VK_OAUTH_STATE_KEY } from "@/lib/auth/vk-oauth";
 
 import styles from "./screens/screens.module.css";
 
-/** Редирект на VK: бэк отдаёт url, после callback — POST /auth/vk/sign-in (см. app/auth/vk/callback) */
 export const VkLoginButton = () => {
   const onLogin = async () => {
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      if (!API_URL) {
+        toast.error("NEXT_PUBLIC_API_URL не задан");
+        return;
+      }
+
       const state = crypto.randomUUID();
       localStorage.setItem(VK_OAUTH_STATE_KEY, state);
-      const data = await getVkOAuthUrl(state);
-      if (!data?.url) {
+
+      const response = await fetch(`${API_URL}/auth/vk/url?state=${encodeURIComponent(state)}`, {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
         toast.error("Не удалось получить ссылку VK");
         return;
       }
-      window.location.assign(data.url);
+
+      const { url } = (await response.json()) as { url?: string };
+      if (!url) {
+        toast.error("Не удалось получить ссылку VK");
+        return;
+      }
+
+      window.location.href = url;
     } catch {
       toast.error("Ошибка входа через VK");
     }
