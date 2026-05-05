@@ -34,3 +34,25 @@ export interface CdekCalculateResponse {
   tariff_code?: number;
   tariff_name?: string;
 }
+
+export interface CdekTariffsRequest {
+  fromCityCode: number;
+  toCityCode: number;
+  weight: number;
+  length: number;
+  width: number;
+  height: number;
+}
+
+export interface CdekTariffItem {
+  tariffCode: number;
+  tariffName: string;
+  periodMin?: number;
+  periodMax?: number;
+  totalSum?: number;
+  tariff_code?: number;
+  tariff_name?: string;
+  period_min?: number;
+  period_max?: number;
+  total_sum?: number;
+}

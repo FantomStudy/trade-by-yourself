@@ -23,11 +23,11 @@ const nextConfig: NextConfig = {
   // Прокси Engine.IO на бэк: браузер бьёт в тот же origin, что Next (меньше боли с CORS/credentials между портами).
   async rewrites() {
     const api = normalizePublicApiUrl();
-    const useRelativeSocket =
-      process.env.NEXT_PUBLIC_CHAT_SOCKET_RELATIVE === "true" ||
-      process.env.NEXT_PUBLIC_CHAT_SOCKET_RELATIVE === "1";
-    if (!api || !useRelativeSocket) return [];
-    return [{ source: "/socket.io/:path*", destination: `${api}/socket.io/:path*` }];
+    if (!api) return [];
+    return [
+      { source: "/socket.io", destination: `${api}/socket.io` },
+      { source: "/socket.io/:path*", destination: `${api}/socket.io/:path*` },
+    ];
   },
 
   images: {

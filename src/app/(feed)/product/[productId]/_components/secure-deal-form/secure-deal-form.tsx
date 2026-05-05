@@ -1,6 +1,6 @@
 "use client";
 
-import type { CdekCity, CdekPvz, ExtendedProduct } from "@/types";
+import type { CdekCity, CdekPvz, CdekTariffItem, ExtendedProduct } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { MapPin, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -10,6 +10,7 @@ import {
   createDeal,
   getCdekCities,
   getCdekDeliveryPoints,
+  getCdekTariffs,
 } from "@/api/requests";
 import { AuthDialog } from "@/components/auth-dialog";
 import {
@@ -31,7 +32,6 @@ import { formatPrice } from "@/lib/format";
 
 import styles from "./secure-deal-form.module.css";
 
-const DEFAULT_CDEK_TARIFF_CODE = 136;
 type ParcelInputMode = "approximate" | "exact";
 
 function getCityFromAddress(address?: string | null) {
@@ -174,6 +174,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   const { data: currentUser } = useCurrentUser();
   const [isLoadingCities, setIsLoadingCities] = useState(false);
   const [isLoadingPvz, setIsLoadingPvz] = useState(false);
+  const [isLoadingTariffs, setIsLoadingTariffs] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -185,8 +186,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   const [toPvzList, setToPvzList] = useState<CdekPvz[]>([]);
   const [toPvzCode, setToPvzCode] = useState("");
 
+  const [tariffs, setTariffs] = useState<CdekTariffItem[]>([]);
+  const [selectedTariffCode, setSelectedTariffCode] = useState<number | null>(null);
   const [tariffName, setTariffName] = useState("");
-  const [tariffCode, setTariffCode] = useState<number>(DEFAULT_CDEK_TARIFF_CODE);
+  const [tariffCode, setTariffCode] = useState<number | null>(null);
   const [fromCityCode, setFromCityCode] = useState<number | null>(null);
   const [fromCityName, setFromCityName] = useState("");
   const [weight, setWeight] = useState("");
@@ -211,8 +214,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     setShowCitySuggestions(false);
     setToPvzList([]);
     setToPvzCode("");
+    setTariffs([]);
+    setSelectedTariffCode(null);
     setTariffName("");
-    setTariffCode(DEFAULT_CDEK_TARIFF_CODE);
+    setTariffCode(null);
     setFromCityCode(null);
     setFromCityName("");
     setWeight("");
@@ -246,6 +251,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     setWidth(String(preset.width));
     setHeight(String(preset.height));
     setWeight(String(preset.weight));
+    setTariffs([]);
+    setSelectedTariffCode(null);
+    setTariffCode(null);
+    setTariffName("");
     setDeliveryCost(null);
   };
 
@@ -313,6 +322,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setToPvzList(pvzList);
       setToPvzCode("");
 
+      setTariffs([]);
+      setSelectedTariffCode(null);
+      setTariffCode(null);
+      setTariffName("");
       setDeliveryCost(null);
     } catch (error) {
       console.error("Ошибка получения ПВЗ CDEK:", error);
@@ -330,6 +343,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
     if (!toCityCode) {
       toast.error("Выбери город получателя");
+      return;
+    }
+
+    if (!selectedTariffCode) {
+      toast.error("Сначала выбери тариф");
       return;
     }
 
@@ -360,7 +378,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     try {
       setIsCalculating(true);
       const result = await calculateCdekDelivery({
-        tariffCode,
+        tariffCode: selectedTariffCode,
         fromCityCode,
         toCityCode,
         weight: parsedWeight,
@@ -405,12 +423,17 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       return;
     }
 
+    if (!selectedTariffCode) {
+      toast.error("Сначала выбери тариф");
+      return;
+    }
+
     try {
       setIsCreating(true);
       const deal = await createDeal({
         productId: product.id,
         deliveryCost,
-        cdekTariffCode: tariffCode,
+        cdekTariffCode: selectedTariffCode,
         cdekTariffName: tariffName || undefined,
         cdekFromCityCode: fromCityCode,
         cdekToCityCode: toCityCode,
@@ -449,6 +472,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     setToCityCode(null);
     setToPvzList([]);
     setToPvzCode("");
+    setTariffs([]);
+    setSelectedTariffCode(null);
+    setTariffCode(null);
+    setTariffName("");
     setDeliveryCost(null);
 
     if (citySearchDebounceRef.current) {
@@ -467,7 +494,81 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     setShowCitySuggestions(false);
     setToPvzList([]);
     setToPvzCode("");
+    setTariffs([]);
+    setSelectedTariffCode(null);
+    setTariffCode(null);
+    setTariffName("");
     setDeliveryCost(null);
+  };
+
+  const handleLoadTariffs = async () => {
+    if (!fromCityCode) {
+      toast.error("Не удалось определить город отправителя из адреса товара");
+      return;
+    }
+    if (!toCityCode) {
+      toast.error("Выбери город получателя");
+      return;
+    }
+
+    const parsedWeight = Number(weight);
+    const parsedLength = Number(length);
+    const parsedWidth = Number(width);
+    const parsedHeight = Number(height);
+
+    if (
+      Number.isNaN(parsedWeight) ||
+      Number.isNaN(parsedLength) ||
+      Number.isNaN(parsedWidth) ||
+      Number.isNaN(parsedHeight) ||
+      parsedWeight <= 0 ||
+      parsedLength <= 0 ||
+      parsedWidth <= 0 ||
+      parsedHeight <= 0
+    ) {
+      toast.error("Укажи корректные параметры посылки");
+      return;
+    }
+
+    try {
+      setIsLoadingTariffs(true);
+      const response = await getCdekTariffs({
+        fromCityCode,
+        toCityCode,
+        weight: parsedWeight,
+        length: parsedLength,
+        width: parsedWidth,
+        height: parsedHeight,
+      });
+
+      const normalizedTariffs = response
+        .map((item) => ({
+          ...item,
+          tariffCode: item.tariffCode ?? item.tariff_code ?? 0,
+          tariffName: item.tariffName ?? item.tariff_name ?? "Тариф",
+          periodMin: item.periodMin ?? item.period_min,
+          periodMax: item.periodMax ?? item.period_max,
+          totalSum: item.totalSum ?? item.total_sum,
+        }))
+        .filter((item) => item.tariffCode > 0);
+
+      setTariffs(normalizedTariffs);
+      setSelectedTariffCode(null);
+      setTariffCode(null);
+      setTariffName("");
+      setDeliveryCost(null);
+
+      if (normalizedTariffs.length === 0) {
+        toast.error("Доступные тарифы не найдены");
+        return;
+      }
+      toast.success("Тарифы получены");
+    } catch (error) {
+      console.error("Ошибка получения тарифов CDEK:", error);
+      toast.error(getApiErrorMessage(error, "Не удалось получить тарифы CDEK"));
+    } finally {
+      setIsLoadingTariffs(false);
+    }
   };
 
   return (
@@ -557,20 +658,34 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
             <div className={styles.block}>
               <Typography variant="h2">Параметры посылки и тариф</Typography>
               <Typography className={styles.metaText}>
-                Тариф CDEK определяется автоматически по выбранному городу получателя.
+                Сначала получи список тарифов, затем выбери один и рассчитай доставку.
               </Typography>
               <div className={styles.modeSwitch}>
                 <button
                   className={`${styles.modeButton} ${parcelMode === "approximate" ? styles.modeButtonActive : ""}`}
                   type="button"
-                  onClick={() => setParcelMode("approximate")}
+                  onClick={() => {
+                    setParcelMode("approximate");
+                    setTariffs([]);
+                    setSelectedTariffCode(null);
+                    setTariffCode(null);
+                    setTariffName("");
+                    setDeliveryCost(null);
+                  }}
                 >
                   Примерно
                 </button>
                 <button
                   className={`${styles.modeButton} ${parcelMode === "exact" ? styles.modeButtonActive : ""}`}
                   type="button"
-                  onClick={() => setParcelMode("exact")}
+                  onClick={() => {
+                    setParcelMode("exact");
+                    setTariffs([]);
+                    setSelectedTariffCode(null);
+                    setTariffCode(null);
+                    setTariffName("");
+                    setDeliveryCost(null);
+                  }}
                 >
                   Точные
                 </button>
@@ -606,6 +721,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                       onChange={(event) => {
                         setSelectedPresetId(null);
                         setWeight(event.target.value);
+                        setTariffs([]);
+                        setSelectedTariffCode(null);
+                        setTariffCode(null);
+                        setTariffName("");
+                        setDeliveryCost(null);
                       }}
                       placeholder="Введите значение"
                     />
@@ -619,6 +739,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                       onChange={(event) => {
                         setSelectedPresetId(null);
                         setLength(event.target.value);
+                        setTariffs([]);
+                        setSelectedTariffCode(null);
+                        setTariffCode(null);
+                        setTariffName("");
+                        setDeliveryCost(null);
                       }}
                       placeholder="Введите значение"
                     />
@@ -632,6 +757,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                       onChange={(event) => {
                         setSelectedPresetId(null);
                         setWidth(event.target.value);
+                        setTariffs([]);
+                        setSelectedTariffCode(null);
+                        setTariffCode(null);
+                        setTariffName("");
+                        setDeliveryCost(null);
                       }}
                       placeholder="Введите значение"
                     />
@@ -645,12 +775,45 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                       onChange={(event) => {
                         setSelectedPresetId(null);
                         setHeight(event.target.value);
+                        setTariffs([]);
+                        setSelectedTariffCode(null);
+                        setTariffCode(null);
+                        setTariffName("");
+                        setDeliveryCost(null);
                       }}
                       placeholder="Введите значение"
                     />
                   </label>
                 </div>
               )}
+
+              <Button disabled={isLoadingTariffs} type="button" variant="secondary" onClick={handleLoadTariffs}>
+                {isLoadingTariffs ? "Получаем тарифы..." : "Получить тарифы"}
+              </Button>
+
+              <select
+                className={styles.select}
+                disabled={tariffs.length === 0}
+                value={selectedTariffCode ?? ""}
+                onChange={(event) => {
+                  const nextCode = Number(event.target.value);
+                  const selectedTariff = tariffs.find((item) => item.tariffCode === nextCode);
+                  setSelectedTariffCode(nextCode || null);
+                  setTariffCode(nextCode || null);
+                  setTariffName(selectedTariff?.tariffName ?? "");
+                  setDeliveryCost(null);
+                }}
+              >
+                <option value="">Выбери тариф</option>
+                {tariffs.map((item) => (
+                  <option key={item.tariffCode} value={item.tariffCode}>
+                    {item.tariffName} (код {item.tariffCode}){item.totalSum ? ` - ${item.totalSum} ₽` : ""}
+                    {item.periodMin || item.periodMax
+                      ? `, ${item.periodMin ?? "?"}-${item.periodMax ?? "?"} дн.`
+                      : ""}
+                  </option>
+                ))}
+              </select>
 
               <Button disabled={isCalculating} type="button" onClick={handleCalculate}>
                 {isCalculating ? "Считаем..." : "Рассчитать доставку"}
@@ -667,7 +830,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                 Доставка: {deliveryCost === null ? "не рассчитана" : formatPrice(deliveryCost)}
               </Typography>
               <Typography>
-                Тариф: {tariffName || "не определен"} (код {tariffCode})
+                Тариф: {tariffName || "не выбран"} (код {tariffCode ?? "—"})
               </Typography>
               <Typography variant="h2">Итого: {formatPrice(totalPrice)}</Typography>
             </div>

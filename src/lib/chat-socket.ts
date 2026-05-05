@@ -22,11 +22,20 @@ const SOCKET_RELATIVE =
 
 /** Общие опции под googollee/go-socket.io: namespace /chat, path /socket.io, cookie session_id. */
 export function getChatSocketClientOptions(): Partial<ManagerOptions & SocketOptions> {
+  const transports: Array<"polling" | "websocket"> = POLLING_ONLY
+    ? ["polling"]
+    : ["polling", "websocket"];
+
   return {
     path: "/socket.io",
     withCredentials: true,
-    // Сначала polling — меньше сюрпризов с handshake на Go; потом можно websocket.
-    transports: POLLING_ONLY ? ["polling"] : ["polling", "websocket"],
+    // Сначала polling, потом upgrade в websocket.
+    transports,
+    upgrade: !POLLING_ONLY,
+    reconnection: true,
+    timeout: 10_000,
+    // Для совместимости с сервером на Engine.IO v3/v4.
+    allowEIO3: true,
   };
 }
 
