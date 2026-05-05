@@ -1,6 +1,7 @@
 import { ofetch } from "ofetch";
 
 import { isServer } from "../is-server";
+import { updateServerTimeOffset } from "../server-time-offset";
 
 const RAW_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const BASE_URL = RAW_BASE_URL
@@ -31,6 +32,9 @@ export const api = ofetch.create({
     if (options.headers instanceof Headers) {
       options.headers.set("cookie", cookieHeader);
     }
+  },
+  onResponse: ({ response }) => {
+    updateServerTimeOffset(response.headers.get("date"));
   },
   onResponseError: async ({ response }) => {
     if (response.status === 401 && !isServer()) {

@@ -5,8 +5,9 @@ import type { ExtendedProduct } from "@/types/product";
 
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { useDeleteProductMutation, useUpdateProductMutation } from "@/api/hooks";
+import { useDeleteProductMutation, usePublishDraftMutation, useUpdateProductMutation } from "@/api/hooks";
 import { getProductById } from "@/api/requests";
 import { AddressMap, Button, Input, Textarea } from "@/components/ui";
 import { api } from "@/lib/api/instance";
@@ -31,6 +32,9 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     description: "",
     state: "",
     address: "",
+    categoryId: "",
+    subcategoryId: "",
+    typeId: "",
     videoUrl: "",
   });
 
@@ -46,6 +50,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
 
   const updateProductMutation = useUpdateProductMutation(Number(productId));
   const deleteProductMutation = useDeleteProductMutation();
+  const publishDraftMutation = usePublishDraftMutation();
 
   // Загружаем данные товара
   useEffect(() => {
@@ -68,20 +73,33 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           description: productData.description || "",
           state: "NEW", // TODO: добавить state в ExtendedProduct
           address: productData.address,
+          categoryId: String(productData.category?.id ?? ""),
+          subcategoryId: String(productData.subCategory?.id ?? ""),
           videoUrl: productData.videoUrl || "",
+          typeId: "",
         });
 
         // Заполняем fieldValues если они есть
         if (productData.fieldValues && Array.isArray(productData.fieldValues)) {
           const values: Record<string, string> = {};
           productData.fieldValues.forEach((field) => {
-            Object.entries(field).forEach(([key, value]) => {
-              if (key !== "id") {
-                values[key] = String(value);
-              }
-            });
+            const valueEntry = Object.entries(field).find(([key]) => key !== "id");
+            if (!valueEntry) return;
+            const [, value] = valueEntry;
+            values[String(field.id)] = String(value);
           });
           setFieldValues(values);
+        }
+
+        const currentCategory = categoriesData.find((cat) => cat.id === productData.category?.id);
+        const currentSubcategory = currentCategory?.subCategories.find(
+          (sub) => sub.id === productData.subCategory?.id,
+        );
+        const matchedType = currentSubcategory?.subcategoryTypes.find(
+          (type) => type.name === productData.type,
+        );
+        if (matchedType?.id) {
+          setFormData((prev) => ({ ...prev, typeId: String(matchedType.id) }));
         }
 
         setLoading(false);
@@ -208,24 +226,26 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    const parsedPrice = formData.price.trim() ? Number(formData.price) : undefined;
+    const parsedQuantity = formData.quantity.trim() ? Number(formData.quantity) : undefined;
 
-    if (!formData.name || !formData.price || !formData.quantity) {
-      setError("Пожалуйста, заполните обязательные поля");
-      return;
-    }
-
-    if (Number(formData.price) <= 0) {
+    if (parsedPrice !== undefined && (!Number.isFinite(parsedPrice) || parsedPrice <= 0)) {
       setError("Цена должна быть больше нуля");
       return;
     }
 
-    const parsedQuantity = Number(formData.quantity || "1");
-    if (!Number.isInteger(parsedQuantity) || parsedQuantity < 1) {
+    if (
+      parsedQuantity !== undefined &&
+      (!Number.isFinite(parsedQuantity) || !Number.isInteger(parsedQuantity) || parsedQuantity < 1)
+    ) {
       setError("Количество должно быть целым числом больше 0");
       return;
     }
 
     try {
+      const resolvedCategoryId = Number(formData.categoryId || product.category?.id || 0);
+      const resolvedSubcategoryId = Number(formData.subcategoryId || product.subCategory?.id || 0);
+
       // Переупорядочиваем изображения так, чтобы основное было первым
       let orderedImages = images;
       if (images.length > 0 && mainImageIndex >= existingImages.length) {
@@ -242,15 +262,18 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
 
       await updateProductMutation.mutateAsync(
         {
-          name: formData.name,
-          price: Number(formData.price),
-          quantity: parsedQuantity,
-          state: formData.state as "NEW" | "USED",
-          description: formData.description,
-          address: formData.address,
+          ...(formData.name.trim() ? { name: formData.name.trim() } : {}),
+          ...(parsedPrice !== undefined ? { price: parsedPrice } : {}),
+          ...(parsedQuantity !== undefined ? { quantity: parsedQuantity } : {}),
+          ...(formData.state ? { state: formData.state as "NEW" | "USED" } : {}),
+          ...(resolvedCategoryId > 0 ? { categoryId: resolvedCategoryId } : {}),
+          ...(resolvedSubcategoryId > 0 ? { subcategoryId: resolvedSubcategoryId } : {}),
+          ...(formData.typeId ? { typeId: Number(formData.typeId) } : {}),
+          ...(formData.description.trim() ? { description: formData.description.trim() } : {}),
+          ...(formData.address.trim() ? { address: formData.address.trim() } : {}),
           images: orderedImages.length > 0 ? orderedImages : undefined,
           fieldValues: Object.keys(fieldValues).length > 0 ? fieldValues : undefined,
-          videoUrl: formData.videoUrl,
+          ...(formData.videoUrl.trim() ? { videoUrl: formData.videoUrl.trim() } : {}),
         },
         {
           onSuccess: () => {
@@ -273,6 +296,65 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
       );
     } catch (err) {
       console.error("Submit error:", err);
+    }
+  };
+
+  const handleCreateFromDraft = async () => {
+    setError(null);
+
+    if (
+      !formData.name.trim() ||
+      !formData.price.trim() ||
+      !formData.quantity.trim() ||
+      !formData.state ||
+      !formData.categoryId ||
+      !formData.subcategoryId ||
+      !formData.typeId
+    ) {
+      setError("Пожалуйста, заполните все обязательные поля");
+      return;
+    }
+
+    const parsedPrice = Number(formData.price);
+    if (!Number.isFinite(parsedPrice) || parsedPrice <= 0) {
+      setError("Цена должна быть больше нуля");
+      return;
+    }
+
+    const parsedQuantity = Number(formData.quantity);
+    if (!Number.isInteger(parsedQuantity) || parsedQuantity < 1) {
+      setError("Количество должно быть целым числом больше 0");
+      return;
+    }
+
+    if (getTotalImages() === 0) {
+      setError("Добавьте хотя бы одно изображение");
+      return;
+    }
+
+    try {
+      // Сначала сохраняем актуальные правки в черновик, затем публикуем.
+      await updateProductMutation.mutateAsync({
+        name: formData.name.trim(),
+        price: parsedPrice,
+        quantity: parsedQuantity,
+        state: formData.state as "NEW" | "USED",
+        categoryId: Number(formData.categoryId),
+        subcategoryId: Number(formData.subcategoryId),
+        typeId: Number(formData.typeId),
+        description: formData.description.trim() || undefined,
+        address: formData.address.trim() || undefined,
+        images: images.length > 0 ? images : undefined,
+        fieldValues: Object.keys(fieldValues).length > 0 ? fieldValues : undefined,
+        videoUrl: formData.videoUrl.trim() || undefined,
+      });
+      await publishDraftMutation.mutateAsync(Number(productId));
+      toast.success("Объявление отправлено на модерацию");
+      router.replace("/profile/my-products");
+      router.refresh();
+    } catch (err) {
+      console.error("Publish from draft error:", err);
+      setError("Не удалось создать объявление из черновика");
     }
   };
 
@@ -312,12 +394,21 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     );
   }
 
+  const selectedCategory = categories.find((cat) => String(cat.id) === formData.categoryId);
+  const availableSubcategories = selectedCategory?.subCategories || [];
+  const selectedSubcategory = availableSubcategories.find(
+    (sub) => String(sub.id) === formData.subcategoryId,
+  );
+  const availableTypes = selectedSubcategory?.subcategoryTypes || [];
+  const selectedType = availableTypes.find((type) => String(type.id) === formData.typeId);
+  const dynamicFields = selectedType?.fields || [];
+
   return (
     <form onSubmit={handleSubmit}>
       <div className={styles.wrapper}>
         <h1 className={styles.purple}>Редактирование объявления</h1>
         <Input
-          required
+          required={product?.moderateState !== "DRAFT"}
           className="bg-white"
           name="name"
           value={formData.name}
@@ -325,7 +416,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           placeholder="Название объявления"
         />
         <Input
-          required
+          required={product?.moderateState !== "DRAFT"}
           className="bg-white"
           name="price"
           pattern="[0-9]*"
@@ -336,7 +427,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           placeholder="Цена"
         />
         <Input
-          required
+          required={product?.moderateState !== "DRAFT"}
           className="bg-white"
           min={1}
           name="quantity"
@@ -382,31 +473,82 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           </div>
         </div>
 
-        <h1 className={styles.blue}>Дополнительная информация</h1>
-        {product.fieldValues &&
-          Array.isArray(product.fieldValues) &&
-          product.fieldValues.map((field) =>
-            Object.entries(field)
-              .filter(([key]) => key !== "id")
-              .map(([fieldName, value]) => (
-                <Input
-                  key={`${field.id}-${fieldName}`}
-                  className="bg-white"
-                  value={fieldValues[fieldName] || String(value)}
-                  onChange={(e) =>
-                    setFieldValues((prev) => ({
-                      ...prev,
-                      [fieldName]: e.target.value,
-                    }))
-                  }
-                  placeholder={fieldName}
-                />
-              )),
-          )}
+        <h1 className={styles.blue}>Категория</h1>
+        <select
+          className="w-full rounded border border-gray-300 bg-white p-2"
+          name="categoryId"
+          value={formData.categoryId}
+          onChange={(e) => {
+            setFormData((prev) => ({
+              ...prev,
+              categoryId: e.target.value,
+              subcategoryId: "",
+              typeId: "",
+            }));
+            setFieldValues({});
+          }}
+        >
+          <option value="">Выберите категорию</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
 
-        <h1 className={styles.green}>
-          Изображения (максимум {8}, добавлено: {getTotalImages()})
-        </h1>
+        <select
+          className="w-full rounded border border-gray-300 bg-white p-2"
+          disabled={!formData.categoryId}
+          name="subcategoryId"
+          value={formData.subcategoryId}
+          onChange={(e) => {
+            setFormData((prev) => ({ ...prev, subcategoryId: e.target.value, typeId: "" }));
+            setFieldValues({});
+          }}
+        >
+          <option value="">Выберите подкатегорию</option>
+          {availableSubcategories.map((subcategory) => (
+            <option key={subcategory.id} value={subcategory.id}>
+              {subcategory.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="w-full rounded border border-gray-300 bg-white p-2"
+          disabled={!formData.subcategoryId}
+          name="typeId"
+          value={formData.typeId}
+          onChange={(e) => {
+            setFormData((prev) => ({ ...prev, typeId: e.target.value }));
+            setFieldValues({});
+          }}
+        >
+          <option value="">Выберите тип</option>
+          {availableTypes.map((type) => (
+            <option key={type.id} value={type.id}>
+              {type.name}
+            </option>
+          ))}
+        </select>
+
+        {dynamicFields.length > 0 &&
+          dynamicFields.map((field) => (
+            <Input
+              key={field.id}
+              className="bg-white"
+              value={fieldValues[String(field.id)] || ""}
+              onChange={(e) =>
+                setFieldValues((prev) => ({
+                  ...prev,
+                  [String(field.id)]: e.target.value,
+                }))
+              }
+              placeholder={field.name}
+            />
+          ))}
+
+        <h1 className={styles.green}>Подробности</h1>
         <div className="flex flex-wrap gap-3">
           {/* Существующие изображения */}
           {existingImages.map((img, idx) => {
@@ -414,11 +556,10 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             return (
               <div
                 key={`existing-${img}-${idx}`}
-                className={`relative h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-xl border-2 transition-colors md:h-[200px] md:w-[200px] ${
-                  globalIndex === mainImageIndex
-                    ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
-                    : "border-transparent hover:border-blue-500"
-                }`}
+                className={`relative h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-xl border-2 transition-colors md:h-[200px] md:w-[200px] ${globalIndex === mainImageIndex
+                  ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
+                  : "border-transparent hover:border-blue-500"
+                  }`}
                 tabIndex={0}
                 onClick={() => setAsMainImage(globalIndex)}
                 onKeyDown={(e) => {
@@ -460,11 +601,10 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             return (
               <div
                 key={uniqueKey}
-                className={`relative h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-xl border-2 transition-colors md:h-[200px] md:w-[200px] ${
-                  globalIndex === mainImageIndex
-                    ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
-                    : "border-blue-400 hover:border-blue-500"
-                }`}
+                className={`relative h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-xl border-2 transition-colors md:h-[200px] md:w-[200px] ${globalIndex === mainImageIndex
+                  ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
+                  : "border-blue-400 hover:border-blue-500"
+                  }`}
                 tabIndex={0}
                 onClick={() => setAsMainImage(globalIndex)}
                 onKeyDown={(e) => {
@@ -572,10 +712,19 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         <div className="flex gap-4">
           <Button
             className={styles.button}
-            disabled={updateProductMutation.isPending}
+            disabled={updateProductMutation.isPending || publishDraftMutation.isPending}
             type="submit"
           >
             {updateProductMutation.isPending ? "Сохранение..." : "Сохранить изменения"}
+          </Button>
+          <Button
+            className={styles.button}
+            disabled={updateProductMutation.isPending || publishDraftMutation.isPending}
+            type="button"
+            variant="secondary"
+            onClick={handleCreateFromDraft}
+          >
+            {publishDraftMutation.isPending ? "Создание..." : "Создать объявление"}
           </Button>
         </div>
       </div>

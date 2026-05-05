@@ -9,9 +9,9 @@
   width: 100%;
 }
 
-.reservedText {
+.timerText {
   font-size: 13px;
-  color: #b45309;
+  color: #92400e;
 }
 
 .dialog {
@@ -35,4 +35,11 @@
   font-size: 12px;
   font-weight: 600;
   color: #4b5563;
+}
+
+.sellerCancel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }

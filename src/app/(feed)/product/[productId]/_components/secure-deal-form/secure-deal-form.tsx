@@ -34,6 +34,27 @@ import styles from "./secure-deal-form.module.css";
 const DEFAULT_CDEK_TARIFF_CODE = 136;
 type ParcelInputMode = "approximate" | "exact";
 
+function getCityFromAddress(address?: string | null) {
+  if (!address) return "";
+  const normalized = address.trim();
+  if (!normalized) return "";
+
+  const parts = normalized
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  const directCity = parts.find((part) => /^г\.\s*/i.test(part));
+  if (directCity) return directCity.replace(/^г\.\s*/i, "").trim();
+
+  const cityFromDistrict = parts.find((part) => /^городской округ\s+/i.test(part));
+  if (cityFromDistrict) return cityFromDistrict.replace(/^городской округ\s+/i, "").trim();
+
+  const blocked = /(\d|улиц|проспект|переул|проезд|шоссе|бульвар|плош|район|область|край|республика|федеральный|россия|индекс|корпус|строение|квартира|дом|новостройка)/i;
+  const candidates = parts.filter((part) => !blocked.test(part));
+  return candidates.at(-1) ?? "";
+}
+
 interface ParcelPreset {
   id: string;
   name: string;
@@ -165,6 +186,9 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   const [toPvzCode, setToPvzCode] = useState("");
 
   const [tariffName, setTariffName] = useState("");
+  const [tariffCode, setTariffCode] = useState<number>(DEFAULT_CDEK_TARIFF_CODE);
+  const [fromCityCode, setFromCityCode] = useState<number | null>(null);
+  const [fromCityName, setFromCityName] = useState("");
   const [weight, setWeight] = useState("");
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
@@ -188,6 +212,9 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     setToPvzList([]);
     setToPvzCode("");
     setTariffName("");
+    setTariffCode(DEFAULT_CDEK_TARIFF_CODE);
+    setFromCityCode(null);
+    setFromCityName("");
     setWeight("");
     setLength("");
     setWidth("");
@@ -243,6 +270,36 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     }
   };
 
+  const resolveFromCityByAddress = async () => {
+    const cityCandidate = getCityFromAddress(product.address);
+    if (!cityCandidate) {
+      setFromCityCode(null);
+      setFromCityName("");
+      return;
+    }
+
+    try {
+      const cities = await getCdekCities(cityCandidate, 10);
+      const exact = cities.find(
+        (city) => city.city?.trim().toLowerCase() === cityCandidate.trim().toLowerCase(),
+      );
+      const picked = exact ?? cities[0];
+
+      if (!picked?.code) {
+        setFromCityCode(null);
+        setFromCityName("");
+        return;
+      }
+
+      setFromCityCode(picked.code);
+      setFromCityName(picked.city ?? cityCandidate);
+    } catch (error) {
+      console.error("Ошибка определения города отправителя:", error);
+      setFromCityCode(null);
+      setFromCityName("");
+    }
+  };
+
   const handleSelectCity = async (code: number) => {
     try {
       setIsLoadingPvz(true);
@@ -266,6 +323,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   };
 
   const handleCalculate = async () => {
+    if (!fromCityCode) {
+      toast.error("Не удалось определить город отправителя из адреса товара");
+      return;
+    }
+
     if (!toCityCode) {
       toast.error("Выбери город получателя");
       return;
@@ -297,9 +359,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
     try {
       setIsCalculating(true);
-      const fromCityCode = toCityCode;
       const result = await calculateCdekDelivery({
-        tariffCode: DEFAULT_CDEK_TARIFF_CODE,
+        tariffCode,
         fromCityCode,
         toCityCode,
         weight: parsedWeight,
@@ -311,6 +372,9 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       const calculatedCost = result.delivery_sum ?? result.total_sum ?? 0;
       setDeliveryCost(calculatedCost);
       if (result.tariff_name) setTariffName(result.tariff_name);
+      if (typeof result.tariff_code === "number") {
+        setTariffCode(result.tariff_code);
+      }
       toast.success("Доставка рассчитана");
     } catch (error) {
       console.error("Ошибка расчета доставки:", error);
@@ -321,6 +385,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   };
 
   const handleCreateDeal = async () => {
+    if (!fromCityCode) {
+      toast.error("Не удалось определить город отправителя из адреса товара");
+      return;
+    }
+
     if (!toCityCode) {
       toast.error("Заполни город получения");
       return;
@@ -338,11 +407,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
     try {
       setIsCreating(true);
-      const fromCityCode = toCityCode;
       const deal = await createDeal({
         productId: product.id,
         deliveryCost,
-        cdekTariffCode: DEFAULT_CDEK_TARIFF_CODE,
+        cdekTariffCode: tariffCode,
         cdekTariffName: tariffName || undefined,
         cdekFromCityCode: fromCityCode,
         cdekToCityCode: toCityCode,
@@ -371,6 +439,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     }
 
     setOpen(true);
+    void resolveFromCityByAddress();
   };
 
   const handleCityInputChange = (value: string) => {
@@ -590,11 +659,16 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
             <div className={styles.summary}>
               <Typography>Товар: {formatPrice(product.price)}</Typography>
-              <Typography>Код города CDEK: {toCityCode ?? "не выбран"}</Typography>
+              <Typography>
+                Город отправителя: {fromCityName || "не определен"} ({fromCityCode ?? "—"})
+              </Typography>
+              <Typography>Город получателя (код CDEK): {toCityCode ?? "не выбран"}</Typography>
               <Typography>
                 Доставка: {deliveryCost === null ? "не рассчитана" : formatPrice(deliveryCost)}
               </Typography>
-              <Typography>Тариф: {tariffName}</Typography>
+              <Typography>
+                Тариф: {tariffName || "не определен"} (код {tariffCode})
+              </Typography>
               <Typography variant="h2">Итого: {formatPrice(totalPrice)}</Typography>
             </div>
           </div>

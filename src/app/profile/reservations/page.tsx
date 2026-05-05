@@ -23,14 +23,29 @@ function formatDate(value?: string | null) {
 }
 
 function reservationStatusLabel(status: string) {
+  const normalizedStatus = status.trim().toUpperCase();
   const map: Record<string, string> = {
     ACTIVE: "Активен",
+    RESERVED: "Активен",
     CANCELLED_BY_BUYER: "Отменён покупателем",
     CANCELLED_BY_SELLER: "Отменён продавцом",
     DEAL_CREATED: "Оформлена сделка",
     EXPIRED: "Истёк",
   };
-  return map[status] ?? status;
+  return map[normalizedStatus] ?? status;
+}
+
+function normalizedReservationStatus(status: string) {
+  return status.trim().toUpperCase();
+}
+
+function isCancelledStatus(status: string) {
+  const normalizedStatus = normalizedReservationStatus(status);
+  return (
+    normalizedStatus.includes("CANCELLED") ||
+    normalizedStatus.includes("CANCELED") ||
+    normalizedStatus.includes("ОТМЕН")
+  );
 }
 
 function getApiErrorMessage(error: unknown, fallback: string) {
@@ -49,7 +64,13 @@ function getApiErrorMessage(error: unknown, fallback: string) {
 
 /** Активный резерв — можно отменять */
 function isReservationActive(reservation: Reservation) {
-  return reservation.status === "ACTIVE";
+  const normalizedStatus = normalizedReservationStatus(reservation.status);
+  if (isCancelledStatus(normalizedStatus)) return false;
+  return normalizedStatus !== "DEAL_CREATED" && normalizedStatus !== "EXPIRED";
+}
+
+function isReservationCancelled(reservation: Reservation) {
+  return isCancelledStatus(reservation.status);
 }
 
 /** Непустые URL картинок из ответа резерва */
@@ -154,6 +175,7 @@ const ReservationsPage = () => {
       ? (reservation.seller?.fullName ?? reservation.sellerName ?? "—")
       : (reservation.buyer?.fullName ?? reservation.buyerName ?? "—");
     const canCancel = isReservationActive(reservation);
+    const isCancelled = isReservationCancelled(reservation);
 
     const cardInner = (
       <>
@@ -204,7 +226,17 @@ const ReservationsPage = () => {
           <div className={styles.cardLink}>{cardInner}</div>
         )}
 
-        {canCancel ? (
+        {isCancelled ? (
+          <div className={styles.cardFooter}>
+            <div className={styles.actionsRow}>
+              <Button disabled type="button" variant="secondary">
+                Резерв уже отменён
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
+        {canCancel && !isCancelled ? (
           <div className={styles.cardFooter}>
             {isBuyer ? (
               <div className={styles.actionsRow}>
