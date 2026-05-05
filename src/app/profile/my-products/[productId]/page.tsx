@@ -243,8 +243,8 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     }
 
     try {
-      const resolvedCategoryId = Number(formData.categoryId || product.category?.id || 0);
-      const resolvedSubcategoryId = Number(formData.subcategoryId || product.subCategory?.id || 0);
+      const resolvedCategoryId = Number(formData.categoryId || product?.category?.id || 0);
+      const resolvedSubcategoryId = Number(formData.subcategoryId || product?.subCategory?.id || 0);
 
       // Переупорядочиваем изображения так, чтобы основное было первым
       let orderedImages = images;
