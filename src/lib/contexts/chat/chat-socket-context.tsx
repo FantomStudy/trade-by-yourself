@@ -1,51 +1,35 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import type { Socket } from "socket.io-client";
 
-import type { ChatSocketContextType, Message } from "./types";
+import type { ChatSocketContextType, ChatSocketLike, Message } from "./types";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
+import { createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
-import { createChatSocket, getChatSocketUrl } from "@/lib/chat-socket";
+import {
+  createChatSocket,
+  parseChatSocketMessage,
+  sendChatSocketEvent,
+  type ChatEventName,
+} from "@/lib/chat-socket";
 
 import { useAuth } from "../auth";
 
 const ChatSocketContext = createContext<ChatSocketContextType | null>(null);
 
-/** Ответ ack от Go: joinChat / sendMessage / markAsRead */
-type SocketAck = { success?: boolean; message?: string } | undefined;
-
-function logAckFailed(op: string, ack: SocketAck) {
-  if (ack && ack.success === false && ack.message) {
-    console.warn(`[chat socket] ${op}:`, ack.message);
-  }
-}
-
-// Функция для запроса разрешения на уведомления
 const requestNotificationPermission = async () => {
-  if (!("Notification" in window)) {
-    console.log("Browser doesn't support notifications");
-    return false;
-  }
-
-  if (Notification.permission === "granted") {
-    return true;
-  }
-
+  if (!("Notification" in window)) return false;
+  if (Notification.permission === "granted") return true;
   if (Notification.permission !== "denied") {
     const permission = await Notification.requestPermission();
     return permission === "granted";
   }
-
   return false;
 };
 
-// Функция для показа уведомления
 const showNotification = (message: Message) => {
   if (Notification.permission !== "granted") return;
-
   const productName = message.product?.name;
   const title = productName
     ? `${message.sender.fullName} (${productName})`
@@ -68,126 +52,115 @@ const showNotification = (message: Message) => {
 
 export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
   const queryClient = useQueryClient();
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
   const { user } = useAuth();
+  const [isConnected, setIsConnected] = useState(false);
+  const wsRef = useRef<WebSocket | null>(null);
+  const listenersRef = useRef<Map<ChatEventName, Set<(payload: any) => void>>>(new Map());
 
-  // Запрос разрешения на уведомления при монтировании
   useEffect(() => {
-    if (user) {
-      requestNotificationPermission();
-    }
+    if (user) void requestNotificationPermission();
   }, [user]);
+
+  const emitLocal = useCallback((event: ChatEventName, payload: any) => {
+    const set = listenersRef.current.get(event);
+    if (!set) return;
+    for (const cb of set) cb(payload);
+  }, []);
+
+  const socketLike = useMemo<ChatSocketLike>(
+    () => ({
+      on: (event, callback) => {
+        const existing = listenersRef.current.get(event) ?? new Set();
+        existing.add(callback);
+        listenersRef.current.set(event, existing);
+      },
+      off: (event, callback) => {
+        const existing = listenersRef.current.get(event);
+        if (!existing) return;
+        existing.delete(callback);
+      },
+    }),
+    [],
+  );
 
   useEffect(() => {
     if (!user) {
-      if (socket) {
-        socket.disconnect();
-        setSocket(null);
-        setIsConnected(false);
-      }
+      if (wsRef.current) wsRef.current.close();
+      wsRef.current = null;
+      setIsConnected(false);
       return;
     }
 
-    // Тот же хост, что REST: session_id уходит в handshake благодаря withCredentials (см. chat-socket.ts).
-    const socketInstance = createChatSocket();
+    const ws = createChatSocket();
+    wsRef.current = ws;
 
-    socketInstance.on("connect", () => {
-      console.log("WebSocket connected");
+    ws.onopen = () => {
       setIsConnected(true);
-    });
+    };
 
-    socketInstance.on("disconnect", () => {
-      console.log("WebSocket disconnected");
+    ws.onclose = () => {
       setIsConnected(false);
-    });
+    };
 
-    socketInstance.on("connect_error", (error: Error) => {
-      const url = getChatSocketUrl();
-      console.error("Chat Socket connect_error:", error?.message ?? error, { url });
-      if (process.env.NODE_ENV === "development") {
-        console.info(
-          "[chat] Если xhr poll error: проверь Network → запрос к /socket.io; на бэке CORS с credentials для origin фронта. Либо в .env: NEXT_PUBLIC_CHAT_SOCKET_RELATIVE=true и NEXT_PUBLIC_CHAT_SOCKET_POLLING_ONLY=true (прокси через Next, см. next.config rewrites).",
-        );
-      }
+    ws.onerror = () => {
       setIsConnected(false);
-    });
+    };
 
-    // Глобальный обработчик новых сообщений для уведомлений
-    socketInstance.on("newMessage", (data: Message) => {
-      // Показываем уведомление только если это не ваше сообщение
-      // и если окно неактивно или вы не на странице этого чата
-      if (data.senderId !== user.id) {
-        const isWindowFocused = document.hasFocus();
-        const isOnChatPage = window.location.pathname.includes(`/profile/messages/${data.chatId}`);
+    ws.onmessage = (event) => {
+      const packet = parseChatSocketMessage(event.data);
+      if (!packet) return;
 
-        // Показываем уведомление если окно неактивно или вы на другой странице
-        if (!isWindowFocused || !isOnChatPage) {
-          showNotification(data);
+      if (packet.event === "newMessage") {
+        const data = packet.data as Message;
+        if (data.senderId !== user.id) {
+          const isWindowFocused = document.hasFocus();
+          const isOnChatPage = window.location.pathname.includes(`/profile/messages/${data.chatId}`);
+          if (!isWindowFocused || !isOnChatPage) showNotification(data);
         }
       }
-    });
 
-    // Событие для списка чатов (сайдбар / «Сообщения»)
-    socketInstance.on("newChatMessage", () => {
-      void queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
-    });
+      if (packet.event === "newChatMessage") {
+        void queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
+      }
 
-    setSocket(socketInstance);
+      emitLocal(packet.event, packet.data);
+    };
 
     return () => {
-      socketInstance.disconnect();
+      ws.close();
+      wsRef.current = null;
     };
-  }, [user, queryClient]);
+  }, [emitLocal, queryClient, user]);
 
-  const joinChat = useCallback(
-    (chatId: number) => {
-      if (socket?.connected) {
-        socket.emit("joinChat", { chatId }, (ack: SocketAck) => logAckFailed("joinChat", ack));
-      }
-    },
-    [socket],
-  );
+  const joinChat = useCallback((chatId: number) => {
+    const ws = wsRef.current;
+    if (!ws) return;
+    sendChatSocketEvent(ws, "joinChat", { chatId });
+  }, []);
 
-  const leaveChat = useCallback(
-    (chatId: number) => {
-      if (socket?.connected) {
-        socket.emit("leaveChat", { chatId });
-      }
-    },
-    [socket],
-  );
+  const leaveChat = useCallback((chatId: number) => {
+    const ws = wsRef.current;
+    if (!ws) return;
+    sendChatSocketEvent(ws, "leaveChat", { chatId });
+  }, []);
 
-  const sendMessage = useCallback(
-    (chatId: number, content: string) => {
-      if (socket?.connected) {
-        socket.emit(
-          "sendMessage",
-          { chatId, content },
-          (ack: SocketAck) => logAckFailed("sendMessage", ack),
-        );
-      }
-    },
-    [socket],
-  );
+  const sendMessage = useCallback((chatId: number, content: string) => {
+    const ws = wsRef.current;
+    if (!ws) return;
+    sendChatSocketEvent(ws, "sendMessage", { chatId, content });
+  }, []);
 
-  const sendTyping = useCallback(
-    (chatId: number, isTyping: boolean) => {
-      if (socket?.connected) {
-        socket.emit("typing", { chatId, isTyping });
-      }
-    },
-    [socket],
-  );
+  const sendTyping = useCallback((chatId: number, isTyping: boolean) => {
+    const ws = wsRef.current;
+    if (!ws) return;
+    sendChatSocketEvent(ws, "typing", { chatId, isTyping });
+  }, []);
 
-  const markAsRead = useCallback(
-    (chatId: number) => {
-      if (socket?.connected) {
-        socket.emit("markAsRead", { chatId }, (ack: SocketAck) => logAckFailed("markAsRead", ack));
-      }
-    },
-    [socket],
-  );
+  const markAsRead = useCallback((chatId: number) => {
+    const ws = wsRef.current;
+    if (!ws) return;
+    sendChatSocketEvent(ws, "markAsRead", { chatId });
+  }, []);
 
   const value: ChatSocketContextType = useMemo(
     () => ({
@@ -197,9 +170,9 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
       markAsRead,
       sendMessage,
       sendTyping,
-      socket,
+      socket: socketLike,
     }),
-    [isConnected, joinChat, leaveChat, markAsRead, sendMessage, sendTyping, socket],
+    [isConnected, joinChat, leaveChat, markAsRead, sendMessage, sendTyping, socketLike],
   );
 
   return <ChatSocketContext value={value}>{children}</ChatSocketContext>;
@@ -212,3 +185,4 @@ export const useChatSocket = () => {
   }
   return context;
 };
+
