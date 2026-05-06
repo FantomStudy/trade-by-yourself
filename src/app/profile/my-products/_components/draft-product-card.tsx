@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { useDeleteProductMutation, usePublishDraftMutation } from "@/api/hooks";
 import { ProductPreview } from "@/components/product-card/product-preview/product-preview";
 import { Typography } from "@/components/ui";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 
 import styles from "@/components/product-card/product-card.module.css";
 
@@ -118,7 +118,7 @@ export const DraftProductCard = ({ product }: DraftProductCardProps) => {
           <Typography>{product.createdAt}</Typography>
           <Typography>В наличии: {product.quantity ?? 1} шт.</Typography>
         </div>
-        <Typography className={styles.price}>{formatPrice(product.price)}</Typography>
+        <Typography className={styles.price}>{toCurrency(product.price)}</Typography>
       </div>
     </article>
   );

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { useCancelDealMutation, useMyDeals, useShipDealMutation } from "@/api/hooks";
 import { Button, Input, Typography } from "@/components/ui";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 
 import styles from "./page.module.css";
 
@@ -32,7 +32,7 @@ function getDealRoleText(role?: Deal["myRole"]) {
 
 function formatMoney(value: number | null | undefined) {
   if (typeof value !== "number" || Number.isNaN(value)) return "—";
-  return formatPrice(value);
+  return toCurrency(value);
 }
 
 function formatDate(value: string | null | undefined) {
@@ -190,7 +190,10 @@ const DealsPage = () => {
                           value={orderUuidByDealId[deal.id] ?? ""}
                           placeholder="UUID заказа (необязательно)"
                           onChange={(event) =>
-                            setOrderUuidByDealId((prev) => ({ ...prev, [deal.id]: event.target.value }))
+                            setOrderUuidByDealId((prev) => ({
+                              ...prev,
+                              [deal.id]: event.target.value,
+                            }))
                           }
                         />
                       </div>
@@ -224,15 +227,21 @@ const DealsPage = () => {
                   <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Сумма товара</span>
-                      <span className={styles.infoValue}>{formatMoney(deal.amounts.productAmount)}</span>
+                      <span className={styles.infoValue}>
+                        {formatMoney(deal.amounts.productAmount)}
+                      </span>
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Доставка</span>
-                      <span className={styles.infoValue}>{formatMoney(deal.amounts.deliveryCost)}</span>
+                      <span className={styles.infoValue}>
+                        {formatMoney(deal.amounts.deliveryCost)}
+                      </span>
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Итого к оплате</span>
-                      <span className={styles.infoValueStrong}>{formatMoney(deal.amounts.totalAmount)}</span>
+                      <span className={styles.infoValueStrong}>
+                        {formatMoney(deal.amounts.totalAmount)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -242,11 +251,15 @@ const DealsPage = () => {
                   <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Тариф</span>
-                      <span className={styles.infoValue}>{deal.cdek.tariffName ?? `Код ${deal.cdek.tariffCode}`}</span>
+                      <span className={styles.infoValue}>
+                        {deal.cdek.tariffName ?? `Код ${deal.cdek.tariffCode}`}
+                      </span>
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Трек-номер</span>
-                      <span className={styles.infoValue}>{deal.cdek.trackNumber ?? "Ещё не присвоен"}</span>
+                      <span className={styles.infoValue}>
+                        {deal.cdek.trackNumber ?? "Ещё не присвоен"}
+                      </span>
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>UUID заказа CDEK</span>

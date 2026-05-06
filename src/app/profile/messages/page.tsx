@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import { ChatsBanner } from "@/components/product-feed-banner";
 import { useChats } from "@/lib/api/hooks";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 import { getSupportMessages, getSupportUnreadCount } from "@/lib/support-chat";
 
 const MessagesPage = () => {
@@ -169,7 +169,7 @@ const MessagesPage = () => {
                 )}
                 <div className="flex-1">
                   <h3 className="font-semibold">{chat.product.name}</h3>
-                  <p className="text-sm text-blue-600">{formatPrice(chat.product.price)}</p>
+                  <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
                   {chat.lastMessage && (
                     <span className="text-xs text-gray-500">
                       {new Date(chat.lastMessage.createdAt).toLocaleString("ru-RU", {

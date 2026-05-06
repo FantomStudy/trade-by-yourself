@@ -9,7 +9,7 @@ import { useState } from "react";
 
 import { useDeleteProductMutation, useToggleProductMutation } from "@/api/hooks";
 import { Typography } from "@/components/ui";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 
 import { ProductPreview } from "./product-preview/product-preview";
 
@@ -162,7 +162,7 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
         </div>
 
         <Typography className={`${styles.price} ${product.isHide ? styles.hiddenText : ""}`}>
-          {formatPrice(product.price)}
+          {toCurrency(product.price)}
         </Typography>
       </div>
     </article>

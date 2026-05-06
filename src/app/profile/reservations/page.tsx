@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useCancelReservationMutation, useCurrentUser, useMyReservations } from "@/api/hooks";
 import { getProductById } from "@/api/requests";
 import { Button, Input, Typography } from "@/components/ui";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 
 import styles from "./page.module.css";
 
@@ -154,8 +154,7 @@ const ReservationsPage = () => {
   const renderReservation = (reservation: Reservation) => {
     const productId = reservation.product?.id ?? reservation.productId;
     const card = productId ? productCardById.get(productId) : undefined;
-    const name =
-      reservation.product?.name ?? card?.name ?? reservation.productName ?? "Товар";
+    const name = reservation.product?.name ?? card?.name ?? reservation.productName ?? "Товар";
     const fromReservation = reservationImageUrls(reservation);
     const images =
       fromReservation.length > 0 ? fromReservation : (card?.images?.filter(Boolean) ?? []);
@@ -198,7 +197,7 @@ const ReservationsPage = () => {
           <div className={styles.priceRow}>
             <span className={styles.reserveId}>№{reservation.id}</span>
             {typeof price === "number" && Number.isFinite(price) ? (
-              <span className={styles.price}>{formatPrice(price)}</span>
+              <span className={styles.price}>{toCurrency(price)}</span>
             ) : (
               <span className={styles.priceMissing}>Цена на странице товара</span>
             )}

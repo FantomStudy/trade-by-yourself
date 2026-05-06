@@ -3,7 +3,7 @@ import type { Product } from "@/types";
 import Link from "next/link";
 
 import { Typography } from "@/components/ui";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 
 import { LikeButton } from "../like-button";
 import { ProductPreview } from "./product-preview/product-preview";
@@ -39,7 +39,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </div>
 
         <Typography className={styles.price} data-slot="product-price">
-          {formatPrice(product.price)}
+          {toCurrency(product.price)}
         </Typography>
       </div>
     </article>

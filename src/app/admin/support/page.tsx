@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Typography } from "@/components/ui";
 import { useChats } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 import {
   addSupportMessage,
   getAdminUnreadCount,
@@ -340,7 +340,7 @@ const SupportPage = () => {
 
                       <div className="flex items-center gap-2">
                         <Typography className="text-sm text-blue-600">
-                          {formatPrice(chat.product.price)}
+                          {toCurrency(chat.product.price)}
                         </Typography>
                         {isModeration && (
                           <span className="rounded bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">

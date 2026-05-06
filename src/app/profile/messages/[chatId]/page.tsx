@@ -10,7 +10,7 @@ import { use, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui";
 import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 
 interface ChatPageProps {
   params: Promise<{ chatId: string }>;
@@ -196,7 +196,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
           </div>
           <div>
             <h1 className="text-base font-semibold">{chat.product.name}</h1>
-            <p className="text-sm text-blue-600">{formatPrice(chat.product.price)}</p>
+            <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
           </div>
         </div>
 
@@ -244,8 +244,9 @@ const ChatPage = ({ params }: ChatPageProps) => {
 
                 {/* Сообщение */}
                 <div
-                  className={`rounded-2xl px-4 py-3 ${isCurrentUser ? "bg-blue-400 text-white" : "bg-white text-gray-800"
-                    }`}
+                  className={`rounded-2xl px-4 py-3 ${
+                    isCurrentUser ? "bg-blue-400 text-white" : "bg-white text-gray-800"
+                  }`}
                 >
                   <p className="text-sm">{messageText}</p>
                 </div>

@@ -28,7 +28,7 @@ import { useCurrentUser } from "@/lib/api/hooks/queries";
 import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
 import { MY_RESERVATIONS_QUERY_KEY } from "@/lib/api/hooks/queries/useMyReservations";
 import { PRODUCT_RESERVATION_QUERY_KEY } from "@/lib/api/hooks/queries/useProductReservation";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 
 import styles from "./secure-deal-form.module.css";
 
@@ -50,7 +50,8 @@ function getCityFromAddress(address?: string | null) {
   const cityFromDistrict = parts.find((part) => /^городской округ\s+/i.test(part));
   if (cityFromDistrict) return cityFromDistrict.replace(/^городской округ\s+/i, "").trim();
 
-  const blocked = /(\d|улиц|проспект|переул|проезд|шоссе|бульвар|плош|район|область|край|республика|федеральный|россия|индекс|корпус|строение|квартира|дом|новостройка)/i;
+  const blocked =
+    /(\d|улиц|проспект|переул|проезд|шоссе|бульвар|плош|район|область|край|республика|федеральный|россия|индекс|корпус|строение|квартира|дом|новостройка)/i;
   const candidates = parts.filter((part) => !blocked.test(part));
   return candidates.at(-1) ?? "";
 }
@@ -586,7 +587,6 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
           if (!nextOpen) resetState();
         }}
       >
-
         <DialogContent className={styles.dialogContent}>
           <DialogHeader>
             <DialogTitle>Оформление безопасной сделки</DialogTitle>
@@ -787,7 +787,12 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                 </div>
               )}
 
-              <Button disabled={isLoadingTariffs} type="button" variant="secondary" onClick={handleLoadTariffs}>
+              <Button
+                disabled={isLoadingTariffs}
+                type="button"
+                variant="secondary"
+                onClick={handleLoadTariffs}
+              >
                 {isLoadingTariffs ? "Получаем тарифы..." : "Получить тарифы"}
               </Button>
 
@@ -807,7 +812,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                 <option value="">Выбери тариф</option>
                 {tariffs.map((item) => (
                   <option key={item.tariffCode} value={item.tariffCode}>
-                    {item.tariffName} (код {item.tariffCode}){item.totalSum ? ` - ${item.totalSum} ₽` : ""}
+                    {item.tariffName} (код {item.tariffCode})
+                    {item.totalSum ? ` - ${item.totalSum} ₽` : ""}
                     {item.periodMin || item.periodMax
                       ? `, ${item.periodMin ?? "?"}-${item.periodMax ?? "?"} дн.`
                       : ""}
@@ -821,23 +827,28 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
             </div>
 
             <div className={styles.summary}>
-              <Typography>Товар: {formatPrice(product.price)}</Typography>
+              <Typography>Товар: {toCurrency(product.price)}</Typography>
               <Typography>
                 Город отправителя: {fromCityName || "не определен"} ({fromCityCode ?? "—"})
               </Typography>
               <Typography>Город получателя (код CDEK): {toCityCode ?? "не выбран"}</Typography>
               <Typography>
-                Доставка: {deliveryCost === null ? "не рассчитана" : formatPrice(deliveryCost)}
+                Доставка: {deliveryCost === null ? "не рассчитана" : toCurrency(deliveryCost)}
               </Typography>
               <Typography>
                 Тариф: {tariffName || "не выбран"} (код {tariffCode ?? "—"})
               </Typography>
-              <Typography variant="h2">Итого: {formatPrice(totalPrice)}</Typography>
+              <Typography variant="h2">Итого: {toCurrency(totalPrice)}</Typography>
             </div>
           </div>
 
           <DialogFooter className={styles.footer}>
-            <Button disabled={isCreating} type="button" variant="secondary" onClick={() => setOpen(false)}>
+            <Button
+              disabled={isCreating}
+              type="button"
+              variant="secondary"
+              onClick={() => setOpen(false)}
+            >
               Отмена
             </Button>
             <Button disabled={isCreating} type="button" onClick={handleCreateDeal}>
