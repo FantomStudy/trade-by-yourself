@@ -1,4 +1,4 @@
-﻿import { Suspense } from "react";
+import { Suspense } from "react";
 
 import { VkCallbackClient } from "./vk-callback-client";
 

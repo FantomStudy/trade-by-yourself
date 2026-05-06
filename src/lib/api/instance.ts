@@ -4,8 +4,7 @@ import { isServer } from "../is-server";
 import { updateServerTimeOffset } from "../server-time-offset";
 
 const RAW_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const BASE_URL = RAW_BASE_URL
-  ?.trim()
+const BASE_URL = RAW_BASE_URL?.trim()
   // Защита от случайных кавычек в .env, чтобы запросы не уходили в относительный путь.
   .replace(/^['"]+|['"]+$/g, "")
   .replace(/\/+$/g, "");

@@ -5,7 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getProductReservation } from "@/api/requests";
 
-export const PRODUCT_RESERVATION_QUERY_KEY = (productId: number) => ["reservation", "product", productId];
+export const PRODUCT_RESERVATION_QUERY_KEY = (productId: number) => [
+  "reservation",
+  "product",
+  productId,
+];
 
 export const useProductReservation = (
   productId?: number,

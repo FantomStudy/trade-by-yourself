@@ -3,15 +3,15 @@
 import type { PropsWithChildren } from "react";
 
 import type { ChatSocketContextType, ChatSocketLike, Message } from "./types";
-
+import type {ChatEventName} from "@/lib/chat-socket";
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
 import {
+  
   createChatSocket,
   parseChatSocketMessage,
-  sendChatSocketEvent,
-  type ChatEventName,
+  sendChatSocketEvent
 } from "@/lib/chat-socket";
 
 import { useAuth } from "../auth";
@@ -114,7 +114,9 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
         const data = packet.data as Message;
         if (data.senderId !== user.id) {
           const isWindowFocused = document.hasFocus();
-          const isOnChatPage = window.location.pathname.includes(`/profile/messages/${data.chatId}`);
+          const isOnChatPage = window.location.pathname.includes(
+            `/profile/messages/${data.chatId}`,
+          );
           if (!isWindowFocused || !isOnChatPage) showNotification(data);
         }
       }
@@ -185,4 +187,3 @@ export const useChatSocket = () => {
   }
   return context;
 };
-

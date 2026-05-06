@@ -7,7 +7,11 @@ import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useDeleteProductMutation, usePublishDraftMutation, useUpdateProductMutation } from "@/api/hooks";
+import {
+  useDeleteProductMutation,
+  usePublishDraftMutation,
+  useUpdateProductMutation,
+} from "@/api/hooks";
 import { getProductById } from "@/api/requests";
 import { AddressMap, Button, Input, Textarea } from "@/components/ui";
 import { api } from "@/lib/api/instance";
@@ -285,7 +289,9 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
               error.response?.data?.message ||
               error.response?.data?.error ||
               "Ошибка при обновлении объявления";
-            const formattedMessage = Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage;
+            const formattedMessage = Array.isArray(errorMessage)
+              ? errorMessage.join(", ")
+              : errorMessage;
             setError(
               formattedMessage.includes("Количество должно быть целым числом больше 0")
                 ? "Количество должно быть целым числом больше 0"
@@ -556,10 +562,11 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             return (
               <div
                 key={`existing-${img}-${idx}`}
-                className={`relative h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-xl border-2 transition-colors md:h-[200px] md:w-[200px] ${globalIndex === mainImageIndex
-                  ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
-                  : "border-transparent hover:border-blue-500"
-                  }`}
+                className={`relative h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-xl border-2 transition-colors md:h-[200px] md:w-[200px] ${
+                  globalIndex === mainImageIndex
+                    ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
+                    : "border-transparent hover:border-blue-500"
+                }`}
                 tabIndex={0}
                 onClick={() => setAsMainImage(globalIndex)}
                 onKeyDown={(e) => {
@@ -601,10 +608,11 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             return (
               <div
                 key={uniqueKey}
-                className={`relative h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-xl border-2 transition-colors md:h-[200px] md:w-[200px] ${globalIndex === mainImageIndex
-                  ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
-                  : "border-blue-400 hover:border-blue-500"
-                  }`}
+                className={`relative h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-xl border-2 transition-colors md:h-[200px] md:w-[200px] ${
+                  globalIndex === mainImageIndex
+                    ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
+                    : "border-blue-400 hover:border-blue-500"
+                }`}
                 tabIndex={0}
                 onClick={() => setAsMainImage(globalIndex)}
                 onKeyDown={(e) => {

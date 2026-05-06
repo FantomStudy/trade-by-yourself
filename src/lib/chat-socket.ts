@@ -67,4 +67,3 @@ function getSessionIdFromCookie(): string | null {
     : cookie.slice("session_id=".length);
   return value ? decodeURIComponent(value) : null;
 }
-

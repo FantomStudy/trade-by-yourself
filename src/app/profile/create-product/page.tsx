@@ -152,7 +152,9 @@ const CreateProductPage = () => {
                 error.response?.data?.message ||
                 error.response?.data?.error ||
                 "Ошибка валидации данных";
-              const formattedMessage = Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage;
+              const formattedMessage = Array.isArray(errorMessage)
+                ? errorMessage.join(", ")
+                : errorMessage;
               setError(
                 formattedMessage.includes("Количество должно быть целым числом больше 0")
                   ? "Количество должно быть целым числом больше 0"
@@ -193,8 +195,8 @@ const CreateProductPage = () => {
             ? { price: parsedPrice }
             : {}),
           ...(typeof parsedQuantity === "number" &&
-            Number.isFinite(parsedQuantity) &&
-            parsedQuantity > 0
+          Number.isFinite(parsedQuantity) &&
+          parsedQuantity > 0
             ? { quantity: parsedQuantity }
             : {}),
           ...(formData.state ? { state: formData.state as "NEW" | "USED" } : {}),
@@ -204,7 +206,9 @@ const CreateProductPage = () => {
           ...(formData.description.trim() ? { description: formData.description.trim() } : {}),
           ...(formData.address.trim() ? { address: formData.address.trim() } : {}),
           images: images.length > 0 ? images : undefined,
-          ...(Object.keys(normalizedFieldValues).length > 0 ? { fieldValues: normalizedFieldValues } : {}),
+          ...(Object.keys(normalizedFieldValues).length > 0
+            ? { fieldValues: normalizedFieldValues }
+            : {}),
           ...(formData.videoUrl.trim() ? { videoUrl: formData.videoUrl.trim() } : {}),
           ...(coordinates && {
             latitude: coordinates.lat,
@@ -222,7 +226,9 @@ const CreateProductPage = () => {
                 error.response?.data?.message ||
                 error.response?.data?.error ||
                 "Ошибка валидации данных";
-              const formattedMessage = Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage;
+              const formattedMessage = Array.isArray(errorMessage)
+                ? errorMessage.join(", ")
+                : errorMessage;
               setError(
                 formattedMessage.includes("Количество должно быть целым числом больше 0")
                   ? "Количество должно быть целым числом больше 0"
@@ -327,7 +333,9 @@ const CreateProductPage = () => {
         />
 
         <p>Состояние товара *</p>
-        <div className={`${styles.checkboxes} ${submitAttempted && requiredValidation.state ? styles.invalidGroup : ""}`}>
+        <div
+          className={`${styles.checkboxes} ${submitAttempted && requiredValidation.state ? styles.invalidGroup : ""}`}
+        >
           <div className={styles.box}>
             <input
               checked={formData.state === "NEW"}

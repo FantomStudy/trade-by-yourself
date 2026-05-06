@@ -7,8 +7,7 @@ export const getModerationQueue = (filter = "", page = 1) =>
 
 export const getModerationProduct = (id: number) => apiGet(`/admin/moderation/products/${id}`);
 
-export const getModerationSummary = (days = 30) =>
-  apiGet(`/admin/moderation/summary?days=${days}`);
+export const getModerationSummary = (days = 30) => apiGet(`/admin/moderation/summary?days=${days}`);
 
 export const getModerationAuditLogs = (limit = 100) =>
   apiGet(`/admin/moderation/audit-logs?limit=${limit}`);

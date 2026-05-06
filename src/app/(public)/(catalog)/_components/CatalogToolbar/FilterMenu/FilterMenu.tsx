@@ -256,7 +256,7 @@ export const FilterMenu = () => {
         </div>
 
         <Sheet.Footer>
-          <Button variant="danger" onClick={handleReset}>
+          <Button variant="destructive" onClick={handleReset}>
             Сбросить
           </Button>
           <Button onClick={handleApply}>Применить</Button>

@@ -7,7 +7,9 @@ if (!S3_HOSTNAME) {
 
 /** Как в instance.ts — без хвостового слэша и кавычек из .env */
 function normalizePublicApiUrl(): string | null {
-  const raw = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/^['"]+|['"]+$/g, "").replace(/\/+$/g, "");
+  const raw = process.env.NEXT_PUBLIC_API_URL?.trim()
+    .replace(/^['"]+|['"]+$/g, "")
+    .replace(/\/+$/g, "");
   return raw || null;
 }
 

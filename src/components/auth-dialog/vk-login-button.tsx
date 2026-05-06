@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { toast } from "sonner";
 
@@ -43,7 +43,12 @@ export const VkLoginButton = () => {
   return (
     <div className={styles.oauth}>
       <span className={styles.oauthLabel}>или</span>
-      <Button className={styles.oauthButton} type="button" variant="secondary" onClick={() => void onLogin()}>
+      <Button
+        className={styles.oauthButton}
+        type="button"
+        variant="secondary"
+        onClick={() => void onLogin()}
+      >
         Войти через VK
       </Button>
     </div>

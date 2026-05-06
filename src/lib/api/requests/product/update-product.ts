@@ -37,8 +37,10 @@ export const updateProduct = async (productId: number, data: UpdateProductData) 
   if (data.quantity !== undefined) formData.append("quantity", data.quantity.toString());
   if (data.state) formData.append("state", data.state);
   if (data.categoryId !== undefined) formData.append("categoryId", data.categoryId.toString());
-  if (data.subcategoryId !== undefined) formData.append("subCategoryId", data.subcategoryId.toString());
-  if (data.subcategoryId !== undefined) formData.append("subcategoryId", data.subcategoryId.toString());
+  if (data.subcategoryId !== undefined)
+    formData.append("subCategoryId", data.subcategoryId.toString());
+  if (data.subcategoryId !== undefined)
+    formData.append("subcategoryId", data.subcategoryId.toString());
   if (data.typeId !== undefined) formData.append("typeId", data.typeId.toString());
   if (data.typeId !== undefined) formData.append("typeld", data.typeId.toString());
   if (data.description) formData.append("description", data.description);

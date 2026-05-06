@@ -40,7 +40,6 @@
   color: var(--foreground);
 }
 
-
 @media (max-width: 768px) {
   .card[data-size="wide"] .imageWrapper {
     aspect-ratio: 660 / 400;

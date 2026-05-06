@@ -101,14 +101,17 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
   const [isExpired, setIsExpired] = useState(false);
 
   const { data: currentUser } = useCurrentUser();
-  const { data: reservationInfo, refetch: refetchReservationInfo } = useProductReservation(product.id);
+  const { data: reservationInfo, refetch: refetchReservationInfo } = useProductReservation(
+    product.id,
+  );
   const createReservationMutation = useCreateReservationMutation(product.id);
   const cancelReservationMutation = useCancelReservationMutation();
 
   const isReserved = Boolean(reservationInfo?.isReserved);
   const reservation = reservationInfo?.reservation ?? null;
-  const canCancelReservation =
-    Boolean(reservation && currentUser && isReservationActive(reservation));
+  const canCancelReservation = Boolean(
+    reservation && currentUser && isReservationActive(reservation),
+  );
   const isBuyerOnReservation = reservation ? userIsBuyer(reservation, currentUser?.id) : false;
   const isSellerOnReservation = reservation
     ? userIsSeller(reservation, currentUser?.id, product.seller.id)
@@ -116,10 +119,13 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
   const showCancelOnListing =
     canCancelReservation && (isBuyerOnReservation || isSellerOnReservation);
   const isCancelledReservation = isReservationCancelled(reservation?.status);
-  const showCancelledReservationState =
-    Boolean(reservation && isCancelledReservation && (isBuyerOnReservation || isSellerOnReservation));
+  const showCancelledReservationState = Boolean(
+    reservation && isCancelledReservation && (isBuyerOnReservation || isSellerOnReservation),
+  );
   const countdownExpiresAt =
-    reservationInfo?.reservation?.expiresAt ?? reservationInfo?.expiresAt ?? reservationInfo?.reservedUntil;
+    reservationInfo?.reservation?.expiresAt ??
+    reservationInfo?.expiresAt ??
+    reservationInfo?.reservedUntil;
 
   useEffect(() => {
     if (!isReserved || !countdownExpiresAt) {
@@ -207,7 +213,9 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
           <>
             {remainingMs !== null && (
               <Typography className={styles.timerText}>
-                {isExpired ? "Время резерва вышло" : `Осталось: ${formatRemainingTime(remainingMs)}`}
+                {isExpired
+                  ? "Время резерва вышло"
+                  : `Осталось: ${formatRemainingTime(remainingMs)}`}
               </Typography>
             )}
           </>

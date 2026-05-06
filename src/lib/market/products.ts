@@ -29,5 +29,7 @@ export async function getCatalog(params: CatalogParams) {
 }
 
 export async function getRecommended(subcategoryId: number, limit = 12) {
-  return apiGet<ProductCard[]>(`/product/recommended?subcategoryId=${subcategoryId}&limit=${limit}`);
+  return apiGet<ProductCard[]>(
+    `/product/recommended?subcategoryId=${subcategoryId}&limit=${limit}`,
+  );
 }

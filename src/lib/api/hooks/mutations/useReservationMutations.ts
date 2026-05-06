@@ -23,7 +23,8 @@ export const useCancelReservationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, reason }: { id: number; reason?: string }) => cancelReservation(id, { reason }),
+    mutationFn: ({ id, reason }: { id: number; reason?: string }) =>
+      cancelReservation(id, { reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: MY_RESERVATIONS_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: ["reservation", "product"] });

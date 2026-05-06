@@ -100,10 +100,11 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
                 onMouseLeave={() => setHoveredRating(0)}
               >
                 <Star
-                  className={`h-8 w-8 ${value <= (hoveredRating || rating)
+                  className={`h-8 w-8 ${
+                    value <= (hoveredRating || rating)
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300"
-                    }`}
+                  }`}
                 />
               </button>
             ))}

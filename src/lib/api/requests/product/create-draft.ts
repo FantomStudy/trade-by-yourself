@@ -36,7 +36,8 @@ export const createDraftProduct = async (data: DraftProductData = {}) => {
   if (typeof data.price === "number") formData.append("price", data.price.toString());
   if (typeof data.quantity === "number") formData.append("quantity", data.quantity.toString());
   if (data.state) formData.append("state", data.state);
-  if (typeof data.categoryId === "number") formData.append("categoryId", data.categoryId.toString());
+  if (typeof data.categoryId === "number")
+    formData.append("categoryId", data.categoryId.toString());
   if (typeof data.subcategoryId === "number")
     formData.append("subcategoryId", data.subcategoryId.toString());
   if (typeof data.typeId === "number") formData.append("typeld", data.typeId.toString());

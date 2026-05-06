@@ -23,7 +23,9 @@ export const HeaderActionsAuth = ({ user }: { user: CurrentUser }) => {
       <Link className={styles.chatLink} href="/profile/messages">
         <MessageSquareIcon className="text-secondary" />
         {unreadChatsCount > 0 ? (
-          <span className={styles.chatBadge}>{unreadChatsCount > 99 ? "99+" : unreadChatsCount}</span>
+          <span className={styles.chatBadge}>
+            {unreadChatsCount > 99 ? "99+" : unreadChatsCount}
+          </span>
         ) : null}
       </Link>
 
