@@ -4,7 +4,7 @@ import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
 import { getCurrentUserOrNull } from "@/api/requests";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { Toaster } from "@/components/ui";
+import { Sonner } from "@/components/ui/Sonner";
 import { getQueryClient } from "@/lib/get-query-client";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -35,7 +35,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
           <Header />
           <main>{children}</main>
           <Footer />
-          <Toaster />
+          <Sonner />
         </Providers>
       </body>
     </html>

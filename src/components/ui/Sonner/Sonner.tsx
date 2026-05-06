@@ -1,7 +1,6 @@
 "use client";
 
 import type { ToasterProps } from "sonner";
-
 import clsx from "clsx";
 import {
   CircleCheckIcon,
@@ -10,25 +9,20 @@ import {
   OctagonXIcon,
   TriangleAlertIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
-import { Toaster as Sonner } from "sonner";
-
-import styles from "./sonner.module.css";
+import { Toaster } from "sonner";
+import styles from "./Sonner.module.css";
 
 const inlineVariables = {
   "--normal-bg": "var(--popover)",
   "--normal-text": "var(--popover-foreground)",
   "--normal-border": "var(--border)",
-};
+} as React.CSSProperties;
 
-const Toaster = (props: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-
+export const Sonner = ({ ...props }: ToasterProps) => {
   return (
-    <Sonner
-      className={styles.toaster}
-      style={inlineVariables as React.CSSProperties}
-      theme={theme as ToasterProps["theme"]}
+    <Toaster
+      style={inlineVariables}
+      theme="system"
       icons={{
         success: <CircleCheckIcon className={styles.icon} />,
         info: <InfoIcon className={styles.icon} />,
@@ -40,5 +34,3 @@ const Toaster = (props: ToasterProps) => {
     />
   );
 };
-
-export { Toaster };

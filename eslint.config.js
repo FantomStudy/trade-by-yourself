@@ -1,4 +1,5 @@
 import antfu from "@antfu/eslint-config";
+import queryPlugin from "@tanstack/eslint-plugin-query";
 
 const eslintConfig = antfu(
   {
@@ -19,6 +20,7 @@ const eslintConfig = antfu(
       "react-refresh/only-export-components": "off",
     },
   },
+  ...queryPlugin.configs.recommended,
   {
     name: "fantomstudy/perfectionist",
     rules: {
