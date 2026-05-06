@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
   title: "Согласие на обработку персональных данных — Торгуй сам",
@@ -8,14 +10,12 @@ export const metadata: Metadata = {
 
 const ConsentPage = () => {
   return (
-    <div className="mx-auto max-w-4xl bg-white px-4 py-10 text-gray-800">
+    <div className={styles.page}>
       {/* Заголовок */}
-      <h1 className="mb-10 text-center text-2xl font-bold uppercase md:text-3xl">
-        Согласие на обработку персональных данных
-      </h1>
+      <h1 className={styles.titleSpaced}>Согласие на обработку персональных данных</h1>
 
       {/* Развёрнутый текст согласия */}
-      <p className="mb-6">
+      <p className={styles.pLg}>
         Настоящим я, субъект персональных данных (далее — «Пользователь»), свободно, своей волей и в
         своём интересе, в соответствии с требованиями Федерального закона от 27.07.2006 № 152-ФЗ «О
         персональных данных», даю своё согласие Обществу с ограниченной ответственностью «Олимп»
@@ -25,39 +25,37 @@ const ConsentPage = () => {
       </p>
 
       {/* 1 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">
-          1. Перечень персональных данных, на обработку которых даётся согласие
-        </h2>
-        <p className="mb-3">
+      <section>
+        <h2>1. Перечень персональных данных, на обработку которых даётся согласие</h2>
+        <p>
           В зависимости от используемой формы и функций Сервиса обработке подлежат следующие
           персональные данные:
         </p>
 
-        <p className="mb-2 font-semibold">При регистрации:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.label}>При регистрации:</p>
+        <ul>
           <li>фамилия, имя, отчество (или псевдоним);</li>
           <li>номер мобильного телефона;</li>
           <li>адрес электронной почты (e-mail);</li>
           <li>пароль (хранится в зашифрованном виде).</li>
         </ul>
 
-        <p className="mb-2 font-semibold">При размещении объявлений:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.label}>При размещении объявлений:</p>
+        <ul>
           <li>контактное имя;</li>
           <li>номер телефона для связи;</li>
           <li>адрес местонахождения (город, регион, при необходимости — улица);</li>
           <li>фотографии товаров.</li>
         </ul>
 
-        <p className="mb-2 font-semibold">При совершении платежей:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.label}>При совершении платежей:</p>
+        <ul>
           <li>сведения о платежах (сумма, дата, идентификатор транзакции);</li>
           <li>адрес электронной почты и/или телефон для направления чека.</li>
         </ul>
 
-        <p className="mb-2 font-semibold">Автоматически собираемые данные:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.label}>Автоматически собираемые данные:</p>
+        <ul>
           <li>IP-адрес;</li>
           <li>данные файлов cookies;</li>
           <li>информация о браузере и устройстве;</li>
@@ -65,24 +63,24 @@ const ConsentPage = () => {
           <li>источник перехода на Сайт.</li>
         </ul>
 
-        <p className="mb-2 font-semibold">При подписке на рассылку:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.label}>При подписке на рассылку:</p>
+        <ul>
           <li>адрес электронной почты;</li>
           <li>имя (при наличии).</li>
         </ul>
 
-        <p className="mb-2 font-semibold">При обращении в поддержку:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.label}>При обращении в поддержку:</p>
+        <ul>
           <li>контактные данные (имя, телефон, e-mail);</li>
           <li>содержание обращения.</li>
         </ul>
       </section>
 
       {/* 2 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">2. Цели обработки персональных данных</h2>
-        <p className="mb-3">Персональные данные обрабатываются в следующих целях:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+      <section>
+        <h2>2. Цели обработки персональных данных</h2>
+        <p>Персональные данные обрабатываются в следующих целях:</p>
+        <ul>
           <li>регистрация учётной записи и предоставление доступа к функциям Сервиса;</li>
           <li>идентификация и аутентификация Пользователя;</li>
           <li>размещение объявлений и обеспечение связи между Пользователями;</li>
@@ -104,9 +102,9 @@ const ConsentPage = () => {
       </section>
 
       {/* 3 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">3. Способы обработки персональных данных</h2>
-        <p className="mb-3">
+      <section>
+        <h2>3. Способы обработки персональных данных</h2>
+        <p>
           Обработка персональных данных осуществляется с использованием средств автоматизации и
           включает следующие действия: сбор, запись, систематизацию, накопление, хранение, уточнение
           (обновление, изменение), извлечение, использование, передачу (предоставление, доступ),
@@ -115,10 +113,10 @@ const ConsentPage = () => {
       </section>
 
       {/* 4 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">4. Передача персональных данных третьим лицам</h2>
-        <p className="mb-3">Персональные данные могут передаваться:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+      <section>
+        <h2>4. Передача персональных данных третьим лицам</h2>
+        <p>Персональные данные могут передаваться:</p>
+        <ul>
           <li>
             другим Пользователям Сервиса (контактные данные в объявлениях — для связи по сделкам);
           </li>
@@ -132,16 +130,16 @@ const ConsentPage = () => {
       </section>
 
       {/* 5 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">5. Срок действия согласия</h2>
-        <p className="mb-3">Согласие действует с момента его предоставления и до момента:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+      <section>
+        <h2>5. Срок действия согласия</h2>
+        <p>Согласие действует с момента его предоставления и до момента:</p>
+        <ul>
           <li>достижения целей обработки; или</li>
           <li>отзыва согласия Пользователем; или</li>
           <li>удаления учётной записи; или</li>
           <li>истечения сроков хранения, установленных законодательством.</li>
         </ul>
-        <p className="mb-3">
+        <p>
           По истечении указанных сроков персональные данные подлежат уничтожению или обезличиванию,
           за исключением данных, хранение которых требуется в соответствии с законодательством
           Российской Федерации.
@@ -149,18 +147,15 @@ const ConsentPage = () => {
       </section>
 
       {/* 6 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">6. Порядок отзыва согласия</h2>
-        <p className="mb-3">
+      <section>
+        <h2>6. Порядок отзыва согласия</h2>
+        <p>
           Пользователь вправе отозвать настоящее согласие в любое время одним из следующих способов:
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>
             направив заявление на адрес электронной почты:{" "}
-            <a href="mailto:privacy@torguisam.ru" className="text-blue-600 hover:underline">
-              privacy@torguisam.ru
-            </a>
-            ;
+            <a href="mailto:privacy@torguisam.ru">privacy@torguisam.ru</a>;
           </li>
           <li>
             направив письменное заявление по адресу: 460005, Оренбургская область, г. Оренбург, ул.
@@ -169,17 +164,17 @@ const ConsentPage = () => {
           <li>через настройки Личного кабинета (при наличии соответствующей функции);</li>
           <li>путём удаления учётной записи.</li>
         </ul>
-        <p className="mb-2">Заявление об отзыве должно содержать:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pSm}>Заявление об отзыве должно содержать:</p>
+        <ul>
           <li>ФИО субъекта персональных данных;</li>
           <li>контактные данные (телефон и/или e-mail, указанные при регистрации);</li>
           <li>чётко выраженное волеизъявление об отзыве согласия.</li>
         </ul>
-        <p className="mb-3">
+        <p>
           Оператор прекращает обработку персональных данных в течение 30 (тридцати) дней с даты
           получения отзыва.
         </p>
-        <p className="mb-3 text-sm">
+        <p className={styles.note}>
           <strong>Важно:</strong> Отзыв согласия на обработку персональных данных, необходимых для
           использования Сервиса, влечёт невозможность дальнейшего использования Сервиса и удаление
           учётной записи. Отзыв не влияет на законность обработки, осуществлявшейся до отзыва.
@@ -187,40 +182,29 @@ const ConsentPage = () => {
       </section>
 
       {/* 7 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">7. Права субъекта персональных данных</h2>
-        <p className="mb-3">Пользователь имеет право:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+      <section>
+        <h2>7. Права субъекта персональных данных</h2>
+        <p>Пользователь имеет право:</p>
+        <ul>
           <li>получить информацию об обработке своих персональных данных;</li>
           <li>получить доступ к своим персональным данным;</li>
           <li>требовать уточнения, блокирования или уничтожения персональных данных;</li>
           <li>отозвать согласие на обработку;</li>
           <li>обжаловать действия Оператора в Роскомнадзор или в суд.</li>
         </ul>
-        <p className="mb-3">
-          Порядок реализации прав изложен в{" "}
-          <a href="/privacy" className="text-blue-600 hover:underline">
-            Политике конфиденциальности
-          </a>
+        <p>
+          Порядок реализации прав изложен в <Link href="/privacy">Политике конфиденциальности</Link>
           .
         </p>
       </section>
 
       {/* 8 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">8. Дополнительная информация</h2>
-        <p className="mb-3">
+      <section>
+        <h2>8. Дополнительная информация</h2>
+        <p>
           Полная информация о порядке обработки и защиты персональных данных содержится в{" "}
-          <a href="/privacy" className="text-blue-600 hover:underline">
-            Политике конфиденциальности
-          </a>
-          , размещённой по адресу:{" "}
-          <a
-            href="https://torguisam.ru/privacy"
-            className="text-blue-600 hover:underline"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+          <Link href="/privacy">Политике конфиденциальности</Link>, размещённой по адресу:{" "}
+          <a href="https://torguisam.ru/privacy" rel="noopener noreferrer" target="_blank">
             https://torguisam.ru/privacy
           </a>
           .
@@ -228,14 +212,14 @@ const ConsentPage = () => {
       </section>
 
       {/* 9 */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">9. Подтверждение согласия</h2>
-        <p className="mb-3">
+      <section>
+        <h2>9. Подтверждение согласия</h2>
+        <p>
           Нажимая кнопку «Зарегистрироваться» / «Отправить» / «Подписаться» / «Разместить
           объявление» / «Оплатить» (или иную кнопку подтверждения), проставляя отметку в
           соответствующем поле, я подтверждаю, что:
         </p>
-        <ul className="mb-6 list-inside list-disc space-y-0.5 pl-4">
+        <ul className={styles.listLg}>
           <li>мне исполнилось 18 лет;</li>
           <li>я ознакомился(-ась) с настоящим Согласием и Политикой конфиденциальности;</li>
           <li>понимаю и принимаю все изложенные условия;</li>
@@ -243,9 +227,9 @@ const ConsentPage = () => {
         </ul>
 
         {/* Реквизиты оператора */}
-        <div className="border-t border-gray-200 pt-6">
-          <p className="mb-2 font-semibold">Оператор персональных данных:</p>
-          <ul className="space-y-1 text-sm">
+        <div className={styles.divider}>
+          <p className={styles.label}>Оператор персональных данных:</p>
+          <ul className={styles.listPlain}>
             <li>
               <strong>Полное наименование:</strong> ООО «Олимп»
             </li>
@@ -261,18 +245,11 @@ const ConsentPage = () => {
             </li>
             <li>
               <strong>E-mail:</strong>{" "}
-              <a href="mailto:privacy@torguisam.ru" className="text-blue-600 hover:underline">
-                privacy@torguisam.ru
-              </a>
+              <a href="mailto:privacy@torguisam.ru">privacy@torguisam.ru</a>
             </li>
             <li>
               <strong>Сайт:</strong>{" "}
-              <a
-                href="https://torguisam.ru"
-                className="text-blue-600 hover:underline"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+              <a href="https://torguisam.ru" rel="noopener noreferrer" target="_blank">
                 https://torguisam.ru
               </a>
             </li>

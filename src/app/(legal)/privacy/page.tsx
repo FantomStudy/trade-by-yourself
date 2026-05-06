@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
   title: "Политика конфиденциальности — Торгуй сам",
@@ -8,39 +9,37 @@ export const metadata: Metadata = {
 
 const PrivacyPage = () => {
   return (
-    <div className="mx-auto max-w-4xl bg-white px-4 py-10 text-gray-800">
+    <div className={styles.page}>
       {/* Заголовок */}
-      <h1 className="mb-2 text-center text-2xl font-bold uppercase md:text-3xl">
-        Политика конфиденциальности и обработки персональных данных
-      </h1>
-      <p className="mb-2 text-center text-lg font-semibold">интернет-сервиса TorguiSam.ru</p>
-      <p className="mb-10 text-center text-sm text-gray-500">Редакция от «24» февраля 2026 года</p>
+      <h1>Политика конфиденциальности и обработки персональных данных</h1>
+      <p className={styles.subtitle}>интернет-сервиса TorguiSam.ru</p>
+      <p className={styles.revision}>Редакция от «24» февраля 2026 года</p>
 
       {/* 1. ОБЩИЕ ПОЛОЖЕНИЯ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">1. ОБЩИЕ ПОЛОЖЕНИЯ</h2>
+      <section>
+        <h2>1. ОБЩИЕ ПОЛОЖЕНИЯ</h2>
 
-        <p className="mb-3">
+        <p>
           1.1. Настоящая Политика конфиденциальности и обработки персональных данных (далее —
           «Политика») определяет порядок сбора, обработки, хранения, использования и защиты
           персональных данных пользователей интернет-сервиса TorguiSam.ru (далее — «Сервис»,
           «Сайт»).
         </p>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           1.2. <strong>Оператор персональных данных:</strong>
         </p>
-        <p className="mb-1">Общество с ограниченной ответственностью «Олимп» (ООО «Олимп»)</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>Общество с ограниченной ответственностью «Олимп» (ООО «Олимп»)</p>
+        <ul>
           <li>ОГРН: 1175658012441</li>
           <li>ИНН: 5609186174</li>
           <li>КПП: 560901001</li>
           <li>Адрес: 460005, Оренбургская область, г. Оренбург, ул. Шевченко, д. 20В</li>
         </ul>
-        <p className="mb-3">(далее — «Оператор», «Администрация», «Мы»).</p>
+        <p>(далее — «Оператор», «Администрация», «Мы»).</p>
 
-        <p className="mb-1">1.3. Настоящая Политика разработана в соответствии с:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>1.3. Настоящая Политика разработана в соответствии с:</p>
+        <ul>
           <li>Конституцией Российской Федерации;</li>
           <li>Гражданским кодексом Российской Федерации;</li>
           <li>Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных»;</li>
@@ -62,53 +61,53 @@ const PrivacyPage = () => {
           </li>
         </ul>
 
-        <p className="mb-3">
+        <p>
           1.4. При обработке персональных данных субъектов, находящихся на территории Европейского
           союза (при наличии таковых), Оператор также руководствуется принципами Общего регламента
           по защите данных (General Data Protection Regulation, GDPR) (ЕС) 2016/679 в применимой
           части.
         </p>
 
-        <p className="mb-3">
+        <p>
           1.5. Настоящая Политика распространяется на все персональные данные, которые Оператор
           может получить от Пользователя в процессе использования Сайта, мобильных приложений (при
           наличии), сервисов и функций Сервиса.
         </p>
 
-        <p className="mb-3">
+        <p>
           1.6. Используя Сервис, регистрируясь на Сайте, размещая объявления, заполняя формы с
           персональными данными, Пользователь выражает своё согласие с условиями настоящей Политики.
           Если Пользователь не согласен с условиями Политики, он должен прекратить использование
           Сервиса.
         </p>
 
-        <p className="mb-3">
+        <p>
           1.7. Оператор не контролирует и не несёт ответственности за сайты и сервисы третьих лиц,
           на которые Пользователь может перейти по ссылкам, доступным на Сайте. На таких сайтах
           может осуществляться собственный сбор и обработка персональных данных, и Оператор
           рекомендует ознакомиться с их политиками конфиденциальности.
         </p>
 
-        <p className="mb-3">
+        <p>
           1.8. Сервис предназначен для использования лицами, достигшими возраста 18 (восемнадцати)
           лет. Оператор не осуществляет намеренный сбор персональных данных несовершеннолетних.
         </p>
       </section>
 
       {/* 2. ОСНОВНЫЕ ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">2. ОСНОВНЫЕ ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ</h2>
+      <section>
+        <h2>2. ОСНОВНЫЕ ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ</h2>
 
-        <p className="mb-3">
+        <p>
           2.1. <strong>Персональные данные</strong> — любая информация, относящаяся к прямо или
           косвенно определённому или определяемому физическому лицу (субъекту персональных данных).
         </p>
-        <p className="mb-3">
+        <p>
           2.2. <strong>Субъект персональных данных (Пользователь)</strong> — физическое лицо, чьи
           персональные данные обрабатываются Оператором, в том числе посетители Сайта,
           зарегистрированные пользователи, продавцы и покупатели.
         </p>
-        <p className="mb-3">
+        <p>
           2.3. <strong>Обработка персональных данных</strong> — любое действие (операция) или
           совокупность действий (операций), совершаемых с использованием средств автоматизации или
           без использования таких средств с персональными данными, включая сбор, запись,
@@ -116,40 +115,40 @@ const PrivacyPage = () => {
           использование, передачу (распространение, предоставление, доступ), обезличивание,
           блокирование, удаление, уничтожение персональных данных.
         </p>
-        <p className="mb-3">
+        <p>
           2.4. <strong>Автоматизированная обработка персональных данных</strong> — обработка
           персональных данных с помощью средств вычислительной техники.
         </p>
-        <p className="mb-3">
+        <p>
           2.5. <strong>Распространение персональных данных</strong> — действия, направленные на
           раскрытие персональных данных неопределённому кругу лиц.
         </p>
-        <p className="mb-3">
+        <p>
           2.6. <strong>Предоставление персональных данных</strong> — действия, направленные на
           раскрытие персональных данных определённому лицу или определённому кругу лиц.
         </p>
-        <p className="mb-3">
+        <p>
           2.7. <strong>Блокирование персональных данных</strong> — временное прекращение обработки
           персональных данных (за исключением случаев, когда обработка необходима для уточнения
           персональных данных).
         </p>
-        <p className="mb-3">
+        <p>
           2.8. <strong>Уничтожение персональных данных</strong> — действия, в результате которых
           становится невозможным восстановить содержание персональных данных в информационной
           системе персональных данных и (или) в результате которых уничтожаются материальные
           носители персональных данных.
         </p>
-        <p className="mb-3">
+        <p>
           2.9. <strong>Обезличивание персональных данных</strong> — действия, в результате которых
           становится невозможным без использования дополнительной информации определить
           принадлежность персональных данных конкретному субъекту персональных данных.
         </p>
-        <p className="mb-3">
+        <p>
           2.10. <strong>Cookies (куки)</strong> — небольшие текстовые файлы, которые сохраняются на
           устройстве Пользователя при посещении Сайта и позволяют идентифицировать браузер
           Пользователя, сохранять настройки и предпочтения.
         </p>
-        <p className="mb-3">
+        <p>
           2.11. <strong>Трансграничная передача персональных данных</strong> — передача персональных
           данных на территорию иностранного государства органу власти иностранного государства,
           иностранному физическому лицу или иностранному юридическому лицу.
@@ -157,236 +156,208 @@ const PrivacyPage = () => {
       </section>
 
       {/* 3. КАТЕГОРИИ ОБРАБАТЫВАЕМЫХ ПЕРСОНАЛЬНЫХ ДАННЫХ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">3. КАТЕГОРИИ ОБРАБАТЫВАЕМЫХ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
+      <section>
+        <h2>3. КАТЕГОРИИ ОБРАБАТЫВАЕМЫХ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
 
-        <p className="mb-3">3.1. Оператор обрабатывает следующие категории персональных данных:</p>
+        <p>3.1. Оператор обрабатывает следующие категории персональных данных:</p>
 
-        <h3 className="mb-3 text-lg font-semibold">
+        <h3 className={styles.h3Spaced}>
           3.1.1. Данные, предоставляемые Пользователем при регистрации и использовании Сервиса:
         </h3>
-        <div className="mb-4 overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300 text-sm">
+        <div className={styles.tableWrapMd}>
+          <table className={styles.tableBordered}>
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-3 py-2 text-left">Категория данных</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Описание</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Обязательность</th>
+              <tr>
+                <th>Категория данных</th>
+                <th>Описание</th>
+                <th>Обязательность</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Фамилия, имя, отчество</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Фамилия, имя, отчество</td>
+                <td className={styles.tdSm}>
                   ФИО Пользователя (для физических лиц) или наименование организации и данные
                   представителя (для юридических лиц)
                 </td>
-                <td className="border border-gray-300 px-3 py-2">Обязательно</td>
+                <td className={styles.tdSm}>Обязательно</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Номер телефона</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Номер телефона</td>
+                <td className={styles.tdSm}>
                   Мобильный телефон для регистрации, авторизации и связи
                 </td>
-                <td className="border border-gray-300 px-3 py-2">Обязательно</td>
+                <td className={styles.tdSm}>Обязательно</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">
-                  Адрес электронной почты (e-mail)
-                </td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Для уведомлений, восстановления доступа, рассылок
-                </td>
-                <td className="border border-gray-300 px-3 py-2">Обязательно</td>
+                <td className={styles.tdSm}>Адрес электронной почты (e-mail)</td>
+                <td className={styles.tdSm}>Для уведомлений, восстановления доступа, рассылок</td>
+                <td className={styles.tdSm}>Обязательно</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Пароль</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Хранится в зашифрованном (хешированном) виде
-                </td>
-                <td className="border border-gray-300 px-3 py-2">Обязательно</td>
+                <td className={styles.tdSm}>Пароль</td>
+                <td className={styles.tdSm}>Хранится в зашифрованном (хешированном) виде</td>
+                <td className={styles.tdSm}>Обязательно</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Адрес местонахождения</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Адрес местонахождения</td>
+                <td className={styles.tdSm}>
                   Адрес продавца для указания в объявлениях (город, регион, при необходимости —
                   улица)
                 </td>
-                <td className="border border-gray-300 px-3 py-2">По желанию</td>
+                <td className={styles.tdSm}>По желанию</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Фотографии</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Изображения товаров и аватар профиля
-                </td>
-                <td className="border border-gray-300 px-3 py-2">По желанию</td>
+                <td className={styles.tdSm}>Фотографии</td>
+                <td className={styles.tdSm}>Изображения товаров и аватар профиля</td>
+                <td className={styles.tdSm}>По желанию</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Информация в профиле</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Информация в профиле</td>
+                <td className={styles.tdSm}>
                   Дополнительные сведения, указанные Пользователем (описание, контакты)
                 </td>
-                <td className="border border-gray-300 px-3 py-2">По желанию</td>
+                <td className={styles.tdSm}>По желанию</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h3 className="mb-3 text-lg font-semibold">
+        <h3 className={styles.h3Spaced}>
           3.1.2. Данные, собираемые автоматически при использовании Сервиса:
         </h3>
-        <div className="mb-4 overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300 text-sm">
+        <div className={styles.tableWrapMd}>
+          <table className={styles.tableBordered}>
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-3 py-2 text-left">Категория данных</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Описание</th>
+              <tr>
+                <th>Категория данных</th>
+                <th>Описание</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">IP-адрес</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Уникальный сетевой адрес устройства Пользователя
-                </td>
+                <td className={styles.tdSm}>IP-адрес</td>
+                <td className={styles.tdSm}>Уникальный сетевой адрес устройства Пользователя</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Данные файлов cookies</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Идентификаторы сессий, настройки, предпочтения
-                </td>
+                <td className={styles.tdSm}>Данные файлов cookies</td>
+                <td className={styles.tdSm}>Идентификаторы сессий, настройки, предпочтения</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Информация о браузере</td>
-                <td className="border border-gray-300 px-3 py-2">Тип, версия, язык браузера</td>
+                <td className={styles.tdSm}>Информация о браузере</td>
+                <td className={styles.tdSm}>Тип, версия, язык браузера</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Информация об устройстве</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Информация об устройстве</td>
+                <td className={styles.tdSm}>
                   Тип устройства (компьютер, смартфон, планшет), операционная система, разрешение
                   экрана
                 </td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Данные о местоположении</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Приблизительное местоположение на основе IP-адреса
-                </td>
+                <td className={styles.tdSm}>Данные о местоположении</td>
+                <td className={styles.tdSm}>Приблизительное местоположение на основе IP-адреса</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Источник перехода</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Источник перехода</td>
+                <td className={styles.tdSm}>
                   URL страницы, с которой Пользователь перешёл на Сайт (реферер)
                 </td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Поведенческие данные</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Поведенческие данные</td>
+                <td className={styles.tdSm}>
                   Действия на Сайте: просмотренные страницы, клики, время на странице, поисковые
                   запросы, добавление в избранное, взаимодействие с объявлениями
                 </td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Дата и время посещения</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Временные метки действий Пользователя
-                </td>
+                <td className={styles.tdSm}>Дата и время посещения</td>
+                <td className={styles.tdSm}>Временные метки действий Пользователя</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h3 className="mb-3 text-lg font-semibold">
-          3.1.3. Данные, получаемые при совершении платежей:
-        </h3>
-        <div className="mb-4 overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300 text-sm">
+        <h3 className={styles.h3Spaced}>3.1.3. Данные, получаемые при совершении платежей:</h3>
+        <div className={styles.tableWrapMd}>
+          <table className={styles.tableBordered}>
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-3 py-2 text-left">Категория данных</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Описание</th>
+              <tr>
+                <th>Категория данных</th>
+                <th>Описание</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Идентификатор транзакции</td>
-                <td className="border border-gray-300 px-3 py-2">Уникальный номер платежа</td>
+                <td className={styles.tdSm}>Идентификатор транзакции</td>
+                <td className={styles.tdSm}>Уникальный номер платежа</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Сумма и дата платежа</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Информация о проведённых платежах
-                </td>
+                <td className={styles.tdSm}>Сумма и дата платежа</td>
+                <td className={styles.tdSm}>Информация о проведённых платежах</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Способ оплаты</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Способ оплаты</td>
+                <td className={styles.tdSm}>
                   Тип использованного платёжного средства (без хранения полных данных карты)
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p className="mb-4 text-sm">
+        <p className={styles.noteMd}>
           <strong>Важно:</strong> Оператор не хранит полные данные банковских карт (номер карты,
           CVV/CVC-код, срок действия). Обработка платежей осуществляется сертифицированными
           платёжными системами.
         </p>
 
-        <h3 className="mb-3 text-lg font-semibold">3.1.4. Данные из переписки и обращений:</h3>
-        <div className="mb-4 overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300 text-sm">
+        <h3 className={styles.h3Spaced}>3.1.4. Данные из переписки и обращений:</h3>
+        <div className={styles.tableWrapMd}>
+          <table className={styles.tableBordered}>
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-3 py-2 text-left">Категория данных</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Описание</th>
+              <tr>
+                <th>Категория данных</th>
+                <th>Описание</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Сообщения в чате</td>
-                <td className="border border-gray-300 px-3 py-2">Переписка между Пользователями</td>
+                <td className={styles.tdSm}>Сообщения в чате</td>
+                <td className={styles.tdSm}>Переписка между Пользователями</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Обращения в поддержку</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Сообщения, направленные в службу поддержки Сервиса
-                </td>
+                <td className={styles.tdSm}>Обращения в поддержку</td>
+                <td className={styles.tdSm}>Сообщения, направленные в службу поддержки Сервиса</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Комментарии</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Тексты комментариев, оставленных Пользователем
-                </td>
+                <td className={styles.tdSm}>Комментарии</td>
+                <td className={styles.tdSm}>Тексты комментариев, оставленных Пользователем</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <p className="mb-3">
+        <p>
           3.2. Оператор <strong>не осуществляет</strong> обработку специальных категорий
           персональных данных, касающихся расовой, национальной принадлежности, политических
           взглядов, религиозных или философских убеждений, состояния здоровья, интимной жизни, за
           исключением случаев, когда такие данные добровольно и явно предоставлены самим субъектом.
         </p>
-        <p className="mb-3">
+        <p>
           3.3. Оператор <strong>не осуществляет</strong> обработку биометрических персональных
           данных.
         </p>
       </section>
 
       {/* 4. ЦЕЛИ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">4. ЦЕЛИ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
+      <section>
+        <h2>4. ЦЕЛИ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
 
-        <p className="mb-3">
-          4.1. Оператор обрабатывает персональные данные исключительно в следующих целях:
-        </p>
+        <p>4.1. Оператор обрабатывает персональные данные исключительно в следующих целях:</p>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          4.1.1. Предоставление доступа к Сервису и его функциям:
-        </h3>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <h3>4.1.1. Предоставление доступа к Сервису и его функциям:</h3>
+        <ul className={styles.listMd}>
           <li>регистрация учётной записи Пользователя и создание Личного кабинета;</li>
           <li>идентификация и аутентификация Пользователя при входе в Сервис;</li>
           <li>предоставление доступа к функциональным возможностям Сервиса;</li>
@@ -398,8 +369,8 @@ const PrivacyPage = () => {
           </li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">4.1.2. Исполнение договорных обязательств:</h3>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <h3>4.1.2. Исполнение договорных обязательств:</h3>
+        <ul className={styles.listMd}>
           <li>
             оказание платных услуг (размещение объявлений сверх лимита, продвижение, баннерная
             реклама);
@@ -409,8 +380,8 @@ const PrivacyPage = () => {
           <li>формирование бухгалтерских и налоговых документов.</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">4.1.3. Коммуникация с Пользователем:</h3>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <h3>4.1.3. Коммуникация с Пользователем:</h3>
+        <ul className={styles.listMd}>
           <li>
             направление сервисных уведомлений (о статусе объявлений, платежах, изменениях в
             Сервисе);
@@ -420,8 +391,8 @@ const PrivacyPage = () => {
           <li>уведомление об изменениях в Политике конфиденциальности и иных правилах Сервиса.</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">4.1.4. Улучшение качества Сервиса:</h3>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <h3>4.1.4. Улучшение качества Сервиса:</h3>
+        <ul className={styles.listMd}>
           <li>анализ использования Сервиса и поведения Пользователей;</li>
           <li>выявление технических проблем и их устранение;</li>
           <li>разработка и внедрение новых функций;</li>
@@ -429,8 +400,8 @@ const PrivacyPage = () => {
           <li>проведение статистических и маркетинговых исследований (на обезличенных данных).</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">4.1.5. Обеспечение безопасности:</h3>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <h3>4.1.5. Обеспечение безопасности:</h3>
+        <ul className={styles.listMd}>
           <li>предотвращение мошеннических действий и злоупотреблений;</li>
           <li>обеспечение безопасности учётных записей;</li>
           <li>выявление и блокировка подозрительной активности;</li>
@@ -438,10 +409,8 @@ const PrivacyPage = () => {
           <li>защита прав и законных интересов Оператора и третьих лиц.</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          4.1.6. Соблюдение требований законодательства:
-        </h3>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <h3>4.1.6. Соблюдение требований законодательства:</h3>
+        <ul className={styles.listMd}>
           <li>исполнение требований законодательства Российской Федерации;</li>
           <li>
             предоставление информации по запросам уполномоченных государственных органов в
@@ -450,11 +419,11 @@ const PrivacyPage = () => {
           <li>досудебное и судебное урегулирование споров.</li>
         </ul>
 
-        <p className="mb-3">
+        <p>
           4.2. Обработка персональных данных осуществляется только в объёме, необходимом для
           достижения указанных целей.
         </p>
-        <p className="mb-3">
+        <p>
           4.3. В случае если Оператор намеревается обрабатывать персональные данные в целях, не
           предусмотренных настоящей Политикой, Оператор предварительно получает согласие субъекта
           персональных данных.
@@ -462,21 +431,17 @@ const PrivacyPage = () => {
       </section>
 
       {/* 5. ПРАВОВЫЕ ОСНОВАНИЯ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">
-          5. ПРАВОВЫЕ ОСНОВАНИЯ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ
-        </h2>
+      <section>
+        <h2>5. ПРАВОВЫЕ ОСНОВАНИЯ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
 
-        <p className="mb-3">
+        <p>
           5.1. Оператор обрабатывает персональные данные на основании следующих правовых оснований,
           предусмотренных статьёй 6 Федерального закона № 152-ФЗ «О персональных данных»:
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          5.1.1. Согласие субъекта персональных данных (пункт 1 части 1 статьи 6):
-        </h3>
-        <p className="mb-1">Согласие выражается путём:</p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <h3>5.1.1. Согласие субъекта персональных данных (пункт 1 части 1 статьи 6):</h3>
+        <p className={styles.pXs}>Согласие выражается путём:</p>
+        <ul className={styles.listMd}>
           <li>принятия условий Политики конфиденциальности при регистрации;</li>
           <li>проставления соответствующей отметки (чекбокса) в формах на Сайте;</li>
           <li>
@@ -486,24 +451,24 @@ const PrivacyPage = () => {
           <li>подписания отдельного документа о согласии (при необходимости).</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          5.1.2. Исполнение договора (пункт 5 части 1 статьи 6):
-        </h3>
-        <p className="mb-1">
+        <h3>5.1.2. Исполнение договора (пункт 5 части 1 статьи 6):</h3>
+        <p className={styles.pXs}>
           Обработка персональных данных необходима для исполнения договора (Публичной оферты),
           стороной которого является субъект персональных данных, в том числе для:
         </p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <ul className={styles.listMd}>
           <li>предоставления доступа к Сервису;</li>
           <li>оказания платных услуг;</li>
           <li>обеспечения возможности связи между Пользователями.</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">
+        <h3>
           5.1.3. Исполнение обязанностей, возложенных законодательством (пункт 2 части 1 статьи 6):
         </h3>
-        <p className="mb-1">Обработка персональных данных необходима для исполнения требований:</p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>
+          Обработка персональных данных необходима для исполнения требований:
+        </p>
+        <ul className={styles.listMd}>
           <li>Налогового кодекса Российской Федерации;</li>
           <li>Федерального закона № 54-ФЗ «О применении контрольно-кассовой техники»;</li>
           <li>
@@ -513,25 +478,23 @@ const PrivacyPage = () => {
           <li>иного законодательства.</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          5.1.4. Законные интересы Оператора (пункт 7 части 1 статьи 6):
-        </h3>
-        <p className="mb-1">
+        <h3>5.1.4. Законные интересы Оператора (пункт 7 части 1 статьи 6):</h3>
+        <p className={styles.pXs}>
           Обработка необходима для реализации законных интересов Оператора, при условии, что при
           этом не нарушаются права и свободы субъекта персональных данных, в том числе для:
         </p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <ul className={styles.listMd}>
           <li>обеспечения безопасности Сервиса;</li>
           <li>предотвращения мошенничества;</li>
           <li>улучшения качества Сервиса;</li>
           <li>проведения аналитики.</li>
         </ul>
 
-        <p className="mb-3">
+        <p>
           5.2. В случаях, предусмотренных законодательством, Оператор вправе обрабатывать
           персональные данные без согласия субъекта, в том числе:
         </p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <ul className={styles.listMd}>
           <li>
             для защиты жизни, здоровья или иных жизненно важных интересов субъекта персональных
             данных;
@@ -543,14 +506,12 @@ const PrivacyPage = () => {
       </section>
 
       {/* 6. СПОСОБЫ И СРОКИ ОБРАБОТКИ И ХРАНЕНИЯ ПЕРСОНАЛЬНЫХ ДАННЫХ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">
-          6. СПОСОБЫ И СРОКИ ОБРАБОТКИ И ХРАНЕНИЯ ПЕРСОНАЛЬНЫХ ДАННЫХ
-        </h2>
+      <section>
+        <h2>6. СПОСОБЫ И СРОКИ ОБРАБОТКИ И ХРАНЕНИЯ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
 
-        <h3 className="mb-2 text-lg font-semibold">6.1. Способы обработки</h3>
-        <p className="mb-1">6.1.1. Обработка персональных данных осуществляется:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <h3>6.1. Способы обработки</h3>
+        <p className={styles.pXs}>6.1.1. Обработка персональных данных осуществляется:</p>
+        <ul>
           <li>
             с использованием средств автоматизации (в информационных системах персональных данных);
           </li>
@@ -558,98 +519,84 @@ const PrivacyPage = () => {
             без использования средств автоматизации (в случаях, предусмотренных законодательством).
           </li>
         </ul>
-        <p className="mb-3">
+        <p>
           6.1.2. Обработка включает следующие действия: сбор, запись, систематизацию, накопление,
           хранение, уточнение (обновление, изменение), извлечение, использование, передачу
           (предоставление, доступ), обезличивание, блокирование, удаление, уничтожение.
         </p>
-        <p className="mb-3">
+        <p>
           6.1.3. Персональные данные хранятся на серверах, расположенных на территории Российской
           Федерации, в соответствии с требованиями части 5 статьи 18 Федерального закона № 152-ФЗ.
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">6.2. Сроки хранения</h3>
-        <p className="mb-3">
+        <h3>6.2. Сроки хранения</h3>
+        <p>
           6.2.1. Персональные данные хранятся в течение сроков, необходимых для достижения целей
           обработки, но не менее сроков, установленных законодательством Российской Федерации:
         </p>
-        <div className="mb-4 overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300 text-sm">
+        <div className={styles.tableWrapMd}>
+          <table className={styles.tableBordered}>
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-3 py-2 text-left">Категория данных</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Срок хранения</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Основание</th>
+              <tr>
+                <th>Категория данных</th>
+                <th>Срок хранения</th>
+                <th>Основание</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">
-                  Данные учётной записи (ФИО, телефон, e-mail)
-                </td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Данные учётной записи (ФИО, телефон, e-mail)</td>
+                <td className={styles.tdSm}>
                   В течение срока использования Сервиса + 3 года после удаления учётной записи
                 </td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Исполнение договора, общий срок исковой давности
-                </td>
+                <td className={styles.tdSm}>Исполнение договора, общий срок исковой давности</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Данные объявлений</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  В течение срока публикации + 1 год после удаления
-                </td>
-                <td className="border border-gray-300 px-3 py-2">Модерация, рассмотрение споров</td>
+                <td className={styles.tdSm}>Данные объявлений</td>
+                <td className={styles.tdSm}>В течение срока публикации + 1 год после удаления</td>
+                <td className={styles.tdSm}>Модерация, рассмотрение споров</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">
-                  Данные о платежах и транзакциях
-                </td>
-                <td className="border border-gray-300 px-3 py-2">5 лет с даты транзакции</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Налоговый кодекс РФ, 402-ФЗ «О бухгалтерском учёте»
-                </td>
+                <td className={styles.tdSm}>Данные о платежах и транзакциях</td>
+                <td className={styles.tdSm}>5 лет с даты транзакции</td>
+                <td className={styles.tdSm}>Налоговый кодекс РФ, 402-ФЗ «О бухгалтерском учёте»</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Бухгалтерские документы</td>
-                <td className="border border-gray-300 px-3 py-2">5 лет</td>
-                <td className="border border-gray-300 px-3 py-2">402-ФЗ «О бухгалтерском учёте»</td>
+                <td className={styles.tdSm}>Бухгалтерские документы</td>
+                <td className={styles.tdSm}>5 лет</td>
+                <td className={styles.tdSm}>402-ФЗ «О бухгалтерском учёте»</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Переписка в чате</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Переписка в чате</td>
+                <td className={styles.tdSm}>
                   В течение срока существования учётных записей участников + 1 год
                 </td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Исполнение договора, рассмотрение споров
-                </td>
+                <td className={styles.tdSm}>Исполнение договора, рассмотрение споров</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Обращения в поддержку</td>
-                <td className="border border-gray-300 px-3 py-2">3 года с даты обращения</td>
-                <td className="border border-gray-300 px-3 py-2">Рассмотрение споров</td>
+                <td className={styles.tdSm}>Обращения в поддержку</td>
+                <td className={styles.tdSm}>3 года с даты обращения</td>
+                <td className={styles.tdSm}>Рассмотрение споров</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Данные cookies и аналитики</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  До 2 лет (в зависимости от типа cookie)
-                </td>
-                <td className="border border-gray-300 px-3 py-2">Согласие пользователя</td>
+                <td className={styles.tdSm}>Данные cookies и аналитики</td>
+                <td className={styles.tdSm}>До 2 лет (в зависимости от типа cookie)</td>
+                <td className={styles.tdSm}>Согласие пользователя</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">IP-адреса и логи</td>
-                <td className="border border-gray-300 px-3 py-2">До 1 года</td>
-                <td className="border border-gray-300 px-3 py-2">Обеспечение безопасности</td>
+                <td className={styles.tdSm}>IP-адреса и логи</td>
+                <td className={styles.tdSm}>До 1 года</td>
+                <td className={styles.tdSm}>Обеспечение безопасности</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <p className="mb-3">
+        <p>
           6.2.2. По истечении сроков хранения персональные данные уничтожаются или обезличиваются,
           если иное не предусмотрено законодательством.
         </p>
-        <p className="mb-3">
+        <p>
           6.2.3. При отзыве согласия на обработку персональных данных Оператор прекращает обработку
           и уничтожает персональные данные в срок, не превышающий 30 (тридцати) рабочих дней, за
           исключением случаев, когда обработка может быть продолжена на ином правовом основании.
@@ -657,18 +604,18 @@ const PrivacyPage = () => {
       </section>
 
       {/* 7. ПЕРЕДАЧА ПЕРСОНАЛЬНЫХ ДАННЫХ ТРЕТЬИМ ЛИЦАМ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">7. ПЕРЕДАЧА ПЕРСОНАЛЬНЫХ ДАННЫХ ТРЕТЬИМ ЛИЦАМ</h2>
+      <section>
+        <h2>7. ПЕРЕДАЧА ПЕРСОНАЛЬНЫХ ДАННЫХ ТРЕТЬИМ ЛИЦАМ</h2>
 
-        <h3 className="mb-2 text-lg font-semibold">7.1. Случаи передачи персональных данных</h3>
-        <p className="mb-3">
+        <h3>7.1. Случаи передачи персональных данных</h3>
+        <p>
           7.1.1. Оператор может передавать персональные данные третьим лицам в следующих случаях:
         </p>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           <strong>а) Другим Пользователям Сервиса:</strong>
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>
             Контактные данные Продавца (имя, телефон, адрес) передаются Покупателям для целей связи
             по объявлениям;
@@ -678,10 +625,10 @@ const PrivacyPage = () => {
           </li>
         </ul>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           <strong>б) Партнёрам и поставщикам услуг:</strong>
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>
             Платёжным системам и банкам — для обработки платежей (передаются только данные,
             необходимые для проведения платежа);
@@ -694,20 +641,20 @@ const PrivacyPage = () => {
           </li>
         </ul>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           <strong>в) Уполномоченным государственным органам:</strong>
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>
             По запросу суда, прокуратуры, органов следствия и дознания, иных уполномоченных органов
             в случаях и порядке, предусмотренных законодательством Российской Федерации.
           </li>
         </ul>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           <strong>г) Иным лицам:</strong>
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>При наличии согласия субъекта персональных данных;</li>
           <li>
             При реорганизации Оператора — правопреемнику с соблюдением условий настоящей Политики;
@@ -715,82 +662,68 @@ const PrivacyPage = () => {
           <li>В иных случаях, предусмотренных законодательством.</li>
         </ul>
 
-        <p className="mb-4">
+        <p className={styles.pMd}>
           7.1.2. При передаче персональных данных третьим лицам Оператор обеспечивает соблюдение
           конфиденциальности и безопасности данных путём заключения соответствующих договоров с
           получателями данных.
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          7.2. Перечень третьих лиц — получателей персональных данных
-        </h3>
-        <p className="mb-3">
+        <h3>7.2. Перечень третьих лиц — получателей персональных данных</h3>
+        <p>
           7.2.1. Оператор может передавать персональные данные следующим категориям третьих лиц:
         </p>
-        <div className="mb-4 overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300 text-sm">
+        <div className={styles.tableWrapMd}>
+          <table className={styles.tableBordered}>
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-3 py-2 text-left">Категория получателя</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Цель передачи</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Передаваемые данные</th>
+              <tr>
+                <th>Категория получателя</th>
+                <th>Цель передачи</th>
+                <th>Передаваемые данные</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>
                   Платёжные системы интернет-эквайринг Т-Бизнеса через СБП, T-Pay, Mir Pay и другими
                   способами
                 </td>
-                <td className="border border-gray-300 px-3 py-2">Обработка платежей</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Идентификатор Пользователя, сумма, e-mail, телефон
-                </td>
+                <td className={styles.tdSm}>Обработка платежей</td>
+                <td className={styles.tdSm}>Идентификатор Пользователя, сумма, e-mail, телефон</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">
-                  Оператор фискальных данных АО «ТБанк»
-                </td>
-                <td className="border border-gray-300 px-3 py-2">Формирование чеков</td>
-                <td className="border border-gray-300 px-3 py-2">E-mail, телефон, сумма платежа</td>
+                <td className={styles.tdSm}>Оператор фискальных данных АО «ТБанк»</td>
+                <td className={styles.tdSm}>Формирование чеков</td>
+                <td className={styles.tdSm}>E-mail, телефон, сумма платежа</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Провайдер хостинга: beget.com</td>
-                <td className="border border-gray-300 px-3 py-2">Хранение данных</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Все данные (хранятся на серверах провайдера)
-                </td>
+                <td className={styles.tdSm}>Провайдер хостинга: beget.com</td>
+                <td className={styles.tdSm}>Хранение данных</td>
+                <td className={styles.tdSm}>Все данные (хранятся на серверах провайдера)</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">
-                  Сервисы аналитики (см. раздел 8)
-                </td>
-                <td className="border border-gray-300 px-3 py-2">Анализ использования Сервиса</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  Обезличенные данные, cookies, IP-адреса
-                </td>
+                <td className={styles.tdSm}>Сервисы аналитики (см. раздел 8)</td>
+                <td className={styles.tdSm}>Анализ использования Сервиса</td>
+                <td className={styles.tdSm}>Обезличенные данные, cookies, IP-адреса</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">СМС-провайдер ПАО «МТС»</td>
-                <td className="border border-gray-300 px-3 py-2">Отправка SMS-уведомлений</td>
-                <td className="border border-gray-300 px-3 py-2">Номер телефона</td>
+                <td className={styles.tdSm}>СМС-провайдер ПАО «МТС»</td>
+                <td className={styles.tdSm}>Отправка SMS-уведомлений</td>
+                <td className={styles.tdSm}>Номер телефона</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          7.3. Трансграничная передача персональных данных
-        </h3>
-        <p className="mb-3">
+        <h3>7.3. Трансграничная передача персональных данных</h3>
+        <p>
           7.3.1. Оператор преимущественно осуществляет обработку и хранение персональных данных на
           территории Российской Федерации.
         </p>
-        <p className="mb-1">
+        <p className={styles.pXs}>
           7.3.2. Трансграничная передача персональных данных может осуществляться в следующих
           случаях:
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>
             использование сервисов аналитики и рекламы, серверы которых могут располагаться за
             пределами Российской Федерации;
@@ -798,11 +731,11 @@ const PrivacyPage = () => {
           <li>использование международных платёжных систем;</li>
           <li>в иных случаях, предусмотренных законодательством.</li>
         </ul>
-        <p className="mb-1">
+        <p className={styles.pXs}>
           7.3.3. При трансграничной передаче Оператор обеспечивает соблюдение требований статьи 12
           Федерального закона № 152-ФЗ, в том числе:
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>
             передача осуществляется на территорию иностранных государств, обеспечивающих адекватную
             защиту прав субъектов персональных данных (в соответствии с перечнем Роскомнадзора),
@@ -811,97 +744,92 @@ const PrivacyPage = () => {
           <li>субъект персональных данных дал согласие на такую передачу, либо</li>
           <li>передача необходима для исполнения договора с субъектом персональных данных.</li>
         </ul>
-        <p className="mb-3">
+        <p>
           7.3.4. Перечень стран, в которые может осуществляться трансграничная передача:
           определяется на основании местоположения серверов используемых сервисов.
         </p>
       </section>
 
       {/* 8. ИСПОЛЬЗОВАНИЕ ФАЙЛОВ COOKIES И ИНСТРУМЕНТОВ АНАЛИТИКИ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">
-          8. ИСПОЛЬЗОВАНИЕ ФАЙЛОВ COOKIES И ИНСТРУМЕНТОВ АНАЛИТИКИ
-        </h2>
+      <section>
+        <h2>8. ИСПОЛЬЗОВАНИЕ ФАЙЛОВ COOKIES И ИНСТРУМЕНТОВ АНАЛИТИКИ</h2>
 
-        <h3 className="mb-2 text-lg font-semibold">8.1. Файлы cookies</h3>
-        <p className="mb-3">
+        <h3>8.1. Файлы cookies</h3>
+        <p>
           8.1.1. Сайт использует файлы cookies — небольшие текстовые файлы, которые сохраняются на
           устройстве Пользователя при посещении Сайта.
         </p>
-        <p className="mb-2">8.1.2. Типы используемых cookies:</p>
-        <div className="mb-4 overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300 text-sm">
+        <p className={styles.pSm}>8.1.2. Типы используемых cookies:</p>
+        <div className={styles.tableWrapMd}>
+          <table className={styles.tableBordered}>
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-3 py-2 text-left">Тип cookies</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Описание</th>
-                <th className="border border-gray-300 px-3 py-2 text-left">Срок хранения</th>
+              <tr>
+                <th>Тип cookies</th>
+                <th>Описание</th>
+                <th>Срок хранения</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">
-                  Строго необходимые (технические)
-                </td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Строго необходимые (технические)</td>
+                <td className={styles.tdSm}>
                   Обеспечивают работу основных функций Сайта: авторизацию, безопасность, сохранение
                   сессии. Без них Сайт не может функционировать корректно
                 </td>
-                <td className="border border-gray-300 px-3 py-2">Сессия / до 1 года</td>
+                <td className={styles.tdSm}>Сессия / до 1 года</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Функциональные</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Функциональные</td>
+                <td className={styles.tdSm}>
                   Запоминают выбор и предпочтения Пользователя: язык, регион, настройки отображения
                 </td>
-                <td className="border border-gray-300 px-3 py-2">До 1 года</td>
+                <td className={styles.tdSm}>До 1 года</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Аналитические</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Аналитические</td>
+                <td className={styles.tdSm}>
                   Собирают информацию о том, как Пользователи используют Сайт (посещённые страницы,
                   время на сайте, источники трафика). Используются для улучшения работы Сайта
                 </td>
-                <td className="border border-gray-300 px-3 py-2">До 2 лет</td>
+                <td className={styles.tdSm}>До 2 лет</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-3 py-2">Рекламные (маркетинговые)</td>
-                <td className="border border-gray-300 px-3 py-2">
+                <td className={styles.tdSm}>Рекламные (маркетинговые)</td>
+                <td className={styles.tdSm}>
                   Используются для показа релевантной рекламы и отслеживания эффективности рекламных
                   кампаний
                 </td>
-                <td className="border border-gray-300 px-3 py-2">До 2 лет</td>
+                <td className={styles.tdSm}>До 2 лет</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <p className="mb-1">8.1.3. Пользователь может управлять настройками cookies:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>8.1.3. Пользователь может управлять настройками cookies:</p>
+        <ul>
           <li>через настройки браузера (отключить, удалить cookies);</li>
           <li>через баннер согласия на cookies на Сайте (при наличии);</li>
           <li>через настройки Личного кабинета (при наличии такой функции).</li>
         </ul>
-        <p className="mb-4">
+        <p className={styles.pMd}>
           8.1.4. Отключение cookies может привести к ограничению функциональности Сайта.
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">8.2. Инструменты аналитики</h3>
-        <p className="mb-3">
+        <h3>8.2. Инструменты аналитики</h3>
+        <p>
           8.2.1. Для анализа использования Сервиса и улучшения его работы Оператор использует
           следующие сервисы веб-аналитики:
         </p>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           <strong>а) Яндекс.Метрика</strong>
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>Оператор: ООО «ЯНДЕКС», Россия</li>
           <li>
             Политика конфиденциальности:{" "}
             <a
               href="https://yandex.ru/legal/confidential/"
-              className="text-blue-500 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -919,7 +847,6 @@ const PrivacyPage = () => {
             Отказ от отслеживания:{" "}
             <a
               href="https://yandex.ru/support/metrica/general/opt-out.html"
-              className="text-blue-500 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -928,10 +855,10 @@ const PrivacyPage = () => {
           </li>
         </ul>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           <strong>б) Внутренний сервис TorguiSam.ru</strong>
         </p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <ul className={styles.listMd}>
           <li>
             Собираемые данные: IP-адрес (в обезличенном виде), cookies, данные о поведении на сайте,
             информация об устройстве и браузере
@@ -941,31 +868,28 @@ const PrivacyPage = () => {
           </li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">8.3. Рекламные и маркетинговые сервисы</h3>
-        <p className="mb-2">8.3.1. Оператор может использовать следующие рекламные сервисы:</p>
+        <h3>8.3. Рекламные и маркетинговые сервисы</h3>
+        <p className={styles.pSm}>
+          8.3.1. Оператор может использовать следующие рекламные сервисы:
+        </p>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           <strong>а) Рекламная сеть Яндекса (РСЯ)</strong>
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>Оператор: ООО «ЯНДЕКС», Россия</li>
           <li>Цель: показ таргетированной рекламы, ретаргетинг</li>
           <li>Собираемые данные: cookies, идентификаторы устройства</li>
         </ul>
 
-        <p className="mb-1">
+        <p className={styles.pXs}>
           <strong>б) ВКонтакте (VK)</strong>
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>Оператор: ООО «В Контакте», Россия</li>
           <li>
             Политика конфиденциальности:{" "}
-            <a
-              href="https://vk.com/privacy"
-              className="text-blue-500 hover:underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
+            <a href="https://vk.com/privacy" rel="noopener noreferrer" target="_blank">
               https://vk.com/privacy
             </a>
           </li>
@@ -973,65 +897,55 @@ const PrivacyPage = () => {
           <li>Собираемые данные: cookies, идентификаторы пользователя VK (при авторизации)</li>
         </ul>
 
-        <p className="mb-1">8.3.2. Пользователь может отказаться от персонализированной рекламы:</p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>
+          8.3.2. Пользователь может отказаться от персонализированной рекламы:
+        </p>
+        <ul className={styles.listMd}>
           <li>
             в настройках рекламных предпочтений Яндекса:{" "}
-            <a
-              href="https://yandex.ru/tune/adv/"
-              className="text-blue-500 hover:underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
+            <a href="https://yandex.ru/tune/adv/" rel="noopener noreferrer" target="_blank">
               https://yandex.ru/tune/adv/
             </a>
           </li>
           <li>
             в настройках рекламы ВКонтакте:{" "}
-            <a
-              href="https://vk.com/settings?act=privacy"
-              className="text-blue-500 hover:underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
+            <a href="https://vk.com/settings?act=privacy" rel="noopener noreferrer" target="_blank">
               https://vk.com/settings?act=privacy
             </a>
           </li>
           <li>через настройки браузера.</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">8.4. Социальные сети</h3>
-        <p className="mb-3">
+        <h3>8.4. Социальные сети</h3>
+        <p>
           8.4.1. На Сайте могут размещаться кнопки и виджеты социальных сетей (ВКонтакте,
           Одноклассники и др.), которые позволяют Пользователям делиться контентом.
         </p>
-        <p className="mb-3">
+        <p>
           8.4.2. При взаимодействии с такими элементами соответствующие социальные сети могут
           получать информацию о посещении Сайта Пользователем.
         </p>
-        <p className="mb-3">
+        <p>
           8.4.3. Обработка данных социальными сетями осуществляется в соответствии с их собственными
           политиками конфиденциальности.
         </p>
       </section>
 
       {/* 9. ПРАВА СУБЪЕКТА ПЕРСОНАЛЬНЫХ ДАННЫХ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">9. ПРАВА СУБЪЕКТА ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
+      <section>
+        <h2>9. ПРАВА СУБЪЕКТА ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
 
-        <p className="mb-3">
+        <p>
           9.1. В соответствии с Федеральным законом № 152-ФЗ «О персональных данных» субъект
           персональных данных имеет следующие права:
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          9.1.1. Право на получение информации об обработке персональных данных
-        </h3>
-        <p className="mb-1">
+        <h3>9.1.1. Право на получение информации об обработке персональных данных</h3>
+        <p className={styles.pXs}>
           Пользователь вправе получить информацию, касающуюся обработки его персональных данных, в
           том числе содержащую:
         </p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <ul className={styles.listMd}>
           <li>подтверждение факта обработки персональных данных;</li>
           <li>правовые основания и цели обработки;</li>
           <li>цели и применяемые способы обработки;</li>
@@ -1043,79 +957,68 @@ const PrivacyPage = () => {
           <li>иную информацию, предусмотренную законодательством.</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          9.1.2. Право на доступ к своим персональным данным
-        </h3>
-        <p className="mb-4">
+        <h3>9.1.2. Право на доступ к своим персональным данным</h3>
+        <p className={styles.pMd}>
           Пользователь вправе получить доступ к своим персональным данным, которые обрабатываются
           Оператором, включая получение копии таких данных.
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          9.1.3. Право на уточнение персональных данных
-        </h3>
-        <p className="mb-3">
+        <h3>9.1.3. Право на уточнение персональных данных</h3>
+        <p>
           Пользователь вправе требовать от Оператора уточнения своих персональных данных, их
           блокирования или уничтожения в случае, если персональные данные являются неполными,
           устаревшими, неточными.
         </p>
-        <p className="mb-4">
+        <p className={styles.pMd}>
           Пользователь может самостоятельно уточнить свои данные в Личном кабинете.
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">9.1.4. Право на удаление персональных данных</h3>
-        <p className="mb-1">
+        <h3>9.1.4. Право на удаление персональных данных</h3>
+        <p className={styles.pXs}>
           Пользователь вправе требовать удаления своих персональных данных в следующих случаях:
         </p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <ul className={styles.listMd}>
           <li>персональные данные являются незаконно полученными;</li>
           <li>персональные данные не являются необходимыми для заявленных целей обработки;</li>
           <li>Пользователь отзывает согласие на обработку;</li>
           <li>в иных случаях, предусмотренных законодательством.</li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">
-          9.1.5. Право на отзыв согласия на обработку персональных данных
-        </h3>
-        <p className="mb-3">
+        <h3>9.1.5. Право на отзыв согласия на обработку персональных данных</h3>
+        <p>
           Пользователь вправе в любое время отозвать своё согласие на обработку персональных данных,
           направив соответствующее заявление Оператору.
         </p>
-        <p className="mb-4 text-sm">
+        <p className={styles.noteMd}>
           <strong>Важно:</strong> Отзыв согласия не влияет на законность обработки, осуществлявшейся
           на основании согласия до его отзыва. Отзыв согласия на обработку данных, необходимых для
           исполнения договора, может повлечь невозможность использования Сервиса и удаление учётной
           записи.
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">9.1.6. Право на ограничение обработки</h3>
-        <p className="mb-4">
+        <h3>9.1.6. Право на ограничение обработки</h3>
+        <p className={styles.pMd}>
           Пользователь вправе требовать ограничения обработки персональных данных в случаях,
           предусмотренных законодательством.
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">9.1.7. Право на возражение против обработки</h3>
-        <p className="mb-4">
+        <h3>9.1.7. Право на возражение против обработки</h3>
+        <p className={styles.pMd}>
           Пользователь вправе возражать против обработки персональных данных в целях прямого
           маркетинга (рекламных рассылок).
         </p>
 
-        <h3 className="mb-2 text-lg font-semibold">9.1.8. Право на подачу жалобы</h3>
-        <p className="mb-1">
+        <h3>9.1.8. Право на подачу жалобы</h3>
+        <p className={styles.pXs}>
           Пользователь вправе обжаловать действия или бездействие Оператора в уполномоченный орган
           по защите прав субъектов персональных данных — Федеральную службу по надзору в сфере
           связи, информационных технологий и массовых коммуникаций (Роскомнадзор):
         </p>
-        <ul className="mb-4 list-inside list-disc space-y-0.5 pl-4">
+        <ul className={styles.listMd}>
           <li>Адрес: 109992, г. Москва, Китайгородский проезд, д. 7, стр. 2</li>
           <li>
             Сайт:{" "}
-            <a
-              href="https://rkn.gov.ru"
-              className="text-blue-500 hover:underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
+            <a href="https://rkn.gov.ru" rel="noopener noreferrer" target="_blank">
               https://rkn.gov.ru
             </a>
           </li>
@@ -1123,7 +1026,6 @@ const PrivacyPage = () => {
             Электронная приёмная:{" "}
             <a
               href="https://rkn.gov.ru/treatments/ask-question/"
-              className="text-blue-500 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -1132,17 +1034,15 @@ const PrivacyPage = () => {
           </li>
         </ul>
 
-        <h3 className="mb-2 text-lg font-semibold">9.2. Порядок реализации прав</h3>
-        <p className="mb-1">
+        <h3>9.2. Порядок реализации прав</h3>
+        <p className={styles.pXs}>
           9.2.1. Для реализации своих прав Пользователь направляет запрос (заявление) Оператору
           одним из следующих способов:
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>
             <strong>а)</strong> По электронной почте:{" "}
-            <a href="mailto:privacy@torguisam.ru" className="text-blue-500 hover:underline">
-              privacy@torguisam.ru
-            </a>
+            <a href="mailto:privacy@torguisam.ru">privacy@torguisam.ru</a>
           </li>
           <li>
             <strong>б)</strong> Через форму обратной связи в Личном кабинете
@@ -1153,8 +1053,8 @@ const PrivacyPage = () => {
           </li>
         </ul>
 
-        <p className="mb-1">9.2.2. Запрос должен содержать:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>9.2.2. Запрос должен содержать:</p>
+        <ul>
           <li>фамилию, имя, отчество субъекта персональных данных;</li>
           <li>контактные данные (телефон, e-mail);</li>
           <li>данные документа, удостоверяющего личность (для подтверждения личности);</li>
@@ -1166,37 +1066,39 @@ const PrivacyPage = () => {
           <li>подпись (для бумажного заявления).</li>
         </ul>
 
-        <p className="mb-3">
+        <p>
           9.2.3. Оператор рассматривает запрос в течение 10 (десяти) рабочих дней с даты получения
           (или 30 дней в случаях, предусмотренных законодательством) и направляет ответ способом,
           указанным в запросе.
         </p>
 
-        <p className="mb-1">9.2.4. Оператор вправе отказать в удовлетворении запроса в случаях:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>
+          9.2.4. Оператор вправе отказать в удовлетворении запроса в случаях:
+        </p>
+        <ul>
           <li>невозможности идентификации субъекта персональных данных;</li>
           <li>наличия законных оснований для продолжения обработки;</li>
           <li>в иных случаях, предусмотренных законодательством.</li>
         </ul>
 
-        <p className="mb-3">
+        <p>
           9.2.5. Услуги по реализации прав субъектов персональных данных предоставляются бесплатно.
         </p>
       </section>
 
       {/* 10. МЕРЫ ПО ЗАЩИТЕ ПЕРСОНАЛЬНЫХ ДАННЫХ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">10. МЕРЫ ПО ЗАЩИТЕ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
+      <section>
+        <h2>10. МЕРЫ ПО ЗАЩИТЕ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
 
-        <p className="mb-3">
+        <p>
           10.1. Оператор принимает необходимые и достаточные организационные и технические меры для
           защиты персональных данных от неправомерного или случайного доступа, уничтожения,
           изменения, блокирования, копирования, распространения, а также от иных неправомерных
           действий третьих лиц.
         </p>
 
-        <p className="mb-1">10.2. К организационным мерам относятся:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>10.2. К организационным мерам относятся:</p>
+        <ul>
           <li>назначение лица, ответственного за организацию обработки персональных данных;</li>
           <li>
             утверждение внутренних документов, регламентирующих обработку и защиту персональных
@@ -1211,8 +1113,8 @@ const PrivacyPage = () => {
           <li>контроль за соблюдением требований к защите персональных данных.</li>
         </ul>
 
-        <p className="mb-1">10.3. К техническим мерам относятся:</p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <p className={styles.pXs}>10.3. К техническим мерам относятся:</p>
+        <ul>
           <li>использование защищённого протокола HTTPS для передачи данных;</li>
           <li>хранение паролей в зашифрованном (хешированном) виде;</li>
           <li>разграничение прав доступа к персональным данным;</li>
@@ -1224,18 +1126,18 @@ const PrivacyPage = () => {
           <li>ведение журналов (логов) доступа к персональным данным.</li>
         </ul>
 
-        <p className="mb-3">
+        <p>
           10.4. Доступ к персональным данным имеют только те сотрудники Оператора, которым такой
           доступ необходим для выполнения их должностных обязанностей. Все сотрудники, имеющие
           доступ к персональным данным, подписали обязательства о неразглашении.
         </p>
 
-        <p className="mb-3">
+        <p>
           10.5. Оператор регулярно оценивает эффективность принимаемых мер защиты и совершенствует
           систему защиты персональных данных.
         </p>
 
-        <p className="mb-3 text-sm">
+        <p className={styles.note}>
           <strong>10.6. Важно:</strong> Несмотря на принимаемые меры, Оператор не может
           гарантировать абсолютную защиту персональных данных от всех возможных угроз, в том числе
           от действий третьих лиц, действующих с нарушением закона. Пользователь несёт
@@ -1245,71 +1147,62 @@ const PrivacyPage = () => {
       </section>
 
       {/* 11. ПОРЯДОК ИЗМЕНЕНИЯ ПОЛИТИКИ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">11. ПОРЯДОК ИЗМЕНЕНИЯ ПОЛИТИКИ</h2>
+      <section>
+        <h2>11. ПОРЯДОК ИЗМЕНЕНИЯ ПОЛИТИКИ</h2>
 
-        <p className="mb-3">
-          11.1. Оператор вправе вносить изменения в настоящую Политику в одностороннем порядке.
-        </p>
-        <p className="mb-3">
+        <p>11.1. Оператор вправе вносить изменения в настоящую Политику в одностороннем порядке.</p>
+        <p>
           11.2. Новая редакция Политики вступает в силу с момента её размещения на Сайте по адресу{" "}
-          <a href="https://torguisam.ru/privacy" className="text-blue-500 hover:underline">
-            https://torguisam.ru/privacy
-          </a>
-          , если иное не предусмотрено новой редакцией.
+          <a href="https://torguisam.ru/privacy">https://torguisam.ru/privacy</a>, если иное не
+          предусмотрено новой редакцией.
         </p>
-        <p className="mb-3">
-          11.3. Дата последнего обновления Политики указывается в начале документа.
-        </p>
-        <p className="mb-3">
+        <p>11.3. Дата последнего обновления Политики указывается в начале документа.</p>
+        <p>
           11.4. Оператор рекомендует Пользователям регулярно проверять условия настоящей Политики на
           предмет изменений.
         </p>
-        <p className="mb-1">
+        <p className={styles.pXs}>
           11.5. В случае внесения существенных изменений Оператор уведомляет Пользователей одним из
           следующих способов:
         </p>
-        <ul className="mb-3 list-inside list-disc space-y-0.5 pl-4">
+        <ul>
           <li>размещение уведомления на Сайте;</li>
           <li>
             направление уведомления по электронной почте (на адрес, указанный при регистрации);
           </li>
           <li>уведомление в Личном кабинете.</li>
         </ul>
-        <p className="mb-3">
+        <p>
           11.6. Продолжение использования Сервиса после вступления в силу изменений означает
           согласие Пользователя с новой редакцией Политики.
         </p>
-        <p className="mb-3">
+        <p>
           11.7. Если Пользователь не согласен с изменениями, он вправе прекратить использование
           Сервиса и направить запрос на удаление персональных данных.
         </p>
       </section>
 
       {/* 12. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xl font-bold">12. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ</h2>
+      <section>
+        <h2>12. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ</h2>
 
-        <p className="mb-3">
+        <p>
           12.1. Настоящая Политика является официальным документом Оператора и размещается в
           открытом доступе на Сайте.
         </p>
-        <p className="mb-3">
+        <p>
           12.2. Политика применяется совместно с Публичной офертой, размещённой на Сайте по адресу{" "}
-          <a href="https://torguisam.ru/oferta" className="text-blue-500 hover:underline">
-            https://torguisam.ru/oferta
-          </a>
-          .
+          <a href="https://torguisam.ru/oferta">https://torguisam.ru/oferta</a>.
         </p>
-        <p className="mb-3">
+        <p>
           12.3. По всем вопросам, не урегулированным настоящей Политикой, Оператор и Пользователи
           руководствуются действующим законодательством Российской Федерации.
         </p>
-        <p className="mb-3">
+        <p>
           12.4. В случае возникновения противоречий между настоящей Политикой и законодательством
           Российской Федерации применяются нормы законодательства.
         </p>
-        <p className="mb-3">
+        <p>
           12.5. Признание отдельных положений Политики недействительными не влечёт
           недействительности остальных положений.
         </p>
