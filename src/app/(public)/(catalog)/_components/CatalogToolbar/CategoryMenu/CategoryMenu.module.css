@@ -1,0 +1,40 @@
+.tree {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem 1rem;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.label {
+  flex: 1;
+  justify-content: start;
+  text-align: left;
+  text-wrap: wrap;
+  height: auto;
+  padding: 0.5rem;
+}
+
+.chevron {
+  transition: transform 150ms;
+}
+
+.chevron[data-open="true"] {
+  transform: rotate(90deg);
+}
+
+.children {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+}

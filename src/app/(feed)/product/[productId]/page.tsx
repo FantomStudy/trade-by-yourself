@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
   Typography,
 } from "@/components/ui";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 
 import { Gallery, ProductMap, ReviewForm, SellerCard, ToggleProductButton } from "./_components";
 
@@ -65,7 +65,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
             <Typography variant="h1">{product.name}</Typography>
             <div className={styles.productMeta}>
               <Typography className={styles.price} variant="h2">
-                {formatPrice(product.price)}
+                {toCurrency(product.price)}
               </Typography>
 
               <LikeButton initLiked={product.isFavorited} productId={product.id} />
