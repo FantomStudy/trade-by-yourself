@@ -1,6 +1,4 @@
-export * from "./useAvailableFilters";
 export * from "./useCategories";
-export * from "./useCategoryBySlug";
 export * from "./useChats";
 export * from "./useCurrentUser";
 export * from "./useIsAdmin";
@@ -11,6 +9,5 @@ export * from "./useMyReservations";
 export * from "./usePaymentHistory";
 export * from "./useProductReservation";
 export * from "./useProductsToModerate";
-export * from "./useRandomProducts";
 export * from "./useReviewsToModerate";
 export * from "./useUserInfo";
