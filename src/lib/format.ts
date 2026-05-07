@@ -1,4 +1,4 @@
-export const formatFullName = (fullName: string) => {
+export const toShortName = (fullName: string) => {
   if (!fullName) return "";
 
   const parts = fullName.trim().split(/\s+/);

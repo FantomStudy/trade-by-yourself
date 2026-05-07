@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import { useIsAdmin, useUserInfo } from "@/api/hooks";
 import { Avatar, Button, Typography } from "@/components/ui";
 import { useAuth } from "@/lib/contexts";
-import { formatFullName } from "@/lib/format";
+import { toShortName } from "@/lib/format";
 
 import { LINKS } from "./constants";
 
@@ -34,7 +34,7 @@ export const Sidebar = () => {
         <>
           <div className={styles.profileInfo}>
             <Avatar fullName={user.fullName} size="lg" src={userInfo?.photo ?? ""} />
-            <Typography variant="h2">{formatFullName(user.fullName)}</Typography>
+            <Typography variant="h2">{toShortName(user.fullName)}</Typography>
           </div>
 
           <div className={styles.stats}>

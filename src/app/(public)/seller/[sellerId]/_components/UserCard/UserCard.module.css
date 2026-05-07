@@ -3,14 +3,12 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface);
+  border-radius: var(--radius);
 }
 
-.userInfo {
+.userHeader {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,7 +17,7 @@
   width: 100%;
 }
 
-.stats {
+.userStats {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,19 +27,14 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.reviews {
-  color: #6b7280;
-  font-size: 13px;
-}
-
-.ratingSection {
+.rating {
   font-size: 14px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.rating {
+.ratingValue {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -49,29 +42,38 @@
   font-weight: 600;
 }
 
-.rating svg {
+.ratingValue svg {
   width: 16px;
   height: 16px;
 }
 
-.profileType {
-  font-size: 12px;
+.reviewsCount {
+  color: #6b7280;
+  font-size: 13px;
 }
 
-.productsCount {
-  width: 100%;
-  padding: 12px 0;
-  text-align: center;
+.profileBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  background-color: var(--accent);
+  color: var(--primary);
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
 }
 
-.actions {
+.userActions {
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 8px;
-}
-
-.icon {
-  width: 18px;
-  height: 18px;
 }
