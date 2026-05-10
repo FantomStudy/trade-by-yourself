@@ -16,7 +16,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 
-import { AuthDialog } from "@/components/auth-dialog";
+import { AuthDialog } from "@/components/AuthDialog";
 import { Avatar, Button, Sheet } from "@/components/ui";
 import { useAuth } from "@/lib/contexts";
 

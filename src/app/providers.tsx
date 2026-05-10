@@ -1,7 +1,8 @@
 "use client";
 
-import { environmentManager, QueryClient, QueryClientProvider  } from "@tanstack/react-query";
+import { environmentManager, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { AuthDialogProvider } from "@/components/AuthDialog";
 import { AuthProvider, ChatSocketProvider } from "@/lib/contexts";
 
 function makeQueryClient() {
@@ -35,10 +36,11 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ChatSocketProvider>{children}</ChatSocketProvider>
-      </AuthProvider>
-
+      <AuthDialogProvider>
+        <AuthProvider>
+          <ChatSocketProvider>{children}</ChatSocketProvider>
+        </AuthProvider>
+      </AuthDialogProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>
   );

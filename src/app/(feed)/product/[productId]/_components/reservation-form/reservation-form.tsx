@@ -11,7 +11,7 @@ import {
   useCurrentUser,
   useProductReservation,
 } from "@/api/hooks";
-import { AuthDialog } from "@/components/auth-dialog";
+import { AuthDialog } from "@/components/AuthDialog";
 import {
   Button,
   Dialog,

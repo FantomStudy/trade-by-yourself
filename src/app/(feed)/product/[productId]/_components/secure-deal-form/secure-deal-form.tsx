@@ -12,7 +12,7 @@ import {
   getCdekDeliveryPoints,
   getCdekTariffs,
 } from "@/api/requests";
-import { AuthDialog } from "@/components/auth-dialog";
+import { AuthDialog } from "@/components/AuthDialog";
 import {
   Button,
   Dialog,
