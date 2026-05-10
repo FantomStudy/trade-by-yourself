@@ -3,16 +3,11 @@
 import type { PropsWithChildren } from "react";
 
 import type { ChatSocketContextType, ChatSocketLike, Message } from "./types";
-import type {ChatEventName} from "@/lib/chat-socket";
+import type { ChatEventName } from "@/lib/chat-socket";
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
-import {
-  
-  createChatSocket,
-  parseChatSocketMessage,
-  sendChatSocketEvent
-} from "@/lib/chat-socket";
+import { createChatSocket, parseChatSocketMessage, sendChatSocketEvent } from "@/lib/chat-socket";
 
 import { useAuth } from "../auth";
 

@@ -2,10 +2,10 @@ import type { ProductUser } from "@/api/products";
 import { CircleSmallIcon, StarIcon } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui/lab/Avatar";
 import { toShortName } from "@/lib/format";
 import { PhoneButton } from "./PhoneButton";
 import styles from "./UserCard.module.css";
-import { Avatar } from "@/components/ui/lab/Avatar";
 
 interface UserCardProps {
   user: ProductUser;

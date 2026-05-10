@@ -1,12 +1,12 @@
+import { notFound } from "next/navigation";
 import { getUserProducts } from "@/api/products";
 import { getUser } from "@/api/users";
-import { notFound } from "next/navigation";
-import styles from "./page.module.css";
-import { ProductCard } from "../../(catalog)/_components/FeedList/ProductCard";
-import { LikeButton } from "../../(catalog)/_components/FeedList/LikeButton";
-import { Typography } from "@/components/ui";
 import { ProductGrid } from "@/components/ProductGrid";
+import { Typography } from "@/components/ui";
+import { LikeButton } from "../../(catalog)/_components/FeedList/LikeButton";
+import { ProductCard } from "../../(catalog)/_components/FeedList/ProductCard";
 import { UserCard } from "./_components/UserCard";
+import styles from "./page.module.css";
 
 const SellerPage = async ({ params }: PageProps<"/seller/[sellerId]">) => {
   const { sellerId } = await params;
