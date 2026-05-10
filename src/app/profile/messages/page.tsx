@@ -3,8 +3,7 @@
 import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-import { ChatsBanner } from "@/components/product-feed-banner";
+import { BannerSlot } from "@/components/BannerSlot";
 import { useChats } from "@/lib/api/hooks";
 import { toCurrency } from "@/lib/format";
 import { getSupportMessages, getSupportUnreadCount } from "@/lib/support-chat";
@@ -47,7 +46,7 @@ const MessagesPage = () => {
       <div className="space-y-4">
         <h1 className="text-2xl font-bold">Сообщения</h1>
 
-        <ChatsBanner />
+        <BannerSlot place="CHATS" />
 
         {/* Чат тех поддержки */}
         <Link
@@ -105,7 +104,7 @@ const MessagesPage = () => {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">Сообщения</h1>
 
-      <ChatsBanner />
+      <BannerSlot place="CHATS" />
 
       <div className="space-y-2">
         {/* Чат тех поддержки - всегда первый */}

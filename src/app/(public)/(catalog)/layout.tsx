@@ -1,5 +1,5 @@
+import { BannerSlot } from "@/components/BannerSlot";
 import { CatalogToolbar } from "./_components/CatalogToolbar";
-import { BannerSlot } from "./_components/FeedList/BannerSlot";
 
 const CatalogLayout = ({ children }: LayoutProps<"/">) => {
   return (

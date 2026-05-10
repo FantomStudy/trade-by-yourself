@@ -1,19 +1,10 @@
 import Link from "next/link";
-
 import { getProductById } from "@/api/requests";
-import { LikeButton } from "@/components/like-button";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-  Typography,
-} from "@/components/ui";
+import { LikeButton } from "@/components/LikeButton";
+import { Typography } from "@/components/ui";
+import { Breadcrumb } from "@/components/ui/lab/Breadcrumb";
 import { toCurrency } from "@/lib/format";
-
 import { Gallery, ProductMap, ReviewForm, SellerCard, ToggleProductButton } from "./_components";
-
 import styles from "./page.module.css";
 
 const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
@@ -22,37 +13,31 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
 
   return (
     <div className="global-container">
-      <Breadcrumb className={styles.breadcrumb}>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Главная</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">{product.category.name}</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">{product.subCategory.name}</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+      <Breadcrumb>
+        <Breadcrumb.List>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link render={<Link href="/" />}>Главная</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Separator />
+          <Breadcrumb.Item>
+            <Breadcrumb.Link render={<Link href="/" />}>{product.category.name}</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Separator />
+          <Breadcrumb.Item>
+            <Breadcrumb.Link render={<Link href="/" />}>{product.subCategory.name}</Breadcrumb.Link>
+          </Breadcrumb.Item>
           {product.type && (
             <>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
+              <Breadcrumb.Separator />
+              <Breadcrumb.Item>
+                <Breadcrumb.Link render={<Link href="/" />}>
                   {/* @ts-expect-error - type will be fixed later */}
-                  <Link href="/">{product.type.name}</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
+                  {product.type.name}
+                </Breadcrumb.Link>
+              </Breadcrumb.Item>
             </>
           )}
-        </BreadcrumbList>
+        </Breadcrumb.List>
       </Breadcrumb>
 
       <div className={styles.container}>
@@ -68,7 +53,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
                 {toCurrency(product.price)}
               </Typography>
 
-              <LikeButton initLiked={product.isFavorited} productId={product.id} />
+              <LikeButton size="icon" initLiked={product.isFavorited} productId={product.id} />
             </div>
             <Typography>В наличии: {product.quantity ?? 1} шт.</Typography>
           </div>

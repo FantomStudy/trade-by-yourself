@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { BannerBadge } from "./BannerSlot";
+import { BannerBadge } from "@/components/BannerSlot";
 import styles from "./FeedBanner.module.css";
 
 interface FeedBannerProps {

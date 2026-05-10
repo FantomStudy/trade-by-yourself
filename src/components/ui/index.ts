@@ -1,7 +1,6 @@
 export * from "./address-map-wrapper";
 export * from "./avatar";
 export * from "./badge/badge";
-export * from "./breadcrumb/breadcrumb";
 export * from "./button/button";
 export * from "./dialog/dialog";
 export * from "./field/field";
