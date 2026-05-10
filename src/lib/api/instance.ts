@@ -1,6 +1,4 @@
 import { ofetch } from "ofetch";
-
-import { isServer } from "../is-server";
 import { updateServerTimeOffset } from "../server-time-offset";
 
 const RAW_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -20,7 +18,7 @@ export const api = ofetch.create({
   baseURL: BASE_URL,
   credentials: "include",
   onRequest: async ({ options }) => {
-    if (!isServer()) return;
+    if (typeof window !== "undefined") return;
 
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
