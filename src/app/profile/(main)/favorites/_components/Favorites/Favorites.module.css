@@ -1,0 +1,53 @@
+.stateContainer {
+  display: flex;
+  min-height: 400px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background-color: var(--surface);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.iconContainer {
+  margin-bottom: 1rem;
+  display: flex;
+  height: 5rem;
+  width: 5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+.iconContainerError {
+  background-color: #fef2f2;
+}
+
+.iconContainerEmpty {
+  background-color: #eff6ff;
+}
+
+.icon {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+.iconError {
+  color: var(--destructive);
+}
+
+.iconEmpty {
+  color: var(--primary);
+}
+
+.title {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.description {
+  color: var(--muted-foreground);
+}
