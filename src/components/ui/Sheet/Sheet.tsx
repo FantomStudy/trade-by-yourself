@@ -3,7 +3,7 @@
 import { Dialog as SheetBase } from "@base-ui/react/dialog";
 import clsx from "clsx";
 import { XIcon } from "lucide-react";
-import { Button } from "../Button";
+import { Button } from "../lab/Button";
 import styles from "./Sheet.module.css";
 
 const SheetRoot = ({ ...props }: SheetBase.Root.Props) => {

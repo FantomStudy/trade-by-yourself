@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getProductById } from "@/api/requests";
 import { LikeButton } from "@/components/LikeButton";
 import { Typography } from "@/components/ui";
-import { Breadcrumb } from "@/components/ui/lab/Breadcrumb";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { toCurrency } from "@/lib/format";
 import { Gallery, ProductMap, ReviewForm, SellerCard, ToggleProductButton } from "./_components";
 import styles from "./page.module.css";

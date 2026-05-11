@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCategory } from "@/api/categories";
 import { ProductGrid } from "@/components/ProductGrid";
-import { Breadcrumb } from "@/components/ui/lab/Breadcrumb";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { FeedCard, FeedList } from "../_components/FeedList";
 import { getFeed } from "../_lib/getFeed";
 import styles from "./page.module.css";

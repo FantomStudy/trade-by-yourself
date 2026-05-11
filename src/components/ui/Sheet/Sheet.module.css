@@ -46,6 +46,11 @@
   transform: translateY(2.5rem);
 }
 
+.content[data-side="left"],
+.content[data-side="right"] {
+  max-width: 24rem;
+}
+
 .content[data-side="left"] {
   top: 0;
   bottom: 0;
@@ -87,10 +92,11 @@
   transform: translateY(-2.5rem);
 }
 
-@media (min-width: 640px) {
+@media (max-width: 640px) {
   .content[data-side="left"],
   .content[data-side="right"] {
-    max-width: 24rem;
+    width: 100%;
+    max-width: none;
   }
 }
 

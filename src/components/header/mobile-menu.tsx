@@ -17,11 +17,12 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { AuthDialog } from "@/components/AuthDialog";
-import { Button, Sheet } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/lib/contexts";
 
 import styles from "./mobile-menu.module.css";
+import { Sheet } from "../ui/Sheet";
 
 interface AuthenticatedMenuProps {
   user: CurrentUser;
