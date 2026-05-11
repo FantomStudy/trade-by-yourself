@@ -7,9 +7,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { MyProductCard } from "@/components/product-card";
-
 import { DraftProductCard } from "./draft-product-card";
+import { MyProductCard } from "./product-card";
 
 export type MyProductsTab = "active" | "drafts";
 

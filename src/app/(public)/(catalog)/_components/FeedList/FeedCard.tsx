@@ -1,7 +1,7 @@
 import type { FeedItem } from "../../_lib/getFeed";
 import { LikeButton } from "@/components/LikeButton";
+import { ProductCard } from "@/components/ProductCard";
 import { FeedBanner } from "./FeedBanner";
-import { ProductCard } from "./ProductCard";
 
 interface FeedCardProps {
   item: FeedItem;

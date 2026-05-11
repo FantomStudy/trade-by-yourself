@@ -21,8 +21,8 @@ import { Button } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/lib/contexts";
 
-import styles from "./mobile-menu.module.css";
 import { Sheet } from "../ui/Sheet";
+import styles from "./mobile-menu.module.css";
 
 interface AuthenticatedMenuProps {
   user: CurrentUser;

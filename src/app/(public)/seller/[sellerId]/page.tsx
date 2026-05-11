@@ -4,7 +4,7 @@ import { getUser } from "@/api/users";
 import { LikeButton } from "@/components/LikeButton";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Typography } from "@/components/ui";
-import { ProductCard } from "../../(catalog)/_components/FeedList/ProductCard";
+import { ProductCard } from "../../../../components/ProductCard";
 import { UserCard } from "./_components/UserCard";
 import styles from "./page.module.css";
 

@@ -8,11 +8,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { useDeleteProductMutation, usePublishDraftMutation } from "@/api/hooks";
-import { ProductPreview } from "@/components/product-card/product-preview/product-preview";
 import { Typography } from "@/components/ui";
 import { toCurrency } from "@/lib/format";
-
-import styles from "@/components/product-card/product-card.module.css";
+import { ProductPreview } from "./product-card/product-preview/product-preview";
+import styles from "./product-card/product-card.module.css";
 
 interface DraftProductCardProps {
   product: Product;
