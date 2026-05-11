@@ -17,7 +17,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { AuthDialog } from "@/components/AuthDialog";
-import { Avatar, Button, Sheet } from "@/components/ui";
+import { Button, Sheet } from "@/components/ui";
+import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/lib/contexts";
 
 import styles from "./mobile-menu.module.css";
@@ -37,7 +38,7 @@ const AuthenticatedMenu = ({ user, onClose, onLogout }: AuthenticatedMenuProps) 
   return (
     <>
       <div className={styles.userSection}>
-        <Avatar fullName={user.fullName} size="lg" />
+        <Avatar size="lg" src={user.photo} fallback={user.fullName} />
         <span className={styles.userName}>{user.fullName}</span>
       </div>
 

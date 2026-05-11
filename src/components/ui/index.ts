@@ -1,5 +1,4 @@
 export * from "./address-map-wrapper";
-export * from "./avatar";
 export * from "./badge/badge";
 export * from "./button/button";
 export * from "./dialog/dialog";

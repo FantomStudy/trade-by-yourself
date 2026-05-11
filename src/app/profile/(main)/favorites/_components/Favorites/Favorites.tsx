@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { HeartIcon } from "lucide-react";
 import { getFavorites } from "@/api/products/favorites";
-import { LikeButton } from "@/components/LikeButton";
 import { ProductCard } from "@/app/(public)/(catalog)/_components/FeedList/ProductCard";
+import { LikeButton } from "@/components/LikeButton";
 import { ProductGrid } from "@/components/ProductGrid";
 import styles from "./Favorites.module.css";
 

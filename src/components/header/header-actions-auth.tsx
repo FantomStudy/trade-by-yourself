@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import { useChats } from "@/api/hooks";
-import { Avatar, Button } from "@/components/ui";
+import { Button } from "@/components/ui";
+import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/lib/contexts";
 
 import styles from "./header.module.css";
@@ -34,7 +35,7 @@ export const HeaderActionsAuth = ({ user }: { user: CurrentUser }) => {
       </Link>
 
       <Link href="/profile/my-products">
-        <Avatar fullName={user.fullName} />
+        <Avatar src={user.photo} fallback={user.fullName} />
       </Link>
 
       <Button asChild variant="secondary">

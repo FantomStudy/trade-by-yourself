@@ -9,6 +9,7 @@ import styles from "./page.module.css";
 
 const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
   const { productId } = await params;
+
   const product = await getProductById(Number(productId));
 
   return (
@@ -20,18 +21,29 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
           </Breadcrumb.Item>
           <Breadcrumb.Separator />
           <Breadcrumb.Item>
-            <Breadcrumb.Link render={<Link href="/" />}>{product.category.name}</Breadcrumb.Link>
+            <Breadcrumb.Link render={<Link href={`/${product.category.slug}`} />}>
+              {product.category.name}
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Separator />
           <Breadcrumb.Item>
-            <Breadcrumb.Link render={<Link href="/" />}>{product.subCategory.name}</Breadcrumb.Link>
+            <Breadcrumb.Link
+              render={<Link href={`/${product.category.slug}/${product.subCategory.slug}`} />}
+            >
+              {product.subCategory.name}
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
           {product.type && (
             <>
               <Breadcrumb.Separator />
               <Breadcrumb.Item>
-                <Breadcrumb.Link render={<Link href="/" />}>
-                  {/* @ts-expect-error - type will be fixed later */}
+                <Breadcrumb.Link
+                  render={
+                    <Link
+                      href={`/${product.category.slug}/${product.subCategory.slug}/${product.type.slug}`}
+                    />
+                  }
+                >
                   {product.type.name}
                 </Breadcrumb.Link>
               </Breadcrumb.Item>

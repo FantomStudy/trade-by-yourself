@@ -1,17 +1,15 @@
 "use client";
-import type { ExtendedProduct } from "@/types";
 
+import type { ExtendedProduct } from "@/types";
 import { CircleSmall, Phone, StarIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { useStartChatMutation } from "@/api/hooks";
-import { Avatar, Badge, Button, Typography } from "@/components/ui";
-
+import { Badge, Button, Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui/Avatar";
 import { ReservationForm } from "../reservation-form/reservation-form";
 import { SecureDealForm } from "../secure-deal-form/secure-deal-form";
-
 import styles from "./seller-card.module.css";
 
 interface SellerCardProps {
@@ -48,7 +46,7 @@ export const SellerCard = ({ product }: SellerCardProps) => {
   return (
     <div className={styles.card}>
       <Link href={`/seller/${product.seller.id}`} className={styles.userInfo}>
-        <Avatar fullName={product.seller.fullName} size="lg" />
+        <Avatar size="lg" src={product.seller.photo} fallback={product.seller.fullName} />
         <Typography variant="h2">{product.seller.fullName}</Typography>
       </Link>
 

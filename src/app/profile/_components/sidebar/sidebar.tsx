@@ -6,12 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useIsAdmin, useUserInfo } from "@/api/hooks";
-import { Avatar, Button, Typography } from "@/components/ui";
+import { Button, Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/lib/contexts";
+
 import { toShortName } from "@/lib/format";
 
 import { LINKS } from "./constants";
-
 import styles from "./sidebar.module.css";
 
 export const Sidebar = () => {
@@ -33,7 +34,7 @@ export const Sidebar = () => {
       {user && (
         <>
           <div className={styles.profileInfo}>
-            <Avatar fullName={user.fullName} size="lg" src={userInfo?.photo ?? ""} />
+            <Avatar size="lg" src={userInfo?.photo ?? ""} fallback={user.fullName} />
             <Typography variant="h2">{toShortName(user.fullName)}</Typography>
           </div>
 
