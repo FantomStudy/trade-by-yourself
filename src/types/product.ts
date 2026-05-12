@@ -6,34 +6,49 @@ export interface Product {
   images: string[];
   isFavorited: boolean;
   isHide?: boolean;
-  moderateState?: "APPROVED" | "DENIDED" | "DENIED" | "MODERATE";
+  moderateState?: "APPROVED" | "DENIDED" | "DENIED" | "MODERATE" | "DRAFT";
   price: number;
+  quantity: number;
   subCategoryName?: string;
   userId: number;
   videoUrl?: string | null;
   hasPromotion?: boolean;
+  promotionLevel?: number;
+  promotionName?: string | null;
+  sellerRating?: number | null;
+  sellerVerified?: boolean;
+  viewsCount?: number;
+  popularityScore?: number;
+  badges?: string[];
 }
 
 export interface ExtendedProduct extends Product {
   description?: string;
   fieldValues?: Array<{ id: number; [key: string]: number | string }>;
-  type: string | null;
+  type: {
+    id: number;
+    name: string;
+    slug: string;
+  };
   videoUrl?: string | null;
   category: {
     id: number;
     name: string;
+    slug: string;
   };
   seller: {
     id: number;
     fullName: string;
     phoneNumber: string;
     profileType: string;
+    photo: string | null;
     rating: number;
     reviewsCount: number;
   };
   subCategory: {
     id: number;
     name: string;
+    slug: string;
   };
 }
 
@@ -74,4 +89,29 @@ export interface ModerationProductsResponse {
   total: number;
   page: number;
   pages: number;
+}
+
+export type ProductSortBy =
+  | "relevance"
+  | "date_desc"
+  | "date_asc"
+  | "price_asc"
+  | "price_desc"
+  | "popularity"
+  | "seller_rating";
+
+export interface ProductsQueryParams {
+  search?: string;
+  categorySlug?: string;
+  subCategorySlug?: string;
+  typeSlug?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  state?: string;
+  region?: string;
+  profileType?: string;
+  fieldValues?: string;
+  sortBy?: ProductSortBy;
+  page?: number;
+  limit?: number;
 }

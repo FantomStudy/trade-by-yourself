@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
-
 import { Montserrat } from "next/font/google";
-
-import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
-import { getCurrentUser } from "@/api/requests";
-import { getQueryClient } from "@/lib/get-query-client";
-
-import { MainLayout } from "./_components";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import { Sonner } from "@/components/ui/Sonner";
 import { Providers } from "./providers";
-
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -22,19 +17,15 @@ export const metadata: Metadata = {
   description: "Сайт для продажи вещей",
 };
 
-const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: CURRENT_USER_QUERY_KEY,
-    queryFn: getCurrentUser,
-  });
-
+const RootLayout = async ({ children }: LayoutProps<"/">) => {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className={montserrat.variable} suppressHydrationWarning>
         <Providers>
-          <MainLayout>{children}</MainLayout>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <Sonner />
         </Providers>
       </body>
     </html>

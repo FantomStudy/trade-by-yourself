@@ -1,4 +1,4 @@
-export const formatFullName = (fullName: string) => {
+export const toShortName = (fullName: string) => {
   if (!fullName) return "";
 
   const parts = fullName.trim().split(/\s+/);
@@ -12,7 +12,7 @@ export const formatFullName = (fullName: string) => {
   return initials ? `${surname} ${initials}.` : surname;
 };
 
-export const formatPrice = (price: number, locale = "ru-RU", currency = "RUB") => {
+export const toCurrency = (price: number, locale = "ru-RU", currency = "RUB") => {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,

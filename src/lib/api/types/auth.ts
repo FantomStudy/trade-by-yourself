@@ -71,4 +71,7 @@ export type VerifyMobileCodeData = z.infer<typeof verifyMobileCodeSchema>;
 
 export interface VerifyMobileCodeResponse {
   message: string;
+  /** Если бэк отдаёт как при логине — пишем cookie и кэш (иначе полагаемся на Set-Cookie) */
+  session_id?: string;
+  user?: User;
 }

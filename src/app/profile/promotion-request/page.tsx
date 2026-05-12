@@ -4,7 +4,8 @@ import type { Product } from "@/types";
 import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button, Input, Typography } from "@/components/ui";
+import { Input, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { addPromotion, getCurrentUserProducts } from "@/lib/api";
 import { useCurrentUser } from "@/lib/api/hooks/queries";
 import { api } from "@/lib/api/instance";
@@ -108,14 +109,6 @@ const PromotionPage = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("ru-RU", {
-      style: "currency",
-      currency: "RUB",
-      minimumFractionDigits: 0,
-    }).format(amount);
   };
 
   if (isLoading) {

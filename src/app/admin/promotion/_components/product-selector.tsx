@@ -1,9 +1,9 @@
 "use client";
 
 import type { Product } from "@/types";
-
 import { Check } from "lucide-react";
 import Image from "next/image";
+import { toCurrency } from "@/lib/format";
 
 interface ProductSelectorProps {
   products: Product[];
@@ -16,14 +16,6 @@ export const ProductSelector = ({
   selectedProductId,
   onSelectProduct,
 }: ProductSelectorProps) => {
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("ru-RU", {
-      style: "currency",
-      currency: "RUB",
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
-
   if (products.length === 0) {
     return (
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -72,7 +64,7 @@ export const ProductSelector = ({
               <h4 className="mb-1 line-clamp-2 text-sm font-semibold text-gray-900">
                 {product.name}
               </h4>
-              <p className="text-lg font-bold text-blue-600">{formatPrice(product.price)}</p>
+              <p className="text-lg font-bold text-blue-600">{toCurrency(product.price)}</p>
               {product.address && (
                 <p className="mt-1 line-clamp-1 text-xs text-gray-500">{product.address}</p>
               )}

@@ -1,4 +1,9 @@
-import type { Socket } from "socket.io-client";
+import type { ChatEventName } from "@/lib/chat-socket";
+
+export interface ChatSocketLike {
+  off: (event: ChatEventName, callback: (payload: any) => void) => void;
+  on: (event: ChatEventName, callback: (payload: any) => void) => void;
+}
 
 export interface Message {
   id: number;
@@ -42,7 +47,7 @@ export interface MessagesReadData {
 
 export interface ChatSocketContextType {
   isConnected: boolean;
-  socket: Socket | null;
+  socket: ChatSocketLike | null;
   joinChat: (chatId: number) => void;
   leaveChat: (chatId: number) => void;
   markAsRead: (chatId: number) => void;

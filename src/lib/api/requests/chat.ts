@@ -25,4 +25,6 @@ export const getChatById = async (chatId: number) => api<ChatDetail>(`/chat/${ch
  * Возвращает сообщения чата с пагинацией
  */
 export const getChatMessages = async (chatId: number, page: number = 1, limit: number = 50) =>
-  api<MessagesResponse>(`/chat/${chatId}/messages`);
+  api<MessagesResponse>(`/chat/${chatId}/messages`, {
+    query: { page, limit },
+  });

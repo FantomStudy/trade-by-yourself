@@ -1,7 +1,5 @@
 import clsx from "clsx";
-
 import { Sidebar } from "./_components/sidebar/sidebar";
-
 import styles from "./layout.module.css";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {

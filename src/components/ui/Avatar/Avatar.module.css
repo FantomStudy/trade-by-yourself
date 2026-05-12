@@ -1,0 +1,54 @@
+.root {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  border-radius: 100%;
+  user-select: none;
+  font-weight: 500;
+  background-color: var(--accent);
+  color: var(--foreground);
+  font-size: 1rem;
+  line-height: 1;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.fallback {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: 1rem;
+}
+
+/* Sizes */
+.sm {
+  width: 24px;
+  height: 24px;
+  .fallback {
+    font-size: 10px;
+  }
+}
+.md {
+  width: 40px;
+  height: 40px;
+
+  .fallback {
+    font-size: 16px;
+  }
+}
+.lg {
+  width: 96px;
+  height: 96px;
+
+  .fallback {
+    font-size: 32px;
+  }
+}

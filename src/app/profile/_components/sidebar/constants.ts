@@ -23,6 +23,14 @@ export const LINKS: SidebarLinkGroup[] = [
         label: "Сообщения",
       },
       {
+        href: "/profile/deals",
+        label: "Безопасные сделки",
+      },
+      {
+        href: "/profile/reservations",
+        label: "Мои резервы",
+      },
+      {
         href: "/profile/favorites",
         label: "Избранное",
       },

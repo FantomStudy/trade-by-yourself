@@ -5,10 +5,11 @@ import type { Chat } from "@/types";
 import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useChats } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 import {
   addSupportMessage,
   getAdminUnreadCount,
@@ -278,7 +279,7 @@ const SupportPage = () => {
                     {supportMessages.length > 0 && (
                       <div className="mt-2 rounded bg-purple-50 p-2">
                         <Typography className="line-clamp-2 text-sm text-gray-600">
-                          {supportMessages.at(-1).content}
+                          {supportMessages.at(-1)?.content ?? ""}
                         </Typography>
                       </div>
                     )}
@@ -340,7 +341,7 @@ const SupportPage = () => {
 
                       <div className="flex items-center gap-2">
                         <Typography className="text-sm text-blue-600">
-                          {formatPrice(chat.product.price)}
+                          {toCurrency(chat.product.price)}
                         </Typography>
                         {isModeration && (
                           <span className="rounded bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">

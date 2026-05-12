@@ -10,8 +10,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { deleteUser, findAllUsers, toggleUserBanned, updateUser } from "@/api/requests";
+import { Button } from "@/components/ui/Button";
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -209,14 +209,14 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                   <div className="flex items-center gap-1">
                     <Button
                       title="Редактировать"
-                      variant="secondary"
+                      variant="success"
                       onClick={() => handleEdit(user)}
                     >
                       <Edit className="h-3.5 w-3.5" />
                     </Button>
                     <Button
                       title={user.isBanned ? "Разблокировать" : "Заблокировать"}
-                      variant="secondary"
+                      variant="success"
                       onClick={() => toggleBanMutation.mutate(user.id)}
                     >
                       <Ban className="h-3.5 w-3.5" />
@@ -319,7 +319,7 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
           </div>
 
           <div className="mt-4 flex justify-end gap-2">
-            <Button variant="secondary" onClick={() => setIsEditDialogOpen(false)}>
+            <Button variant="success" onClick={() => setIsEditDialogOpen(false)}>
               Отмена
             </Button>
             <Button disabled={updateMutation.isPending} onClick={handleSaveEdit}>
@@ -341,7 +341,7 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
           </DialogHeader>
 
           <div className="mt-4 flex justify-end gap-2">
-            <Button variant="secondary" onClick={() => setIsDeleteDialogOpen(false)}>
+            <Button variant="success" onClick={() => setIsDeleteDialogOpen(false)}>
               Отмена
             </Button>
             <Button

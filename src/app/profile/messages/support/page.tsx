@@ -6,7 +6,7 @@ import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useCurrentUser } from "@/lib/api/hooks";
 import {
   addSupportMessage,

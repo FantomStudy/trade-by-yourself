@@ -1,0 +1,70 @@
+.header {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+}
+
+.wrapper {
+  display: flex;
+  height: 72px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.desktopActions {
+  display: flex;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.chatLink {
+  position: relative;
+  display: inline-flex;
+}
+
+.chatBadge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  border: 2px solid var(--background);
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: 60px;
+  }
+
+  .desktopActions {
+    display: none;
+  }
+
+  .rightSection {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    height: 56px;
+  }
+}

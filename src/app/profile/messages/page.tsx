@@ -3,10 +3,9 @@
 import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-import { ChatsBanner } from "@/components/product-feed-banner";
+import { BannerSlot } from "@/components/BannerSlot";
 import { useChats } from "@/lib/api/hooks";
-import { formatPrice } from "@/lib/format";
+import { toCurrency } from "@/lib/format";
 import { getSupportMessages, getSupportUnreadCount } from "@/lib/support-chat";
 
 const MessagesPage = () => {
@@ -19,7 +18,7 @@ const MessagesPage = () => {
       setSupportUnread(getSupportUnreadCount());
       const messages = getSupportMessages();
       if (messages.length > 0) {
-        setLastSupportMessage(messages.at(-1).content);
+        setLastSupportMessage(messages.at(-1)?.content ?? "");
       }
     };
 
@@ -47,7 +46,7 @@ const MessagesPage = () => {
       <div className="space-y-4">
         <h1 className="text-2xl font-bold">Сообщения</h1>
 
-        <ChatsBanner />
+        <BannerSlot place="CHATS" />
 
         {/* Чат тех поддержки */}
         <Link
@@ -105,7 +104,7 @@ const MessagesPage = () => {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">Сообщения</h1>
 
-      <ChatsBanner />
+      <BannerSlot place="CHATS" />
 
       <div className="space-y-2">
         {/* Чат тех поддержки - всегда первый */}
@@ -169,7 +168,7 @@ const MessagesPage = () => {
                 )}
                 <div className="flex-1">
                   <h3 className="font-semibold">{chat.product.name}</h3>
-                  <p className="text-sm text-blue-600">{formatPrice(chat.product.price)}</p>
+                  <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
                   {chat.lastMessage && (
                     <span className="text-xs text-gray-500">
                       {new Date(chat.lastMessage.createdAt).toLocaleString("ru-RU", {

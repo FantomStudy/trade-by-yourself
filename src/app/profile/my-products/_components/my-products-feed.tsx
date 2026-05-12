@@ -1,11 +1,26 @@
+import type { MyProductsTab } from "./my-products-tabs";
 import { Package } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { MyProductCard } from "@/components/product-card";
-import { getCurrentUser, getCurrentUserProducts } from "@/lib/api";
+import { getCurrentUserOrNull, getCurrentUserProducts, getMyDrafts } from "@/lib/api";
+import { MyProductsTabs } from "./my-products-tabs";
 
-export const MyProductsFeed = async () => {
-  const currentUser = await getCurrentUser();
+interface MyProductsFeedProps {
+  initialTab: MyProductsTab;
+}
+
+export const MyProductsFeed = async ({ initialTab }: MyProductsFeedProps) => {
+  const currentUser = await getCurrentUserOrNull();
+  if (!currentUser) {
+    redirect("/");
+  }
+
   const products = await getCurrentUserProducts(currentUser.id);
+  const drafts = await getMyDrafts().catch((err) => {
+    console.warn("getMyDrafts:", err);
+    return [];
+  });
 
   if (!products) {
     return (
@@ -19,7 +34,13 @@ export const MyProductsFeed = async () => {
     );
   }
 
-  if (products.length === 0) {
+  /** Убираем дубли: если товар есть в черновиках, в "Активные" его не показываем. */
+  const draftIds = new Set(drafts.map((draft) => draft.id));
+  const activeProducts = products.filter((product) => !draftIds.has(product.id));
+
+  const hasAnything = activeProducts.length > 0 || drafts.length > 0;
+
+  if (!hasAnything) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-sm">
         <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
@@ -29,21 +50,22 @@ export const MyProductsFeed = async () => {
         <p className="mb-4 text-gray-600">
           Создайте свое первое объявление, чтобы начать продавать
         </p>
-        <a
+        <Link
           href="/profile/create-product"
           className="rounded-lg bg-blue-500 px-6 py-2 text-white transition-colors hover:bg-blue-600"
         >
           Создать объявление
-        </a>
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {products.map((product) => (
-        <MyProductCard key={product.id} product={product} />
-      ))}
-    </div>
+    <MyProductsTabs
+      key={initialTab}
+      drafts={drafts}
+      initialTab={initialTab}
+      products={activeProducts}
+    />
   );
 };

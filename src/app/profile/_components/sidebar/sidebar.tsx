@@ -6,12 +6,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useIsAdmin, useUserInfo } from "@/api/hooks";
-import { Avatar, Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
-import { formatFullName } from "@/lib/format";
+
+import { toShortName } from "@/lib/format";
 
 import { LINKS } from "./constants";
-
 import styles from "./sidebar.module.css";
 
 export const Sidebar = () => {
@@ -33,8 +35,8 @@ export const Sidebar = () => {
       {user && (
         <>
           <div className={styles.profileInfo}>
-            <Avatar fullName={user.fullName} size="lg" src={userInfo?.photo ?? ""} />
-            <Typography variant="h2">{formatFullName(user.fullName)}</Typography>
+            <Avatar size="lg" src={userInfo?.photo ?? ""} fallback={user.fullName} />
+            <Typography variant="h2">{toShortName(user.fullName)}</Typography>
           </div>
 
           <div className={styles.stats}>
@@ -76,7 +78,7 @@ export const Sidebar = () => {
 
           {adminCheck?.isAdmin && (
             <Link href="/admin">
-              <Button className={styles.adminButton} variant="secondary">
+              <Button className={styles.adminButton} variant="success">
                 <ShieldCheck size={20} />
                 Панель администратора
               </Button>
