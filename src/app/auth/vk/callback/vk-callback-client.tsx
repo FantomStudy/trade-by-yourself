@@ -44,7 +44,7 @@ export function VkCallbackClient() {
 
       localStorage.removeItem(VK_OAUTH_STATE_KEY);
       await queryClient.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY });
-      router.replace("/profile");
+      router.replace("/profile/my-products");
     })();
   }, [queryClient, router, search]);
 
