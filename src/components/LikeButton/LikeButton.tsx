@@ -1,12 +1,12 @@
 "use client";
 
-import type { ButtonProps } from "@/components/ui/lab/Button";
+import type { ButtonProps } from "@/components/ui/Button";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { HeartIcon } from "lucide-react";
 import { useState } from "react";
 import { addFavorite, deleteFavorite } from "@/api/products/favorites";
-import { Button } from "@/components/ui/lab/Button";
+import { Button } from "@/components/ui/Button";
 import styles from "./LikeButton.module.css";
 
 interface LikeButtonProps extends ButtonProps {

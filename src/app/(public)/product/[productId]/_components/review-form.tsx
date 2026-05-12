@@ -8,7 +8,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { sendReview } from "@/api/requests";
-import { Button, Textarea, Typography } from "@/components/ui";
+import { Textarea, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
 
 interface ReviewFormProps {

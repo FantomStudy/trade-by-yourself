@@ -3,7 +3,7 @@
 import { Dialog as SheetBase } from "@base-ui/react/dialog";
 import clsx from "clsx";
 import { XIcon } from "lucide-react";
-import { Button } from "../lab/Button";
+import { Button } from "../Button";
 import styles from "./Sheet.module.css";
 
 const SheetRoot = ({ ...props }: SheetBase.Root.Props) => {
@@ -36,7 +36,7 @@ const SheetContent = ({
         {showCloseButton && (
           <SheetBase.Close
             render={
-              <Button variant="ghost" className={styles.closeButton} size="icon-sm">
+              <Button variant="ghost" size="icon-sm" className={styles.closeButton}>
                 <XIcon />
                 <span className="sr-only">Close</span>
               </Button>

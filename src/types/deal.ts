@@ -10,14 +10,14 @@ export interface CreateDealRequest {
 }
 
 /** Ответ бэка на GET /deals/:id/cdek-qr — для показа QR в ПВЗ. */
-export type DealCdekQrResponse = {
+export interface DealCdekQrResponse {
   qrCodeData?: string | null;
   qrCodeUrl?: string | null;
   trackNumber?: string | null;
   trackingUrl?: string | null;
   orderUuid?: string | null;
   trackPending?: boolean;
-};
+}
 
 export interface Deal {
   id: number;

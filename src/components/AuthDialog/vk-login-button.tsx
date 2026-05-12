@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { VK_OAUTH_STATE_KEY } from "@/lib/auth/vk-oauth";
 
 import styles from "./screens/screens.module.css";
@@ -46,7 +46,7 @@ export const VkLoginButton = () => {
       <Button
         className={styles.oauthButton}
         type="button"
-        variant="secondary"
+        variant="success"
         onClick={() => void onLogin()}
       >
         Войти через VK

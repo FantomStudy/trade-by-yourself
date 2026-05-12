@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useCreateDraftMutation, useCreateProductMutation } from "@/api/hooks";
-import { AddressMap, Button, ImageUpload, Input, Textarea } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
+import { AddressMap, ImageUpload, Input, Textarea } from "@/components/ui";
 import { api } from "@/lib/api/instance";
 
 import styles from "./page.module.css";
@@ -504,7 +505,7 @@ const CreateProductPage = () => {
           className={styles.button}
           disabled={createProductMutation.isPending || createDraftMutation.isPending}
           type="button"
-          variant="secondary"
+          variant="success"
           onClick={handleSaveDraft}
         >
           {createDraftMutation.isPending ? "Сохранение..." : "Сохранить черновик"}

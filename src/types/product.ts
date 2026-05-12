@@ -25,11 +25,16 @@ export interface Product {
 export interface ExtendedProduct extends Product {
   description?: string;
   fieldValues?: Array<{ id: number; [key: string]: number | string }>;
-  type: string | null;
+  type: {
+    id: number;
+    name: string;
+    slug: string;
+  };
   videoUrl?: string | null;
   category: {
     id: number;
     name: string;
+    slug: string;
   };
   seller: {
     id: number;
@@ -43,6 +48,7 @@ export interface ExtendedProduct extends Product {
   subCategory: {
     id: number;
     name: string;
+    slug: string;
   };
 }
 

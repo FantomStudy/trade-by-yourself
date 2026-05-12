@@ -3,7 +3,7 @@
 import { Dialog as DialogBase } from "@base-ui/react/dialog";
 import clsx from "clsx";
 import { XIcon } from "lucide-react";
-import { Button } from "../Button";
+import { Button } from "../../Button";
 import styles from "./Dialog.module.css";
 
 const DialogRoot = ({ ...props }: DialogBase.Root.Props) => {

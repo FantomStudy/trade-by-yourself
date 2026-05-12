@@ -1,6 +1,7 @@
 import type { AuthScreenProps } from "../types";
 
-import { Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 
 import { VerifyCodeForm } from "./verify-code-form";
 

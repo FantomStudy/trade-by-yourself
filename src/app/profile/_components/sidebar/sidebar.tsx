@@ -6,8 +6,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useIsAdmin, useUserInfo } from "@/api/hooks";
-import { Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
 
 import { toShortName } from "@/lib/format";
@@ -77,7 +78,7 @@ export const Sidebar = () => {
 
           {adminCheck?.isAdmin && (
             <Link href="/admin">
-              <Button className={styles.adminButton} variant="secondary">
+              <Button className={styles.adminButton} variant="success">
                 <ShieldCheck size={20} />
                 Панель администратора
               </Button>

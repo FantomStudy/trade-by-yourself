@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useAuthDialog } from "@/components/AuthDialog";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 
 import styles from "./header.module.css";
 
@@ -25,7 +25,7 @@ export const HeaderActionsGuest = () => {
         Вход / Регистрация
       </Button>
 
-      <Button variant="secondary" onClick={open}>
+      <Button variant="success" onClick={open}>
         Разместить объявление
       </Button>
     </div>

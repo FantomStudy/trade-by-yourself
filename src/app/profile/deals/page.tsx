@@ -6,9 +6,10 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { useCancelDealMutation, useMyDeals, useShipDealMutation } from "@/api/hooks";
-import { Button, Input, Typography } from "@/components/ui";
-import { getDealCdekQr, syncDealPayment } from "@/lib/api/requests";
+import { Input, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
+import { getDealCdekQr, syncDealPayment } from "@/lib/api/requests";
 import { toCurrency } from "@/lib/format";
 
 import styles from "./page.module.css";
@@ -178,7 +179,7 @@ const DealsPage = () => {
     <div className={styles.page}>
       <div className={styles.header}>
         <Typography variant="h1">Безопасные сделки</Typography>
-        <Button disabled={isFetching} type="button" variant="secondary" onClick={() => refetch()}>
+        <Button disabled={isFetching} type="button" variant="success" onClick={() => refetch()}>
           Обновить
         </Button>
       </div>
@@ -188,7 +189,7 @@ const DealsPage = () => {
           <Button
             key={item.key}
             type="button"
-            variant={filter === item.key ? "default" : "secondary"}
+            variant={filter === item.key ? "primary" : "success"}
             onClick={() => setFilter(item.key)}
           >
             {item.label}
@@ -237,7 +238,7 @@ const DealsPage = () => {
                     <Button
                       disabled={syncPayLoadingId === deal.id}
                       type="button"
-                      variant="secondary"
+                      variant="success"
                       onClick={() => handleSyncDealPayment(deal.id)}
                     >
                       {syncPayLoadingId === deal.id ? "Проверяем Тинькофф…" : "Обновить статус оплаты"}
@@ -381,7 +382,7 @@ const DealsPage = () => {
                       <Button
                         disabled={cdekQrLoadingId === deal.id}
                         type="button"
-                        variant="secondary"
+                        variant="success"
                         onClick={() => handleLoadCdekQr(deal.id)}
                       >
                         {cdekQrLoadingId === deal.id ? "Грузим из CDEK…" : "Получить QR из CDEK"}

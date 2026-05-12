@@ -10,7 +10,8 @@ import { toast } from "sonner";
 
 import { useCancelReservationMutation, useCurrentUser, useMyReservations } from "@/api/hooks";
 import { getProductById } from "@/api/requests";
-import { Button, Input, Typography } from "@/components/ui";
+import { Input, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { toCurrency } from "@/lib/format";
 
@@ -214,7 +215,7 @@ const ReservationsPage = () => {
         {isCancelled ? (
           <div className={styles.cardFooter}>
             <div className={styles.actionsRow}>
-              <Button disabled type="button" variant="secondary">
+              <Button disabled type="button" variant="success">
                 Резерв уже отменён
               </Button>
             </div>
@@ -265,7 +266,7 @@ const ReservationsPage = () => {
     <div className={styles.page}>
       <div className={styles.header}>
         <Typography variant="h1">Мои резервы</Typography>
-        <Button disabled={isFetching} type="button" variant="secondary" onClick={() => refetch()}>
+        <Button disabled={isFetching} type="button" variant="success" onClick={() => refetch()}>
           Обновить
         </Button>
       </div>

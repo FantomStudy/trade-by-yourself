@@ -1,14 +1,11 @@
 import type { CurrentUser } from "@/types";
-
 import { HeartIcon, MessageSquareIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
-
 import { useChats } from "@/api/hooks";
-import { Button } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
-
 import styles from "./header.module.css";
 
 export const HeaderActionsAuth = ({ user }: { user: CurrentUser }) => {
@@ -38,8 +35,12 @@ export const HeaderActionsAuth = ({ user }: { user: CurrentUser }) => {
         <Avatar src={user.photo} fallback={user.fullName} />
       </Link>
 
-      <Button asChild variant="secondary">
-        <Link href="/profile/create-product">Разместить объявление</Link>
+      <Button
+        variant="success"
+        render={<Link href="/profile/create-product" />}
+        nativeButton={false}
+      >
+        Разместить объявление
       </Button>
 
       <Button variant="ghost" onClick={logout}>

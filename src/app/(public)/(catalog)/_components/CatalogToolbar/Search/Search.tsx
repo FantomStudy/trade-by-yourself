@@ -3,7 +3,7 @@
 import type { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Button } from "@/components/ui/lab/Button";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/lab/Input";
 import styles from "./Search.module.css";
 

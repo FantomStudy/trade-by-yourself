@@ -7,9 +7,10 @@ import type { RegisterData } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import { useRegisterMutation } from "@/api/hooks";
-import { Button, Field, PhoneField, usePhoneField } from "@/components/ui";
+
+import { Field, PhoneField, usePhoneField } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { registerSchema } from "@/lib/api";
 
 import styles from "../forms.module.css";
@@ -83,7 +84,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       <div style={{ display: "flex", gap: "8px", width: "100%" }}>
         <Button
           type="button"
-          variant={verificationMethod === "sms" ? "secondary" : "ghost"}
+          variant={verificationMethod === "sms" ? "success" : "ghost"}
           onClick={() => setValue("where", "sms")}
           style={{ flex: 1 }}
         >
@@ -91,7 +92,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         </Button>
         <Button
           type="button"
-          variant={verificationMethod === "telegram" ? "secondary" : "ghost"}
+          variant={verificationMethod === "telegram" ? "success" : "ghost"}
           onClick={() => setValue("where", "telegram")}
           style={{ flex: 1 }}
         >
@@ -101,7 +102,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
 
       {error && <span className={styles.error}>{error}</span>}
 
-      <Button disabled={isSubmitting} type="submit" variant="secondary">
+      <Button disabled={isSubmitting} type="submit" variant="success">
         Зарегистрироваться
       </Button>
     </form>

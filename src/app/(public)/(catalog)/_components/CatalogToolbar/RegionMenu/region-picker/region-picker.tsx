@@ -3,7 +3,7 @@
 import { MapPin, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { getAddressSuggestions, validateAddress } from "@/api/address";
-import { Button } from "@/components/ui/lab/Button";
+import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/lab/Dialog";
 import { Input } from "@/components/ui/lab/Input";
 import styles from "./region-picker.module.css";

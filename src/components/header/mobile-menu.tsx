@@ -17,8 +17,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { AuthDialog } from "@/components/AuthDialog";
-import { Button } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
 
 import { Sheet } from "../ui/Sheet";
@@ -106,10 +106,10 @@ const GuestMenu = ({ onAuthClick, onClose }: GuestMenuProps) => {
       </div>
 
       <div className={styles.guestActions}>
-        <Button className={styles.authButton} variant="default" onClick={onAuthClick}>
+        <Button className={styles.authButton} variant="primary" onClick={onAuthClick}>
           Вход / Регистрация
         </Button>
-        <Button className={styles.authButton} variant="secondary" onClick={onAuthClick}>
+        <Button className={styles.authButton} variant="success" onClick={onAuthClick}>
           Разместить объявление
         </Button>
       </div>

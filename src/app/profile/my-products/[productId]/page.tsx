@@ -13,7 +13,8 @@ import {
   useUpdateProductMutation,
 } from "@/api/hooks";
 import { getProductById } from "@/api/requests";
-import { AddressMap, Button, Input, Textarea } from "@/components/ui";
+import { AddressMap, Input, Textarea } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
 
 import styles from "../../create-product/page.module.css";
@@ -99,8 +100,10 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         const currentSubcategory = currentCategory?.subCategories.find(
           (sub) => sub.id === productData.subCategory?.id,
         );
+        console.log(productData);
+        
         const matchedType = currentSubcategory?.subcategoryTypes.find(
-          (type) => type.name === productData.type,
+          (type) => type.name === productData.type?.name,
         );
         if (matchedType?.id) {
           setFormData((prev) => ({ ...prev, typeId: String(matchedType.id) }));
@@ -729,7 +732,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             className={styles.button}
             disabled={updateProductMutation.isPending || publishDraftMutation.isPending}
             type="button"
-            variant="secondary"
+            variant="success"
             onClick={handleCreateFromDraft}
           >
             {publishDraftMutation.isPending ? "Создание..." : "Создать объявление"}

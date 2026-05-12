@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { Button, Logo } from "@/components/ui";
+import { Logo } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
 
 import styles from "./footer.module.css";
@@ -36,11 +37,11 @@ export const Footer = () => {
             <Link href="/consent">Согласие на обработку ПДн</Link>
             {user ? (
               <Link href="/profile/messages/support">
-                <Button variant="secondary">Тех поддержка</Button>
+                <Button variant="success">Тех поддержка</Button>
               </Link>
             ) : (
               <div style={{ position: "relative" }}>
-                <Button variant="secondary" onClick={handleSupportClick}>
+                <Button variant="success" onClick={handleSupportClick}>
                   Тех поддержка
                 </Button>
                 {showPhone && (

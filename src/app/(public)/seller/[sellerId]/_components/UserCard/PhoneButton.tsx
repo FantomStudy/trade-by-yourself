@@ -2,7 +2,7 @@
 
 import { PhoneIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 
 interface PhoneButtonProps {
   phoneNumber: string;

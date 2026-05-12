@@ -14,7 +14,6 @@ import {
 } from "@/api/requests";
 import { AuthDialog } from "@/components/AuthDialog";
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -24,12 +23,13 @@ import {
   Input,
   Typography,
 } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { useCurrentUser } from "@/lib/api/hooks/queries";
 import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
 import { MY_RESERVATIONS_QUERY_KEY } from "@/lib/api/hooks/queries/useMyReservations";
 import { PRODUCT_RESERVATION_QUERY_KEY } from "@/lib/api/hooks/queries/useProductReservation";
 import { toCurrency } from "@/lib/format";
-import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 
 import styles from "./secure-deal-form.module.css";
 
@@ -778,7 +778,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
               <Button
                 disabled={isLoadingTariffs}
                 type="button"
-                variant="secondary"
+                variant="success"
                 onClick={handleLoadTariffs}
               >
                 {isLoadingTariffs ? "Получаем тарифы..." : "Получить тарифы"}
@@ -834,7 +834,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
             <Button
               disabled={isCreating}
               type="button"
-              variant="secondary"
+              variant="success"
               onClick={() => setOpen(false)}
             >
               Отмена

@@ -18,7 +18,8 @@ import {
   usePaymentHistory,
   useUserInfo,
 } from "@/api/hooks";
-import { Button, Input, Typography } from "@/components/ui";
+import { Input, Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
 
 import styles from "./page.module.css";
@@ -214,7 +215,7 @@ const BalancePage = () => {
                 <Button
                   key={value}
                   className={styles["quick-amount-btn"]}
-                  variant="secondary"
+                  variant="success"
                   onClick={() => handleAmountClick(value)}
                 >
                   {value} ₽
@@ -251,7 +252,7 @@ const BalancePage = () => {
           <Typography className={styles["history-title"]} variant="h2">
             История операций
           </Typography>
-          <Button disabled={isLoading} variant="secondary" onClick={() => refetch()}>
+          <Button disabled={isLoading} variant="success" onClick={() => refetch()}>
             <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
           </Button>
         </div>
@@ -307,7 +308,7 @@ const BalancePage = () => {
                   {payment.status === "PENDING" && (
                     <Button
                       disabled={checkStatusMutation.isPending}
-                      variant="secondary"
+                      variant="success"
                       onClick={() => handleCheckStatus(payment.paymentId)}
                     >
                       {checkStatusMutation.isPending ? "Проверка..." : "Проверить"}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Typography } from "@/components/ui";
-import { Button } from "@/components/ui/lab/Button";
+import { Button } from "@/components/ui/Button";
 import styles from "./not-found.module.css";
 
 const NotFoundPage = () => {

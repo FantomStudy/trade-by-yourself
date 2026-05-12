@@ -4,7 +4,7 @@ import type { Route } from "next";
 import { FilterIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Button } from "@/components/ui/lab/Button";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/lab/Input";
 import { Select } from "@/components/ui/Select";
 import { Sheet } from "@/components/ui/Sheet";

@@ -6,8 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useStartChatMutation } from "@/api/hooks";
-import { Badge, Button, Typography } from "@/components/ui";
+import { Badge, Typography } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
 import { ReservationForm } from "../reservation-form/reservation-form";
 import { SecureDealForm } from "../secure-deal-form/secure-deal-form";
 import styles from "./seller-card.module.css";
@@ -70,11 +71,7 @@ export const SellerCard = ({ product }: SellerCardProps) => {
         <ReservationForm product={product} />
         <SecureDealForm product={product} />
 
-        <Button
-          disabled={startChatMutation.isPending}
-          variant="secondary"
-          onClick={handleStartChat}
-        >
+        <Button disabled={startChatMutation.isPending} variant="success" onClick={handleStartChat}>
           {startChatMutation.isPending ? "Загрузка..." : "Написать продавцу"}
         </Button>
 

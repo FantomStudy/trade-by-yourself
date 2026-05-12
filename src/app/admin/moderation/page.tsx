@@ -12,8 +12,8 @@ import {
   useModerationProduct,
   useProductsToModerate,
 } from "@/api/hooks";
+import { Button } from "@/components/ui/Button";
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -307,7 +307,7 @@ const RejectModal = ({
           onChange={(e) => setReason(e.target.value)}
         />
         <div className="flex gap-2 pt-1">
-          <Button className="flex-1" variant="secondary" onClick={onClose}>
+          <Button className="flex-1" variant="success" onClick={onClose}>
             Отмена
           </Button>
           <Button

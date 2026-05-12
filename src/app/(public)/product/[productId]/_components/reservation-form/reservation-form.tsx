@@ -13,7 +13,6 @@ import {
 } from "@/api/hooks";
 import { AuthDialog } from "@/components/AuthDialog";
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -24,6 +23,7 @@ import {
   Textarea,
   Typography,
 } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { getServerNowMs } from "@/lib/server-time-offset";
 
@@ -208,7 +208,7 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
           </>
         )}
         {showCancelledReservationState ? (
-          <Button className={styles.button} disabled type="button" variant="secondary">
+          <Button className={styles.button} disabled type="button" variant="success">
             Резерв уже отменён
           </Button>
         ) : null}
@@ -245,7 +245,7 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
           className={styles.button}
           disabled={isReserved}
           type="button"
-          variant="secondary"
+          variant="success"
           onClick={handleOpenReservation}
         >
           {isReserved ? "Товар зарезервирован" : "Зарезервировать"}
@@ -275,7 +275,7 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+            <Button type="button" variant="success" onClick={() => setOpen(false)}>
               Отмена
             </Button>
             <Button

@@ -3,7 +3,7 @@
 import { MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getCityByIp } from "@/api/address";
-import { Button } from "@/components/ui/lab/Button";
+import { Button } from "@/components/ui/Button";
 import { CityConfirmPopup } from "../city-confirm-popup";
 import { RegionPicker } from "../region-picker";
 import { useQueryState } from "./useQueryState";

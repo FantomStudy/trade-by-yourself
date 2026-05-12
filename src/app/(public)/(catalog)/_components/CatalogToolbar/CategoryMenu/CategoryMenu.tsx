@@ -5,7 +5,7 @@ import type { Category } from "@/api/categories";
 import { ChevronRightIcon, TextSearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/components/ui/lab/Button";
+import { Button } from "@/components/ui/Button";
 import { Sheet } from "@/components/ui/Sheet";
 import { useCategories } from "@/hooks/useCategories";
 import styles from "./CategoryMenu.module.css";

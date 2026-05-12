@@ -1,6 +1,6 @@
 import type { AuthScreenProps } from "../types";
-
-import { Button, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { VkLoginButton } from "../../vk-login-button";
 import { LoginForm } from "./login-form";
 
@@ -23,7 +23,7 @@ export const LoginScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
 
       <div className={styles.actions}>
         <Typography>У вас нет аккаунта?</Typography>
-        <Button variant="secondary" onClick={() => onChangeScreen("register")}>
+        <Button variant="success" onClick={() => onChangeScreen("register")}>
           Зарегистрироваться
         </Button>
       </div>
