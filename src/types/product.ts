@@ -36,6 +36,7 @@ export interface ExtendedProduct extends Product {
     fullName: string;
     phoneNumber: string;
     profileType: string;
+    photo: string | null;
     rating: number;
     reviewsCount: number;
   };
