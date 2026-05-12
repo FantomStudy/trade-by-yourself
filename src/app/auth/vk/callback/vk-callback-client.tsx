@@ -33,7 +33,7 @@ export function VkCallbackClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code, state }),
       });
 
       if (!res.ok) {
