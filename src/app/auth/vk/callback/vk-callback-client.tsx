@@ -15,17 +15,18 @@ export function VkCallbackClient() {
   useEffect(() => {
     const code = search.get("code");
     const state = search.get("state");
+    const deviceId = search.get("device_id");
     const savedState = localStorage.getItem(VK_OAUTH_STATE_KEY);
 
     if (!code || !state || state !== savedState) {
-      router.replace("/login?error=vk_state");
+      router.replace("/?error=vk_state");
       return;
     }
 
     void (async () => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       if (!API_URL) {
-        router.replace("/login?error=vk_signin");
+        router.replace("/?error=vk_signin");
         return;
       }
 
@@ -33,11 +34,11 @@ export function VkCallbackClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ code, state }),
+        body: JSON.stringify({ code, state, device_id: deviceId }),
       });
 
       if (!res.ok) {
-        router.replace("/login?error=vk_signin");
+        router.replace("/?error=vk_signin");
         return;
       }
 
