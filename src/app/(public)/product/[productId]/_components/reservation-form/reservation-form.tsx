@@ -24,26 +24,13 @@ import {
   Textarea,
   Typography,
 } from "@/components/ui";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { getServerNowMs } from "@/lib/server-time-offset";
 
 import styles from "./reservation-form.module.css";
 
 interface ReservationFormProps {
   product: ExtendedProduct;
-}
-
-function getApiErrorMessage(error: unknown, fallback: string) {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data?: { message?: string } }).data;
-    if (typeof data?.message === "string" && data.message.trim()) return data.message;
-  }
-
-  if (typeof error === "object" && error !== null && "message" in error) {
-    const message = (error as { message?: string }).message;
-    if (typeof message === "string" && message.trim()) return message;
-  }
-
-  return fallback;
 }
 
 function formatRemainingTime(remainingMs: number) {

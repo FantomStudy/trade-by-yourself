@@ -29,6 +29,7 @@ import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
 import { MY_RESERVATIONS_QUERY_KEY } from "@/lib/api/hooks/queries/useMyReservations";
 import { PRODUCT_RESERVATION_QUERY_KEY } from "@/lib/api/hooks/queries/useProductReservation";
 import { toCurrency } from "@/lib/format";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 
 import styles from "./secure-deal-form.module.css";
 
@@ -149,20 +150,6 @@ const PARCEL_PRESETS: ParcelPreset[] = [
     weight: 200000,
   },
 ];
-
-function getApiErrorMessage(error: unknown, fallback: string) {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data?: { message?: string } }).data;
-    if (typeof data?.message === "string" && data.message.trim()) return data.message;
-  }
-
-  if (typeof error === "object" && error !== null && "message" in error) {
-    const message = (error as { message?: string }).message;
-    if (typeof message === "string" && message.trim()) return message;
-  }
-
-  return fallback;
-}
 
 interface SecureDealFormProps {
   product: ExtendedProduct;
@@ -449,8 +436,9 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setOpen(false);
       resetState();
     } catch (error) {
-      console.error("Ошибка создания сделки:", error);
-      toast.error(getApiErrorMessage(error, "Не удалось создать сделку"));
+      const msg = getApiErrorMessage(error, "Не удалось создать сделку");
+      console.error("Ошибка создания сделки:", msg, error);
+      toast.error(msg);
     } finally {
       setIsCreating(false);
     }

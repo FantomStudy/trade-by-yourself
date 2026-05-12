@@ -9,6 +9,16 @@ export interface CreateDealRequest {
   cdekToPvzCode?: string;
 }
 
+/** Ответ бэка на GET /deals/:id/cdek-qr — для показа QR в ПВЗ. */
+export type DealCdekQrResponse = {
+  qrCodeData?: string | null;
+  qrCodeUrl?: string | null;
+  trackNumber?: string | null;
+  trackingUrl?: string | null;
+  orderUuid?: string | null;
+  trackPending?: boolean;
+};
+
 export interface Deal {
   id: number;
   myRole: "buyer" | "seller";
@@ -52,6 +62,16 @@ export interface Deal {
     toCityCode: number;
     toPvzCode: string | null;
     trackNumber: string | null;
+    /** Ссылка на трекинг cdek.ru, если трек уже есть. */
+    trackingUrl?: string | null;
+    /** Трек ещё не присвоен, но UUID заказа в CDEK уже есть. */
+    trackPending?: boolean;
+    /** С бэка: когда ждать UUID/трек (логика оплаты + CDEK). */
+    registrationHint?: string | null;
+    /** С бэка: что делать продавцу (тариф + ПВЗ без противоречий). */
+    sellerHandoffHint?: string | null;
+    /** Демо: без Тинькофф оплата симулируется по кнопке «Оплатить». */
+    mockPaymentAvailable?: boolean;
   };
   createdAt: string;
   updatedAt: string;
