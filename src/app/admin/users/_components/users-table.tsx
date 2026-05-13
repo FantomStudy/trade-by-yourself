@@ -10,7 +10,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { deleteUser, findAllUsers, toggleUserBanned, updateUser } from "@/api/requests";
-import { Button } from "@/components/ui/Button";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +19,7 @@ import {
   Input,
   Typography,
 } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 
 interface UsersTableProps {
   searchQuery: string;

@@ -8,33 +8,6 @@ const eslintConfig = antfu(
     react: true,
     nextjs: true,
     ignores: ["package.json"],
-    perfectionist: {
-      overrides: {
-        "perfectionist/sort-imports": [
-          "error",
-          {
-            groups: [
-              "type-import",
-              ["type-parent", "type-sibling", "type-index", "type-internal"],
-              "value-builtin",
-              "value-external",
-              "value-internal",
-              ["value-parent", "value-sibling", "value-index"],
-              "side-effect",
-              "style",
-              "side-effect-style",
-              "ts-equals-import",
-              "unknown",
-            ],
-            internalPattern: ["^~/.*", "^@/.*"],
-            newlinesBetween: "ignore",
-            newlinesInside: "ignore",
-            order: "asc",
-            type: "natural",
-          },
-        ],
-      },
-    },
   },
   {
     name: "fantomstudy/overrides",
@@ -45,6 +18,34 @@ const eslintConfig = antfu(
       "react/no-array-index-key": "off",
       "react-hooks/exhaustive-deps": "off",
       "react-refresh/only-export-components": "off",
+    },
+  },
+  {
+    name: "fantomstudy/perfectionist",
+    rules: {
+      "perfectionist/sort-imports": [
+        "error",
+        {
+          groups: [
+            "type-import",
+            ["type-parent", "type-sibling", "type-index", "type-internal"],
+            "value-builtin",
+            "value-external",
+            "value-internal",
+            ["value-parent", "value-sibling", "value-index"],
+            "side-effect",
+            "style",
+            "side-effect-style",
+            "ts-equals-import",
+            "unknown",
+          ],
+          internalPattern: ["^~/.*", "^@/.*"],
+          newlinesBetween: "ignore",
+          newlinesInside: "ignore",
+          order: "asc",
+          type: "natural",
+        },
+      ],
     },
   },
   ...pluginQuery.configs["flat/recommended"],

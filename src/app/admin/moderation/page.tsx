@@ -12,7 +12,6 @@ import {
   useModerationProduct,
   useProductsToModerate,
 } from "@/api/hooks";
-import { Button } from "@/components/ui/Button";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +20,7 @@ import {
   Textarea,
   Typography,
 } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 
 import { MobileHeader } from "../_components/admin-sidebar";
 
