@@ -5,7 +5,7 @@ import type { Deal, DealCdekQrResponse } from "@/types";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { useCancelDealMutation, useMyDeals, useShipDealMutation } from "@/api/hooks";
+import { useCancelDealMutation, useMyDeals, usePayDealMutation, useShipDealMutation } from "@/api/hooks";
 import { Input, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
@@ -72,7 +72,7 @@ function getCdekRegistrationHint(deal: Deal): string | null {
   if (fromApi) return fromApi;
   if (deal.cdek.orderUuid?.trim()) return null;
   if (deal.myRole === "buyer") {
-    return "Трек и штрихкод появятся после оплаты и регистрации отправления в CDEK.";
+    return "Нажми «Оплатить» выше, затем после реальной оплаты — «Обновить статус оплаты» (если вебхук Тинькофф не дошёл до сервера).";
   }
   return null;
 }
@@ -114,6 +114,7 @@ const DealsPage = () => {
   const [syncPayLoadingId, setSyncPayLoadingId] = useState<number | null>(null);
   const { data: deals = [], isLoading, isFetching, refetch } = useMyDeals();
   const cancelDealMutation = useCancelDealMutation();
+  const payDealMutation = usePayDealMutation();
   const shipDealMutation = useShipDealMutation();
 
   const filteredDeals = useMemo(() => getFilteredDeals(deals, filter), [deals, filter]);
@@ -146,6 +147,31 @@ const DealsPage = () => {
       toast.success("Заказ отправлен");
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось отправить заказ"));
+    }
+  };
+
+  const handlePayDeal = async (deal: Deal) => {
+    const existingUrl = deal.paymentUrl?.trim();
+    if (existingUrl) {
+      window.open(existingUrl, "_blank", "noopener,noreferrer");
+      toast.message("Если оплата прошла — нажми «Обновить статус оплаты».");
+      return;
+    }
+    try {
+      const res = await payDealMutation.mutateAsync(deal.id);
+      if (res.mockPayment) {
+        toast.success("Сделка оплачена (режим без Тинькофф, см. DEAL_ALLOW_MOCK_PAYMENT на сервере)");
+        return;
+      }
+      const url = res.paymentUrl?.trim();
+      if (url) {
+        window.open(url, "_blank", "noopener,noreferrer");
+        toast.success("Открыли оплату Тинькофф. После оплаты нажми «Обновить статус оплаты».");
+      } else {
+        toast.success("Платёж создан");
+      }
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Не удалось начать оплату"));
     }
   };
 
@@ -226,6 +252,35 @@ const DealsPage = () => {
                       onClick={() => handleCancelDeal(deal.id)}
                     >
                       Отменить сделку
+                    </Button>
+                  </div>
+                ) : null}
+
+                {deal.myRole === "buyer" && deal.statusCode === "CREATED" ? (
+                  <div className={styles.actionsRow}>
+                    {deal.paymentUrl?.trim() ? (
+                      <Button
+                        type="button"
+                        variant="success"
+                        onClick={() => {
+                          window.open(deal.paymentUrl!.trim(), "_blank", "noopener,noreferrer");
+                          toast.message("После оплаты нажми «Обновить статус оплаты».");
+                        }}
+                      >
+                        Открыть оплату (Тинькофф)
+                      </Button>
+                    ) : null}
+                    <Button
+                      disabled={payDealMutation.isPending && payDealMutation.variables === deal.id}
+                      type="button"
+                      variant="primary"
+                      onClick={() => handlePayDeal(deal)}
+                    >
+                      {payDealMutation.isPending && payDealMutation.variables === deal.id
+                        ? "Создаём платёж…"
+                        : deal.paymentUrl?.trim()
+                          ? "Обновить ссылку на оплату"
+                          : "Оплатить"}
                     </Button>
                   </div>
                 ) : null}

@@ -87,3 +87,12 @@ export interface Deal {
   orderId?: string | null;
   disputeReason?: string | null;
 }
+
+/** Ответ POST /deals/:id/pay — Тинькофф Init или демо-оплата без банка. */
+export interface PayDealResponse {
+  deal: Deal;
+  paymentId: string;
+  paymentUrl?: string | null;
+  orderId?: string | null;
+  mockPayment?: boolean;
+}

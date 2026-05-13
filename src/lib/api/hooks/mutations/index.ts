@@ -1,4 +1,5 @@
 export * from "./useCancelDealMutation";
+export * from "./usePayDealMutation";
 export * from "./useCreateDraftMutation";
 export * from "./useCreateProductMutation";
 export * from "./useDeleteProductMutation";

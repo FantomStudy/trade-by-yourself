@@ -1,8 +1,8 @@
-import type { Deal } from "@/types";
+import type { PayDealResponse } from "@/types";
 
 import { api } from "@/api/instance";
 
 export const payDeal = async (id: number) =>
-  api<Deal>(`/deals/${id}/pay`, {
+  api<PayDealResponse>(`/deals/${id}/pay`, {
     method: "POST",
   });
