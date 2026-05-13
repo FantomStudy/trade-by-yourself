@@ -5,7 +5,13 @@ import type { Deal, DealCdekQrResponse } from "@/types";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { useCancelDealMutation, useMyDeals, useShipDealMutation } from "@/api/hooks";
+import {
+  useCancelDealMutation,
+  useConfirmDeliveryMutation,
+  useMyDeals,
+  usePayDealMutation,
+  useShipDealMutation,
+} from "@/api/hooks";
 import { Input, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
@@ -66,7 +72,6 @@ function mapCancelError(error: unknown) {
   return message;
 }
 
-/** Подсказка по UUID/трек — приходит с API (registrationHint), без устаревшего текста про «только вручную». */
 function getCdekRegistrationHint(deal: Deal): string | null {
   const fromApi = deal.cdek.registrationHint?.trim();
   if (fromApi) return fromApi;
@@ -77,7 +82,6 @@ function getCdekRegistrationHint(deal: Deal): string | null {
   return null;
 }
 
-/** Собираем картинку или ссылку на PDF из ответа CDEK (url / base64). */
 function buildCdekQrMedia(payload: DealCdekQrResponse): { kind: "img"; src: string } | { kind: "file"; href: string } | null {
   const rawUrl = payload.qrCodeUrl?.trim();
   const rawData = payload.qrCodeData?.trim();
@@ -101,8 +105,22 @@ function buildCdekQrMedia(payload: DealCdekQrResponse): { kind: "img"; src: stri
 }
 
 function CdekQrImg({ src }: { src: string }) {
-  // Внешние URL и data: от CDEK — next/image без смысла, remotePatterns не покрывают api.cdek.ru.
   return <img alt="Штрихкод CDEK для ПВЗ" className={styles.qrImage} src={src} />;
+}
+
+function DealQrContent({ payload }: { payload: DealCdekQrResponse }) {
+  const media = buildCdekQrMedia(payload);
+  if (!media) {
+    return <span className={styles.infoValue}>Нет данных изображения</span>;
+  }
+  if (media.kind === "file") {
+    return (
+      <a className={styles.trackingLink} href={media.href} rel="noreferrer" target="_blank">
+        Открыть штрихкод CDEK (файл)
+      </a>
+    );
+  }
+  return <CdekQrImg src={media.src} />;
 }
 
 const DealsPage = () => {
@@ -112,9 +130,12 @@ const DealsPage = () => {
   const [cdekQrByDealId, setCdekQrByDealId] = useState<Record<number, DealCdekQrResponse>>({});
   const [cdekQrLoadingId, setCdekQrLoadingId] = useState<number | null>(null);
   const [syncPayLoadingId, setSyncPayLoadingId] = useState<number | null>(null);
+
   const { data: deals = [], isLoading, isFetching, refetch } = useMyDeals();
   const cancelDealMutation = useCancelDealMutation();
   const shipDealMutation = useShipDealMutation();
+  const payDealMutation = usePayDealMutation();
+  const confirmDeliveryMutation = useConfirmDeliveryMutation();
 
   const filteredDeals = useMemo(() => getFilteredDeals(deals, filter), [deals, filter]);
 
@@ -146,6 +167,33 @@ const DealsPage = () => {
       toast.success("Заказ отправлен");
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось отправить заказ"));
+    }
+  };
+
+  const handlePayDeal = async (dealId: number) => {
+    try {
+      const result = await payDealMutation.mutateAsync(dealId);
+      if (result?.paymentUrl?.trim()) {
+        window.open(result.paymentUrl, "_blank");
+      }
+      toast.success("Счёт на оплату сделки создан");
+      await refetch();
+    } catch (error) {
+      const details = getApiErrorMessage(error, "");
+      const message = details?.trim()
+        ? `Не удалось создать оплату сделки: ${details}`
+        : "Не удалось создать оплату сделки. Проверь настройки Тинькофф.";
+      toast.error(message);
+    }
+  };
+
+  const handleConfirmDelivery = async (dealId: number) => {
+    try {
+      await confirmDeliveryMutation.mutateAsync(dealId);
+      toast.success("Получение подтверждено");
+      await refetch();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Не удалось подтвердить получение"));
     }
   };
 
@@ -230,18 +278,33 @@ const DealsPage = () => {
                   </div>
                 ) : null}
 
-                {deal.myRole === "buyer" &&
-                deal.statusCode === "CREATED" &&
-                deal.paymentId?.trim() &&
-                !deal.paymentId.trim().toLowerCase().startsWith("mock-") ? (
+                {deal.myRole === "buyer" && deal.statusCode === "CREATED" ? (
+                  <div className={styles.actionsRow}>
+                    <Button disabled={payDealMutation.isPending} type="button" onClick={() => handlePayDeal(deal.id)}>
+                      {payDealMutation.isPending ? "Создаём оплату..." : "Оплатить сделку"}
+                    </Button>
+                    {deal.paymentId?.trim() && !deal.paymentId.trim().toLowerCase().startsWith("mock-") ? (
+                      <Button
+                        disabled={syncPayLoadingId === deal.id}
+                        type="button"
+                        variant="success"
+                        onClick={() => handleSyncDealPayment(deal.id)}
+                      >
+                        {syncPayLoadingId === deal.id ? "Проверяем Тинькофф..." : "Обновить статус оплаты"}
+                      </Button>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {deal.myRole === "buyer" && deal.statusCode === "SHIPPED" ? (
                   <div className={styles.actionsRow}>
                     <Button
-                      disabled={syncPayLoadingId === deal.id}
+                      disabled={confirmDeliveryMutation.isPending}
                       type="button"
                       variant="success"
-                      onClick={() => handleSyncDealPayment(deal.id)}
+                      onClick={() => handleConfirmDelivery(deal.id)}
                     >
-                      {syncPayLoadingId === deal.id ? "Проверяем Тинькофф…" : "Обновить статус оплаты"}
+                      {confirmDeliveryMutation.isPending ? "Подтверждаем..." : "Подтвердить получение"}
                     </Button>
                   </div>
                 ) : null}
@@ -301,21 +364,15 @@ const DealsPage = () => {
                   <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Сумма товара</span>
-                      <span className={styles.infoValue}>
-                        {formatMoney(deal.amounts.productAmount)}
-                      </span>
+                      <span className={styles.infoValue}>{formatMoney(deal.amounts.productAmount)}</span>
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Доставка</span>
-                      <span className={styles.infoValue}>
-                        {formatMoney(deal.amounts.deliveryCost)}
-                      </span>
+                      <span className={styles.infoValue}>{formatMoney(deal.amounts.deliveryCost)}</span>
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Итого к оплате</span>
-                      <span className={styles.infoValueStrong}>
-                        {formatMoney(deal.amounts.totalAmount)}
-                      </span>
+                      <span className={styles.infoValueStrong}>{formatMoney(deal.amounts.totalAmount)}</span>
                     </div>
                   </div>
                 </div>
@@ -325,9 +382,7 @@ const DealsPage = () => {
                   <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Тариф</span>
-                      <span className={styles.infoValue}>
-                        {deal.cdek.tariffName ?? `Код ${deal.cdek.tariffCode}`}
-                      </span>
+                      <span className={styles.infoValue}>{deal.cdek.tariffName ?? `Код ${deal.cdek.tariffCode}`}</span>
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Трек-номер</span>
@@ -335,7 +390,7 @@ const DealsPage = () => {
                         {deal.cdek.trackNumber?.trim()
                           ? deal.cdek.trackNumber
                           : deal.cdek.trackPending
-                            ? "Ждём от CDEK…"
+                            ? "Ждём от CDEK..."
                             : "Ещё не присвоен"}
                       </span>
                     </div>
@@ -349,9 +404,7 @@ const DealsPage = () => {
                     ) : null}
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>UUID заказа CDEK</span>
-                      <span className={styles.infoValue}>
-                        {deal.cdek.orderUuid?.trim() ? deal.cdek.orderUuid : "Не указан"}
-                      </span>
+                      <span className={styles.infoValue}>{deal.cdek.orderUuid?.trim() ? deal.cdek.orderUuid : "Не указан"}</span>
                     </div>
                     {deal.myRole === "buyer" ? (
                       <div className={styles.infoItem}>
@@ -371,6 +424,7 @@ const DealsPage = () => {
                     )}
                   </div>
                   {cdekRegHint ? <p className={styles.cdekHint}>{cdekRegHint}</p> : null}
+
                   {deal.cdek.orderUuid?.trim() ? (
                     <div className={styles.pickupQrBlock}>
                       <Typography variant="h3">Штрихкод для ПВЗ</Typography>
@@ -385,8 +439,9 @@ const DealsPage = () => {
                         variant="success"
                         onClick={() => handleLoadCdekQr(deal.id)}
                       >
-                        {cdekQrLoadingId === deal.id ? "Грузим из CDEK…" : "Получить QR из CDEK"}
+                        {cdekQrLoadingId === deal.id ? "Грузим из CDEK..." : "Получить QR из CDEK"}
                       </Button>
+
                       {cdekQrByDealId[deal.id] ? (
                         <div className={styles.qrResult}>
                           {cdekQrByDealId[deal.id].trackNumber ? (
@@ -405,20 +460,7 @@ const DealsPage = () => {
                               Отследить на cdek.ru
                             </a>
                           ) : null}
-                          {(() => {
-                            const media = buildCdekQrMedia(cdekQrByDealId[deal.id]);
-                            if (!media) {
-                              return <span className={styles.infoValue}>Нет данных изображения</span>;
-                            }
-                            if (media.kind === "file") {
-                              return (
-                                <a className={styles.trackingLink} href={media.href} rel="noreferrer" target="_blank">
-                                  Открыть штрихкод CDEK (файл)
-                                </a>
-                              );
-                            }
-                            return <CdekQrImg src={media.src} />;
-                          })()}
+                          <DealQrContent payload={cdekQrByDealId[deal.id]} />
                         </div>
                       ) : null}
                     </div>
