@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { MobileTabs } from "@/components/layout/MobileTabs";
 import { Sonner } from "@/components/ui/Sonner";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -25,6 +26,7 @@ const RootLayout = async ({ children }: LayoutProps<"/">) => {
           <Header />
           <main>{children}</main>
           <Footer />
+          <MobileTabs />
           <Sonner />
         </Providers>
       </body>
