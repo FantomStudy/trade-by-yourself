@@ -47,6 +47,9 @@ export interface CdekTariffsRequest {
 export interface CdekTariffItem {
   tariffCode: number;
   tariffName: string;
+  fromDoor?: boolean | number;
+  toDoor?: boolean | number;
+  deliveryMode?: number;
   periodMin?: number;
   periodMax?: number;
   totalSum?: number;

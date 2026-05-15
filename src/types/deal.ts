@@ -7,6 +7,7 @@ export interface CreateDealRequest {
   cdekToCityCode: number;
   cdekFromPvzCode?: string;
   cdekToPvzCode?: string;
+  cdekToAddress?: string;
 }
 
 /** Ответ бэка на GET /deals/:id/cdek-qr — для показа QR в ПВЗ. */
@@ -61,6 +62,7 @@ export interface Deal {
     tariffName: string | null;
     toCityCode: number;
     toPvzCode: string | null;
+    toAddress?: string | null;
     trackNumber: string | null;
     /** Ссылка на трекинг cdek.ru, если трек уже есть. */
     trackingUrl?: string | null;
