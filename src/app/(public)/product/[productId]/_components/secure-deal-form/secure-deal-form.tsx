@@ -206,6 +206,12 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     return flag === true || flag === 1;
   }, [selectedTariff]);
 
+  const isWarehouseToWarehouse = (item: CdekTariffItem) => {
+    const toDoor = item.toDoor === true || item.toDoor === 1;
+    const fromDoor = item.fromDoor === true || item.fromDoor === 1;
+    return !toDoor && !fromDoor;
+  };
+
   const resetState = () => {
     setToCityQuery("");
     setToCities([]);
@@ -351,11 +357,6 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       return;
     }
 
-    if (isDoorDelivery && !toAddress.trim()) {
-      toast.error("Заполни адрес получателя для доставки до двери");
-      return;
-    }
-
     if (!isDoorDelivery && !toPvzCode) {
       toast.error("Выбери ПВЗ получателя");
       return;
@@ -438,11 +439,6 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       return;
     }
 
-    if (isDoorDelivery && !toAddress.trim()) {
-      toast.error("Заполни адрес получателя для доставки до двери");
-      return;
-    }
-
     try {
       setIsCreating(true);
       const deal = await createDeal({
@@ -452,8 +448,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
         cdekTariffName: tariffName || undefined,
         cdekFromCityCode: fromCityCode,
         cdekToCityCode: toCityCode,
-        cdekToPvzCode: isDoorDelivery ? undefined : toPvzCode || undefined,
-        cdekToAddress: isDoorDelivery ? toAddress.trim() : undefined,
+        cdekToPvzCode: toPvzCode || undefined,
+        cdekToAddress: undefined,
       });
 
       toast.success(`Сделка #${deal.id} создана`);
@@ -569,7 +565,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
           periodMax: item.periodMax ?? item.period_max,
           totalSum: item.totalSum ?? item.total_sum,
         }))
-        .filter((item) => item.tariffCode > 0);
+        .filter((item) => item.tariffCode > 0)
+        .filter((item) => isWarehouseToWarehouse(item));
 
       setTariffs(normalizedTariffs);
       setSelectedTariffCode(null);
@@ -578,7 +575,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setDeliveryCost(null);
 
       if (normalizedTariffs.length === 0) {
-        toast.error("Доступные тарифы не найдены");
+        toast.error("Тарифы «склад-склад» не найдены для выбранных параметров");
         return;
       }
       toast.success("Тарифы получены");
@@ -672,13 +669,6 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                 ))}
               </select>
 
-              {isDoorDelivery ? (
-                <Input
-                  value={toAddress}
-                  onChange={(event) => setToAddress(event.target.value)}
-                  placeholder="Адрес получателя (для доставки до двери)"
-                />
-              ) : null}
             </div>
 
             <div className={styles.block}>
