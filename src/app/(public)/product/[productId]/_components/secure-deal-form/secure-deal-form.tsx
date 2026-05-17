@@ -24,12 +24,12 @@ import {
   Typography,
 } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
-import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { useCurrentUser } from "@/lib/api/hooks/queries";
 import { CHATS_QUERY_KEY } from "@/lib/api/hooks/queries/useChats";
 import { MY_RESERVATIONS_QUERY_KEY } from "@/lib/api/hooks/queries/useMyReservations";
 import { PRODUCT_RESERVATION_QUERY_KEY } from "@/lib/api/hooks/queries/useProductReservation";
 import { toCurrency } from "@/lib/format";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 
 import styles from "./secure-deal-form.module.css";
 
@@ -45,14 +45,14 @@ function getCityFromAddress(address?: string | null) {
     .map((part) => part.trim())
     .filter(Boolean);
 
-  const directCity = parts.find((part) => /^Рі\.\s*/i.test(part));
-  if (directCity) return directCity.replace(/^Рі\.\s*/i, "").trim();
+  const directCity = parts.find((part) => /^г\.\s*/i.test(part));
+  if (directCity) return directCity.replace(/^г\.\s*/i, "").trim();
 
-  const cityFromDistrict = parts.find((part) => /^РіРѕСЂРѕРґСЃРєРѕР№ РѕРєСЂСѓРі\s+/i.test(part));
-  if (cityFromDistrict) return cityFromDistrict.replace(/^РіРѕСЂРѕРґСЃРєРѕР№ РѕРєСЂСѓРі\s+/i, "").trim();
+  const cityFromDistrict = parts.find((part) => /^городской округ\s+/i.test(part));
+  if (cityFromDistrict) return cityFromDistrict.replace(/^городской округ\s+/i, "").trim();
 
   const blocked =
-    /(\d|СѓР»РёС†|РїСЂРѕСЃРїРµРєС‚|РїРµСЂРµСѓР»|РїСЂРѕРµР·Рґ|С€РѕСЃСЃРµ|Р±СѓР»СЊРІР°СЂ|РїР»РѕС€|СЂР°Р№РѕРЅ|РѕР±Р»Р°СЃС‚СЊ|РєСЂР°Р№|СЂРµСЃРїСѓР±Р»РёРєР°|С„РµРґРµСЂР°Р»СЊРЅС‹Р№|СЂРѕСЃСЃРёСЏ|РёРЅРґРµРєСЃ|РєРѕСЂРїСѓСЃ|СЃС‚СЂРѕРµРЅРёРµ|РєРІР°СЂС‚РёСЂР°|РґРѕРј|РЅРѕРІРѕСЃС‚СЂРѕР№РєР°)/i;
+    /(\d|улиц|проспект|переул|проезд|шоссе|бульвар|плош|район|область|край|республика|федеральный|россия|индекс|корпус|строение|квартира|дом|новостройка)/i;
   const candidates = parts.filter((part) => !blocked.test(part));
   return candidates.at(-1) ?? "";
 }
@@ -71,9 +71,9 @@ interface ParcelPreset {
 const PARCEL_PRESETS: ParcelPreset[] = [
   {
     id: "envelope",
-    name: "РљРѕРЅРІРµСЂС‚",
-    dimensions: "34x27x2 СЃРј",
-    weightText: "РґРѕ 0.5 РєРі",
+    name: "Конверт",
+    dimensions: "34x27x2 см",
+    weightText: "до 0.5 кг",
     length: 34,
     width: 27,
     height: 2,
@@ -81,9 +81,9 @@ const PARCEL_PRESETS: ParcelPreset[] = [
   },
   {
     id: "box-xs",
-    name: "РљРѕСЂРѕР± XS",
-    dimensions: "17x12x9 СЃРј",
-    weightText: "РґРѕ 0.5 РєРі",
+    name: "Короб XS",
+    dimensions: "17x12x9 см",
+    weightText: "до 0.5 кг",
     length: 17,
     width: 12,
     height: 9,
@@ -91,9 +91,9 @@ const PARCEL_PRESETS: ParcelPreset[] = [
   },
   {
     id: "box-s",
-    name: "РљРѕСЂРѕР± S",
-    dimensions: "23x19x10 СЃРј",
-    weightText: "РґРѕ 2 РєРі",
+    name: "Короб S",
+    dimensions: "23x19x10 см",
+    weightText: "до 2 кг",
     length: 23,
     width: 19,
     height: 10,
@@ -101,9 +101,9 @@ const PARCEL_PRESETS: ParcelPreset[] = [
   },
   {
     id: "box-m",
-    name: "РљРѕСЂРѕР± M",
-    dimensions: "33x25x15 СЃРј",
-    weightText: "РґРѕ 5 РєРі",
+    name: "Короб M",
+    dimensions: "33x25x15 см",
+    weightText: "до 5 кг",
     length: 33,
     width: 25,
     height: 15,
@@ -111,9 +111,9 @@ const PARCEL_PRESETS: ParcelPreset[] = [
   },
   {
     id: "box-l",
-    name: "РљРѕСЂРѕР± L",
-    dimensions: "31x25x38 СЃРј",
-    weightText: "РґРѕ 12 РєРі",
+    name: "Короб L",
+    dimensions: "31x25x38 см",
+    weightText: "до 12 кг",
     length: 31,
     width: 25,
     height: 38,
@@ -121,9 +121,9 @@ const PARCEL_PRESETS: ParcelPreset[] = [
   },
   {
     id: "box-xl",
-    name: "РљРѕСЂРѕР± XL",
-    dimensions: "60x35x30 СЃРј",
-    weightText: "РґРѕ 18 РєРі",
+    name: "Короб XL",
+    dimensions: "60x35x30 см",
+    weightText: "до 18 кг",
     length: 60,
     width: 35,
     height: 30,
@@ -131,9 +131,9 @@ const PARCEL_PRESETS: ParcelPreset[] = [
   },
   {
     id: "suitcase",
-    name: "Р§РµРјРѕРґР°РЅ",
-    dimensions: "55x35x77 СЃРј",
-    weightText: "РґРѕ 30 РєРі",
+    name: "Чемодан",
+    dimensions: "55x35x77 см",
+    weightText: "до 30 кг",
     length: 55,
     width: 35,
     height: 77,
@@ -141,9 +141,9 @@ const PARCEL_PRESETS: ParcelPreset[] = [
   },
   {
     id: "pallet",
-    name: "РџР°Р»Р»РµС‚Р°",
-    dimensions: "120x120x80 СЃРј",
-    weightText: "РґРѕ 200 РєРі",
+    name: "Паллета",
+    dimensions: "120x120x80 см",
+    weightText: "до 200 кг",
     length: 120,
     width: 120,
     height: 80,
@@ -272,8 +272,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setToCities(cities);
       setShowCitySuggestions(true);
     } catch (error) {
-      console.error("РћС€РёР±РєР° РїРѕРёСЃРєР° РіРѕСЂРѕРґРѕРІ CDEK:", error);
-      toast.error(getApiErrorMessage(error, "РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РіРѕСЂРѕРґРѕРІ CDEK"));
+      console.error("Ошибка поиска городов CDEK:", error);
+      toast.error(getApiErrorMessage(error, "Не удалось получить список городов CDEK"));
     } finally {
       setIsLoadingCities(false);
     }
@@ -303,7 +303,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setFromCityCode(picked.code);
       setFromCityName(picked.city ?? cityCandidate);
     } catch (error) {
-      console.error("РћС€РёР±РєР° РѕРїСЂРµРґРµР»РµРЅРёСЏ РіРѕСЂРѕРґР° РѕС‚РїСЂР°РІРёС‚РµР»СЏ:", error);
+      console.error("Ошибка определения города отправителя:", error);
       setFromCityCode(null);
       setFromCityName("");
     }
@@ -321,7 +321,6 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setShowCitySuggestions(false);
       setToPvzList(pvzList);
       setToPvzCode("");
-    setToAddress("");
 
       setTariffs([]);
       setSelectedTariffCode(null);
@@ -329,8 +328,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setTariffName("");
       setDeliveryCost(null);
     } catch (error) {
-      console.error("РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РџР’Р— CDEK:", error);
-      toast.error(getApiErrorMessage(error, "РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РџР’Р— CDEK"));
+      console.error("Ошибка получения ПВЗ CDEK:", error);
+      toast.error(getApiErrorMessage(error, "Не удалось получить ПВЗ CDEK"));
     } finally {
       setIsLoadingPvz(false);
     }
@@ -338,12 +337,12 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
   const handleCalculate = async () => {
     if (!fromCityCode) {
-      toast.error("РќРµ СѓРґР°Р»РѕСЃСЊ РѕРїСЂРµРґРµР»РёС‚СЊ РіРѕСЂРѕРґ РѕС‚РїСЂР°РІРёС‚РµР»СЏ РёР· Р°РґСЂРµСЃР° С‚РѕРІР°СЂР°");
+      toast.error("Не удалось определить город отправителя из адреса товара");
       return;
     }
 
     if (!toCityCode) {
-      toast.error("Р’С‹Р±РµСЂРё РіРѕСЂРѕРґ РїРѕР»СѓС‡Р°С‚РµР»СЏ");
+      toast.error("Выбери город получателя");
       return;
     }
 
@@ -352,12 +351,12 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       return;
     }
 
-    if (isDoorDelivery) {
-      if (!toAddress.trim()) {
-        toast.error("Заполни адрес получателя для доставки до двери");
-        return;
-      }
-    } else if (!toPvzCode) {
+    if (isDoorDelivery && !toAddress.trim()) {
+      toast.error("Заполни адрес получателя для доставки до двери");
+      return;
+    }
+
+    if (!isDoorDelivery && !toPvzCode) {
       toast.error("Выбери ПВЗ получателя");
       return;
     }
@@ -368,7 +367,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     const parsedHeight = Number(height);
 
     if (!weight || !length || !width || !height) {
-      toast.error("РЈРєР°Р¶Рё РєРѕСЂСЂРµРєС‚РЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ РїРѕСЃС‹Р»РєРё");
+      toast.error("Укажи корректные параметры посылки");
       return;
     }
 
@@ -382,7 +381,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       parsedWidth <= 0 ||
       parsedHeight <= 0
     ) {
-      toast.error("РЈРєР°Р¶Рё РєРѕСЂСЂРµРєС‚РЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ РїРѕСЃС‹Р»РєРё");
+      toast.error("Укажи корректные параметры посылки");
       return;
     }
 
@@ -404,10 +403,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       if (typeof result.tariff_code === "number") {
         setTariffCode(result.tariff_code);
       }
-      toast.success("Р”РѕСЃС‚Р°РІРєР° СЂР°СЃСЃС‡РёС‚Р°РЅР°");
+      toast.success("Доставка рассчитана");
     } catch (error) {
-      console.error("РћС€РёР±РєР° СЂР°СЃС‡РµС‚Р° РґРѕСЃС‚Р°РІРєРё:", error);
-      toast.error(getApiErrorMessage(error, "РќРµ СѓРґР°Р»РѕСЃСЊ СЂР°СЃСЃС‡РёС‚Р°С‚СЊ РґРѕСЃС‚Р°РІРєСѓ"));
+      console.error("Ошибка расчета доставки:", error);
+      toast.error(getApiErrorMessage(error, "Не удалось рассчитать доставку"));
     } finally {
       setIsCalculating(false);
     }
@@ -415,17 +414,22 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
   const handleCreateDeal = async () => {
     if (!fromCityCode) {
-      toast.error("РќРµ СѓРґР°Р»РѕСЃСЊ РѕРїСЂРµРґРµР»РёС‚СЊ РіРѕСЂРѕРґ РѕС‚РїСЂР°РІРёС‚РµР»СЏ РёР· Р°РґСЂРµСЃР° С‚РѕРІР°СЂР°");
+      toast.error("Не удалось определить город отправителя из адреса товара");
       return;
     }
 
     if (!toCityCode) {
-      toast.error("Р—Р°РїРѕР»РЅРё РіРѕСЂРѕРґ РїРѕР»СѓС‡РµРЅРёСЏ");
+      toast.error("Заполни город получения");
+      return;
+    }
+
+    if (!isDoorDelivery && !toPvzCode) {
+      toast.error("Выбери ПВЗ получателя");
       return;
     }
 
     if (deliveryCost === null) {
-      toast.error("РЎРЅР°С‡Р°Р»Р° СЂР°СЃСЃС‡РёС‚Р°Р№ РґРѕСЃС‚Р°РІРєСѓ");
+      toast.error("Сначала рассчитай доставку");
       return;
     }
 
@@ -434,13 +438,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       return;
     }
 
-    if (isDoorDelivery) {
-      if (!toAddress.trim()) {
-        toast.error("Заполни адрес получателя для доставки до двери");
-        return;
-      }
-    } else if (!toPvzCode) {
-      toast.error("Выбери ПВЗ получателя");
+    if (isDoorDelivery && !toAddress.trim()) {
+      toast.error("Заполни адрес получателя для доставки до двери");
       return;
     }
 
@@ -457,7 +456,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
         cdekToAddress: isDoorDelivery ? toAddress.trim() : undefined,
       });
 
-      toast.success(`РЎРґРµР»РєР° #${deal.id} СЃРѕР·РґР°РЅР°`);
+      toast.success(`Сделка #${deal.id} создана`);
       queryClient.invalidateQueries({ queryKey: MY_RESERVATIONS_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: PRODUCT_RESERVATION_QUERY_KEY(product.id) });
       queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
@@ -465,8 +464,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setOpen(false);
       resetState();
     } catch (error) {
-      const msg = getApiErrorMessage(error, "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ СЃРґРµР»РєСѓ");
-      console.error("РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ СЃРґРµР»РєРё:", msg, error);
+      const msg = getApiErrorMessage(error, "Не удалось создать сделку");
+      console.error("Ошибка создания сделки:", msg, error);
       toast.error(msg);
     } finally {
       setIsCreating(false);
@@ -486,7 +485,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   const handleCityInputChange = (value: string) => {
     setToCityQuery(value);
 
-    // РџСЂРё СЂСѓС‡РЅРѕРј РёР·РјРµРЅРµРЅРёРё С‚РµРєСЃС‚Р° СЃР±СЂР°СЃС‹РІР°РµРј СЂР°РЅРµРµ РІС‹Р±СЂР°РЅРЅС‹Р№ РіРѕСЂРѕРґ Рё РџР’Р—.
+    // При ручном изменении текста сбрасываем ранее выбранный город и ПВЗ.
     setToCityCode(null);
     setToPvzList([]);
     setToPvzCode("");
@@ -523,11 +522,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
   const handleLoadTariffs = async () => {
     if (!fromCityCode) {
-      toast.error("РќРµ СѓРґР°Р»РѕСЃСЊ РѕРїСЂРµРґРµР»РёС‚СЊ РіРѕСЂРѕРґ РѕС‚РїСЂР°РІРёС‚РµР»СЏ РёР· Р°РґСЂРµСЃР° С‚РѕРІР°СЂР°");
+      toast.error("Не удалось определить город отправителя из адреса товара");
       return;
     }
     if (!toCityCode) {
-      toast.error("Р’С‹Р±РµСЂРё РіРѕСЂРѕРґ РїРѕР»СѓС‡Р°С‚РµР»СЏ");
+      toast.error("Выбери город получателя");
       return;
     }
 
@@ -546,7 +545,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       parsedWidth <= 0 ||
       parsedHeight <= 0
     ) {
-      toast.error("РЈРєР°Р¶Рё РєРѕСЂСЂРµРєС‚РЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ РїРѕСЃС‹Р»РєРё");
+      toast.error("Укажи корректные параметры посылки");
       return;
     }
 
@@ -565,7 +564,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
         .map((item) => ({
           ...item,
           tariffCode: item.tariffCode ?? item.tariff_code ?? 0,
-          tariffName: item.tariffName ?? item.tariff_name ?? "РўР°СЂРёС„",
+          tariffName: item.tariffName ?? item.tariff_name ?? "Тариф",
           periodMin: item.periodMin ?? item.period_min,
           periodMax: item.periodMax ?? item.period_max,
           totalSum: item.totalSum ?? item.total_sum,
@@ -579,13 +578,13 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       setDeliveryCost(null);
 
       if (normalizedTariffs.length === 0) {
-        toast.error("Р”РѕСЃС‚СѓРїРЅС‹Рµ С‚Р°СЂРёС„С‹ РЅРµ РЅР°Р№РґРµРЅС‹");
+        toast.error("Доступные тарифы не найдены");
         return;
       }
-      toast.success("РўР°СЂРёС„С‹ РїРѕР»СѓС‡РµРЅС‹");
+      toast.success("Тарифы получены");
     } catch (error) {
-      console.error("РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ С‚Р°СЂРёС„РѕРІ CDEK:", error);
-      toast.error(getApiErrorMessage(error, "РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ С‚Р°СЂРёС„С‹ CDEK"));
+      console.error("Ошибка получения тарифов CDEK:", error);
+      toast.error(getApiErrorMessage(error, "Не удалось получить тарифы CDEK"));
     } finally {
       setIsLoadingTariffs(false);
     }
@@ -594,7 +593,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   return (
     <>
       <Button className={styles.dealButton} type="button" onClick={handleOpenSecureDeal}>
-        Р‘РµР·РѕРїР°СЃРЅР°СЏ СЃРґРµР»РєР°
+        Безопасная сделка
       </Button>
 
       <AuthDialog onOpenChange={setIsAuthOpen} open={isAuthOpen} />
@@ -608,25 +607,25 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       >
         <DialogContent className={styles.dialogContent}>
           <DialogHeader>
-            <DialogTitle>РћС„РѕСЂРјР»РµРЅРёРµ Р±РµР·РѕРїР°СЃРЅРѕР№ СЃРґРµР»РєРё</DialogTitle>
+            <DialogTitle>Оформление безопасной сделки</DialogTitle>
             <DialogDescription>
-              Р’С‹Р±РµСЂРё РіРѕСЂРѕРґ Рё РџР’Р— РїРѕР»СѓС‡Р°С‚РµР»СЏ, Р·Р°С‚РµРј СѓРєР°Р¶Рё РїР°СЂР°РјРµС‚СЂС‹ РїРѕСЃС‹Р»РєРё.
+              Выбери город и ПВЗ получателя, затем укажи параметры посылки.
             </DialogDescription>
           </DialogHeader>
 
           <div className={styles.form}>
             <div className={styles.block}>
-              <Typography variant="h2">Р“РѕСЂРѕРґ РїРѕР»СѓС‡Р°С‚РµР»СЏ</Typography>
+              <Typography variant="h2">Город получателя</Typography>
               <div ref={citySearchRef} className={styles.searchSection}>
                 <div className={styles.inputWrapper}>
                   <Input
                     value={toCityQuery}
                     onChange={(event) => handleCityInputChange(event.target.value)}
-                    placeholder="Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РіРѕСЂРѕРґР°"
+                    placeholder="Введите название города"
                   />
                   {toCityQuery ? (
                     <button
-                      aria-label="РћС‡РёСЃС‚РёС‚СЊ РіРѕСЂРѕРґ"
+                      aria-label="Очистить город"
                       className={styles.clearButton}
                       type="button"
                       onClick={handleClearCity}
@@ -647,7 +646,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                       >
                         <MapPin className={styles.suggestionIcon} size={16} />
                         <span>
-                          {city.city ?? "Р“РѕСЂРѕРґ Р±РµР· РЅР°Р·РІР°РЅРёСЏ"} ({city.code})
+                          {city.city ?? "Город без названия"} ({city.code})
                         </span>
                       </button>
                     ))}
@@ -655,7 +654,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                 ) : null}
 
                 {isLoadingCities ? (
-                  <Typography className={styles.metaText}>РС‰РµРј РіРѕСЂРѕРґР°...</Typography>
+                  <Typography className={styles.metaText}>Ищем города...</Typography>
                 ) : null}
               </div>
 
@@ -665,10 +664,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                 value={toPvzCode}
                 onChange={(event) => setToPvzCode(event.target.value)}
               >
-                <option value="">Р’С‹Р±РµСЂРё РџР’Р— РїРѕР»СѓС‡Р°С‚РµР»СЏ</option>
+                <option value="">Выбери ПВЗ получателя</option>
                 {toPvzList.map((pvz) => (
                   <option key={pvz.code} value={pvz.code}>
-                    {pvz.name ?? "РџР’Р—"} - {pvz.location?.address ?? "Р‘РµР· Р°РґСЂРµСЃР°"}
+                    {pvz.name ?? "ПВЗ"} - {pvz.location?.address ?? "Без адреса"}
                   </option>
                 ))}
               </select>
@@ -683,9 +682,9 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
             </div>
 
             <div className={styles.block}>
-              <Typography variant="h2">РџР°СЂР°РјРµС‚СЂС‹ РїРѕСЃС‹Р»РєРё Рё С‚Р°СЂРёС„</Typography>
+              <Typography variant="h2">Параметры посылки и тариф</Typography>
               <Typography className={styles.metaText}>
-                РЎРЅР°С‡Р°Р»Р° РїРѕР»СѓС‡Рё СЃРїРёСЃРѕРє С‚Р°СЂРёС„РѕРІ, Р·Р°С‚РµРј РІС‹Р±РµСЂРё РѕРґРёРЅ Рё СЂР°СЃСЃС‡РёС‚Р°Р№ РґРѕСЃС‚Р°РІРєСѓ.
+                Сначала получи список тарифов, затем выбери один и рассчитай доставку.
               </Typography>
               <div className={styles.modeSwitch}>
                 <button
@@ -700,7 +699,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                     setDeliveryCost(null);
                   }}
                 >
-                  РџСЂРёРјРµСЂРЅРѕ
+                  Примерно
                 </button>
                 <button
                   className={`${styles.modeButton} ${parcelMode === "exact" ? styles.modeButtonActive : ""}`}
@@ -714,7 +713,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                     setDeliveryCost(null);
                   }}
                 >
-                  РўРѕС‡РЅС‹Рµ
+                  Точные
                 </button>
               </div>
 
@@ -727,7 +726,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                       type="button"
                       onClick={() => applyPreset(preset)}
                     >
-                      <div className={styles.presetIcon}>рџ“¦</div>
+                      <div className={styles.presetIcon}>📦</div>
                       <div className={styles.presetContent}>
                         <Typography className={styles.presetTitle}>{preset.name}</Typography>
                         <Typography className={styles.presetMeta}>
@@ -740,7 +739,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
               ) : (
                 <div className={styles.grid}>
                   <label className={styles.inputGroup}>
-                    <span className={styles.inputLabel}>Р’РµСЃ, Рі</span>
+                    <span className={styles.inputLabel}>Вес, г</span>
                     <Input
                       min={1}
                       type="number"
@@ -754,11 +753,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                         setTariffName("");
                         setDeliveryCost(null);
                       }}
-                      placeholder="Р’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёРµ"
+                      placeholder="Введите значение"
                     />
                   </label>
                   <label className={styles.inputGroup}>
-                    <span className={styles.inputLabel}>Р”Р»РёРЅР°, СЃРј</span>
+                    <span className={styles.inputLabel}>Длина, см</span>
                     <Input
                       min={1}
                       type="number"
@@ -772,11 +771,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                         setTariffName("");
                         setDeliveryCost(null);
                       }}
-                      placeholder="Р’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёРµ"
+                      placeholder="Введите значение"
                     />
                   </label>
                   <label className={styles.inputGroup}>
-                    <span className={styles.inputLabel}>РЁРёСЂРёРЅР°, СЃРј</span>
+                    <span className={styles.inputLabel}>Ширина, см</span>
                     <Input
                       min={1}
                       type="number"
@@ -790,11 +789,11 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                         setTariffName("");
                         setDeliveryCost(null);
                       }}
-                      placeholder="Р’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёРµ"
+                      placeholder="Введите значение"
                     />
                   </label>
                   <label className={styles.inputGroup}>
-                    <span className={styles.inputLabel}>Р’С‹СЃРѕС‚Р°, СЃРј</span>
+                    <span className={styles.inputLabel}>Высота, см</span>
                     <Input
                       min={1}
                       type="number"
@@ -808,7 +807,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                         setTariffName("");
                         setDeliveryCost(null);
                       }}
-                      placeholder="Р’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёРµ"
+                      placeholder="Введите значение"
                     />
                   </label>
                 </div>
@@ -820,7 +819,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                 variant="success"
                 onClick={handleLoadTariffs}
               >
-                {isLoadingTariffs ? "РџРѕР»СѓС‡Р°РµРј С‚Р°СЂРёС„С‹..." : "РџРѕР»СѓС‡РёС‚СЊ С‚Р°СЂРёС„С‹"}
+                {isLoadingTariffs ? "Получаем тарифы..." : "Получить тарифы"}
               </Button>
 
               <select
@@ -836,36 +835,36 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                   setDeliveryCost(null);
                 }}
               >
-                <option value="">Р’С‹Р±РµСЂРё С‚Р°СЂРёС„</option>
+                <option value="">Выбери тариф</option>
                 {tariffs.map((item) => (
                   <option key={item.tariffCode} value={item.tariffCode}>
-                    {item.tariffName} (РєРѕРґ {item.tariffCode})
-                    {item.totalSum ? ` - ${item.totalSum} в‚Ѕ` : ""}
+                    {item.tariffName} (код {item.tariffCode})
+                    {item.totalSum ? ` - ${item.totalSum} ₽` : ""}
                     {item.periodMin || item.periodMax
-                      ? `, ${item.periodMin ?? "?"}-${item.periodMax ?? "?"} РґРЅ.`
+                      ? `, ${item.periodMin ?? "?"}-${item.periodMax ?? "?"} дн.`
                       : ""}
                   </option>
                 ))}
               </select>
 
               <Button disabled={isCalculating} type="button" onClick={handleCalculate}>
-                {isCalculating ? "РЎС‡РёС‚Р°РµРј..." : "Р Р°СЃСЃС‡РёС‚Р°С‚СЊ РґРѕСЃС‚Р°РІРєСѓ"}
+                {isCalculating ? "Считаем..." : "Рассчитать доставку"}
               </Button>
             </div>
 
             <div className={styles.summary}>
-              <Typography>РўРѕРІР°СЂ: {toCurrency(product.price)}</Typography>
+              <Typography>Товар: {toCurrency(product.price)}</Typography>
               <Typography>
-                Р“РѕСЂРѕРґ РѕС‚РїСЂР°РІРёС‚РµР»СЏ: {fromCityName || "РЅРµ РѕРїСЂРµРґРµР»РµРЅ"} ({fromCityCode ?? "вЂ”"})
+                Город отправителя: {fromCityName || "не определен"} ({fromCityCode ?? "—"})
               </Typography>
-              <Typography>Р“РѕСЂРѕРґ РїРѕР»СѓС‡Р°С‚РµР»СЏ (РєРѕРґ CDEK): {toCityCode ?? "РЅРµ РІС‹Р±СЂР°РЅ"}</Typography>
+              <Typography>Город получателя (код CDEK): {toCityCode ?? "не выбран"}</Typography>
               <Typography>
-                Р”РѕСЃС‚Р°РІРєР°: {deliveryCost === null ? "РЅРµ СЂР°СЃСЃС‡РёС‚Р°РЅР°" : toCurrency(deliveryCost)}
+                Доставка: {deliveryCost === null ? "не рассчитана" : toCurrency(deliveryCost)}
               </Typography>
               <Typography>
-                РўР°СЂРёС„: {tariffName || "РЅРµ РІС‹Р±СЂР°РЅ"} (РєРѕРґ {tariffCode ?? "вЂ”"})
+                Тариф: {tariffName || "не выбран"} (код {tariffCode ?? "—"})
               </Typography>
-              <Typography variant="h2">РС‚РѕРіРѕ: {toCurrency(totalPrice)}</Typography>
+              <Typography variant="h2">Итого: {toCurrency(totalPrice)}</Typography>
             </div>
           </div>
 
@@ -876,10 +875,10 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
               variant="success"
               onClick={() => setOpen(false)}
             >
-              РћС‚РјРµРЅР°
+              Отмена
             </Button>
             <Button disabled={isCreating} type="button" onClick={handleCreateDeal}>
-              {isCreating ? "РЎРѕР·РґР°РµРј..." : "РЎРѕР·РґР°С‚СЊ СЃРґРµР»РєСѓ"}
+              {isCreating ? "Создаем..." : "Создать сделку"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -887,6 +886,5 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     </>
   );
 };
-
 
 
