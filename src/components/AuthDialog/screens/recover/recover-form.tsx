@@ -121,10 +121,10 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
     <form className={styles.form} onSubmit={handleSubmit(step === "send" ? onSendCode : onApplyCode)}>
       <div className={styles.inputGroup}>
         <div className="flex gap-2">
-          <Button type="button" variant={where === "email" ? "default" : "success"} onClick={() => setValue("where", "email")}>
+          <Button type="button" variant={where === "email" ? "primary" : "success"} onClick={() => setValue("where", "email")}>
             Email
           </Button>
-          <Button type="button" variant={where === "sms" ? "default" : "success"} onClick={() => setValue("where", "sms")}>
+          <Button type="button" variant={where === "sms" ? "primary" : "success"} onClick={() => setValue("where", "sms")}>
             SMS
           </Button>
         </div>
