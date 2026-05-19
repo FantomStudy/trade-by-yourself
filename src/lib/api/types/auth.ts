@@ -48,7 +48,7 @@ export const forgotPasswordSchema = z.object({
   newPassword: z.string().optional(),
 });
 
-export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
+export type ForgotPasswordData = z.input<typeof forgotPasswordSchema>;
 
 export interface ForgotPasswordResponse {
   message: string;
