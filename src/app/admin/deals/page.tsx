@@ -14,6 +14,16 @@ import { Button } from "@/components/ui/Button";
 import { MobileHeader } from "../_components/admin-sidebar";
 
 const STATUSES = ["CREATED", "PAID", "SHIPPED", "DELIVERED", "COMPLETED", "CANCELLED", "REFUNDED", "DISPUTE"];
+const STATUS_LABELS: Record<string, string> = {
+  CREATED: "Создана",
+  PAID: "Оплачена",
+  SHIPPED: "Отправлена",
+  DELIVERED: "Доставлена",
+  COMPLETED: "Завершена",
+  CANCELLED: "Отменена",
+  REFUNDED: "Возврат",
+  DISPUTE: "Спор",
+};
 
 export default function AdminDealsPage() {
   const queryClient = useQueryClient();
@@ -100,7 +110,7 @@ export default function AdminDealsPage() {
                   <td className="px-2 py-2 text-xs">{deal.buyer.fullName}</td>
                   <td className="px-2 py-2 text-xs">{deal.seller.fullName}</td>
                   <td className="px-2 py-2 text-xs">{deal.amounts.totalAmount} ₽</td>
-                  <td className="px-2 py-2 text-xs">{deal.statusCode}</td>
+                  <td className="px-2 py-2 text-xs">{STATUS_LABELS[deal.statusCode] ?? deal.statusCode}</td>
                   <td className="px-2 py-2 text-xs">
                     <div className="flex items-center gap-2">
                       <select
@@ -109,7 +119,7 @@ export default function AdminDealsPage() {
                         onChange={(e) => updateStatus.mutate({ dealId: deal.id, nextStatus: e.target.value })}
                       >
                         {STATUSES.map((s) => (
-                          <option key={s} value={s}>{s}</option>
+                          <option key={s} value={s}>{STATUS_LABELS[s] ?? s}</option>
                         ))}
                       </select>
                       <Button
@@ -140,7 +150,7 @@ export default function AdminDealsPage() {
           <div className="mb-3 flex items-center gap-2">
             <select className="rounded border px-2 py-2 text-sm" value={status} onChange={(e) => setStatus(e.target.value)}>
               {STATUSES.map((s) => (
-                <option key={s} value={s}>{s}</option>
+                <option key={s} value={s}>{STATUS_LABELS[s] ?? s}</option>
               ))}
             </select>
             <Button

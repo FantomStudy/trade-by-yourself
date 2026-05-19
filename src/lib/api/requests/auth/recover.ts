@@ -14,7 +14,7 @@ export const forgotPassword = async (data: ForgotPasswordData) =>
   });
 
 export const verifyCode = async (code: string) =>
-  api<ForgotPasswordResponse>("/auth/verify-code", {
+  api<{ userId: number }>("/auth/verify-code", {
     method: "POST",
     query: { code },
   });

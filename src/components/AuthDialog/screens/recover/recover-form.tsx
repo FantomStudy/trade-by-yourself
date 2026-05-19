@@ -41,7 +41,6 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
   const [step, setStep] = useState<RecoverStep>("send");
   const [error, setError] = useState<string>();
   const [sentMessage, setSentMessage] = useState<string>("");
-  const [userId, setUserId] = useState<number | null>(null);
 
   const where = watch("where") || "email";
 
@@ -73,6 +72,7 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
 
     recoverMutation.mutate(payload, {
       onSuccess: (res) => {
+        // Новый код — новая сессия восстановления.
         setSentMessage(res.message || "Код отправлен");
         setStep("verify");
       },
@@ -97,19 +97,14 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
         return;
       }
 
-      let resolvedUserId = userId;
-      if (!resolvedUserId) {
-        const verifyRes = await verifyCode(code);
-        const maybeUserId = Number((verifyRes as any)?.userId);
-        if (!Number.isFinite(maybeUserId) || maybeUserId <= 0) {
-          setError("Не удалось получить userId после проверки кода");
-          return;
-        }
-        resolvedUserId = maybeUserId;
-        setUserId(maybeUserId);
+      const verifyRes = await verifyCode(code);
+      const maybeUserId = Number(verifyRes?.userId);
+      if (!Number.isFinite(maybeUserId) || maybeUserId <= 0) {
+        setError("Не удалось получить userId после проверки кода");
+        return;
       }
 
-      await changePassword({ userId: resolvedUserId, password: newPassword });
+      await changePassword({ userId: maybeUserId, password: newPassword });
       setStep("done");
       setTimeout(() => onSuccess?.(), 500);
     } catch (e) {
