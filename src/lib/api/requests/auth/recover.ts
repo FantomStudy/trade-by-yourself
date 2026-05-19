@@ -6,7 +6,11 @@ import { api } from "@/api/instance";
 export const forgotPassword = async (data: ForgotPasswordData) =>
   api<ForgotPasswordResponse>("/auth/forgot-password", {
     method: "POST",
-    body: data,
+    body: {
+      where: data.where,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+    },
   });
 
 export const verifyCode = async (code: string) =>
@@ -15,8 +19,8 @@ export const verifyCode = async (code: string) =>
     query: { code },
   });
 
-export const changePassword = async (data: unknown) =>
-  api<unknown>("/auth/change-password", {
+export const changePassword = async (data: { userId: number; password: string }) =>
+  api<{ message: string }>("/auth/change-password", {
     method: "POST",
-    body: data as BodyInit,
+    body: data,
   });

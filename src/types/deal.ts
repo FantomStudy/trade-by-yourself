@@ -89,3 +89,9 @@ export interface Deal {
   orderId?: string | null;
   disputeReason?: string | null;
 }
+
+export interface AdminDealLog {
+  id: number;
+  userId: number;
+  action: string;
+}

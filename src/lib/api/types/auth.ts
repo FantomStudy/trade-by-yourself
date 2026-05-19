@@ -41,8 +41,11 @@ export interface RegisterResponse {
 
 // Recover Schema
 export const forgotPasswordSchema = z.object({
-  email: z.email("Введите корректный email").min(1, "Email обязателен"),
-  //   code: z.string().optional(),
+  where: z.enum(["email", "sms"]).default("email"),
+  email: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  code: z.string().optional(),
+  newPassword: z.string().optional(),
 });
 
 export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;

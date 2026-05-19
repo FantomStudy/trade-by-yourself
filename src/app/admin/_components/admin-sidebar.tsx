@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import {
   FileText,
   FolderTree,
+  Handshake,
   Megaphone,
   Menu,
   MessageSquare,
@@ -21,49 +22,17 @@ import { Typography } from "@/components/ui";
 import styles from "../admin.module.css";
 
 const menuItems = [
-  {
-    href: "/admin/moderation" as const,
-    icon: Package,
-    label: "Модерация товаров",
-  },
-  {
-    href: "/admin/reviews" as const,
-    icon: Star,
-    label: "Модерация отзывов",
-  },
-  {
-    href: "/admin/users" as const,
-    icon: Users,
-    label: "Пользователи",
-  },
-  {
-    href: "/admin/support" as const,
-    icon: MessageSquare,
-    label: "Чат поддержки",
-  },
-  {
-    href: "/admin/advertising" as const,
-    icon: Megaphone,
-    label: "Реклама",
-  },
-  {
-    href: "/admin/categories" as const,
-    icon: FolderTree,
-    label: "Категории",
-  },
-  {
-    href: "/admin/promotion" as const,
-    icon: TrendingUp,
-    label: "Продвижение",
-  },
-  {
-    href: "/admin/logs" as const,
-    icon: FileText,
-    label: "Логи",
-  },
+  { href: "/admin/moderation" as const, icon: Package, label: "Модерация товаров" },
+  { href: "/admin/reviews" as const, icon: Star, label: "Модерация отзывов" },
+  { href: "/admin/users" as const, icon: Users, label: "Пользователи" },
+  { href: "/admin/deals" as const, icon: Handshake, label: "Сделки" },
+  { href: "/admin/support" as const, icon: MessageSquare, label: "Чат поддержки" },
+  { href: "/admin/advertising" as const, icon: Megaphone, label: "Реклама" },
+  { href: "/admin/categories" as const, icon: FolderTree, label: "Категории" },
+  { href: "/admin/promotion" as const, icon: TrendingUp, label: "Продвижение" },
+  { href: "/admin/logs" as const, icon: FileText, label: "Логи" },
 ];
 
-// Контекст для управления сайдбаром
 interface SidebarContextValue {
   isOpen: boolean;
   open: () => void;
@@ -89,7 +58,6 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
-  // Закрываем сайдбар при переходе на другую страницу
   useEffect(() => {
     close();
   }, [pathname, close]);
@@ -103,12 +71,9 @@ export const AdminSidebar = () => {
 
   return (
     <>
-      {/* Overlay */}
       <div className={`${styles.overlay} ${isOpen ? styles.overlayVisible : ""}`} onClick={close} />
 
-      {/* Sidebar */}
       <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}>
-        {/* Кнопка закрытия для мобильных */}
         <button className={styles.closeButton} onClick={close} type="button">
           <X className="h-5 w-5" />
         </button>
@@ -143,7 +108,6 @@ export const AdminSidebar = () => {
   );
 };
 
-// Компонент мобильного header
 export const MobileHeader = ({ title }: { title?: string }) => {
   const { toggle } = useSidebar();
 
