@@ -138,7 +138,6 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
         ) : (
           <PhoneField
             disabled={step !== "send"}
-            error={errors.phoneNumber?.message}
             placeholder="Номер телефона"
             {...phoneField}
           />
