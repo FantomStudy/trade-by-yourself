@@ -5,11 +5,14 @@ export interface ProductFilters {
   typeSlug?: string;
   minPrice?: number;
   maxPrice?: number;
+  minRating?: number;
+  maxRating?: number;
   state?: "NEW" | "USED";
   region?: string;
   profileType?: "INDIVIDUAL" | "IP" | "OOP";
+  hasSecureDeal?: boolean;
   fieldValues?: Record<string, string>;
-  sortBy?: "date_asc" | "date_desc" | "price_asc" | "price_desc" | "relevance";
+  sortBy?: "date_asc" | "date_desc" | "price_asc" | "price_desc" | "relevance" | "seller_rating" | "distance";
   page?: number;
   limit?: number;
 }

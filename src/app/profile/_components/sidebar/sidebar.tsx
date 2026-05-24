@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import { Gift, ShieldCheck, StarIcon, WalletIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCallback, useState } from "react";
 
 import { useIsAdmin, useUserInfo } from "@/api/hooks";
 import { Typography } from "@/components/ui";
@@ -21,14 +22,31 @@ export const Sidebar = () => {
   const { data: userInfo } = useUserInfo(user?.id);
   const { data: adminCheck } = useIsAdmin();
   const pathname = usePathname();
+  const [shareLabel, setShareLabel] = useState("Поделиться профилем");
 
   const getProfileTypeLabel = (type?: string | null) => {
     if (!type) return "Физическое лицо";
-    return type === "OOO" || type === "Юридическое лицо" ? "Юридическое лицо" : "Физическое лицо";
+    return type === "OOO" || type === "Юридическое лицо"
+      ? "Юридическое лицо"
+      : "Физическое лицо";
   };
 
   const isLegalEntity =
     userInfo?.profileType === "OOO" || userInfo?.profileType === "Юридическое лицо";
+
+  const handleShareProfile = useCallback(async () => {
+    if (!user?.id || typeof window === "undefined") return;
+
+    const url = `${window.location.origin}/seller/${user.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareLabel("Ссылка скопирована");
+      setTimeout(() => setShareLabel("Поделиться профилем"), 1800);
+    } catch {
+      setShareLabel("Не удалось скопировать");
+      setTimeout(() => setShareLabel("Поделиться профилем"), 1800);
+    }
+  }, [user?.id]);
 
   return (
     <div className={styles.sidebar}>
@@ -46,9 +64,7 @@ export const Sidebar = () => {
                 <StarIcon fill="currentColor" />
               </Typography>
 
-              <Typography className={styles.reviews}>
-                {userInfo?.reviewsCount ?? 0} отзывов
-              </Typography>
+              <Typography className={styles.reviews}>{userInfo?.reviewsCount ?? 0} отзывов</Typography>
             </div>
 
             <div className={isLegalEntity ? styles.profileTypeLegal : styles.profileTypePhysical}>
@@ -75,6 +91,14 @@ export const Sidebar = () => {
               <Gift /> {userInfo?.bonusBalance ?? 0} ₽
             </span>
           </div>
+
+          <Button
+            className={styles.shareProfileButton}
+            variant="outline"
+            onClick={handleShareProfile}
+          >
+            {shareLabel}
+          </Button>
 
           {adminCheck?.isAdmin && (
             <Link href="/admin">

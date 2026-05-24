@@ -71,6 +71,11 @@
   --product-card-accent: var(--pink);
 }
 
+.card[data-paid="true"] {
+  border: 2px solid #ef4444;
+  --product-card-accent: #ef4444;
+}
+
 .promotedSign {
   position: absolute;
   bottom: 8px;

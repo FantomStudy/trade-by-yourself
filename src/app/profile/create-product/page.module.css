@@ -80,3 +80,9 @@
   color: #dc2626;
   margin-top: -8px;
 }
+
+.fieldHint {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: -10px;
+}

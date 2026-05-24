@@ -1,5 +1,6 @@
-"use client";
-import { MoveLeft, MoveRight, PlayIcon, X } from "lucide-react";
+﻿"use client";
+
+import { MoveLeft, MoveRight, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -10,36 +11,74 @@ interface GalleryProps {
   videoUrl?: string | null;
 }
 
+const PlayGlyph = () => (
+  <svg aria-hidden="true" className={styles.thumbnailIcon} viewBox="0 0 24 24">
+    <polygon points="7,4 20,12 7,20" />
+  </svg>
+);
+
+type VideoSource =
+  | { kind: "iframe"; src: string; provider: "vk" | "yandex" | "other" }
+  | { kind: "video"; src: string; provider: "direct" }
+  | { kind: "external"; src: string; provider: "yandex" };
+
 export const Gallery = ({ images, videoUrl }: GalleryProps) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
-  // Проверка валидности embed-URL VK
-  function isValidVkEmbedUrl(url?: string | null) {
-    if (!url) return false;
-    // embed-URL должен содержать video_ext.php и параметры oid, id
-    return url.includes("video_ext.php") && url.includes("oid=") && url.includes("id=");
-  }
-  // Преобразуем vkvideo.ru ссылку в embed-URL для VK
-  function getVkEmbedUrl(url?: string | null) {
-    if (!url) return url;
-    // Пример: https://vkvideo.ru/video-211504825_456242980
-    const match = url.match(/video-?(\d+)_(\d+)/);
-    if (match) {
-      const oid = match[1].startsWith("-") ? match[1] : `-${match[1]}`;
-      const id = match[2];
-      // embed-URL без hash
-      return `https://vk.com/video_ext.php?oid=${oid}&id=${id}`;
-    }
-    return url;
-  }
 
-  // Формируем массив слайда: сначала изображения, потом видео, если оно есть
+  const isVkVideoUrl = (url?: string | null) => {
+    if (!url) return false;
+    return (
+      url.includes("vkvideo.ru/video") ||
+      url.includes("vk.com/video") ||
+      url.includes("vk.com/video_ext.php")
+    );
+  };
+
+  const getVkEmbedUrl = (url?: string | null) => {
+    if (!url) return null;
+    if (url.includes("video_ext.php")) {
+      return url;
+    }
+    const match = url.match(/video(-?\d+)_(\d+)/);
+    if (!match) {
+      return null;
+    }
+    const oid = match[1];
+    const id = match[2];
+    return `https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2`;
+  };
+  const isYandexVideoUrl = (url?: string | null) => {
+    if (!url) return false;
+    return url.includes("yandex.ru/video/preview/");
+  };
+
+  const getYandexEmbedUrl = (url?: string | null) => {
+    if (!url) return null;
+    // Для части ссылок `preview/<id>` id не совпадает с id плеера.
+    // Безопаснее встраивать исходный URL, а не насильно конвертировать.
+    return url;
+  };
+
+  const resolveVideoSource = (url?: string | null): VideoSource | null => {
+    if (!url) return null;
+    if (isVkVideoUrl(url)) {
+      const src = getVkEmbedUrl(url);
+      return src ? { kind: "iframe", src, provider: "vk" } : null;
+    }
+    if (isYandexVideoUrl(url)) {
+      const src = getYandexEmbedUrl(url);
+      return src ? { kind: "external", src, provider: "yandex" } : null;
+    }
+    if (/^https?:\/\/.+\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
+      return { kind: "video", src: url, provider: "direct" };
+    }
+    // Неизвестный провайдер — пробуем iframe как универсальный вариант.
+    return { kind: "iframe", src: url, provider: "other" };
+  };
+
   const slides = videoUrl ? [...images, videoUrl] : images;
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Подробное логирование состояния галереи
-  console.log("[Gallery] videoUrl:", videoUrl);
-  console.log("[Gallery] slides:", slides);
-  console.log("[Gallery] currentIndex:", currentIndex);
+  const resolvedVideo = resolveVideoSource(videoUrl);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
@@ -60,11 +99,10 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
   return (
     <>
       <div className={styles.imageGallery}>
-        {/* Миниатюры слева */}
         {slides.length > 1 ? (
           <div className={styles.thumbnails}>
             {slides.map((slide, index) => {
-              const isVideo = videoUrl && index === slides.length - 1;
+              const isVideo = Boolean(videoUrl) && index === slides.length - 1;
               return (
                 <button
                   key={slide + index}
@@ -74,7 +112,21 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
                 >
                   {isVideo ? (
                     <div className={styles.thumbnailContent}>
-                      <PlayIcon className={styles.thumbnailIcon} />
+                      {resolvedVideo?.kind === "iframe" && resolvedVideo.provider === "vk" ? (
+                        <iframe
+                          className={styles.videoThumbFrame}
+                          src={resolvedVideo.src}
+                          title="video thumbnail"
+                          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                          frameBorder="0"
+                          tabIndex={-1}
+                        />
+                      ) : (
+                        <>
+                          <div className={styles.videoThumbFallback}>Видео</div>
+                          <PlayGlyph />
+                        </>
+                      )}
                     </div>
                   ) : (
                     <Image fill alt={slide} src={slide} style={{ objectFit: "cover" }} />
@@ -85,78 +137,46 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
           </div>
         ) : null}
 
-        {/* Главное изображение/видео справа */}
         <div className={styles.mainImageWrapper}>
           {videoUrl && currentIndex === slides.length - 1 ? (
             <div className={styles.videoWrapper}>
-              {videoUrl.includes("vkvideo.ru") ? (
-                (() => {
-                  const embedUrl = getVkEmbedUrl(videoUrl);
-                  const valid = isValidVkEmbedUrl(embedUrl);
-                  console.log("[Gallery] VK video debug:", {
-                    originalVideoUrl: videoUrl,
-                    embedUrl,
-                    valid,
-                    currentIndex,
-                    slides,
-                  });
-                  if (valid) {
-                    return (
-                      <iframe
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                        className={styles.mainImage}
-                        src={embedUrl || undefined}
-                        title="video"
-                        allowFullScreen
-                        frameBorder="0"
-                        sandbox="allow-scripts allow-same-origin allow-presentation"
-                      />
-                    );
-                  } else {
-                    return (
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          background: "#222",
-                          color: "#fff",
-                          flexDirection: "column",
-                          fontSize: "14px",
-                        }}
-                      >
-                        Видео недоступно для просмотра
-                        <br />
-                        <pre
-                          style={{
-                            color: "#fff",
-                            fontSize: "12px",
-                            marginTop: "8px",
-                          }}
-                        >
-                          {JSON.stringify(
-                            { videoUrl, embedUrl, valid, currentIndex, slides },
-                            null,
-                            2,
-                          )}
-                        </pre>
-                      </div>
-                    );
-                  }
-                })()
-              ) : (
+              {resolvedVideo?.kind === "iframe" ? (
+                <>
+                  <iframe
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    className={styles.mainImage}
+                    src={resolvedVideo.src}
+                    title="video"
+                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                    allowFullScreen
+                    frameBorder="0"
+                  />
+                  {videoUrl ? (
+                    <a className={styles.videoSourceLink} href={videoUrl} target="_blank" rel="noreferrer">
+                      Открыть видео по ссылке
+                    </a>
+                  ) : null}
+                </>
+              ) : resolvedVideo?.kind === "external" ? (
+                <div className={styles.videoUnavailable}>
+                  <div>
+                    Видео недоступно для встраивания
+                    <br />
+                    Откройте по ссылке
+                  </div>
+                  <a className={styles.videoSourceLink} href={resolvedVideo.src} target="_blank" rel="noreferrer">
+                    Открыть видео по ссылке
+                  </a>
+                </div>
+              ) : resolvedVideo?.kind === "video" ? (
                 <video
                   className={styles.mainImage}
-                  src={videoUrl}
+                  src={resolvedVideo.src}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   controls
                 />
+              ) : (
+                <div className={styles.videoUnavailable}>Видео недоступно для просмотра</div>
               )}
             </div>
           ) : (
@@ -183,7 +203,6 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
         </div>
       </div>
 
-      {/* Полноэкранный просмотр */}
       {isFullScreen && !videoUrl && (
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95"
@@ -197,7 +216,6 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
             <X className="h-6 w-6" />
           </button>
 
-          {/* Навигация */}
           {slides.length > 1 && (
             <>
               <button
@@ -233,7 +251,6 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
             />
           </div>
 
-          {/* Индикаторы */}
           {slides.length > 1 && (
             <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-2">
               {slides.map((slide, index) => (

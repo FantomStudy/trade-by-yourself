@@ -135,6 +135,10 @@
   margin-top: 8px;
 }
 
+.shareProfileButton {
+  width: 100%;
+}
+
 .nav {
   display: flex;
   width: 100%;

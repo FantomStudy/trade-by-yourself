@@ -24,11 +24,13 @@ export const ProductCard = ({
 }: ProductCardProps) => {
   const href = `/product/${product.id}` as Route;
   const preview = <ProductCardPreview images={product.images} />;
+  const isPaidAd = Boolean(product.promotionLevel && product.promotionLevel > 0) || Boolean(product.hasPromotion);
 
   return (
     <article
       className={clsx(styles.card, className)}
       data-promoted={product.hasPromotion}
+      data-paid={isPaidAd}
       {...props}
     >
       {clickable ? <Link href={href}>{preview}</Link> : preview}

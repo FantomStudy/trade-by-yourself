@@ -44,3 +44,23 @@ export const moderateReview = async ({ reviewId, status }: ModerateReviewData) =
     method: "PUT",
     query: { status },
   });
+
+export interface ReviewAppeal {
+  id: number;
+  reviewId: number;
+  userId: number;
+  reason: string;
+  status: string;
+  moderatorId?: number | null;
+  moderatorNote?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const getAllReviewAppeals = async () => api<ReviewAppeal[]>("/review/all-appeals");
+
+export const resolveReviewAppeal = async (id: number, status: "APPROVED" | "REJECTED", note?: string) =>
+  api<{ message: string }>(`/review/resolve-appeal/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ status, note }),
+  });

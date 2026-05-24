@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useVerifyMobileCodeMutation } from "@/api/hooks";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { Field } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { verifyMobileCodeSchema } from "@/lib/api";
@@ -41,7 +42,7 @@ export const VerifyCodeForm = ({ phoneNumber, onSuccess }: VerifyCodeFormProps) 
         setError(undefined);
       },
       onError: (err) => {
-        setError(err.message);
+        setError(getApiErrorMessage(err, "Не удалось подтвердить код"));
       },
     });
   };

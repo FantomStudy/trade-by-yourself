@@ -90,6 +90,11 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
                 </span>
               </div>
             )}
+            {!product.isHide && product.isReserved && (
+              <div className="absolute inset-0 flex items-center justify-center bg-amber-900/55 backdrop-blur-[2px]">
+                <span className="text-center text-lg font-semibold text-amber-100">Зарезервировано</span>
+              </div>
+            )}
             {product.moderateState === "MODERATE" && (
               <div className="absolute inset-0 flex items-center justify-center bg-blue-900/60 backdrop-blur-[2px]">
                 <span className="text-center text-lg font-semibold text-blue-200">

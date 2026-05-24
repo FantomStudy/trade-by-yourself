@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRegisterMutation } from "@/api/hooks";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 
 import { Field, PhoneField, usePhoneField } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
@@ -51,7 +52,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         setError(undefined);
       },
       onError: (err) => {
-        setError(err.message);
+        setError(getApiErrorMessage(err, "Не удалось зарегистрироваться"));
       },
     });
   };

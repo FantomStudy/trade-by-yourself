@@ -5,20 +5,17 @@ import type { Message } from "@/types";
 
 import { ArrowLeft, Send } from "lucide-react";
 import Link from "next/link";
-import { use, useEffect, useMemo, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { toCurrency } from "@/lib/format";
 
-interface ChatPageProps {
-  params: Promise<{ chatId: string }>;
-}
-
-const ChatPage = ({ params }: ChatPageProps) => {
-  const { chatId } = use(params);
-  const chatIdNum = Number(chatId);
+const ChatPage = () => {
+  const params = useParams<{ chatId: string }>();
+  const chatIdNum = Number(params?.chatId);
 
   const [message, setMessage] = useState("");
   const [showPhone, setShowPhone] = useState(false);

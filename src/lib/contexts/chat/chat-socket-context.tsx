@@ -50,6 +50,7 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
   const { user } = useAuth();
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
+  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const listenersRef = useRef<Map<ChatEventName, Set<(payload: any) => void>>>(new Map());
 
   useEffect(() => {
@@ -80,51 +81,72 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (!user) {
+      if (reconnectTimerRef.current) {
+        clearTimeout(reconnectTimerRef.current);
+        reconnectTimerRef.current = null;
+      }
       if (wsRef.current) wsRef.current.close();
       wsRef.current = null;
       setIsConnected(false);
       return;
     }
 
-    const ws = createChatSocket();
-    wsRef.current = ws;
+    let isUnmounted = false;
 
-    ws.onopen = () => {
-      setIsConnected(true);
-    };
+    const connect = () => {
+      if (isUnmounted || !user) return;
 
-    ws.onclose = () => {
-      setIsConnected(false);
-    };
+      const ws = createChatSocket();
+      wsRef.current = ws;
 
-    ws.onerror = () => {
-      setIsConnected(false);
-    };
+      ws.onopen = () => {
+        setIsConnected(true);
+      };
 
-    ws.onmessage = (event) => {
-      const packet = parseChatSocketMessage(event.data);
-      if (!packet) return;
-
-      if (packet.event === "newMessage") {
-        const data = packet.data as Message;
-        if (data.senderId !== user.id) {
-          const isWindowFocused = document.hasFocus();
-          const isOnChatPage = window.location.pathname.includes(
-            `/profile/messages/${data.chatId}`,
-          );
-          if (!isWindowFocused || !isOnChatPage) showNotification(data);
+      ws.onclose = () => {
+        setIsConnected(false);
+        wsRef.current = null;
+        if (!isUnmounted) {
+          reconnectTimerRef.current = setTimeout(connect, 1500);
         }
-      }
+      };
 
-      if (packet.event === "newChatMessage") {
-        void queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
-      }
+      ws.onerror = () => {
+        setIsConnected(false);
+      };
 
-      emitLocal(packet.event, packet.data);
+      ws.onmessage = (event) => {
+        const packet = parseChatSocketMessage(event.data);
+        if (!packet) return;
+
+        if (packet.event === "newMessage") {
+          const data = packet.data as Message;
+          if (data.senderId !== user.id) {
+            const isWindowFocused = document.hasFocus();
+            const isOnChatPage = window.location.pathname.includes(
+              `/profile/messages/${data.chatId}`,
+            );
+            if (!isWindowFocused || !isOnChatPage) showNotification(data);
+          }
+        }
+
+        if (packet.event === "newChatMessage") {
+          void queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
+        }
+
+        emitLocal(packet.event, packet.data);
+      };
     };
+
+    connect();
 
     return () => {
-      ws.close();
+      isUnmounted = true;
+      if (reconnectTimerRef.current) {
+        clearTimeout(reconnectTimerRef.current);
+        reconnectTimerRef.current = null;
+      }
+      if (wsRef.current) wsRef.current.close();
       wsRef.current = null;
     };
   }, [emitLocal, queryClient, user]);

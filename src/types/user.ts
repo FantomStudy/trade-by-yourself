@@ -3,6 +3,7 @@ export interface User {
   email?: string;
   fullName: string;
   phoneNumber: string;
+  role?: "USER" | "USER_VERIFIED" | "SENIOR_MODERATOR" | "ADMIN" | "SUPERADMIN";
   profileType: string;
   rating: number | null;
   photo: string | null;

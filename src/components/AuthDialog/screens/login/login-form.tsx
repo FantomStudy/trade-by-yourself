@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLoginMutation } from "@/api/hooks";
 import { loginSchema } from "@/api/types";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { Field } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import styles from "../forms.module.css";
@@ -30,7 +31,7 @@ export const LoginForm = ({ onSuccess }: AuthFormProps) => {
         setError(undefined);
       },
       onError: (err) => {
-        setError(err.message);
+        setError(getApiErrorMessage(err, "Не удалось выполнить вход"));
       },
     });
   };
@@ -42,7 +43,12 @@ export const LoginForm = ({ onSuccess }: AuthFormProps) => {
         error={errors.login?.message}
         placeholder="Почта / Номер телефона"
       />
-      <Field error={errors.password?.message} {...register("password")} placeholder="Пароль" />
+      <Field
+        type="password"
+        error={errors.password?.message}
+        {...register("password")}
+        placeholder="Пароль"
+      />
 
       {error && <span className={styles.error}>{error}</span>}
 

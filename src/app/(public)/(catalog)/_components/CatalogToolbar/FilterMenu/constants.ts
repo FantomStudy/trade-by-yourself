@@ -1,4 +1,4 @@
-export const STATE_LABELS: Record<string, string> = {
+﻿export const STATE_LABELS: Record<string, string> = {
   NEW: "Новый",
   USED: "Б/У",
 };
@@ -14,6 +14,8 @@ export const SORT_BY_LABELS: Record<string, string> = {
   date_asc: "Сначала старые",
   price_asc: "Сначала дешевле",
   price_desc: "Сначала дороже",
+  seller_rating: "По рейтингу продавца",
+  distance: "По расстоянию",
   relevance: "По релевантности",
 };
 
@@ -22,6 +24,7 @@ export const FILTER_KEYS = [
   "maxPrice",
   "state",
   "profileType",
+  "hasSecureDeal",
   "minRating",
   "maxRating",
   "sortBy",

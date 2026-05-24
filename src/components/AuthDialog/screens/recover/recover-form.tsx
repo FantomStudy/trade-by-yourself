@@ -11,8 +11,9 @@ import { useForm } from "react-hook-form";
 
 import { useRecoverMutation } from "@/api/hooks";
 import { changePassword, forgotPasswordSchema, verifyCode } from "@/lib/api";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { getCleanPhoneForSubmit, isValidPhoneNumber } from "@/lib/phone";
-import { Field } from "@/components/ui";
+import { Field, PhoneField, usePhoneField } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 
 import styles from "../forms.module.css";
@@ -22,6 +23,7 @@ type RecoverStep = "send" | "verify" | "done";
 export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
   const recoverMutation = useRecoverMutation();
   const {
+    control,
     register,
     handleSubmit,
     setValue,
@@ -41,6 +43,11 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
   const [step, setStep] = useState<RecoverStep>("send");
   const [error, setError] = useState<string>();
   const [sentMessage, setSentMessage] = useState<string>("");
+  const phoneField = usePhoneField({
+    control,
+    name: "phoneNumber",
+    storeCleanValue: true,
+  });
 
   const where = watch("where") || "email";
 
@@ -77,7 +84,7 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
         setStep("verify");
       },
       onError: (err) => {
-        setError(err.message);
+        setError(getApiErrorMessage(err, "Не удалось отправить код восстановления"));
       },
     });
   };
@@ -108,7 +115,7 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
       setStep("done");
       setTimeout(() => onSuccess?.(), 500);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Ошибка при восстановлении пароля");
+      setError(getApiErrorMessage(e, "Ошибка при восстановлении пароля"));
     }
   };
 
@@ -129,7 +136,12 @@ export const RecoverForm = ({ onSuccess }: AuthFormProps) => {
         {where === "email" ? (
           <Field disabled={step !== "send"} type="email" error={errors.email?.message} placeholder="Email" {...register("email")} />
         ) : (
-          <Field disabled={step !== "send"} type="tel" error={errors.phoneNumber?.message} placeholder="Номер телефона" {...register("phoneNumber")} />
+          <PhoneField
+            disabled={step !== "send"}
+            error={errors.phoneNumber?.message}
+            placeholder="Номер телефона"
+            {...phoneField}
+          />
         )}
       </div>
 

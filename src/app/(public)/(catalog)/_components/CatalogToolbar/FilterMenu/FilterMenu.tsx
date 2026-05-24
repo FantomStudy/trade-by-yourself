@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { Route } from "next";
 import { FilterIcon } from "lucide-react";
@@ -22,6 +22,7 @@ export const FilterMenu = () => {
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") ?? "");
   const [state, setState] = useState(searchParams.get("state") ?? "");
   const [profileType, setProfileType] = useState(searchParams.get("profileType") ?? "");
+  const [hasSecureDeal, setHasSecureDeal] = useState(searchParams.get("hasSecureDeal") ?? "");
   const [minRating, setMinRating] = useState(searchParams.get("minRating") ?? "");
   const [maxRating, setMaxRating] = useState(searchParams.get("maxRating") ?? "");
   const [sortBy, setSortBy] = useState(searchParams.get("sortBy") ?? "");
@@ -39,11 +40,7 @@ export const FilterMenu = () => {
   const subCategorySlug = pathParts[1] || undefined;
   const typeSlug = pathParts[2] || undefined;
 
-  const filters = useProductFilters({
-    categorySlug,
-    subCategorySlug,
-    typeSlug,
-  });
+  const filters = useProductFilters({ categorySlug, subCategorySlug, typeSlug });
 
   const availableStates = filters.data?.states ?? [];
   const availableProfileTypes = filters.data?.profileTypes ?? [];
@@ -56,6 +53,7 @@ export const FilterMenu = () => {
     setMaxPrice(searchParams.get("maxPrice") ?? "");
     setState(searchParams.get("state") ?? "");
     setProfileType(searchParams.get("profileType") ?? "");
+    setHasSecureDeal(searchParams.get("hasSecureDeal") ?? "");
     setMinRating(searchParams.get("minRating") ?? "");
     setMaxRating(searchParams.get("maxRating") ?? "");
     setSortBy(searchParams.get("sortBy") ?? "");
@@ -76,27 +74,22 @@ export const FilterMenu = () => {
     const params = new URLSearchParams(searchParams.toString());
 
     const setOrDelete = (key: string, value: string) => {
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
+      if (value) params.set(key, value);
+      else params.delete(key);
     };
 
     setOrDelete("minPrice", minPrice);
     setOrDelete("maxPrice", maxPrice);
     setOrDelete("state", state);
     setOrDelete("profileType", profileType);
+    setOrDelete("hasSecureDeal", hasSecureDeal);
     setOrDelete("minRating", minRating);
     setOrDelete("maxRating", maxRating);
     setOrDelete("sortBy", sortBy);
 
     const nonEmptyFields = Object.fromEntries(Object.entries(fields).filter(([, v]) => v));
-    if (Object.keys(nonEmptyFields).length > 0) {
-      params.set("fieldValues", JSON.stringify(nonEmptyFields));
-    } else {
-      params.delete("fieldValues");
-    }
+    if (Object.keys(nonEmptyFields).length > 0) params.set("fieldValues", JSON.stringify(nonEmptyFields));
+    else params.delete("fieldValues");
 
     router.push(`${pathname}?${params.toString()}` as Route);
     setOpen(false);
@@ -110,6 +103,7 @@ export const FilterMenu = () => {
     setMaxPrice("");
     setState("");
     setProfileType("");
+    setHasSecureDeal("");
     setMinRating("");
     setMaxRating("");
     setSortBy("");
@@ -135,120 +129,91 @@ export const FilterMenu = () => {
           <div className={styles.group}>
             <label>Цена</label>
             <div className={styles.inputWrapper}>
-              <Input
-                type="number"
-                className={styles.priceInput}
-                placeholder={priceRange ? String(priceRange.min) : "От"}
-                value={minPrice}
-                onChange={(e) => setMinPrice(e.target.value)}
-              />
+              <Input type="number" className={styles.priceInput} placeholder={priceRange ? String(priceRange.min) : "От"} value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
               <span className={styles.separator}>—</span>
-              <Input
-                type="number"
-                className={styles.priceInput}
-                placeholder={priceRange ? String(priceRange.max) : "До"}
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
-              />
+              <Input type="number" className={styles.priceInput} placeholder={priceRange ? String(priceRange.max) : "До"} value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
             </div>
           </div>
+
           {availableStates.length > 0 && (
             <div className={styles.group}>
               <label>Состояние</label>
               <Select value={state} onValueChange={(v) => setState(v ?? "")}>
                 <Select.Trigger className={styles.selectTrigger}>
-                  <Select.Value placeholder="Все">
-                    {(v: string | null) => (v ? STATE_LABELS[v] : null)}
-                  </Select.Value>
+                  <Select.Value placeholder="Все">{(v: string | null) => (v ? STATE_LABELS[v] : null)}</Select.Value>
                 </Select.Trigger>
                 <Select.Content>
                   {availableStates.map((s) => (
-                    <Select.Item key={s} value={s}>
-                      {STATE_LABELS[s] ?? s}
-                    </Select.Item>
+                    <Select.Item key={s} value={s}>{STATE_LABELS[s] ?? s}</Select.Item>
                   ))}
                 </Select.Content>
               </Select>
             </div>
           )}
+
           {availableProfileTypes.length > 0 && (
             <div className={styles.group}>
               <label>Тип продавца</label>
               <Select value={profileType} onValueChange={(v) => setProfileType(v ?? "")}>
                 <Select.Trigger className={styles.selectTrigger}>
-                  <Select.Value placeholder="Все">
-                    {(v: string | null) => (v ? PROFILE_TYPE_LABELS[v] : null)}
-                  </Select.Value>
+                  <Select.Value placeholder="Все">{(v: string | null) => (v ? PROFILE_TYPE_LABELS[v] : null)}</Select.Value>
                 </Select.Trigger>
                 <Select.Content>
                   {availableProfileTypes.map((pt) => (
-                    <Select.Item key={pt} value={pt}>
-                      {PROFILE_TYPE_LABELS[pt] ?? pt}
-                    </Select.Item>
+                    <Select.Item key={pt} value={pt}>{PROFILE_TYPE_LABELS[pt] ?? pt}</Select.Item>
                   ))}
                 </Select.Content>
               </Select>
             </div>
           )}
+
+          <div className={styles.group}>
+            <label>Безопасная сделка</label>
+            <Select value={hasSecureDeal} onValueChange={(v) => setHasSecureDeal(v ?? "")}>
+              <Select.Trigger className={styles.selectTrigger}><Select.Value placeholder="Все" /></Select.Trigger>
+              <Select.Content>
+                <Select.Item value="true">Только с безопасной сделкой</Select.Item>
+                <Select.Item value="false">Только без безопасной сделки</Select.Item>
+              </Select.Content>
+            </Select>
+          </div>
+
           <div className={styles.group}>
             <label>Рейтинг продавца</label>
             <div className={styles.inputWrapper}>
-              <Input
-                type="number"
-                placeholder={ratingRange ? String(ratingRange.min) : "1"}
-                min={ratingRange?.min ?? 1}
-                max={ratingRange?.max ?? 5}
-                step={0.1}
-                value={minRating}
-                onChange={(e) => setMinRating(e.target.value)}
-              />
+              <Input type="number" placeholder={ratingRange ? String(ratingRange.min) : "1"} min={ratingRange?.min ?? 1} max={ratingRange?.max ?? 5} step={0.1} value={minRating} onChange={(e) => setMinRating(e.target.value)} />
               <span className={styles.separator}>—</span>
-              <Input
-                type="number"
-                placeholder={ratingRange ? String(ratingRange.max) : "5"}
-                min={ratingRange?.min ?? 1}
-                max={ratingRange?.max ?? 5}
-                step={0.1}
-                value={maxRating}
-                onChange={(e) => setMaxRating(e.target.value)}
-              />
+              <Input type="number" placeholder={ratingRange ? String(ratingRange.max) : "5"} min={ratingRange?.min ?? 1} max={ratingRange?.max ?? 5} step={0.1} value={maxRating} onChange={(e) => setMaxRating(e.target.value)} />
             </div>
           </div>
+
           {availableFields.map((field) => (
             <div key={field.fieldId} className={styles.group}>
               <label>{field.fieldName}</label>
-              <Select
-                value={fields[field.fieldId.toString()] ?? ""}
-                onValueChange={(v) =>
-                  setFields((prev) => ({ ...prev, [field.fieldId.toString()]: v ?? "" }))
-                }
-              >
-                <Select.Trigger className={styles.selectTrigger}>
-                  <Select.Value placeholder="Все" />
-                </Select.Trigger>
+              <Select value={fields[field.fieldId.toString()] ?? ""} onValueChange={(v) => setFields((prev) => ({ ...prev, [field.fieldId.toString()]: v ?? "" }))}>
+                <Select.Trigger className={styles.selectTrigger}><Select.Value placeholder="Все" /></Select.Trigger>
                 <Select.Content>
                   {field.values.map((val) => (
-                    <Select.Item key={val} value={val}>
-                      {val}
-                    </Select.Item>
+                    <Select.Item key={val} value={val}>{val}</Select.Item>
                   ))}
                 </Select.Content>
               </Select>
             </div>
           ))}
+
           <div className={styles.group}>
             <label>Сортировать по</label>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v ?? "")}>
               <Select.Trigger className={styles.selectTrigger}>
-                <Select.Value placeholder="Не выбрано">
-                  {(v: string | null) => (v ? SORT_BY_LABELS[v] : null)}
-                </Select.Value>
+                <Select.Value placeholder="Не выбрано">{(v: string | null) => (v ? SORT_BY_LABELS[v] : null)}</Select.Value>
               </Select.Trigger>
               <Select.Content>
                 <Select.Item value="date_desc">Сначала новые</Select.Item>
                 <Select.Item value="date_asc">Сначала старые</Select.Item>
                 <Select.Item value="price_asc">Сначала дешевле</Select.Item>
                 <Select.Item value="price_desc">Сначала дороже</Select.Item>
+                <Select.Item value="seller_rating">По рейтингу продавца</Select.Item>
+                <Select.Item value="distance">По расстоянию</Select.Item>
                 <Select.Item value="relevance">По релевантности</Select.Item>
               </Select.Content>
             </Select>
@@ -256,9 +221,7 @@ export const FilterMenu = () => {
         </div>
 
         <Sheet.Footer>
-          <Button variant="destructive" onClick={handleReset}>
-            Сбросить
-          </Button>
+          <Button variant="destructive" onClick={handleReset}>Сбросить</Button>
           <Button onClick={handleApply}>Применить</Button>
         </Sheet.Footer>
       </Sheet.Content>

@@ -6,6 +6,7 @@ export interface Product {
   images: string[];
   isFavorited: boolean;
   isHide?: boolean;
+  isReserved?: boolean;
   moderateState?: "APPROVED" | "DENIDED" | "DENIED" | "MODERATE" | "DRAFT";
   price: number;
   quantity: number;
@@ -97,6 +98,7 @@ export type ProductSortBy =
   | "date_asc"
   | "price_asc"
   | "price_desc"
+  | "distance"
   | "popularity"
   | "seller_rating";
 
@@ -107,9 +109,12 @@ export interface ProductsQueryParams {
   typeSlug?: string;
   minPrice?: number;
   maxPrice?: number;
+  minRating?: number;
+  maxRating?: number;
   state?: string;
   region?: string;
   profileType?: string;
+  hasSecureDeal?: boolean;
   fieldValues?: string;
   sortBy?: ProductSortBy;
   page?: number;
