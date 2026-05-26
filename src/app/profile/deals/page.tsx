@@ -15,7 +15,10 @@ import {
 import { Input, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
-import { getDealCdekQr, syncDealPayment } from "@/lib/api/requests";
+import { getDealCdekQr, setCdekHandoff, syncDealPayment } from "@/lib/api/requests";
+import type { SetCdekHandoffRequest } from "@/lib/api/requests";
+
+import { CdekDeliverySteps } from "./_components/cdek-delivery-steps";
 import { toCurrency } from "@/lib/format";
 
 import styles from "./page.module.css";
@@ -125,11 +128,13 @@ function DealQrContent({ payload }: { payload: DealCdekQrResponse }) {
 
 const DealsPage = () => {
   const [filter, setFilter] = useState<DealFilter>("all");
-  const [trackByDealId, setTrackByDealId] = useState<Record<number, string>>({});
-  const [orderUuidByDealId, setOrderUuidByDealId] = useState<Record<number, string>>({});
   const [cdekQrByDealId, setCdekQrByDealId] = useState<Record<number, DealCdekQrResponse>>({});
   const [cdekQrLoadingId, setCdekQrLoadingId] = useState<number | null>(null);
   const [syncPayLoadingId, setSyncPayLoadingId] = useState<number | null>(null);
+  const [handoffModeByDealId, setHandoffModeByDealId] = useState<Record<number, "pvz" | "courier">>({});
+  const [fromPvzByDealId, setFromPvzByDealId] = useState<Record<number, string>>({});
+  const [fromAddressByDealId, setFromAddressByDealId] = useState<Record<number, string>>({});
+  const [handoffLoadingId, setHandoffLoadingId] = useState<number | null>(null);
 
   const { data: deals = [], isLoading, isFetching, refetch } = useMyDeals();
   const cancelDealMutation = useCancelDealMutation();
@@ -149,24 +154,52 @@ const DealsPage = () => {
   };
 
   const handleShipDeal = async (deal: Deal) => {
-    const hasPvz = Boolean(deal.cdek.toPvzCode);
-    const cdekTrackNumber = trackByDealId[deal.id]?.trim() ?? "";
-    const cdekOrderUuid = orderUuidByDealId[deal.id]?.trim() ?? "";
-
-    if (hasPvz && !cdekTrackNumber && !cdekOrderUuid) {
-      toast.error("Для ПВЗ укажи трек или UUID заказа CDEK — бэк сам подтянет трек по UUID");
+    if (!deal.cdek.sellerHandoff) {
+      toast.error("Сначала укажи способ передачи в СДЭК (ПВЗ или курьер)");
+      return;
+    }
+    if (!deal.cdek.orderUuid?.trim()) {
+      toast.error("Дождись регистрации заказа в СДЭК после выбора передачи");
       return;
     }
 
     try {
-      await shipDealMutation.mutateAsync({
-        id: deal.id,
-        cdekTrackNumber: cdekTrackNumber || undefined,
-        cdekOrderUuid: cdekOrderUuid || undefined,
-      });
-      toast.success("Заказ отправлен");
+      await shipDealMutation.mutateAsync({ id: deal.id });
+      toast.success("Передача в СДЭК подтверждена — посылка в логистике");
+      await refetch();
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Не удалось отправить заказ"));
+      toast.error(getApiErrorMessage(error, "Не удалось подтвердить передачу"));
+    }
+  };
+
+  const handleSetHandoff = async (deal: Deal) => {
+    const mode = handoffModeByDealId[deal.id] ?? "pvz";
+    const body: SetCdekHandoffRequest = { mode };
+    if (mode === "pvz") {
+      const code = (fromPvzByDealId[deal.id] ?? "").trim();
+      if (!code) {
+        toast.error("Укажи код ПВЗ СДЭК, куда сдашь посылку");
+        return;
+      }
+      body.cdekFromPvzCode = code;
+    } else {
+      const addr = (fromAddressByDealId[deal.id] ?? "").trim();
+      if (!addr) {
+        toast.error("Укажи адрес забора курьером");
+        return;
+      }
+      body.cdekFromAddress = addr;
+    }
+
+    setHandoffLoadingId(deal.id);
+    try {
+      await setCdekHandoff(deal.id, body);
+      toast.success("Заявка в СДЭК оформлена — принеси посылку в пункт или жди курьера");
+      await refetch();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Не удалось оформить передачу в СДЭК"));
+    } finally {
+      setHandoffLoadingId(null);
     }
   };
 
@@ -311,37 +344,82 @@ const DealsPage = () => {
 
                 {deal.myRole === "seller" && deal.statusCode === "PAID" ? (
                   <div className={styles.shipBlock}>
-                    <Typography variant="h2">Отправить заказ</Typography>
-                    {deal.cdek.toPvzCode ? (
-                      <div className={styles.shipInputs}>
-                        <Input
-                          className={styles.shipInput}
-                          value={trackByDealId[deal.id] ?? deal.cdek.trackNumber ?? ""}
-                          placeholder="Трек-номер CDEK *"
-                          onChange={(event) =>
-                            setTrackByDealId((prev) => ({ ...prev, [deal.id]: event.target.value }))
-                          }
-                        />
-                        <Input
-                          className={styles.shipInput}
-                          value={orderUuidByDealId[deal.id] ?? deal.cdek.orderUuid ?? ""}
-                          placeholder="UUID заказа CDEK (можно без трека — подтянется)"
-                          onChange={(event) =>
-                            setOrderUuidByDealId((prev) => ({
-                              ...prev,
-                              [deal.id]: event.target.value,
-                            }))
-                          }
-                        />
-                      </div>
-                    ) : null}
-                    <Button
-                      disabled={shipDealMutation.isPending}
-                      type="button"
-                      onClick={() => handleShipDeal(deal)}
-                    >
-                      Отправить заказ
-                    </Button>
+                    <Typography variant="h2">Передача в СДЭК</Typography>
+                    <p className={styles.cdekHint}>
+                      {deal.cdek.sellerHandoffHint ??
+                        "Принеси посылку в ПВЗ или вызови курьера — сотрудник проверит и упакует отправление."}
+                    </p>
+                    {!deal.cdek.sellerHandoff ? (
+                      <>
+                        <div className={styles.filters}>
+                          <Button
+                            type="button"
+                            variant={(handoffModeByDealId[deal.id] ?? "pvz") === "pvz" ? "primary" : "success"}
+                            onClick={() =>
+                              setHandoffModeByDealId((prev) => ({ ...prev, [deal.id]: "pvz" }))
+                            }
+                          >
+                            Сдам в ПВЗ
+                          </Button>
+                          <Button
+                            type="button"
+                            variant={
+                              (handoffModeByDealId[deal.id] ?? "pvz") === "courier" ? "primary" : "success"
+                            }
+                            onClick={() =>
+                              setHandoffModeByDealId((prev) => ({ ...prev, [deal.id]: "courier" }))
+                            }
+                          >
+                            Вызову курьера
+                          </Button>
+                        </div>
+                        {(handoffModeByDealId[deal.id] ?? "pvz") === "pvz" ? (
+                          <Input
+                            className={styles.shipInput}
+                            placeholder="Код ПВЗ СДЭК (откуда сдаёшь)"
+                            value={fromPvzByDealId[deal.id] ?? ""}
+                            onChange={(event) =>
+                              setFromPvzByDealId((prev) => ({ ...prev, [deal.id]: event.target.value }))
+                            }
+                          />
+                        ) : (
+                          <Input
+                            className={styles.shipInput}
+                            placeholder="Адрес забора курьером"
+                            value={fromAddressByDealId[deal.id] ?? ""}
+                            onChange={(event) =>
+                              setFromAddressByDealId((prev) => ({ ...prev, [deal.id]: event.target.value }))
+                            }
+                          />
+                        )}
+                        <Button
+                          disabled={handoffLoadingId === deal.id}
+                          type="button"
+                          onClick={() => handleSetHandoff(deal)}
+                        >
+                          {handoffLoadingId === deal.id ? "Оформляем..." : "Оформить в СДЭК"}
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        {deal.cdek.orderUuid ? (
+                          <p className={styles.cdekHint}>
+                            Заказ в СДЭК: {deal.cdek.orderUuid}
+                            {deal.cdek.trackNumber ? ` · трек ${deal.cdek.trackNumber}` : ""}
+                          </p>
+                        ) : null}
+                        <Button
+                          disabled={shipDealMutation.isPending}
+                          type="button"
+                          variant="success"
+                          onClick={() => handleShipDeal(deal)}
+                        >
+                          {shipDealMutation.isPending
+                            ? "Сохраняем..."
+                            : "Посылку передал в СДЭК"}
+                        </Button>
+                      </>
+                    )}
                   </div>
                 ) : null}
 
@@ -378,7 +456,8 @@ const DealsPage = () => {
                 </div>
 
                 <div className={styles.section}>
-                  <Typography variant="h2">Доставка CDEK</Typography>
+                  <Typography variant="h2">Доставка СДЭК</Typography>
+                  <CdekDeliverySteps stages={deal.cdek.deliveryStages} />
                   <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>Тариф</span>
@@ -406,9 +485,20 @@ const DealsPage = () => {
                       <span className={styles.infoLabel}>UUID заказа CDEK</span>
                       <span className={styles.infoValue}>{deal.cdek.orderUuid?.trim() ? deal.cdek.orderUuid : "Не указан"}</span>
                     </div>
+                    {deal.cdek.package?.weight ? (
+                      <div className={styles.infoItem}>
+                        <span className={styles.infoLabel}>Посылка</span>
+                        <span className={styles.infoValue}>
+                          {deal.cdek.package.weight} г
+                          {deal.cdek.package.length
+                            ? ` · ${deal.cdek.package.length}×${deal.cdek.package.width}×${deal.cdek.package.height} см`
+                            : ""}
+                        </span>
+                      </div>
+                    ) : null}
                     {deal.myRole === "buyer" ? (
                       <div className={styles.infoItem}>
-                        <span className={styles.infoLabel}>Ваш ПВЗ получения</span>
+                        <span className={styles.infoLabel}>ПВЗ получения</span>
                         <span className={styles.infoValue}>{getPvzText(deal)}</span>
                       </div>
                     ) : (

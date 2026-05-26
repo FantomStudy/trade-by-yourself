@@ -51,7 +51,7 @@ const CreateProductPage = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
-    // Р”Р»СЏ С‡РёСЃР»РѕРІС‹С… РїРѕР»РµР№ СЂР°Р·СЂРµС€Р°РµРј С‚РѕР»СЊРєРѕ С†РёС„СЂС‹
+    // Для числовых полей разрешаем только цифры
     if (name === "price" || name === "quantity") {
       const numericValue = value.replace(/\D/g, "");
       setFormData((prev) => ({ ...prev, [name]: numericValue }));
@@ -72,7 +72,7 @@ const CreateProductPage = () => {
     setError(null);
     setSubmitAttempted(true);
 
-    // Р’Р°Р»РёРґР°С†РёСЏ
+    // Валидация
     if (
       !formData.name ||
       !formData.price ||
@@ -82,23 +82,23 @@ const CreateProductPage = () => {
       !formData.subcategoryId ||
       !formData.typeId
     ) {
-      setError("РџРѕР¶Р°Р»СѓР№СЃС‚Р°, Р·Р°РїРѕР»РЅРёС‚Рµ РІСЃРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ");
+      setError("Пожалуйста, заполните все обязательные поля");
       return;
     }
 
     if (Number(formData.price) <= 0) {
-      setError("Р¦РµРЅР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ РЅСѓР»СЏ");
+      setError("Цена должна быть больше нуля");
       return;
     }
 
     const parsedQuantity = Number(formData.quantity || "1");
     if (!Number.isInteger(parsedQuantity) || parsedQuantity < 1) {
-      setError("РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0");
+      setError("Количество должно быть целым числом больше 0");
       return;
     }
 
     if (images.length === 0) {
-      setError("Р”РѕР±Р°РІСЊС‚Рµ С…РѕС‚СЏ Р±С‹ РѕРґРЅРѕ РёР·РѕР±СЂР°Р¶РµРЅРёРµ");
+      setError("Добавьте хотя бы одно изображение");
       return;
     }
 
@@ -124,9 +124,9 @@ const CreateProductPage = () => {
         },
         {
           onSuccess: (data) => {
-            console.log("РћР±СЉСЏРІР»РµРЅРёРµ СЃРѕР·РґР°РЅРѕ:", data);
+            console.log("Объявление создано:", data);
             toast.success(
-              "РўРѕРІР°СЂ РѕС‚РїСЂР°РІР»РµРЅ РЅР° РјРѕРґРµСЂР°С†РёСЋ. РџРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё РѕРЅ РїРѕСЏРІРёС‚СЃСЏ РІ РІР°С€РµРј СЃРїРёСЃРєРµ РѕР±СЉСЏРІР»РµРЅРёР№.",
+              "Товар отправлен на модерацию. После проверки он появится в вашем списке объявлений.",
             );
             setFormData({
               name: "",
@@ -146,23 +146,23 @@ const CreateProductPage = () => {
             setError(null);
           },
           onError: (error: any) => {
-            console.error("РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РѕР±СЉСЏРІР»РµРЅРёСЏ:", error);
+            console.error("Ошибка создания объявления:", error);
 
             if (error.response?.status === 400) {
               const errorMessage =
                 error.response?.data?.message ||
                 error.response?.data?.error ||
-                "РћС€РёР±РєР° РІР°Р»РёРґР°С†РёРё РґР°РЅРЅС‹С…";
+                "Ошибка валидации данных";
               const formattedMessage = Array.isArray(errorMessage)
                 ? errorMessage.join(", ")
                 : errorMessage;
               setError(
-                formattedMessage.includes("РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0")
-                  ? "РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0"
+                formattedMessage.includes("Количество должно быть целым числом больше 0")
+                  ? "Количество должно быть целым числом больше 0"
                   : formattedMessage,
               );
             } else {
-              setError(`РћС€РёР±РєР° РїСЂРё СЃРѕР·РґР°РЅРёРё РѕР±СЉСЏРІР»РµРЅРёСЏ: ${error.message || "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°"}`);
+              setError(`Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`);
             }
           },
         },
@@ -173,7 +173,7 @@ const CreateProductPage = () => {
     }
   };
 
-  /** Р§РµСЂРЅРѕРІРёРє: С‚Рµ Р¶Рµ РїРѕР»СЏ, РЅРѕ Р±РµР· РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… С„РѕС‚Рѕ (multipart РєР°Рє Сѓ create). */
+  /** Черновик: те же поля, но без обязательных фото (multipart как у create). */
   const handleSaveDraft = async () => {
     setError(null);
 
@@ -218,25 +218,25 @@ const CreateProductPage = () => {
         },
         {
           onSuccess: () => {
-            toast.success("Р§РµСЂРЅРѕРІРёРє СЃРѕС…СЂР°РЅС‘РЅ");
+            toast.success("Черновик сохранён");
           },
           onError: (error: any) => {
-            console.error("РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ С‡РµСЂРЅРѕРІРёРєР°:", error);
+            console.error("Ошибка сохранения черновика:", error);
             if (error.response?.status === 400) {
               const errorMessage =
                 error.response?.data?.message ||
                 error.response?.data?.error ||
-                "РћС€РёР±РєР° РІР°Р»РёРґР°С†РёРё РґР°РЅРЅС‹С…";
+                "Ошибка валидации данных";
               const formattedMessage = Array.isArray(errorMessage)
                 ? errorMessage.join(", ")
                 : errorMessage;
               setError(
-                formattedMessage.includes("РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0")
-                  ? "РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0"
+                formattedMessage.includes("Количество должно быть целым числом больше 0")
+                  ? "Количество должно быть целым числом больше 0"
                   : formattedMessage,
               );
             } else {
-              setError(`РћС€РёР±РєР°: ${error.message || "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°"}`);
+              setError(`Ошибка: ${error.message || "Неизвестная ошибка"}`);
             }
           },
         },
@@ -247,17 +247,17 @@ const CreateProductPage = () => {
     }
   };
 
-  // РџРѕР»СѓС‡Р°РµРј РґРѕСЃС‚СѓРїРЅС‹Рµ РїРѕРґРєР°С‚РµРіРѕСЂРёРё
+  // Получаем доступные подкатегории
   const selectedCategory = categories.find((cat) => String(cat.id) === formData.categoryId);
   const availableSubcategories = selectedCategory?.subCategories || [];
 
-  // РџРѕР»СѓС‡Р°РµРј РґРѕСЃС‚СѓРїРЅС‹Рµ С‚РёРїС‹ РїРѕРґРєР°С‚РµРіРѕСЂРёР№
+  // Получаем доступные типы подкатегорий
   const selectedSubcategory = availableSubcategories.find(
     (sub) => String(sub.id) === formData.subcategoryId,
   );
   const availableTypes = selectedSubcategory?.subcategoryTypes || [];
 
-  // РџРѕР»СѓС‡Р°РµРј РїРѕР»СЏ РґР»СЏ РІС‹Р±СЂР°РЅРЅРѕРіРѕ С‚РёРїР°
+  // Получаем поля для выбранного типа
   const selectedType = availableTypes.find((type) => String(type.id) === formData.typeId);
   const fields = selectedType?.fields || [];
   const requiredValidation = {
@@ -277,9 +277,9 @@ const CreateProductPage = () => {
   return (
     <form noValidate onSubmit={handleSubmit}>
       <div className={styles.wrapper}>
-        <h1 className={styles.purple}>РЎРѕР·РґР°РЅРёРµ РѕР±СЉСЏРІР»РµРЅРёСЏ</h1>
+        <h1 className={styles.purple}>Создание объявления</h1>
         <label className={styles.fieldLabel} htmlFor="name">
-          РќР°Р·РІР°РЅРёРµ РѕР±СЉСЏРІР»РµРЅРёСЏ *
+          Название объявления *
         </label>
         <Input
           required
@@ -288,10 +288,10 @@ const CreateProductPage = () => {
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          placeholder="Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РѕР±СЉСЏРІР»РµРЅРёСЏ"
+          placeholder="Введите название объявления"
         />
         <label className={styles.fieldLabel} htmlFor="price">
-          Р¦РµРЅР° *
+          Цена *
         </label>
         <Input
           required
@@ -303,10 +303,10 @@ const CreateProductPage = () => {
           value={formData.price}
           inputMode="numeric"
           onChange={handleInputChange}
-          placeholder="Р’РІРµРґРёС‚Рµ С†РµРЅСѓ"
+          placeholder="Введите цену"
         />
         <label className={styles.fieldLabel} htmlFor="quantity">
-          РљРѕР»РёС‡РµСЃС‚РІРѕ *
+          Количество *
         </label>
         <Input
           required
@@ -319,10 +319,10 @@ const CreateProductPage = () => {
           value={formData.quantity}
           inputMode="numeric"
           onChange={handleInputChange}
-          placeholder="Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ (С€С‚.)"
+          placeholder="Введите количество (шт.)"
         />
         <label className={styles.fieldLabel} htmlFor="name">
-          РћРїРёСЃР°РЅРёРµ С‚РѕРІР°СЂР°
+          Описание товара
         </label>
         <Textarea
           className="bg-white"
@@ -330,12 +330,12 @@ const CreateProductPage = () => {
           name="description"
           value={formData.description}
           onChange={handleInputChange}
-          placeholder="РќР°РїРёС€РёС‚Рµ РѕРїРёСЃР°РЅРёРµ РґР»СЏ С‚РѕРІР°СЂР°"
+          placeholder="Напишите описание для товара"
           rows={5}
         />
         <p className={styles.fieldHint}>Бесплатно: до 2000 символов, платное: до 7000 символов</p>
 
-        <p>РЎРѕСЃС‚РѕСЏРЅРёРµ С‚РѕРІР°СЂР° *</p>
+        <p>Состояние товара *</p>
         <div
           className={`${styles.checkboxes} ${submitAttempted && requiredValidation.state ? styles.invalidGroup : ""}`}
         >
@@ -348,7 +348,7 @@ const CreateProductPage = () => {
               type="radio"
               onChange={() => handleStateChange("NEW")}
             />
-            <label htmlFor="new">РќРѕРІРѕРµ</label>
+            <label htmlFor="new">Новое</label>
           </div>
           <div className={styles.box}>
             <input
@@ -359,13 +359,13 @@ const CreateProductPage = () => {
               type="radio"
               onChange={() => handleStateChange("USED")}
             />
-            <label htmlFor="used">Р‘/РЈ</label>
+            <label htmlFor="used">Б/У</label>
           </div>
         </div>
 
-        <h1 className={styles.blue}>РљР°С‚РµРіРѕСЂРёСЏ</h1>
+        <h1 className={styles.blue}>Категория</h1>
         <label className={styles.fieldLabel} htmlFor="categoryId">
-          РљР°С‚РµРіРѕСЂРёСЏ *
+          Категория *
         </label>
         <select
           required
@@ -382,7 +382,7 @@ const CreateProductPage = () => {
             }))
           }
         >
-          <option value="">Р’С‹Р±РµСЂРёС‚Рµ РєР°С‚РµРіРѕСЂРёСЋ</option>
+          <option value="">Выберите категорию</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -391,7 +391,7 @@ const CreateProductPage = () => {
         </select>
 
         <label className={styles.fieldLabel} htmlFor="subcategoryId">
-          РџРѕРґРєР°С‚РµРіРѕСЂРёСЏ *
+          Подкатегория *
         </label>
         <select
           required
@@ -408,7 +408,7 @@ const CreateProductPage = () => {
             }))
           }
         >
-          <option value="">Р’С‹Р±РµСЂРёС‚Рµ РїРѕРґРєР°С‚РµРіРѕСЂРёСЋ</option>
+          <option value="">Выберите подкатегорию</option>
           {availableSubcategories.map((subcategory) => (
             <option key={subcategory.id} value={subcategory.id}>
               {subcategory.name}
@@ -417,7 +417,7 @@ const CreateProductPage = () => {
         </select>
 
         <label className={styles.fieldLabel} htmlFor="typeId">
-          РўРёРї *
+          Тип *
         </label>
         <select
           required
@@ -433,7 +433,7 @@ const CreateProductPage = () => {
             }))
           }
         >
-          <option value="">Р’С‹Р±РµСЂРёС‚Рµ С‚РёРї</option>
+          <option value="">Выберите тип</option>
           {availableTypes.map((type) => (
             <option key={type.id} value={type.id}>
               {type.name}
@@ -443,7 +443,7 @@ const CreateProductPage = () => {
 
         {fields.length > 0 && (
           <>
-            <h1 className={styles.blue}>Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ</h1>
+            <h1 className={styles.blue}>Дополнительная информация</h1>
             {fields.map((field) => (
               <Input
                 key={field.id}
@@ -461,19 +461,19 @@ const CreateProductPage = () => {
           </>
         )}
 
-        <h1 className={styles.green}>РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё</h1>
+        <h1 className={styles.green}>Подробности</h1>
       </div>
 
       <ImageUpload maxImages={15} onImagesChange={handleImagesChange} />
       <p className={styles.fieldHint}>Бесплатно: до 8 фото, платное: до 15 фото</p>
       {submitAttempted && requiredValidation.images ? (
-        <div className={styles.invalidHint}>Р”РѕР±Р°РІСЊС‚Рµ С…РѕС‚СЏ Р±С‹ РѕРґРЅРѕ РёР·РѕР±СЂР°Р¶РµРЅРёРµ</div>
+        <div className={styles.invalidHint}>Добавьте хотя бы одно изображение</div>
       ) : null}
 
-      {/* РџРѕР»Рµ РґР»СЏ СЃСЃС‹Р»РєРё РЅР° РІРёРґРµРѕ */}
+      {/* Поле для ссылки на видео */}
       <div style={{ marginTop: 16, marginBottom: 16 }}>
         <label className={styles.fieldLabel} htmlFor="videoUrl">
-          РЎСЃС‹Р»РєР° РЅР° РІРёРґРµРѕ
+          Ссылка на видео
         </label>
         <Input
           id="videoUrl"
@@ -481,12 +481,12 @@ const CreateProductPage = () => {
           name="videoUrl"
           value={formData.videoUrl}
           onChange={handleInputChange}
-          placeholder="РЎСЃС‹Р»РєР° РЅР° РІРёРґРµРѕ"
+          placeholder="Ссылка на видео"
         />
       </div>
 
       <div className={styles.wrapper}>
-        <h1 className={styles.orange}>РњРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёРµ</h1>
+        <h1 className={styles.orange}>Местоположение</h1>
         <AddressMap
           value={formData.address}
           onChange={(address) => setFormData((prev) => ({ ...prev, address }))}
@@ -502,7 +502,7 @@ const CreateProductPage = () => {
           disabled={createProductMutation.isPending || createDraftMutation.isPending}
           type="submit"
         >
-          {createProductMutation.isPending ? "РЎРѕР·РґР°РЅРёРµ..." : "РЎРѕР·РґР°С‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ"}
+          {createProductMutation.isPending ? "Создание..." : "Создать объявление"}
         </Button>
         <Button
           className={styles.button}
@@ -511,7 +511,7 @@ const CreateProductPage = () => {
           variant="success"
           onClick={handleSaveDraft}
         >
-          {createDraftMutation.isPending ? "РЎРѕС…СЂР°РЅРµРЅРёРµ..." : "РЎРѕС…СЂР°РЅРёС‚СЊ С‡РµСЂРЅРѕРІРёРє"}
+          {createDraftMutation.isPending ? "Сохранение..." : "Сохранить черновик"}
         </Button>
       </div>
     </form>
@@ -519,6 +519,3 @@ const CreateProductPage = () => {
 };
 
 export default CreateProductPage;
-
-
-

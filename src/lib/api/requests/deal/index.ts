@@ -9,4 +9,5 @@ export * from "./get-deal-cdek-qr";
 export * from "./get-my-deals";
 export * from "./pay-deal";
 export * from "./ship-deal";
+export * from "./set-cdek-handoff";
 export * from "./sync-deal-payment";

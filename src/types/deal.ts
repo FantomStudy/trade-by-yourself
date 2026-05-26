@@ -1,3 +1,13 @@
+export type CdekRecipientMode = "pvz";
+export type CdekSellerHandoff = "pvz" | "courier";
+
+export interface CdekDeliveryStage {
+  key: string;
+  title: string;
+  description: string;
+  status: "pending" | "active" | "done";
+}
+
 export interface CreateDealRequest {
   productId: number;
   deliveryCost: number;
@@ -8,6 +18,11 @@ export interface CreateDealRequest {
   cdekFromPvzCode?: string;
   cdekToPvzCode?: string;
   cdekToAddress?: string;
+  cdekPackageWeight?: number;
+  cdekPackageLength?: number;
+  cdekPackageWidth?: number;
+  cdekPackageHeight?: number;
+  cdekRecipientMode?: CdekRecipientMode;
 }
 
 /** Ответ бэка на GET /deals/:id/cdek-qr — для показа QR в ПВЗ. */
@@ -57,12 +72,23 @@ export interface Deal {
   cdek: {
     fromCityCode: number;
     fromPvzCode: string | null;
+    fromAddress?: string | null;
     orderUuid: string | null;
     tariffCode: number;
     tariffName: string | null;
     toCityCode: number;
     toPvzCode: string | null;
     toAddress?: string | null;
+    recipientMode?: CdekRecipientMode | null;
+    sellerHandoff?: CdekSellerHandoff | null;
+    cdekStatus?: string | null;
+    package?: {
+      weight?: number;
+      length?: number;
+      width?: number;
+      height?: number;
+    };
+    deliveryStages?: CdekDeliveryStage[];
     trackNumber: string | null;
     /** Ссылка на трекинг cdek.ru, если трек уже есть. */
     trackingUrl?: string | null;

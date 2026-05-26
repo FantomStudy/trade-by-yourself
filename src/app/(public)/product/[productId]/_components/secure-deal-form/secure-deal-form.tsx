@@ -35,7 +35,6 @@ import styles from "./secure-deal-form.module.css";
 type ParcelInputMode = "approximate" | "exact";
 const WAREHOUSE_TO_WAREHOUSE_TARIFF_CODE = 136;
 const WAREHOUSE_TO_WAREHOUSE_TARIFF_NAME = "Посылка склад-склад";
-
 function getCityFromAddress(address?: string | null) {
   if (!address) return "";
   const normalized = address.trim();
@@ -407,15 +406,24 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
     try {
       setIsCreating(true);
+      const parsedWeight = Number(weight);
+      const parsedLength = Number(length);
+      const parsedWidth = Number(width);
+      const parsedHeight = Number(height);
+
       const deal = await createDeal({
         productId: product.id,
         deliveryCost,
-        cdekTariffCode: WAREHOUSE_TO_WAREHOUSE_TARIFF_CODE,
-        cdekTariffName: WAREHOUSE_TO_WAREHOUSE_TARIFF_NAME,
+        cdekTariffCode: tariffCode,
+        cdekTariffName: tariffName,
         cdekFromCityCode: fromCityCode,
         cdekToCityCode: toCityCode,
         cdekToPvzCode: toPvzCode || undefined,
-        cdekToAddress: undefined,
+        cdekPackageWeight: parsedWeight,
+        cdekPackageLength: parsedLength,
+        cdekPackageWidth: parsedWidth,
+        cdekPackageHeight: parsedHeight,
+        cdekRecipientMode: "pvz",
       });
 
       toast.success(`Сделка #${deal.id} создана`);
@@ -497,7 +505,8 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
           <DialogHeader>
             <DialogTitle>Оформление безопасной сделки</DialogTitle>
             <DialogDescription>
-              Выбери город и ПВЗ получателя, затем укажи параметры посылки.
+              Оформление заявки СДЭК: получатель и вес посылки. Дальше продавец передаст груз в ПВЗ или
+              курьеру, вы получите SMS с кодом при прибытии в пункт выдачи.
             </DialogDescription>
           </DialogHeader>
 
@@ -559,13 +568,12 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                   </option>
                 ))}
               </select>
-
             </div>
 
             <div className={styles.block}>
               <Typography variant="h2">Параметры посылки</Typography>
               <Typography className={styles.metaText}>
-                Тариф фиксированный: «Посылка склад-склад» (код 136).
+                Тариф: «Посылка склад-склад» (код 136). Вес и габариты уходят в заявку СДЭК.
               </Typography>
               <div className={styles.modeSwitch}>
                 <button

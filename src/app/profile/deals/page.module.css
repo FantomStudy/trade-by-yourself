@@ -72,6 +72,41 @@
   justify-content: flex-start;
 }
 
+.deliverySteps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.deliveryStep {
+  border-left: 3px solid #d1d5db;
+  padding-left: 12px;
+}
+
+.deliveryStep_active {
+  border-left-color: #2563eb;
+}
+
+.deliveryStep_done {
+  border-left-color: #16a34a;
+}
+
+.deliveryStepTitle {
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+}
+
+.deliveryStepDesc {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
 .shipBlock {
   display: flex;
   flex-direction: column;
