@@ -1,10 +1,11 @@
 "use client";
 
-import type { Deal, DealCdekQrResponse } from "@/types";
+import type { SetCdekHandoffRequest } from "@/lib/api/requests";
 
+import type { CdekPvz, Deal, DealCdekQrResponse } from "@/types";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 
+import { toast } from "sonner";
 import {
   useCancelDealMutation,
   useConfirmDeliveryMutation,
@@ -15,11 +16,9 @@ import {
 import { Input, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
-import { getDealCdekQr, setCdekHandoff, syncDealPayment } from "@/lib/api/requests";
-import type { SetCdekHandoffRequest } from "@/lib/api/requests";
-
-import { CdekDeliverySteps } from "./_components/cdek-delivery-steps";
+import { getCdekDeliveryPoints, getDealCdekQr, setCdekHandoff, syncDealPayment } from "@/lib/api/requests";
 import { toCurrency } from "@/lib/format";
+import { CdekDeliverySteps } from "./_components/cdek-delivery-steps";
 
 import styles from "./page.module.css";
 
@@ -135,6 +134,8 @@ const DealsPage = () => {
   const [fromPvzByDealId, setFromPvzByDealId] = useState<Record<number, string>>({});
   const [fromAddressByDealId, setFromAddressByDealId] = useState<Record<number, string>>({});
   const [handoffLoadingId, setHandoffLoadingId] = useState<number | null>(null);
+  const [sellerPvzByDealId, setSellerPvzByDealId] = useState<Record<number, CdekPvz[]>>({});
+  const [sellerPvzLoadingByDealId, setSellerPvzLoadingByDealId] = useState<Record<number, boolean>>({});
 
   const { data: deals = [], isLoading, isFetching, refetch } = useMyDeals();
   const cancelDealMutation = useCancelDealMutation();
@@ -173,17 +174,17 @@ const DealsPage = () => {
   };
 
   const handleSetHandoff = async (deal: Deal) => {
-    const mode = handoffModeByDealId[deal.id] ?? "pvz";
+    const mode = handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz";
     const body: SetCdekHandoffRequest = { mode };
     if (mode === "pvz") {
-      const code = (fromPvzByDealId[deal.id] ?? "").trim();
+      const code = (fromPvzByDealId[deal.id] ?? deal.cdek.fromPvzCode ?? "").trim();
       if (!code) {
         toast.error("Укажи код ПВЗ СДЭК, куда сдашь посылку");
         return;
       }
       body.cdekFromPvzCode = code;
     } else {
-      const addr = (fromAddressByDealId[deal.id] ?? "").trim();
+      const addr = (fromAddressByDealId[deal.id] ?? deal.cdek.fromAddress ?? "").trim();
       if (!addr) {
         toast.error("Укажи адрес забора курьером");
         return;
@@ -200,6 +201,27 @@ const DealsPage = () => {
       toast.error(getApiErrorMessage(error, "Не удалось оформить передачу в СДЭК"));
     } finally {
       setHandoffLoadingId(null);
+    }
+  };
+
+  const loadSellerPvz = async (deal: Deal) => {
+    if (!deal.cdek.fromCityCode) {
+      toast.error("Не удалось определить город отправителя для выбора ПВЗ");
+      return;
+    }
+    if (sellerPvzByDealId[deal.id]?.length) return;
+
+    setSellerPvzLoadingByDealId((prev) => ({ ...prev, [deal.id]: true }));
+    try {
+      const points = await getCdekDeliveryPoints(deal.cdek.fromCityCode);
+      setSellerPvzByDealId((prev) => ({ ...prev, [deal.id]: points || [] }));
+      if (!points?.length) {
+        toast.error("Для города отправителя ПВЗ не найдены");
+      }
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Не удалось загрузить ПВЗ отправителя"));
+    } finally {
+      setSellerPvzLoadingByDealId((prev) => ({ ...prev, [deal.id]: false }));
     }
   };
 
@@ -349,12 +371,15 @@ const DealsPage = () => {
                       {deal.cdek.sellerHandoffHint ??
                         "Принеси посылку в ПВЗ или вызови курьера — сотрудник проверит и упакует отправление."}
                     </p>
-                    {!deal.cdek.sellerHandoff ? (
-                      <>
+                    <>
                         <div className={styles.filters}>
                           <Button
                             type="button"
-                            variant={(handoffModeByDealId[deal.id] ?? "pvz") === "pvz" ? "primary" : "success"}
+                            variant={
+                              (handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz") === "pvz"
+                                ? "primary"
+                                : "success"
+                            }
                             onClick={() =>
                               setHandoffModeByDealId((prev) => ({ ...prev, [deal.id]: "pvz" }))
                             }
@@ -364,7 +389,9 @@ const DealsPage = () => {
                           <Button
                             type="button"
                             variant={
-                              (handoffModeByDealId[deal.id] ?? "pvz") === "courier" ? "primary" : "success"
+                              (handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz") === "courier"
+                                ? "primary"
+                                : "success"
                             }
                             onClick={() =>
                               setHandoffModeByDealId((prev) => ({ ...prev, [deal.id]: "courier" }))
@@ -373,20 +400,50 @@ const DealsPage = () => {
                             Вызову курьера
                           </Button>
                         </div>
-                        {(handoffModeByDealId[deal.id] ?? "pvz") === "pvz" ? (
-                          <Input
-                            className={styles.shipInput}
-                            placeholder="Код ПВЗ СДЭК (откуда сдаёшь)"
-                            value={fromPvzByDealId[deal.id] ?? ""}
-                            onChange={(event) =>
-                              setFromPvzByDealId((prev) => ({ ...prev, [deal.id]: event.target.value }))
-                            }
-                          />
+                        {(handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz") === "pvz" ? (
+                          <div className={styles.shipInput}>
+                            <div className={styles.actionsRow}>
+                              <Button
+                                disabled={sellerPvzLoadingByDealId[deal.id]}
+                                type="button"
+                                variant="success"
+                                onClick={() => loadSellerPvz(deal)}
+                              >
+                                {sellerPvzLoadingByDealId[deal.id] ? "Загружаем ПВЗ..." : "Выбрать ПВЗ отправителя"}
+                              </Button>
+                            </div>
+                            {sellerPvzByDealId[deal.id]?.length ? (
+                              <select
+                                className={styles.shipInput}
+                                value={fromPvzByDealId[deal.id] ?? deal.cdek.fromPvzCode ?? ""}
+                                onChange={(event) =>
+                                  setFromPvzByDealId((prev) => ({ ...prev, [deal.id]: event.target.value }))
+                                }
+                              >
+                                <option value="">Выбери ПВЗ, откуда отправишь</option>
+                                {sellerPvzByDealId[deal.id].map((pvz) => (
+                                  <option key={pvz.code} value={pvz.code}>
+                                    {pvz.code}
+                                    {pvz.location?.address ? ` — ${pvz.location.address}` : ""}
+                                  </option>
+                                ))}
+                              </select>
+                            ) : (
+                              <Input
+                                className={styles.shipInput}
+                                placeholder="Код ПВЗ СДЭК (если выбираешь вручную)"
+                                value={fromPvzByDealId[deal.id] ?? deal.cdek.fromPvzCode ?? ""}
+                                onChange={(event) =>
+                                  setFromPvzByDealId((prev) => ({ ...prev, [deal.id]: event.target.value }))
+                                }
+                              />
+                            )}
+                          </div>
                         ) : (
                           <Input
                             className={styles.shipInput}
                             placeholder="Адрес забора курьером"
-                            value={fromAddressByDealId[deal.id] ?? ""}
+                            value={fromAddressByDealId[deal.id] ?? deal.cdek.fromAddress ?? ""}
                             onChange={(event) =>
                               setFromAddressByDealId((prev) => ({ ...prev, [deal.id]: event.target.value }))
                             }
@@ -397,29 +454,27 @@ const DealsPage = () => {
                           type="button"
                           onClick={() => handleSetHandoff(deal)}
                         >
-                          {handoffLoadingId === deal.id ? "Оформляем..." : "Оформить в СДЭК"}
+                          {handoffLoadingId === deal.id ? "Оформляем..." : "Сохранить передачу в СДЭК"}
                         </Button>
-                      </>
-                    ) : (
-                      <>
                         {deal.cdek.orderUuid ? (
-                          <p className={styles.cdekHint}>
-                            Заказ в СДЭК: {deal.cdek.orderUuid}
-                            {deal.cdek.trackNumber ? ` · трек ${deal.cdek.trackNumber}` : ""}
-                          </p>
+                          <>
+                            <p className={styles.cdekHint}>
+                              Заказ в СДЭК: {deal.cdek.orderUuid}
+                              {deal.cdek.trackNumber ? ` · трек ${deal.cdek.trackNumber}` : ""}
+                            </p>
+                            <Button
+                              disabled={shipDealMutation.isPending}
+                              type="button"
+                              variant="success"
+                              onClick={() => handleShipDeal(deal)}
+                            >
+                              {shipDealMutation.isPending
+                                ? "Сохраняем..."
+                                : "Посылку передал в СДЭК"}
+                            </Button>
+                          </>
                         ) : null}
-                        <Button
-                          disabled={shipDealMutation.isPending}
-                          type="button"
-                          variant="success"
-                          onClick={() => handleShipDeal(deal)}
-                        >
-                          {shipDealMutation.isPending
-                            ? "Сохраняем..."
-                            : "Посылку передал в СДЭК"}
-                        </Button>
-                      </>
-                    )}
+                    </>
                   </div>
                 ) : null}
 
