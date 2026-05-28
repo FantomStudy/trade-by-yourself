@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { ExtendedProduct } from "@/types";
 import { CircleSmall, Phone, StarIcon } from "lucide-react";
@@ -22,7 +22,7 @@ interface SellerCardProps {
 export const SellerCard = ({ product }: SellerCardProps) => {
   const router = useRouter();
   const [showPhone, setShowPhone] = useState(false);
-  const [shareLabel, setShareLabel] = useState("РџРѕРґРµР»РёС‚СЊСЃСЏ РїСЂРѕС„РёР»РµРј");
+  const [shareLabel, setShareLabel] = useState("Поделиться профилем");
   const startChatMutation = useStartChatMutation();
 
   const handleShowPhone = () => {
@@ -51,15 +51,20 @@ export const SellerCard = ({ product }: SellerCardProps) => {
 
     try {
       await navigator.clipboard.writeText(profileUrl);
-      setShareLabel("РЎСЃС‹Р»РєР° СЃРєРѕРїРёСЂРѕРІР°РЅР°");
+      setShareLabel("Ссылка скопирована");
     } catch {
-      setShareLabel("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРєРѕРїРёСЂРѕРІР°С‚СЊ");
+      setShareLabel("Не удалось скопировать");
     } finally {
-      setTimeout(setShareLabel, 1800, "РџРѕРґРµР»РёС‚СЊСЃСЏ РїСЂРѕС„РёР»РµРј");
+      setTimeout(setShareLabel, 1800, "Поделиться профилем");
     }
   };
 
-  const isLegalEntity = product.seller.profileType === "Р®СЂРёРґРёС‡РµСЃРєРѕРµ Р»РёС†Рѕ";
+  const profileType = product.seller.profileType?.toUpperCase();
+  const isLegalEntity =
+    profileType === "OOO" ||
+    profileType === "OOP" ||
+    profileType === "IP" ||
+    product.seller.profileType === "Юридическое лицо";
 
   return (
     <div className={styles.card}>
@@ -75,7 +80,7 @@ export const SellerCard = ({ product }: SellerCardProps) => {
             <StarIcon fill="currentColor" />
           </Typography>
 
-          <Typography className={styles.reviews}>{product.seller.reviewsCount} РѕС‚Р·С‹РІРѕРІ</Typography>
+          <Typography className={styles.reviews}>{product.seller.reviewsCount} отзывов</Typography>
         </div>
 
         <Badge className={styles.profileType} variant={isLegalEntity ? "secondary" : "primary"}>
@@ -89,12 +94,12 @@ export const SellerCard = ({ product }: SellerCardProps) => {
         <SecureDealForm product={product} />
 
         <Button disabled={startChatMutation.isPending} variant="success" onClick={handleStartChat}>
-          {startChatMutation.isPending ? "Р—Р°РіСЂСѓР·РєР°..." : "РќР°РїРёСЃР°С‚СЊ РїСЂРѕРґР°РІС†Сѓ"}
+          {startChatMutation.isPending ? "Загрузка..." : "Написать продавцу"}
         </Button>
 
         <Button onClick={handleShowPhone}>
           <Phone className={styles.icon} />
-          {showPhone && product.seller.phoneNumber ? product.seller.phoneNumber : "РџРѕРєР°Р·Р°С‚СЊ РЅРѕРјРµСЂ"}
+          {showPhone && product.seller.phoneNumber ? product.seller.phoneNumber : "Показать номер"}
         </Button>
 
         <Button variant="outline" onClick={handleShareProfile}>

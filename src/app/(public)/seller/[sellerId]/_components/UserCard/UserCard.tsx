@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { ProductUser } from "@/api/products";
 import { CircleSmallIcon, StarIcon } from "lucide-react";
@@ -17,8 +17,10 @@ interface UserCardProps {
 }
 
 export const UserCard = ({ user }: UserCardProps) => {
-  const [shareLabel, setShareLabel] = useState("РџРѕРґРµР»РёС‚СЊСЃСЏ РїСЂРѕС„РёР»РµРј");
-  const isLegalEntity = user.profileType === "Р®СЂРёРґРёС‡РµСЃРєРѕРµ Р»РёС†Рѕ";
+  const [shareLabel, setShareLabel] = useState("Поделиться профилем");
+  const profileType = user.profileType?.toUpperCase();
+  const isLegalEntity =
+    profileType === "OOO" || profileType === "OOP" || profileType === "IP" || user.profileType === "Юридическое лицо";
 
   const handleShare = async () => {
     if (typeof window === "undefined") return;
@@ -26,11 +28,11 @@ export const UserCard = ({ user }: UserCardProps) => {
 
     try {
       await navigator.clipboard.writeText(profileUrl);
-      setShareLabel("РЎСЃС‹Р»РєР° СЃРєРѕРїРёСЂРѕРІР°РЅР°");
+      setShareLabel("Ссылка скопирована");
     } catch {
-      setShareLabel("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРєРѕРїРёСЂРѕРІР°С‚СЊ");
+      setShareLabel("Не удалось скопировать");
     } finally {
-      setTimeout(setShareLabel, 1800, "РџРѕРґРµР»РёС‚СЊСЃСЏ РїСЂРѕС„РёР»РµРј");
+      setTimeout(setShareLabel, 1800, "Поделиться профилем");
     }
   };
 
@@ -47,7 +49,7 @@ export const UserCard = ({ user }: UserCardProps) => {
             {user.rating?.toFixed(1) || "0.0"}
             <StarIcon fill="currentColor" />
           </Typography>
-          <Typography className={styles.reviewsCount}>{user.reviewsCount || 0} РѕС‚Р·С‹РІРѕРІ</Typography>
+          <Typography className={styles.reviewsCount}>{user.reviewsCount || 0} отзывов</Typography>
         </div>
         <span className={styles.profileBadge} data-legal={isLegalEntity}>
           <CircleSmallIcon fill="currentColor" />
