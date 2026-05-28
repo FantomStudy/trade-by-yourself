@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Gift, ShieldCheck, StarIcon, WalletIcon } from "lucide-react";
 import Image from "next/image";
@@ -11,8 +11,6 @@ import { Typography } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
-
-import { toShortName } from "@/lib/format";
 
 import { LINKS } from "./constants";
 import styles from "./sidebar.module.css";
@@ -41,10 +39,10 @@ export const Sidebar = () => {
     try {
       await navigator.clipboard.writeText(url);
       setShareLabel("Ссылка скопирована");
-      setTimeout(() => setShareLabel("Поделиться профилем"), 1800);
+      setTimeout(setShareLabel, 1800, "Поделиться профилем");
     } catch {
       setShareLabel("Не удалось скопировать");
-      setTimeout(() => setShareLabel("Поделиться профилем"), 1800);
+      setTimeout(setShareLabel, 1800, "Поделиться профилем");
     }
   }, [user?.id]);
 
@@ -54,7 +52,7 @@ export const Sidebar = () => {
         <>
           <div className={styles.profileInfo}>
             <Avatar size="lg" src={userInfo?.photo ?? ""} fallback={user.fullName} />
-            <Typography variant="h2">{toShortName(user.fullName)}</Typography>
+            <Typography variant="h2">{user.fullName}</Typography>
           </div>
 
           <div className={styles.stats}>

@@ -2,6 +2,7 @@
   position: relative;
   display: block;
   overflow: hidden;
+  border-radius: var(--radius);
 }
 
 .banner[data-place="FAVORITES"] {

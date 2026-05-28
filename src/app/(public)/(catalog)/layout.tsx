@@ -3,7 +3,7 @@ import { CatalogToolbar } from "./_components/CatalogToolbar";
 
 const CatalogLayout = ({ children }: LayoutProps<"/">) => {
   return (
-    <div className="global-container" style={{ marginTop: "-16px" }}>
+    <div className="global-container" style={{ marginTop: "12px" }}>
       <BannerSlot place="FAVORITES" />
       <CatalogToolbar />
 
