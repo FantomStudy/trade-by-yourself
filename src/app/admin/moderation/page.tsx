@@ -4,7 +4,7 @@ import type { ModerationFilter, ModerationProduct, ModerationState } from "@/typ
 
 import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, X } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -101,6 +101,25 @@ const ProductDetailDialog = ({
   isActing: boolean;
 }) => {
   const { data: product, isLoading } = useModerationProduct(open ? productId : null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [product?.id]);
+
+  const imageCount = product?.images.length ?? 0;
+  const hasManyImages = imageCount > 1;
+  const activeImage = imageCount > 0 ? product?.images[currentImageIndex] : null;
+
+  const showPrevImage = () => {
+    if (!product || imageCount <= 1) return;
+    setCurrentImageIndex((prev) => (prev === 0 ? imageCount - 1 : prev - 1));
+  };
+
+  const showNextImage = () => {
+    if (!product || imageCount <= 1) return;
+    setCurrentImageIndex((prev) => (prev === imageCount - 1 ? 0 : prev + 1));
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -123,7 +142,7 @@ const ProductDetailDialog = ({
                 {/* Left column — images + seller */}
                 <div className="flex w-72 flex-shrink-0 flex-col gap-4 overflow-y-auto border-r bg-gray-50 p-5">
                   {/* Images */}
-                  {product.images.length > 0 ? (
+                  {imageCount > 0 ? (
                     <div className="flex flex-col gap-3">
                       <div className="relative aspect-square w-full overflow-hidden rounded-xl border bg-white shadow-sm">
                         <Image
@@ -131,15 +150,50 @@ const ProductDetailDialog = ({
                           className="object-cover"
                           fill
                           sizes="272px"
-                          src={product.images[0]}
+                          src={activeImage!}
                         />
+
+                        {hasManyImages && (
+                          <>
+                            <button
+                              aria-label="Предыдущее фото"
+                              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/55 p-1.5 text-white transition hover:bg-black/70"
+                              type="button"
+                              onClick={showPrevImage}
+                            >
+                              <ChevronLeft className="h-4 w-4" />
+                            </button>
+                            <button
+                              aria-label="Следующее фото"
+                              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/55 p-1.5 text-white transition hover:bg-black/70"
+                              type="button"
+                              onClick={showNextImage}
+                            >
+                              <ChevronRight className="h-4 w-4" />
+                            </button>
+                            <div className="absolute bottom-2 right-2 rounded-md bg-black/60 px-2 py-0.5 text-xs text-white">
+                              {currentImageIndex + 1} / {imageCount}
+                            </div>
+                          </>
+                        )}
                       </div>
-                      {product.images.length > 1 && (
+                      {hasManyImages && (
                         <div className="grid grid-cols-3 gap-2">
-                          {product.images.slice(1).map((src, i) => (
+                          {product.images.map((src, i) => (
                             <div
                               key={i}
-                              className="relative aspect-square overflow-hidden rounded-lg border bg-white"
+                              className={`relative aspect-square cursor-pointer overflow-hidden rounded-lg border bg-white transition ${
+                                i === currentImageIndex ? "ring-2 ring-blue-500" : "hover:ring-2 hover:ring-blue-300"
+                              }`}
+                              role="button"
+                              tabIndex={0}
+                              onClick={() => setCurrentImageIndex(i)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  setCurrentImageIndex(i);
+                                }
+                              }}
                             >
                               <Image
                                 alt={product.name}

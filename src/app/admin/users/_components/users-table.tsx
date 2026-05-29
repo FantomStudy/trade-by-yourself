@@ -103,7 +103,13 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
     }
   };
 
-  const sortedUsers = [...users].sort((a, b) => b.id - a.id);
+  const sortedUsers = [...users].sort((a, b) => {
+    const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+
+    if (aTime !== bTime) return bTime - aTime;
+    return b.id - a.id;
+  });
 
   const filteredUsers = sortedUsers.filter((user) => {
     if (!searchQuery) return true;
