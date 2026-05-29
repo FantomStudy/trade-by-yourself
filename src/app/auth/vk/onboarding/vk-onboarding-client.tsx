@@ -2,7 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
 import {
@@ -29,10 +29,10 @@ export function VkOnboardingClient() {
   const [err, setErr] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const next = search.get("next") || "/profile/my-products";
-  const redirectToNext = () => {
+  const redirectToNext = useCallback(() => {
     const target = next.startsWith("/") ? next : "/profile/my-products";
     window.location.replace(target);
-  };
+  }, [next]);
 
   useEffect(() => {
     void (async () => {
@@ -58,7 +58,7 @@ export function VkOnboardingClient() {
         router.replace("/?auth=1");
       }
     })();
-  }, [next, router]);
+  }, [next, redirectToNext, router]);
 
   const title = useMemo(() => {
     switch (stage) {
