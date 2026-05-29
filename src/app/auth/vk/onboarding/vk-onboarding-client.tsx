@@ -29,6 +29,10 @@ export function VkOnboardingClient() {
   const [err, setErr] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const next = search.get("next") || "/profile/my-products";
+  const redirectToNext = () => {
+    const target = next.startsWith("/") ? next : "/profile/my-products";
+    window.location.replace(target);
+  };
 
   useEffect(() => {
     void (async () => {
@@ -37,7 +41,7 @@ export function VkOnboardingClient() {
         setEmail(status.email || "");
         setPhone(status.phoneNumber || "");
         if (!status.required) {
-          router.replace(next);
+          redirectToNext();
           return;
         }
         if (!status.isEmailVerified) {
@@ -49,7 +53,7 @@ export function VkOnboardingClient() {
           return;
         }
         setStage("done");
-        router.replace(next);
+        redirectToNext();
       } catch {
         router.replace("/?auth=1");
       }
@@ -138,7 +142,7 @@ export function VkOnboardingClient() {
       await vkOnboardingVerifyPhone(phoneCode.trim());
       await queryClient.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY });
       setStage("done");
-      router.replace(next);
+      redirectToNext();
     } catch (e: any) {
       setErr(e?.data?.message || "Неверный код телефона");
     } finally {
@@ -218,4 +222,3 @@ export function VkOnboardingClient() {
     </div>
   );
 }
-
