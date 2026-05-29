@@ -4,4 +4,5 @@ export * from "./login";
 export * from "./recover";
 export * from "./register";
 export * from "./verify-mobile-code";
+export * from "./vk-onboarding";
 export * from "./vk-sign-in";

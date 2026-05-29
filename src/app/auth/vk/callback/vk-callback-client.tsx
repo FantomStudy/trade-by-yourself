@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
+import { getVkOnboardingStatus } from "@/api/requests";
 import { VK_OAUTH_STATE_KEY } from "@/lib/auth/vk-oauth";
 
 export function VkCallbackClient() {
@@ -44,6 +45,13 @@ export function VkCallbackClient() {
 
       localStorage.removeItem(VK_OAUTH_STATE_KEY);
       await queryClient.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY });
+      try {
+        const onboarding = await getVkOnboardingStatus();
+        if (onboarding.required) {
+          router.replace("/auth/vk/onboarding");
+          return;
+        }
+      } catch {}
       router.replace("/profile/my-products");
     })();
   }, [queryClient, router, search]);
