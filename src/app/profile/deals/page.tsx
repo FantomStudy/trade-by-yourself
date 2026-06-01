@@ -23,6 +23,7 @@ import { CdekDeliverySteps } from "./_components/cdek-delivery-steps";
 import styles from "./page.module.css";
 
 type DealFilter = "all" | "buyer" | "seller";
+const WAREHOUSE_TO_WAREHOUSE_TARIFF_CODE = 136;
 
 const FILTER_BUTTONS: Array<{ key: DealFilter; label: string }> = [
   { key: "all", label: "Все сделки" },
@@ -174,7 +175,9 @@ const DealsPage = () => {
   };
 
   const handleSetHandoff = async (deal: Deal) => {
-    const mode = handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz";
+    const selectedMode = handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz";
+    const mode =
+      deal.cdek.tariffCode === WAREHOUSE_TO_WAREHOUSE_TARIFF_CODE ? "pvz" : selectedMode;
     const body: SetCdekHandoffRequest = { mode };
     if (mode === "pvz") {
       const code = (fromPvzByDealId[deal.id] ?? deal.cdek.fromPvzCode ?? "").trim();
@@ -308,6 +311,7 @@ const DealsPage = () => {
         <div className={styles.list}>
           {filteredDeals.map((deal) => {
             const cdekRegHint = getCdekRegistrationHint(deal);
+            const onlyPvzHandoff = deal.cdek.tariffCode === WAREHOUSE_TO_WAREHOUSE_TARIFF_CODE;
             return (
               <div key={deal.id} className={styles.card}>
                 <div className={styles.cardRow}>
@@ -386,19 +390,21 @@ const DealsPage = () => {
                           >
                             Сдам в ПВЗ
                           </Button>
-                          <Button
-                            type="button"
-                            variant={
-                              (handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz") === "courier"
-                                ? "primary"
-                                : "success"
-                            }
-                            onClick={() =>
-                              setHandoffModeByDealId((prev) => ({ ...prev, [deal.id]: "courier" }))
-                            }
-                          >
-                            Вызову курьера
-                          </Button>
+                          {!onlyPvzHandoff ? (
+                            <Button
+                              type="button"
+                              variant={
+                                (handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz") === "courier"
+                                  ? "primary"
+                                  : "success"
+                              }
+                              onClick={() =>
+                                setHandoffModeByDealId((prev) => ({ ...prev, [deal.id]: "courier" }))
+                              }
+                            >
+                              Вызову курьера
+                            </Button>
+                          ) : null}
                         </div>
                         {(handoffModeByDealId[deal.id] ?? deal.cdek.sellerHandoff ?? "pvz") === "pvz" ? (
                           <div className={styles.shipInput}>
