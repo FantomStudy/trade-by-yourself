@@ -85,7 +85,11 @@ function getCdekRegistrationHint(deal: Deal): string | null {
   return null;
 }
 
-function buildCdekQrMedia(payload: DealCdekQrResponse): { kind: "img"; src: string } | { kind: "file"; href: string } | null {
+function buildCdekQrMedia(payload: DealCdekQrResponse):
+  | { kind: "img"; src: string }
+  | { kind: "file"; href: string }
+  | { kind: "text"; value: string }
+  | null {
   const rawUrl = payload.qrCodeUrl?.trim();
   const rawData = payload.qrCodeData?.trim();
   if (rawUrl) {
@@ -101,6 +105,12 @@ function buildCdekQrMedia(payload: DealCdekQrResponse): { kind: "img"; src: stri
         return { kind: "file", href: rawData };
       }
       return { kind: "img", src: rawData };
+    }
+    // CDEK can return just a numeric barcode value (not an image/base64).
+    // In this case render it as text so seller can present it in PVZ.
+    const isLikelyBase64 = /^[A-Za-z0-9+/=\s]+$/.test(rawData) && rawData.length > 64;
+    if (!isLikelyBase64) {
+      return { kind: "text", value: rawData };
     }
     return { kind: "img", src: `data:image/png;base64,${rawData}` };
   }
@@ -122,6 +132,9 @@ function DealQrContent({ payload }: { payload: DealCdekQrResponse }) {
         Открыть штрихкод CDEK (файл)
       </a>
     );
+  }
+  if (media.kind === "text") {
+    return <span className={styles.infoValue}>{media.value}</span>;
   }
   return <CdekQrImg src={media.src} />;
 }
