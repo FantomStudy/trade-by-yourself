@@ -13,7 +13,12 @@ import {
   vkOnboardingVerifyPhone,
 } from "@/api/requests";
 
-type Stage = "email_input" | "email_code" | "phone_input" | "phone_code" | "done";
+type Stage =
+  | "email_input"
+  | "email_code"
+  | "phone_input"
+  | "phone_code"
+  | "done";
 
 export function VkOnboardingClient() {
   const router = useRouter();
@@ -162,11 +167,14 @@ export function VkOnboardingClient() {
           <input
             type="email"
             placeholder="Email"
-            value={email}
             onChange={(e) => setEmail(e.target.value)}
             style={{ width: "100%", padding: 12, marginBottom: 12 }}
           />
-          <button disabled={busy} onClick={onStartEmail} style={{ width: "100%", padding: 12 }}>
+          <button
+            disabled={busy}
+            onClick={onStartEmail}
+            style={{ width: "100%", padding: 12 }}
+          >
             Получить код на почту
           </button>
         </>
@@ -181,7 +189,11 @@ export function VkOnboardingClient() {
             onChange={(e) => setEmailCode(e.target.value)}
             style={{ width: "100%", padding: 12, marginBottom: 12 }}
           />
-          <button disabled={busy} onClick={onVerifyEmail} style={{ width: "100%", padding: 12 }}>
+          <button
+            disabled={busy}
+            onClick={onVerifyEmail}
+            style={{ width: "100%", padding: 12 }}
+          >
             Подтвердить почту
           </button>
         </>
@@ -196,7 +208,11 @@ export function VkOnboardingClient() {
             onChange={(e) => setPhone(e.target.value)}
             style={{ width: "100%", padding: 12, marginBottom: 12 }}
           />
-          <button disabled={busy} onClick={onStartPhone} style={{ width: "100%", padding: 12 }}>
+          <button
+            disabled={busy}
+            onClick={onStartPhone}
+            style={{ width: "100%", padding: 12 }}
+          >
             Получить код на телефон
           </button>
         </>
@@ -211,7 +227,11 @@ export function VkOnboardingClient() {
             onChange={(e) => setPhoneCode(e.target.value)}
             style={{ width: "100%", padding: 12, marginBottom: 12 }}
           />
-          <button disabled={busy} onClick={onVerifyPhone} style={{ width: "100%", padding: 12 }}>
+          <button
+            disabled={busy}
+            onClick={onVerifyPhone}
+            style={{ width: "100%", padding: 12 }}
+          >
             Подтвердить телефон
           </button>
         </>
