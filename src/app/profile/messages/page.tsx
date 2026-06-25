@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { BannerSlot } from "@/components/BannerSlot";
 import { useChats } from "@/lib/api/hooks";
 import { getMySupportTickets } from "@/lib/api/requests";
+import { resolveChatTitle } from "@/lib/chat-title";
 import { toCurrency } from "@/lib/format";
 import { MODERATION_CENTER_NAME, SUPPORT_CENTER_NAME } from "@/lib/support-display";
 
@@ -136,9 +137,10 @@ const MessagesPage = () => {
           </div>
         ) : (
           productChats.map((chat) => {
-            const companion = chat.companion;
-            const initials =
-              companion.fullName
+          const companion = chat.companion;
+          const chatTitle = resolveChatTitle(chat.product?.name, companion.fullName);
+          const initials =
+            companion.fullName
                 ?.split(" ")
                 .map((n) => n[0])
                 .join("")
@@ -162,7 +164,7 @@ const MessagesPage = () => {
                     </div>
                   ) : null}
                   <div className="flex-1">
-                    <h3 className="font-semibold">{chat.product?.name ?? "Объявление"}</h3>
+                    <h3 className="font-semibold">{chatTitle}</h3>
                     {chat.product?.price != null ? (
                       <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
                     ) : null}

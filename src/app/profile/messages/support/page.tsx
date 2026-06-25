@@ -83,13 +83,9 @@ const SupportChatPage = () => {
         }
 
       } catch (error) {
-
-        toast.error(getApiErrorMessage(error, "Не удалось загрузить обращения"));
-
+        console.warn("Support tickets load:", error);
       } finally {
-
         setLoading(false);
-
       }
 
     })();

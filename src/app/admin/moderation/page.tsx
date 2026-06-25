@@ -21,6 +21,7 @@ import {
   Typography,
 } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { fixMojibake } from "@/lib/fix-mojibake";
 
 import { MobileHeader } from "../_components/admin-sidebar";
 
@@ -251,7 +252,7 @@ const ProductDetailDialog = ({
                   {product.moderationRejectionReason && product.moderateState !== "APPROVED" && (
                     <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 leading-relaxed">
                       <span className="font-semibold">Причина: </span>
-                      {product.moderationRejectionReason}
+                      {fixMojibake(product.moderationRejectionReason)}
                     </div>
                   )}
 
@@ -429,7 +430,7 @@ const ProductRow = ({
         {product.moderationRejectionReason && (
           <p className="text-xs text-red-600">
             <span className="font-medium">Причина: </span>
-            {product.moderationRejectionReason}
+            {fixMojibake(product.moderationRejectionReason)}
           </p>
         )}
       </div>

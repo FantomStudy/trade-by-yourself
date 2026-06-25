@@ -10,6 +10,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { deleteUser, findAllUsers, toggleUserBanned, updateUser } from "@/api/requests";
+import { formatUserRole } from "@/lib/format-user-role";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,8 @@ import {
 } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 
+import { UserProductsDialog } from "./user-products-dialog";
+
 interface UsersTableProps {
   searchQuery: string;
 }
@@ -28,6 +31,8 @@ interface UsersTableProps {
 export const UsersTable = ({ searchQuery }: UsersTableProps) => {
   const queryClient = useQueryClient();
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [productsUser, setProductsUser] = useState<User | null>(null);
+  const [productsOpen, setProductsOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [editForm, setEditForm] = useState<UpdateUserDto>({});
@@ -203,21 +208,30 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                   ₽{(user.bonusBalance || 0).toFixed(2)}
                 </td>
                 <td className="px-2 py-2 text-xs whitespace-nowrap text-gray-900">
-                  <div>{user.role ?? "USER"}</div>
+                  <div>{formatUserRole(user.role)}</div>
                   <div className="text-[10px] text-gray-500">
                     {user.isEmailVerified ? "email ✓" : "email —"} ·{" "}
                     {user.isPhoneVerified ? "тел ✓" : "тел —"}
                   </div>
                 </td>
                 <td className="px-2 py-2 text-xs text-gray-900">
-                  <div title="всего">Всего: {user.productStats?.total ?? user.products ?? 0}</div>
-                  <div className="text-[10px] text-gray-500">
-                    акт: {user.productStats?.active ?? 0} · мод: {user.productStats?.moderation ?? 0} ·
-                    черн: {user.productStats?.drafts ?? 0} · скр: {user.productStats?.hidden ?? 0}
-                  </div>
-                  <div className="text-[10px] text-gray-500">
-                    беспл: {user.adsLimit?.remaining ?? "?"}/{user.adsLimit?.total ?? 6}
-                  </div>
+                  <button
+                    type="button"
+                    className="text-left hover:text-blue-600 hover:underline"
+                    onClick={() => {
+                      setProductsUser(user);
+                      setProductsOpen(true);
+                    }}
+                  >
+                    <div title="всего">Всего: {user.productStats?.total ?? user.products ?? 0}</div>
+                    <div className="text-[10px] text-gray-500">
+                      акт: {user.productStats?.active ?? 0} · мод: {user.productStats?.moderation ?? 0} ·
+                      черн: {user.productStats?.drafts ?? 0} · скр: {user.productStats?.hidden ?? 0}
+                    </div>
+                    <div className="text-[10px] text-gray-500">
+                      беспл: {user.adsLimit?.remaining ?? "?"}/{user.adsLimit?.total ?? 6}
+                    </div>
+                  </button>
                 </td>
                 <td className="px-2 py-2 text-xs">
                   <span
@@ -377,6 +391,8 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      <UserProductsDialog open={productsOpen} user={productsUser} onOpenChange={setProductsOpen} />
     </>
   );
 };

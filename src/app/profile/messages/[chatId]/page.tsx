@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
 import { MODERATION_CENTER_NAME, SUPPORT_CENTER_NAME } from "@/lib/support-display";
+import { resolveChatTitle } from "@/lib/chat-title";
 import { toCurrency } from "@/lib/format";
 
 const ChatPage = () => {
@@ -172,7 +173,9 @@ const ChatPage = () => {
   const messages = allMessages;
   const otherUser = chat.companion || chat.otherUser;
   const isModerationChat = chat.isModerationChat === true;
-  const headerTitle = isModerationChat ? MODERATION_CENTER_NAME : (chat.product?.name ?? "Чат");
+  const headerTitle = isModerationChat
+    ? MODERATION_CENTER_NAME
+    : resolveChatTitle(chat.product?.name, otherUser?.fullName);
   const companionName = isModerationChat ? MODERATION_CENTER_NAME : otherUser?.fullName;
 
   return (

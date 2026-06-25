@@ -11,7 +11,10 @@ import { useAuth } from "@/lib/contexts";
 import { AddressMap, ImageUpload, Input, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
+import { fixMojibake } from "@/lib/fix-mojibake";
 import { getUploadErrorMessage } from "@/lib/media-validation";
+import { FetchError } from "ofetch";
 
 import styles from "./page.module.css";
 
@@ -107,84 +110,61 @@ const CreateProductPage = () => {
     }
 
     try {
-      await createProductMutation.mutateAsync(
-        {
-          name: formData.name,
-          price: Number(formData.price),
-          quantity: parsedQuantity,
-          state: formData.state as "NEW" | "USED",
-          categoryId: Number(formData.categoryId),
-          subcategoryId: Number(formData.subcategoryId),
-          typeId: Number(formData.typeId),
-          description: formData.description,
-          address: formData.address,
-          images,
-          fieldValues,
-          videoUrl: formData.videoUrl,
-          ...(coordinates && {
-            latitude: coordinates.lat,
-            longitude: coordinates.lng,
-          }),
-        },
-        {
-          onSuccess: (data: { isDraft?: boolean }) => {
-            if (data?.isDraft) {
-              toast.message("Объявление сохранено как черновик — оплата не списана");
-              router.push("/profile/my-products");
-              return;
-            }
-            const limit = userInfo?.adsLimit;
-            if (limit && limit.remaining <= 0) {
-              toast.success(
-                `Объявление отправлено на модерацию. Списано ${limit.costPerAd} ₽ (сначала бонусы, затем баланс).`,
-              );
-            } else if (limit && limit.remaining === 1) {
-              toast.success("Объявление отправлено на модерацию. Это последнее бесплатное объявление в этом месяце.");
-            } else {
-              toast.success("Объявление отправлено на модерацию.");
-            }
-            setFormData({
-              name: "",
-              price: "",
-              quantity: "1",
-              description: "",
-              state: "",
-              address: "",
-              categoryId: "",
-              subcategoryId: "",
-              typeId: "",
-              videoUrl: "",
-            });
-            setFieldValues({});
-            setImages([]);
-            setCoordinates(null);
-            setError(null);
-          },
-          onError: (error: any) => {
-            console.error("Ошибка создания объявления:", error);
+      const data = (await createProductMutation.mutateAsync({
+        name: formData.name,
+        price: Number(formData.price),
+        quantity: parsedQuantity,
+        state: formData.state as "NEW" | "USED",
+        categoryId: Number(formData.categoryId),
+        subcategoryId: Number(formData.subcategoryId),
+        typeId: Number(formData.typeId),
+        description: formData.description,
+        address: formData.address,
+        images,
+        fieldValues,
+        videoUrl: formData.videoUrl,
+        ...(coordinates && {
+          latitude: coordinates.lat,
+          longitude: coordinates.lng,
+        }),
+      })) as { isDraft?: boolean };
 
-            if (error.response?.status === 400) {
-              const errorMessage =
-                error.response?.data?.message ||
-                error.response?.data?.error ||
-                "Ошибка валидации данных";
-              const formattedMessage = Array.isArray(errorMessage)
-                ? errorMessage.join(", ")
-                : errorMessage;
-              setError(
-                formattedMessage.includes("Количество должно быть целым числом больше 0")
-                  ? "Количество должно быть целым числом больше 0"
-                  : formattedMessage,
-              );
-            } else {
-              setError(getUploadErrorMessage(error, "Ошибка при создании объявления"));
-            }
-          },
-        },
-      );
-      router.replace("/profile/my-products");
-    } catch (err) {
-      console.error("Submit error:", err);
+      if (data?.isDraft) {
+        toast.message("Объявление сохранено как черновик — оплата не списана");
+        router.push("/profile/my-products");
+        return;
+      }
+
+      const limit = userInfo?.adsLimit;
+      if (limit && limit.remaining <= 0) {
+        toast.success(
+          `Объявление отправлено на модерацию. Списано ${limit.costPerAd} ₽ (сначала бонусы, затем баланс).`,
+        );
+      } else if (limit && limit.remaining === 1) {
+        toast.success("Объявление отправлено на модерацию. Это последнее бесплатное объявление в этом месяце.");
+      } else {
+        toast.success("Объявление отправлено на модерацию.");
+      }
+      router.push("/profile/my-products");
+    } catch (error) {
+      console.error("Ошибка создания объявления:", error);
+      let message = fixMojibake(getApiErrorMessage(error, ""));
+
+      if (
+        userInfo?.adsLimit &&
+        userInfo.adsLimit.remaining <= 0 &&
+        error instanceof FetchError &&
+        error.statusCode === 400 &&
+        (!message ||
+          /валидац|validation/i.test(message) ||
+          /недостаточно|средств|баланс/i.test(message))
+      ) {
+        if (!/недостаточно|средств/i.test(message)) {
+          message = `Бесплатный лимит исчерпан. Для размещения нужно ${userInfo.adsLimit.costPerAd} ₽ на балансе или бонусах. Пополните баланс в профиле.`;
+        }
+      }
+
+      setError(message || getUploadErrorMessage(error, "Ошибка при создании объявления"));
     }
   };
 

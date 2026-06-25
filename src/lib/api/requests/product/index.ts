@@ -1,6 +1,7 @@
 export * from "./create-draft";
 export * from "./create-product";
 export * from "./delete-product";
+export * from "./get-admin-user-products";
 export * from "./get-current-user-products";
 export * from "./get-moderation-product";
 export * from "./get-my-drafts";
