@@ -23,6 +23,8 @@ import {
 
 import styles from "./page.module.css";
 
+const POLL_INTERVAL_MS = 4000;
+
 const SupportChatPage = () => {
   const [message, setMessage] = useState("");
   const [ticketId, setTicketId] = useState<number | null>(null);
@@ -30,34 +32,42 @@ const SupportChatPage = () => {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ticketIdRef = useRef<number | null>(null);
   const isUnmountedRef = useRef(false);
+  const lastMsgCountRef = useRef(0);
 
-  // Скролл внутри контейнера сообщений (не всей страницы)
-  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
-    const container = messagesContainerRef.current;
-    if (container) {
-      container.scrollTop = container.scrollHeight;
-    } else {
-      messagesEndRef.current?.scrollIntoView({ behavior, block: "end" });
-    }
+  // Скролл только если пользователь уже внизу или появилось новое сообщение
+  const scrollToBottom = useCallback(() => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+    if (atBottom) el.scrollTop = el.scrollHeight;
   }, []);
 
+  // Загрузка тикета (полный список из БД — единый источник правды)
   const loadTicket = useCallback(async (id: number) => {
     const ticket = await getSupportTicket(id);
+    if (isUnmountedRef.current) return;
     setTicketId(ticket.id);
     ticketIdRef.current = ticket.id;
     setMessages(ticket.messages ?? []);
   }, []);
 
+  // Мёрж новых WS-сообщений без полной перезаписи
+  const mergeMessage = useCallback((msg: SupportTicketMessage) => {
+    setMessages((prev) => {
+      if (prev.some((m) => m.id === msg.id)) return prev;
+      return [...prev, msg];
+    });
+  }, []);
+
   // --- WebSocket ---
-  const wsJoinTicket = useCallback((ws: WebSocket, id: number) => {
-    if (ws.readyState === WebSocket.OPEN) {
-      sendSupportSocketEvent(ws, "joinTicket", { ticketId: id });
+  const tryJoinTicket = useCallback((ws: WebSocket) => {
+    if (ws.readyState === WebSocket.OPEN && ticketIdRef.current) {
+      sendSupportSocketEvent(ws, "joinTicket", { ticketId: ticketIdRef.current });
     }
   }, []);
 
@@ -66,38 +76,28 @@ const SupportChatPage = () => {
     const ws = createSupportSocket();
     wsRef.current = ws;
 
-    ws.onopen = () => {
-      if (ticketIdRef.current) wsJoinTicket(ws, ticketIdRef.current);
-    };
+    ws.onopen = () => tryJoinTicket(ws);
 
     ws.onmessage = (event) => {
       const packet = parseSupportSocketMessage(event.data as string);
       if (!packet) return;
       if (packet.event === "newSupportMessage") {
         const payload = packet.data as { ticketId: number; message: SupportTicketMessage };
-        if (payload?.message) {
-          setMessages((prev) => {
-            // Дедупликация по id
-            if (prev.some((m) => m.id === payload.message.id)) return prev;
-            return [...prev, payload.message];
-          });
-        }
+        if (payload?.message) mergeMessage(payload.message);
       }
     };
 
     ws.onclose = () => {
       wsRef.current = null;
       if (!isUnmountedRef.current) {
-        reconnectTimerRef.current = setTimeout(connectWS, 2000);
+        reconnectTimerRef.current = setTimeout(connectWS, 2500);
       }
     };
 
-    ws.onerror = () => {
-      ws.close();
-    };
-  }, [wsJoinTicket]);
+    ws.onerror = () => ws.close();
+  }, [tryJoinTicket, mergeMessage]);
 
-  // Запускаем WS при монтировании
+  // WS lifecycle
   useEffect(() => {
     isUnmountedRef.current = false;
     connectWS();
@@ -109,12 +109,12 @@ const SupportChatPage = () => {
     };
   }, [connectWS]);
 
-  // Когда ticketId меняется — джойним новый тикет
+  // Когда ticketId меняется — джойним (WS может ещё не быть открытым,
+  // тогда сработает onopen после reconnect)
   useEffect(() => {
-    if (ticketId && wsRef.current?.readyState === WebSocket.OPEN) {
-      wsJoinTicket(wsRef.current, ticketId);
-    }
-  }, [ticketId, wsJoinTicket]);
+    if (!ticketId) return;
+    tryJoinTicket(wsRef.current as WebSocket);
+  }, [ticketId, tryJoinTicket]);
 
   // Начальная загрузка
   useEffect(() => {
@@ -126,38 +126,53 @@ const SupportChatPage = () => {
       } catch (error) {
         console.warn("Support tickets load:", error);
       } finally {
-        setLoading(false);
+        if (!isUnmountedRef.current) setLoading(false);
       }
     })();
   }, [loadTicket]);
 
+  // Polling — fallback если WS не доставил (каждые 4 сек)
+  useEffect(() => {
+    if (!ticketId) return;
+    const interval = setInterval(() => {
+      void loadTicket(ticketId).catch(() => {});
+    }, POLL_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [ticketId, loadTicket]);
+
   // Скролл при новых сообщениях
   useEffect(() => {
-    if (messages.length > 0) scrollToBottom();
+    if (messages.length !== lastMsgCountRef.current) {
+      lastMsgCountRef.current = messages.length;
+      scrollToBottom();
+    }
   }, [messages, scrollToBottom]);
+
+  // Скролл при первой загрузке (сразу в конец)
+  useEffect(() => {
+    if (!loading && messages.length > 0) {
+      const el = messagesContainerRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
+    }
+  }, [loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // --- Отправка ---
   const handleSend = async () => {
     const text = message.trim();
     if (!text || sending) return;
     setSending(true);
-    // Оптимистичное: очищаем ввод сразу
     setMessage("");
     try {
       if (ticketId == null) {
         const created = await createSupportTicket(text);
         await loadTicket(created.id);
-        // WS подключится автоматически в useEffect выше
       } else {
         await sendSupportTicketMessage(ticketId, text);
-        // WS доставит сообщение, но если нет связи — перезагружаем вручную
-        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-          await loadTicket(ticketId);
-        }
+        // Мгновенно перезагружаем (не ждём polling-интервал)
+        await loadTicket(ticketId);
       }
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось отправить сообщение"));
-      // Вернём текст в поле если ошибка
       setMessage(text);
     } finally {
       setSending(false);
@@ -229,7 +244,6 @@ const SupportChatPage = () => {
                 </div>
               );
             })}
-            <div ref={messagesEndRef} />
           </div>
         )}
       </div>

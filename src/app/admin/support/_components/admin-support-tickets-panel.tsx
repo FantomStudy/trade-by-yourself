@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageSquare, Send } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { Typography } from "@/components/ui";
@@ -14,10 +14,16 @@ import {
 import type { SupportTicket, SupportTicketMessage } from "@/lib/api/requests";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { SUPPORT_CENTER_NAME } from "@/lib/support-display";
+import {
+  createSupportSocket,
+  parseSupportSocketMessage,
+  sendSupportSocketEvent,
+} from "@/lib/support-socket";
 
 import styles from "../support.module.css";
 
-const MOD_ROLES = new Set(["SENIOR_MODERATOR", "ADMIN", "SUPERADMIN"]);
+const POLL_MS = 4000;
+const MOD_ROLES = new Set(["SENIOR_MODERATOR", "ADMIN", "SUPERADMIN", "MODERATOR"]);
 
 function isSupportStaff(role?: string | null) {
   return role != null && MOD_ROLES.has(role);
@@ -31,16 +37,78 @@ export function AdminSupportTicketsPanel() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const reconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const selectedIdRef = useRef<number | null>(null);
+  const unmountedRef = useRef(false);
+
   const refreshTickets = useCallback(async () => {
     const data = await getAllSupportTickets();
-    setTickets(data.tickets ?? []);
+    if (!unmountedRef.current) setTickets(data.tickets ?? []);
   }, []);
 
   const loadMessages = useCallback(async (ticketId: number) => {
     const ticket = await getSupportTicket(ticketId);
-    setMessages(ticket.messages ?? []);
+    if (!unmountedRef.current) setMessages(ticket.messages ?? []);
   }, []);
 
+  // Мёрж новых WS-сообщений
+  const mergeMessage = useCallback((msg: SupportTicketMessage) => {
+    setMessages((prev) => {
+      if (prev.some((m) => m.id === msg.id)) return prev;
+      return [...prev, msg];
+    });
+  }, []);
+
+  // --- WebSocket ---
+  const tryJoin = useCallback((ws: WebSocket) => {
+    if (ws.readyState === WebSocket.OPEN && selectedIdRef.current) {
+      sendSupportSocketEvent(ws, "joinTicket", { ticketId: selectedIdRef.current });
+    }
+  }, []);
+
+  const connectWS = useCallback(() => {
+    if (unmountedRef.current) return;
+    const ws = createSupportSocket();
+    wsRef.current = ws;
+
+    ws.onopen = () => tryJoin(ws);
+
+    ws.onmessage = (event) => {
+      const packet = parseSupportSocketMessage(event.data as string);
+      if (!packet) return;
+      if (packet.event === "newSupportMessage") {
+        const payload = packet.data as { ticketId: number; message: SupportTicketMessage };
+        if (payload?.message) mergeMessage(payload.message);
+      }
+    };
+
+    ws.onclose = () => {
+      wsRef.current = null;
+      if (!unmountedRef.current) reconnectRef.current = setTimeout(connectWS, 2500);
+    };
+
+    ws.onerror = () => ws.close();
+  }, [tryJoin, mergeMessage]);
+
+  useEffect(() => {
+    unmountedRef.current = false;
+    connectWS();
+    return () => {
+      unmountedRef.current = true;
+      if (reconnectRef.current) clearTimeout(reconnectRef.current);
+      wsRef.current?.close();
+      wsRef.current = null;
+    };
+  }, [connectWS]);
+
+  // Скролл вниз при новых сообщениях
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Начальная загрузка
   useEffect(() => {
     void (async () => {
       try {
@@ -48,13 +116,34 @@ export function AdminSupportTicketsPanel() {
       } catch (error) {
         toast.error(getApiErrorMessage(error, "Не удалось загрузить обращения"));
       } finally {
-        setLoading(false);
+        if (!unmountedRef.current) setLoading(false);
       }
     })();
   }, [refreshTickets]);
 
+  // Polling тикетов (каждые 15 сек — список не так критичен)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      void refreshTickets().catch(() => {});
+    }, 15_000);
+    return () => clearInterval(interval);
+  }, [refreshTickets]);
+
+  // Polling сообщений выбранного тикета (каждые 4 сек)
+  useEffect(() => {
+    if (!selectedId) return;
+    const interval = setInterval(() => {
+      void loadMessages(selectedId).catch(() => {});
+    }, POLL_MS);
+    return () => clearInterval(interval);
+  }, [selectedId, loadMessages]);
+
   const openTicket = async (ticketId: number) => {
+    selectedIdRef.current = ticketId;
     setSelectedId(ticketId);
+    setMessages([]);
+    // Джойним WS-рум
+    if (wsRef.current) tryJoin(wsRef.current);
     try {
       await loadMessages(ticketId);
     } catch (error) {
@@ -65,15 +154,25 @@ export function AdminSupportTicketsPanel() {
   const handleReply = async () => {
     if (selectedId == null || !reply.trim() || sending) return;
     setSending(true);
+    const text = reply.trim();
+    setReply("");
     try {
-      await sendSupportTicketMessage(selectedId, reply.trim());
-      setReply("");
+      await sendSupportTicketMessage(selectedId, text);
+      // Мгновенная перезагрузка после отправки
       await loadMessages(selectedId);
       await refreshTickets();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось отправить ответ"));
+      setReply(text);
     } finally {
       setSending(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      void handleReply();
     }
   };
 
@@ -91,6 +190,7 @@ export function AdminSupportTicketsPanel() {
       </div>
 
       <div className="grid gap-0 md:grid-cols-[280px_1fr]">
+        {/* Список тикетов */}
         <div className="max-h-[480px] overflow-y-auto border-r">
           {tickets.length === 0 ? (
             <p className="p-4 text-sm text-gray-500">Обращений пока нет</p>
@@ -115,6 +215,7 @@ export function AdminSupportTicketsPanel() {
           )}
         </div>
 
+        {/* Переписка */}
         <div className="flex min-h-[320px] flex-col">
           {selectedId == null ? (
             <p className="p-6 text-sm text-gray-500">Выберите обращение слева</p>
@@ -132,10 +233,17 @@ export function AdminSupportTicketsPanel() {
                         <div className={styles.message}>
                           <p className="text-xs text-gray-500">{msg.author?.fullName}</p>
                           <p className={styles.messageContent}>{msg.text}</p>
+                          <span className={styles.messageTime}>
+                            {new Date(msg.sentAt).toLocaleTimeString("ru-RU", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
                         </div>
                       </div>
                     );
                   })}
+                  <div ref={messagesEndRef} />
                 </div>
               </div>
               <div className={styles.inputContainer}>
@@ -145,6 +253,7 @@ export function AdminSupportTicketsPanel() {
                   rows={2}
                   value={reply}
                   onChange={(e) => setReply(e.target.value)}
+                  onKeyDown={handleKeyDown}
                 />
                 <Button disabled={!reply.trim() || sending} onClick={() => void handleReply()}>
                   <Send className="h-4 w-4" />
