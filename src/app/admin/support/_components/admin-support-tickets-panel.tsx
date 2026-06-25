@@ -22,7 +22,7 @@ import {
 
 import styles from "../support.module.css";
 
-const POLL_MS = 4000;
+const POLL_MS = 2000;
 const MOD_ROLES = new Set(["SENIOR_MODERATOR", "ADMIN", "SUPERADMIN", "MODERATOR"]);
 
 function isSupportStaff(role?: string | null) {
@@ -37,7 +37,7 @@ export function AdminSupportTicketsPanel() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedIdRef = useRef<number | null>(null);
@@ -103,9 +103,12 @@ export function AdminSupportTicketsPanel() {
     };
   }, [connectWS]);
 
-  // Скролл вниз при новых сообщениях
+  // Скролл вниз при новых сообщениях (только контейнер, не вся страница)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    requestAnimationFrame(() => {
+      const el = messagesContainerRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
+    });
   }, [messages]);
 
   // Начальная загрузка
@@ -221,7 +224,7 @@ export function AdminSupportTicketsPanel() {
             <p className="p-6 text-sm text-gray-500">Выберите обращение слева</p>
           ) : (
             <>
-              <div className={`${styles.messagesContainer} flex-1`}>
+              <div ref={messagesContainerRef} className={`${styles.messagesContainer} flex-1`}>
                 <div className={styles.messagesList}>
                   {messages.map((msg) => {
                     const fromStaff = isSupportStaff(msg.author?.role?.name);
@@ -243,7 +246,6 @@ export function AdminSupportTicketsPanel() {
                       </div>
                     );
                   })}
-                  <div ref={messagesEndRef} />
                 </div>
               </div>
               <div className={styles.inputContainer}>

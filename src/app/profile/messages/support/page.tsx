@@ -23,7 +23,7 @@ import {
 
 import styles from "./page.module.css";
 
-const POLL_INTERVAL_MS = 4000;
+const POLL_INTERVAL_MS = 2000;
 
 const SupportChatPage = () => {
   const [message, setMessage] = useState("");
@@ -39,12 +39,17 @@ const SupportChatPage = () => {
   const isUnmountedRef = useRef(false);
   const lastMsgCountRef = useRef(0);
 
-  // Скролл только если пользователь уже внизу или появилось новое сообщение
-  const scrollToBottom = useCallback(() => {
-    const el = messagesContainerRef.current;
-    if (!el) return;
-    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
-    if (atBottom) el.scrollTop = el.scrollHeight;
+  // Скролл контейнера сообщений. force=true — всегда (при первой загрузке).
+  const scrollToBottom = useCallback((force = false) => {
+    // requestAnimationFrame гарантирует что DOM уже отрисован
+    requestAnimationFrame(() => {
+      const el = messagesContainerRef.current;
+      if (!el) return;
+      const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+      if (force || atBottom) {
+        el.scrollTop = el.scrollHeight;
+      }
+    });
   }, []);
 
   // Загрузка тикета (полный список из БД — единый источник правды)
@@ -142,19 +147,13 @@ const SupportChatPage = () => {
 
   // Скролл при новых сообщениях
   useEffect(() => {
+    const isFirst = lastMsgCountRef.current === 0 && messages.length > 0;
     if (messages.length !== lastMsgCountRef.current) {
       lastMsgCountRef.current = messages.length;
-      scrollToBottom();
+      // При первой загрузке — принудительный скролл вниз (force=true)
+      scrollToBottom(isFirst);
     }
   }, [messages, scrollToBottom]);
-
-  // Скролл при первой загрузке (сразу в конец)
-  useEffect(() => {
-    if (!loading && messages.length > 0) {
-      const el = messagesContainerRef.current;
-      if (el) el.scrollTop = el.scrollHeight;
-    }
-  }, [loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // --- Отправка ---
   const handleSend = async () => {
