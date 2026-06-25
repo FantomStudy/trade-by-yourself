@@ -2,29 +2,38 @@
 
 import type { MouseEvent } from "react";
 
-import { X } from "lucide-react";
+import { ImageIcon, X } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import styles from "./product-preview.module.css";
 
 interface ProductPreviewProps {
-  images: string[];
+  images: string[] | null | undefined;
 }
 
 export const ProductPreview = ({ images }: ProductPreviewProps) => {
+  const safeImages = useMemo(
+    () => (Array.isArray(images) ? images.filter((img): img is string => typeof img === "string" && img.trim() !== "") : []),
+    [images],
+  );
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
+  const activeIndex =
+    safeImages.length > 0 ? Math.min(currentIndex, safeImages.length - 1) : 0;
+  const activeImage = safeImages[activeIndex] ?? null;
+
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!(images.length > 1)) return;
+    if (safeImages.length <= 1) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    const sectionWidth = rect.width / images.length;
+    const sectionWidth = rect.width / safeImages.length;
     const index = Math.floor(x / sectionWidth);
 
-    setCurrentIndex(Math.min(index, images.length - 1));
+    setCurrentIndex(Math.min(index, safeImages.length - 1));
   };
 
   const handleMouseLeave = () => {
@@ -34,12 +43,25 @@ export const ProductPreview = ({ images }: ProductPreviewProps) => {
   const handleImageClick = (e: MouseEvent<HTMLImageElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsFullScreen(true);
+    if (activeImage) {
+      setIsFullScreen(true);
+    }
   };
 
   const closeFullScreen = () => {
     setIsFullScreen(false);
   };
+
+  if (!activeImage) {
+    return (
+      <div className={styles.preview} data-slot="product-preview">
+        <div className={styles.emptyPreview}>
+          <ImageIcon className={styles.emptyIcon} />
+          <span className={styles.emptyText}>Нет фото</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -50,32 +72,32 @@ export const ProductPreview = ({ images }: ProductPreviewProps) => {
         onMouseMove={handleMouseMove}
       >
         <div
-          style={{
-            backgroundImage: `url(${images[currentIndex]})`,
-          }}
           className={styles.previewBlur}
+          style={{
+            backgroundImage: `url(${activeImage})`,
+          }}
         />
 
         <Image
           fill
-          key={currentIndex}
-          alt={images[currentIndex]}
+          key={activeIndex}
+          alt={activeImage}
           className={styles.previewImage}
-          src={images[currentIndex]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+          src={activeImage}
           style={{ cursor: "pointer" }}
           onClick={handleImageClick}
         />
 
-        {images.length > 1 && (
+        {safeImages.length > 1 && (
           <div className={styles.dotsWrapper}>
-            {images.map((img, index) => (
-              <div key={`dot-${img}`} className={styles.dot} data-active={index === currentIndex} />
+            {safeImages.map((img, index) => (
+              <div key={`dot-${img}-${index}`} className={styles.dot} data-active={index === activeIndex} />
             ))}
           </div>
         )}
       </div>
 
-      {/* Полноэкранный просмотр */}
       {isFullScreen && (
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95"
@@ -91,20 +113,21 @@ export const ProductPreview = ({ images }: ProductPreviewProps) => {
           <div className="relative h-full w-full p-8">
             <Image
               fill
-              alt={images[currentIndex]}
+              alt={activeImage}
               className="object-contain"
-              src={images[currentIndex]}
+              sizes="100vw"
+              src={activeImage}
               onClick={(e) => e.stopPropagation()}
             />
           </div>
 
-          {images.length > 1 && (
+          {safeImages.length > 1 && (
             <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-2">
-              {images.map((img, index) => (
+              {safeImages.map((img, index) => (
                 <button
-                  key={`fullscreen-dot-${img}`}
+                  key={`fullscreen-dot-${img}-${index}`}
                   className={`h-3 w-3 rounded-full transition-all ${
-                    index === currentIndex ? "bg-white" : "bg-white/50 hover:bg-white/75"
+                    index === activeIndex ? "bg-white" : "bg-white/50 hover:bg-white/75"
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();

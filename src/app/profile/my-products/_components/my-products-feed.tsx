@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { getCurrentUserOrNull, getCurrentUserProducts, getMyDrafts } from "@/lib/api";
+import { categorizeMyProducts } from "./categorize-my-products";
 import { MyProductsTabs } from "./my-products-tabs";
 
 interface MyProductsFeedProps {
@@ -34,11 +35,10 @@ export const MyProductsFeed = async ({ initialTab }: MyProductsFeedProps) => {
     );
   }
 
-  /** Убираем дубли: если товар есть в черновиках, в "Активные" его не показываем. */
-  const draftIds = new Set(drafts.map((draft) => draft.id));
-  const activeProducts = products.filter((product) => !draftIds.has(product.id));
+  const { active, moderation, hidden, denied } = categorizeMyProducts(products, drafts);
 
-  const hasAnything = activeProducts.length > 0 || drafts.length > 0;
+  const hasAnything =
+    active.length + moderation.length + hidden.length + denied.length + drafts.length > 0;
 
   if (!hasAnything) {
     return (
@@ -63,9 +63,12 @@ export const MyProductsFeed = async ({ initialTab }: MyProductsFeedProps) => {
   return (
     <MyProductsTabs
       key={initialTab}
+      active={active}
+      moderation={moderation}
+      hidden={hidden}
+      denied={denied}
       drafts={drafts}
       initialTab={initialTab}
-      products={activeProducts}
     />
   );
 };

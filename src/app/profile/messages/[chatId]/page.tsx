@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
 import { useChatSocket } from "@/lib/contexts";
+import { MODERATION_CENTER_NAME, SUPPORT_CENTER_NAME } from "@/lib/support-display";
 import { toCurrency } from "@/lib/format";
 
 const ChatPage = () => {
@@ -170,38 +171,56 @@ const ChatPage = () => {
 
   const messages = allMessages;
   const otherUser = chat.companion || chat.otherUser;
+  const isModerationChat = chat.isModerationChat === true;
+  const headerTitle = isModerationChat ? MODERATION_CENTER_NAME : (chat.product?.name ?? "Чат");
+  const companionName = isModerationChat ? MODERATION_CENTER_NAME : otherUser?.fullName;
 
   return (
     <div className="flex h-[calc(100vh-110px)] flex-col overflow-hidden rounded-lg bg-white shadow-sm">
       {/* Хедер чата */}
       <div className="flex flex-shrink-0 items-center gap-4 bg-white px-4 py-3 shadow-sm">
-        <Link href={"/profile/messages" as any}>
+        <Link href={"/profile/messages" as "/profile/messages"}>
           <Button className="h-10 w-10 p-0" variant="ghost">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
 
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 overflow-hidden rounded-lg bg-gray-200">
-            {chat.product.image && (
+          {!isModerationChat && chat.product?.image ? (
+            <div className="h-12 w-12 overflow-hidden rounded-lg bg-gray-200">
               <img
                 alt={chat.product.name}
                 className="h-full w-full object-cover"
                 src={chat.product.image}
               />
-            )}
-          </div>
+            </div>
+          ) : null}
           <div>
-            <h1 className="text-base font-semibold">{chat.product.name}</h1>
-            <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
+            <h1 className="text-base font-semibold">{headerTitle}</h1>
+            {isModerationChat ? (
+              <p className="text-sm text-amber-700">Уведомления по объявлениям — не техподдержка</p>
+            ) : chat.product?.price != null ? (
+              <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
+            ) : null}
+            {!isModerationChat && companionName ? (
+              <p className="text-xs text-gray-500">{companionName}</p>
+            ) : null}
           </div>
         </div>
 
-        <div className="ml-auto">
-          <Button className="bg-blue-500 px-6 hover:bg-blue-600" onClick={handleShowPhone}>
-            {showPhone && otherUser?.phoneNumber ? otherUser.phoneNumber : "Показать номер"}
-          </Button>
-        </div>
+        {!isModerationChat ? (
+          <div className="ml-auto">
+            <Button className="bg-blue-500 px-6 hover:bg-blue-600" onClick={handleShowPhone}>
+              {showPhone && otherUser?.phoneNumber ? otherUser.phoneNumber : "Показать номер"}
+            </Button>
+          </div>
+        ) : (
+          <div className="ml-auto text-right">
+            <Link href="/profile/messages/support" className="text-sm text-purple-600 hover:underline">
+              Нужна {SUPPORT_CENTER_NAME}? →
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Область сообщений */}

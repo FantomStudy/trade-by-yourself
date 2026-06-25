@@ -1,13 +1,16 @@
-export interface Product {
+﻿export interface Product {
   id: number;
   name: string;
   address: string;
   createdAt: string;
+  expiresAt?: string;
+  daysUntilExpiration?: number;
+  isExpired?: boolean;
   images: string[];
   isFavorited: boolean;
   isHide?: boolean;
   isReserved?: boolean;
-  moderateState?: "APPROVED" | "DENIDED" | "DENIED" | "MODERATE" | "DRAFT";
+  moderateState?: "APPROVED" | "DENIDED" | "DENIED" | "MODERATE" | "AI_REVIEWED" | "DRAFT";
   price: number;
   quantity: number;
   subCategoryName?: string;
@@ -65,6 +68,9 @@ export interface ModerationProduct {
   moderateState: ModerationState;
   moderationRejectionReason: string | null;
   createdAt: string;
+  expiresAt?: string;
+  daysUntilExpiration?: number;
+  isExpired?: boolean;
   updatedAt: string;
   category: { id: number; name: string };
   subCategory: { id: number; name: string };
@@ -120,3 +126,4 @@ export interface ProductsQueryParams {
   page?: number;
   limit?: number;
 }
+

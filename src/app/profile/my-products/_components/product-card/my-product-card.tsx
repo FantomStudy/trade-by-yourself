@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { Product } from "@/types";
 
@@ -40,7 +40,6 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
       router.refresh();
     } catch (error) {
       console.error("Error deleting product:", error);
-      // eslint-disable-next-line no-alert
       alert("Ошибка при удалении товара");
     } finally {
       setIsDeleting(false);
@@ -72,10 +71,18 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
   const getCardClassName = () => {
     if (product.isHide) return `${styles.card} ${styles.hiddenProduct}`;
     if (product.moderateState === "MODERATE") return `${styles.card} ${styles.moderateProduct}`;
-    if (product.moderateState === "DENIED" || product.moderateState === "DENIDED")
+    if (product.moderateState === "DENIED" || product.moderateState === "DENIDED") {
       return `${styles.card} ${styles.deniedProduct}`;
+    }
     return styles.card;
   };
+
+  const lifetimeLabel =
+    typeof product.daysUntilExpiration === "number"
+      ? product.isExpired
+        ? "Срок истек"
+        : `Осталось ${product.daysUntilExpiration} дн.`
+      : null;
 
   return (
     <article className={getCardClassName()}>
@@ -85,9 +92,7 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
             <ProductPreview images={product.images} />
             {product.isHide && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-900/60 backdrop-blur-[2px]">
-                <span className="text-center text-lg font-semibold text-red-500">
-                  Объявление снято с продажи
-                </span>
+                <span className="text-center text-lg font-semibold text-red-500">Объявление снято с продажи</span>
               </div>
             )}
             {!product.isHide && product.isReserved && (
@@ -97,22 +102,26 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
             )}
             {product.moderateState === "MODERATE" && (
               <div className="absolute inset-0 flex items-center justify-center bg-blue-900/60 backdrop-blur-[2px]">
-                <span className="text-center text-lg font-semibold text-blue-200">
-                  На модерации
-                </span>
+                <span className="text-center text-lg font-semibold text-blue-200">На модерации</span>
               </div>
             )}
             {(product.moderateState === "DENIED" || product.moderateState === "DENIDED") && (
               <div className="absolute inset-0 flex items-center justify-center bg-red-900/60 backdrop-blur-[2px]">
-                <span className="text-center text-lg font-semibold text-red-200">
-                  Не прошел модерацию
-                </span>
+                <span className="text-center text-lg font-semibold text-red-200">Не прошел модерацию</span>
               </div>
             )}
           </div>
         </Link>
 
-        <div className="absolute top-2 right-2 flex gap-1">
+        <div className="absolute top-2 right-2 flex items-start gap-1">
+          {lifetimeLabel ? (
+            <div
+              className={`${styles.expirationBadge} ${product.isExpired ? styles.expiredBadge : ""}`}
+              title={product.expiresAt ? `Действует до ${product.expiresAt}` : undefined}
+            >
+              {lifetimeLabel}
+            </div>
+          ) : null}
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
             disabled={isDeleting || isToggling}
@@ -120,11 +129,7 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
             type="button"
             onClick={handleToggle}
           >
-            {product.isHide ? (
-              <Eye className="h-4 w-4 text-green-600" />
-            ) : (
-              <EyeOff className="h-4 w-4 text-orange-600" />
-            )}
+            {product.isHide ? <Eye className="h-4 w-4 text-green-600" /> : <EyeOff className="h-4 w-4 text-orange-600" />}
           </button>
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
@@ -155,12 +160,8 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
         </Link>
 
         <div className={styles.meta}>
-          <Typography className={product.isHide ? styles.hiddenText : ""}>
-            {product.address}
-          </Typography>
-          <Typography className={product.isHide ? styles.hiddenText : ""}>
-            {product.createdAt}
-          </Typography>
+          <Typography className={product.isHide ? styles.hiddenText : ""}>{product.address}</Typography>
+          <Typography className={product.isHide ? styles.hiddenText : ""}>{product.createdAt}</Typography>
           <Typography className={product.isHide ? styles.hiddenText : ""}>
             В наличии: {product.quantity ?? 1} шт.
           </Typography>

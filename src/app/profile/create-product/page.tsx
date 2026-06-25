@@ -6,15 +6,19 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useCreateDraftMutation, useCreateProductMutation } from "@/api/hooks";
+import { useCreateDraftMutation, useCreateProductMutation, useUserInfo } from "@/api/hooks";
+import { useAuth } from "@/lib/contexts";
 import { AddressMap, ImageUpload, Input, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
+import { getUploadErrorMessage } from "@/lib/media-validation";
 
 import styles from "./page.module.css";
 
 const CreateProductPage = () => {
   const router = useRouter();
+  const { user } = useAuth();
+  const { data: userInfo } = useUserInfo(user?.id);
   const [categories, setCategories] = useState<Category[]>([]);
 
   const [formData, setFormData] = useState({
@@ -123,11 +127,22 @@ const CreateProductPage = () => {
           }),
         },
         {
-          onSuccess: (data) => {
-            console.log("Объявление создано:", data);
-            toast.success(
-              "Товар отправлен на модерацию. После проверки он появится в вашем списке объявлений.",
-            );
+          onSuccess: (data: { isDraft?: boolean }) => {
+            if (data?.isDraft) {
+              toast.message("Объявление сохранено как черновик — оплата не списана");
+              router.push("/profile/my-products");
+              return;
+            }
+            const limit = userInfo?.adsLimit;
+            if (limit && limit.remaining <= 0) {
+              toast.success(
+                `Объявление отправлено на модерацию. Списано ${limit.costPerAd} ₽ (сначала бонусы, затем баланс).`,
+              );
+            } else if (limit && limit.remaining === 1) {
+              toast.success("Объявление отправлено на модерацию. Это последнее бесплатное объявление в этом месяце.");
+            } else {
+              toast.success("Объявление отправлено на модерацию.");
+            }
             setFormData({
               name: "",
               price: "",
@@ -162,7 +177,7 @@ const CreateProductPage = () => {
                   : formattedMessage,
               );
             } else {
-              setError(`Ошибка при создании объявления: ${error.message || "Неизвестная ошибка"}`);
+              setError(getUploadErrorMessage(error, "Ошибка при создании объявления"));
             }
           },
         },
@@ -236,7 +251,7 @@ const CreateProductPage = () => {
                   : formattedMessage,
               );
             } else {
-              setError(`Ошибка: ${error.message || "Неизвестная ошибка"}`);
+              setError(getUploadErrorMessage(error, "Ошибка сохранения черновика"));
             }
           },
         },
@@ -278,6 +293,23 @@ const CreateProductPage = () => {
     <form noValidate onSubmit={handleSubmit}>
       <div className={styles.wrapper}>
         <h1 className={styles.purple}>Создание объявления</h1>
+        {userInfo?.adsLimit ? (
+          <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+            Бесплатных объявлений в этом месяце:{" "}
+            <strong>
+              {userInfo.adsLimit.remaining}/{userInfo.adsLimit.total}
+            </strong>
+            {userInfo.adsLimit.remaining <= 0 ? (
+              <>
+                {" "}
+                — следующее объявление стоит <strong>{userInfo.adsLimit.costPerAd} ₽</strong> (списание
+                сначала с бонусов, затем с баланса).
+              </>
+            ) : userInfo.adsLimit.remaining === 1 ? (
+              <> — после этого объявления платные размещения по {userInfo.adsLimit.costPerAd} ₽.</>
+            ) : null}
+          </div>
+        ) : null}
         <label className={styles.fieldLabel} htmlFor="name">
           Название объявления *
         </label>
@@ -464,8 +496,15 @@ const CreateProductPage = () => {
         <h1 className={styles.green}>Подробности</h1>
       </div>
 
-      <ImageUpload maxImages={15} onImagesChange={handleImagesChange} />
+      <ImageUpload
+        maxImages={15}
+        onImagesChange={handleImagesChange}
+        onValidationError={setError}
+      />
       <p className={styles.fieldHint}>Бесплатно: до 8 фото, платное: до 15 фото</p>
+      <p className={styles.fieldHint}>
+        Не загружайте слишком узкие вертикальные фото и слишком широкие панорамы.
+      </p>
       {submitAttempted && requiredValidation.images ? (
         <div className={styles.invalidHint}>Добавьте хотя бы одно изображение</div>
       ) : null}
@@ -483,6 +522,7 @@ const CreateProductPage = () => {
           onChange={handleInputChange}
           placeholder="Ссылка на видео"
         />
+        <p className={styles.fieldHint}>Видео добавляется только ссылкой, не файлом.</p>
       </div>
 
       <div className={styles.wrapper}>

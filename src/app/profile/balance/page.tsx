@@ -181,6 +181,19 @@ const BalancePage = () => {
             <CreditCard />
             <span>Доступно для использования</span>
           </div>
+          {userInfo?.bonusBalance != null && userInfo.bonusBalance > 0 ? (
+            <Typography className="mt-2 text-sm text-white/90">
+              Бонусы: {userInfo.bonusBalance.toFixed(2)} ₽ (списываются первыми при платных объявлениях)
+            </Typography>
+          ) : null}
+          {userInfo?.adsLimit ? (
+            <Typography className="mt-1 text-sm text-white/90">
+              Бесплатных объявлений в месяц: {userInfo.adsLimit.remaining}/{userInfo.adsLimit.total}
+              {userInfo.adsLimit.remaining <= 0
+                ? ` · платное размещение ${userInfo.adsLimit.costPerAd} ₽`
+                : null}
+            </Typography>
+          ) : null}
         </div>
       </div>
 

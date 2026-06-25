@@ -1,5 +1,6 @@
-import type { Product } from "@/types";
+﻿import type { Product } from "@/types";
 
 import { api } from "@/api/instance";
 
-export const getMyDrafts = async () => api<Product[]>("/product/my-drafts");
+export const getMyDrafts = async () =>
+  api<Product[]>("/product/my-drafts", { cache: "no-store" });

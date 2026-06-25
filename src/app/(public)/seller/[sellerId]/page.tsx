@@ -26,7 +26,7 @@ const SellerPage = async ({ params }: PageProps<"/seller/[sellerId]">) => {
     <div className="global-container">
       <div className={styles.container}>
         <aside className={styles.aside}>
-          <UserCard user={user} />
+          <UserCard user={user} defaultProductId={products[0]?.id} />
         </aside>
 
         <main className={styles.main}>

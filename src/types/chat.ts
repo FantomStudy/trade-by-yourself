@@ -21,6 +21,7 @@ export interface Chat {
   id: number;
   createdAt: string;
   lastActivity: string;
+  isModerationChat?: boolean;
   unreadCount?: number;
   companion: {
     id: number;
@@ -35,12 +36,12 @@ export interface Chat {
     isFromMe: boolean;
     isRead: boolean;
   };
-  product: {
+  product?: {
     id: number;
     name: string;
-    image: string;
+    image?: string;
     price: number;
-  };
+  } | null;
 }
 
 export interface ChatDetail {
@@ -48,6 +49,7 @@ export interface ChatDetail {
   buyer?: User;
   buyerId?: number;
   createdAt: string;
+  isModerationChat?: boolean;
   isUserBuyer: boolean;
   otherUser?: User;
   productId?: number;
@@ -60,13 +62,13 @@ export interface ChatDetail {
     phoneNumber: string;
     role: "buyer" | "seller";
   };
-  product: {
+  product?: {
     id: number;
     name: string;
     description?: string;
     image?: string;
     price: number;
-  };
+  } | null;
 }
 
 export interface MessagesResponse {
@@ -83,7 +85,8 @@ export interface SendMessageData {
 }
 
 export interface StartChatData {
-  productId: number;
+  productId?: number;
+  sellerId?: number;
 }
 
 export interface StartChatResponse {

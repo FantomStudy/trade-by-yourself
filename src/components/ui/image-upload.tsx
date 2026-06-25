@@ -4,14 +4,26 @@ import Image from "next/image";
 import * as React from "react";
 import { useRef, useState } from "react";
 
+import {
+  MAX_IMAGE_FILE_SIZE_MB,
+  MAX_TOTAL_IMAGE_SIZE_MB,
+  validateImageFiles,
+} from "@/lib/media-validation";
+
 interface ImageUploadProps {
   maxImages?: number;
   onImagesChange?: (images: File[]) => void;
+  onValidationError?: (message: string | null) => void;
 }
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({ maxImages = 6, onImagesChange }) => {
+export const ImageUpload: React.FC<ImageUploadProps> = ({
+  maxImages = 6,
+  onImagesChange,
+  onValidationError,
+}) => {
   const [images, setImages] = useState<File[]>([]);
   const [mainImageIndex, setMainImageIndex] = useState<number>(0);
+  const [localError, setLocalError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const reorderImagesWithMain = (imagesList: File[], mainIndex: number) => {
@@ -21,12 +33,30 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ maxImages = 6, onImage
     return [mainImage, ...reordered];
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+
+    const validationError = await validateImageFiles(files, {
+      currentCount: images.length,
+      currentTotalBytes: images.reduce((sum, file) => sum + file.size, 0),
+      maxFiles: maxImages,
+    });
+
+    if (validationError) {
+      setLocalError(validationError);
+      onValidationError?.(validationError);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    setLocalError(null);
+    onValidationError?.(null);
     const newImages = [...images, ...files].slice(0, maxImages);
     const reordered = reorderImagesWithMain(newImages, mainImageIndex);
     setImages(reordered);
     onImagesChange?.(reordered);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const removeImage = (index: number) => {
@@ -130,11 +160,20 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ maxImages = 6, onImage
         <input
           multiple
           ref={fileInputRef}
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp"
           style={{ display: "none" }}
           type="file"
           onChange={handleFileSelect}
         />
+        <div className="mt-3 space-y-1 text-sm text-gray-500">
+          <p>Фото: JPG, PNG или WebP.</p>
+          <p>
+            Размер: до {MAX_IMAGE_FILE_SIZE_MB} МБ на одно фото, общий размер до{" "}
+            {MAX_TOTAL_IMAGE_SIZE_MB} МБ.
+          </p>
+          <p>Соотношение сторон: от 1:2.5 до 2.5:1.</p>
+        </div>
+        {localError ? <div className="mt-2 text-sm text-red-600">{localError}</div> : null}
       </div>
     </div>
   );

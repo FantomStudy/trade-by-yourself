@@ -1,6 +1,7 @@
 import type { AuthScreenProps } from "../types";
 import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { TIDLoginButton } from "../../tid-login-button";
 import { VkLoginButton } from "../../vk-login-button";
 import { LoginForm } from "./login-form";
 
@@ -12,6 +13,7 @@ export const LoginScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
       <LoginForm onSuccess={onClose} />
 
       <VkLoginButton />
+      <TIDLoginButton />
 
       <div className={styles.linkActions}>
         <Typography>Вы забыли пароль?</Typography>

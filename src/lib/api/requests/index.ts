@@ -12,4 +12,5 @@ export * from "./product";
 export * from "./promotion";
 export * from "./reservation";
 export * from "./reviews";
+export * from "./support";
 export * from "./user";

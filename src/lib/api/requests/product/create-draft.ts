@@ -1,4 +1,4 @@
-import type { CreateProductData } from "@/api/types";
+﻿import type { CreateProductData } from "@/api/types";
 
 import { api } from "@/api/instance";
 
@@ -36,10 +36,9 @@ export const createDraftProduct = async (data: DraftProductData = {}) => {
   if (typeof data.price === "number") formData.append("price", data.price.toString());
   if (typeof data.quantity === "number") formData.append("quantity", data.quantity.toString());
   if (data.state) formData.append("state", data.state);
-  if (typeof data.categoryId === "number")
-    formData.append("categoryId", data.categoryId.toString());
-  if (typeof data.subcategoryId === "number")
-    formData.append("subcategoryId", data.subcategoryId.toString());
+  if (typeof data.categoryId === "number") formData.append("categoryId", data.categoryId.toString());
+  if (typeof data.subcategoryId === "number") formData.append("subcategoryId", data.subcategoryId.toString());
+  if (typeof data.typeId === "number") formData.append("typeId", data.typeId.toString());
   if (typeof data.typeId === "number") formData.append("typeld", data.typeId.toString());
   if (data.description) formData.append("description", data.description);
   if (data.address) formData.append("address", data.address);

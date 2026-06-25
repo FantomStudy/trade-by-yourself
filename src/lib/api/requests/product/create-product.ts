@@ -1,4 +1,4 @@
-import type { CreateProductData } from "@/api/types";
+﻿import type { CreateProductData } from "@/api/types";
 
 import { api } from "@/api/instance";
 
@@ -12,7 +12,7 @@ export function buildProductFormData(data: CreateProductData): FormData {
   formData.append("state", data.state);
   formData.append("categoryId", data.categoryId.toString());
   formData.append("subcategoryId", data.subcategoryId.toString());
-  // Бэкенд ожидает опечатку в имени поля
+  formData.append("typeId", data.typeId.toString());
   formData.append("typeld", data.typeId.toString());
 
   if (data.description) formData.append("description", data.description);

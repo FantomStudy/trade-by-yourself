@@ -12,6 +12,16 @@ export interface User {
   bonusBalance?: number;
   products?: number;
   isBanned?: boolean;
+  isEmailVerified?: boolean;
+  isPhoneVerified?: boolean;
+  productStats?: {
+    total: number;
+    drafts: number;
+    moderation: number;
+    active: number;
+    hidden: number;
+    denied: number;
+  };
   usedFreeAds?: number;
   reviewsCount?: number;
   adsLimit?: {

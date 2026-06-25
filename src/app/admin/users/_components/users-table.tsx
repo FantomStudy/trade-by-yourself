@@ -159,7 +159,10 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                 Бонусы
               </th>
               <th className="px-2 py-2 text-left text-xs font-semibold whitespace-nowrap text-gray-700">
-                Товары
+                Роль / вериф.
+              </th>
+              <th className="px-2 py-2 text-left text-xs font-semibold whitespace-nowrap text-gray-700">
+                Объявления
               </th>
               <th className="px-2 py-2 text-left text-xs font-semibold whitespace-nowrap text-gray-700">
                 Статус
@@ -199,8 +202,22 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                 <td className="px-2 py-2 text-xs whitespace-nowrap text-gray-900">
                   ₽{(user.bonusBalance || 0).toFixed(2)}
                 </td>
-                <td className="px-2 py-2 text-center text-xs text-gray-900">
-                  {user.products || 0}
+                <td className="px-2 py-2 text-xs whitespace-nowrap text-gray-900">
+                  <div>{user.role ?? "USER"}</div>
+                  <div className="text-[10px] text-gray-500">
+                    {user.isEmailVerified ? "email ✓" : "email —"} ·{" "}
+                    {user.isPhoneVerified ? "тел ✓" : "тел —"}
+                  </div>
+                </td>
+                <td className="px-2 py-2 text-xs text-gray-900">
+                  <div title="всего">Всего: {user.productStats?.total ?? user.products ?? 0}</div>
+                  <div className="text-[10px] text-gray-500">
+                    акт: {user.productStats?.active ?? 0} · мод: {user.productStats?.moderation ?? 0} ·
+                    черн: {user.productStats?.drafts ?? 0} · скр: {user.productStats?.hidden ?? 0}
+                  </div>
+                  <div className="text-[10px] text-gray-500">
+                    беспл: {user.adsLimit?.remaining ?? "?"}/{user.adsLimit?.total ?? 6}
+                  </div>
                 </td>
                 <td className="px-2 py-2 text-xs">
                   <span

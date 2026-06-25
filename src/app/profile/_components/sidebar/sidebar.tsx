@@ -86,9 +86,15 @@ export const Sidebar = () => {
               <WalletIcon /> {userInfo?.balance ?? 0} ₽
             </span>
             <span className={styles.bonusBalance}>
-              <Gift /> {userInfo?.bonusBalance ?? 0} ₽
+              <Gift /> {userInfo?.bonusBalance ?? 0} ₽ бонус
             </span>
           </div>
+          {userInfo?.adsLimit ? (
+            <p className="text-sm text-gray-600">
+              Бесплатных объявлений: {userInfo.adsLimit.remaining}/{userInfo.adsLimit.total} · платное:{" "}
+              {userInfo.adsLimit.costPerAd} ₽
+            </p>
+          ) : null}
 
           <Button
             className={styles.shareProfileButton}
