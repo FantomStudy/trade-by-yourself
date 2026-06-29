@@ -2,7 +2,7 @@
 
 import type { Product } from "@/types";
 
-import { Edit, Eye, EyeOff, Trash2 } from "lucide-react";
+import { AlertCircle, Edit, Eye, EyeOff, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useDeleteProductMutation, useToggleProductMutation } from "@/api/hooks";
 import { Typography } from "@/components/ui";
 import { toCurrency } from "@/lib/format";
+import { fixMojibake } from "@/lib/fix-mojibake";
 
 import { ProductPreview } from "./product-preview/product-preview";
 
@@ -170,6 +171,22 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
         <Typography className={`${styles.price} ${product.isHide ? styles.hiddenText : ""}`}>
           {toCurrency(product.price)}
         </Typography>
+
+        {(product.moderateState === "DENIED" || product.moderateState === "DENIDED") && (
+          <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 leading-relaxed">
+            <div className="flex items-start gap-1.5">
+              <AlertCircle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
+              <div>
+                <span className="font-semibold">Отклонено модерацией.</span>
+                {product.moderationRejectionReason ? (
+                  <span className="block mt-0.5">{fixMojibake(product.moderationRejectionReason)}</span>
+                ) : (
+                  <span className="block mt-0.5 text-red-500">Причина не указана</span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </article>
   );

@@ -13,6 +13,7 @@ import {
 } from "@/lib/api/requests";
 import type { SupportTicket, SupportTicketMessage } from "@/lib/api/requests";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
+import { fixMojibake } from "@/lib/fix-mojibake";
 import { SUPPORT_CENTER_NAME } from "@/lib/support-display";
 import {
   createSupportSocket,
@@ -211,7 +212,7 @@ export function AdminSupportTicketsPanel() {
                   <MessageSquare className="h-4 w-4 text-purple-600" />
                   <span className="truncate font-medium">{ticket.user?.fullName ?? "Пользователь"}</span>
                 </div>
-                <p className="mt-1 truncate text-xs text-gray-500">{ticket.subject}</p>
+                <p className="mt-1 truncate text-xs text-gray-500">{fixMojibake(ticket.subject)}</p>
                 <p className="text-xs text-gray-400">{ticket.status}</p>
               </button>
             ))
@@ -235,7 +236,7 @@ export function AdminSupportTicketsPanel() {
                       >
                         <div className={styles.message}>
                           <p className="text-xs text-gray-500">{msg.author?.fullName}</p>
-                          <p className={styles.messageContent}>{msg.text}</p>
+                          <p className={styles.messageContent}>{fixMojibake(msg.text)}</p>
                           <span className={styles.messageTime}>
                             {new Date(msg.sentAt).toLocaleTimeString("ru-RU", {
                               hour: "2-digit",

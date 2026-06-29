@@ -2,9 +2,9 @@
 
 import type { ModerationFilter, ModerationProduct, ModerationState } from "@/types";
 
-import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, X } from "lucide-react";
+import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, Maximize2, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -84,6 +84,98 @@ const FILTERS: { value: ModerationFilter; label: string }[] = [
   { value: "APPROVED_AI", label: "Одобрено ИИ" },
 ];
 
+// ─── Lightbox ─────────────────────────────────────────────────────────────────
+
+const Lightbox = ({
+  src,
+  alt,
+  onClose,
+  onPrev,
+  onNext,
+  hasPrev,
+  hasNext,
+  index,
+  total,
+}: {
+  src: string;
+  alt: string;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  hasPrev: boolean;
+  hasNext: boolean;
+  index: number;
+  total: number;
+}) => {
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft" && hasPrev) onPrev();
+      if (e.key === "ArrowRight" && hasNext) onNext();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose, onPrev, onNext, hasPrev, hasNext]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90"
+      onClick={onClose}
+    >
+      {/* Counter */}
+      {total > 1 && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-sm text-white">
+          {index + 1} / {total}
+        </div>
+      )}
+
+      {/* Close */}
+      <button
+        className="absolute right-4 top-4 rounded-full bg-black/60 p-2 text-white transition hover:bg-black/80"
+        type="button"
+        onClick={onClose}
+      >
+        <X className="h-6 w-6" />
+      </button>
+
+      {/* Prev */}
+      {hasPrev && (
+        <button
+          className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 p-3 text-white transition hover:bg-black/80"
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onPrev(); }}
+        >
+          <ChevronLeft className="h-7 w-7" />
+        </button>
+      )}
+
+      {/* Next */}
+      {hasNext && (
+        <button
+          className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 p-3 text-white transition hover:bg-black/80"
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onNext(); }}
+        >
+          <ChevronRight className="h-7 w-7" />
+        </button>
+      )}
+
+      {/* Image */}
+      <div
+        className="relative max-h-[90vh] max-w-[90vw]"
+        style={{ minWidth: 200, minHeight: 200 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          alt={alt}
+          className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+          src={src}
+        />
+      </div>
+    </div>
+  );
+};
+
 // ─── Detail dialog ────────────────────────────────────────────────────────────
 
 const ProductDetailDialog = ({
@@ -103,24 +195,26 @@ const ProductDetailDialog = ({
 }) => {
   const { data: product, isLoading } = useModerationProduct(open ? productId : null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     setCurrentImageIndex(0);
+    setLightboxOpen(false);
   }, [product?.id]);
 
   const imageCount = product?.images.length ?? 0;
   const hasManyImages = imageCount > 1;
   const activeImage = imageCount > 0 ? product?.images[currentImageIndex] : null;
 
-  const showPrevImage = () => {
+  const showPrevImage = useCallback(() => {
     if (!product || imageCount <= 1) return;
     setCurrentImageIndex((prev) => (prev === 0 ? imageCount - 1 : prev - 1));
-  };
+  }, [product, imageCount]);
 
-  const showNextImage = () => {
+  const showNextImage = useCallback(() => {
     if (!product || imageCount <= 1) return;
     setCurrentImageIndex((prev) => (prev === imageCount - 1 ? 0 : prev + 1));
-  };
+  }, [product, imageCount]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -145,14 +239,25 @@ const ProductDetailDialog = ({
                   {/* Images */}
                   {imageCount > 0 ? (
                     <div className="flex flex-col gap-3">
-                      <div className="relative aspect-square w-full overflow-hidden rounded-xl border bg-white shadow-sm">
+                      <div className="group relative aspect-square w-full overflow-hidden rounded-xl border bg-white shadow-sm">
                         <Image
                           alt={product.name}
-                          className="object-cover"
+                          className="cursor-zoom-in object-cover"
                           fill
                           sizes="272px"
                           src={activeImage!}
+                          onClick={() => setLightboxOpen(true)}
                         />
+
+                        {/* Fullscreen hint */}
+                        <button
+                          aria-label="Открыть на весь экран"
+                          className="absolute left-2 top-2 rounded-full bg-black/55 p-1.5 text-white opacity-0 transition hover:bg-black/70 group-hover:opacity-100"
+                          type="button"
+                          onClick={() => setLightboxOpen(true)}
+                        >
+                          <Maximize2 className="h-4 w-4" />
+                        </button>
 
                         {hasManyImages && (
                           <>
@@ -320,6 +425,21 @@ const ProductDetailDialog = ({
           )}
         </div>
       </DialogContent>
+
+      {/* Lightbox — rendered outside DialogContent so it covers everything */}
+      {lightboxOpen && activeImage && (
+        <Lightbox
+          src={activeImage}
+          alt={product?.name ?? ""}
+          index={currentImageIndex}
+          total={imageCount}
+          hasPrev={imageCount > 1}
+          hasNext={imageCount > 1}
+          onClose={() => setLightboxOpen(false)}
+          onPrev={showPrevImage}
+          onNext={showNextImage}
+        />
+      )}
     </Dialog>
   );
 };

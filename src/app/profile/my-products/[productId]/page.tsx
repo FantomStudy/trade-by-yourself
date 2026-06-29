@@ -58,7 +58,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
   const deleteProductMutation = useDeleteProductMutation();
   const publishDraftMutation = usePublishDraftMutation();
 
-  // Р—Р°РіСЂСѓР¶Р°РµРј РґР°РЅРЅС‹Рµ С‚РѕРІР°СЂР°
+  // Загружаем данные товара
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -71,13 +71,13 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         setCategories(categoriesData);
         setExistingImages(productData.images || []);
 
-        // Р—Р°РїРѕР»РЅСЏРµРј С„РѕСЂРјСѓ РґР°РЅРЅС‹РјРё С‚РѕРІР°СЂР°
+        // Заполняем форму данными товара
         setFormData({
           name: productData.name,
           price: productData.price.toString(),
           quantity: String(productData.quantity ?? 1),
           description: productData.description || "",
-          state: "NEW", // TODO: РґРѕР±Р°РІРёС‚СЊ state РІ ExtendedProduct
+          state: "NEW", // TODO: добавить state в ExtendedProduct
           address: productData.address,
           categoryId: String(productData.category?.id ?? ""),
           subcategoryId: String(productData.subCategory?.id ?? ""),
@@ -85,7 +85,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           typeId: "",
         });
 
-        // Р—Р°РїРѕР»РЅСЏРµРј fieldValues РµСЃР»Рё РѕРЅРё РµСЃС‚СЊ
+        // Заполняем fieldValues если они есть
         if (productData.fieldValues && Array.isArray(productData.fieldValues)) {
           const values: Record<string, string> = {};
           productData.fieldValues.forEach((field) => {
@@ -113,7 +113,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         setLoading(false);
       } catch (err) {
         console.error("Error loading product:", err);
-        setError("РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РґР°РЅРЅС‹С… С‚РѕРІР°СЂР°");
+        setError("Ошибка загрузки данных товара");
         setLoading(false);
       }
     };
@@ -225,7 +225,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
       setImages(newImages);
     }
 
-    // РљРѕСЂСЂРµРєС‚РёСЂРѕРІРєР° РѕСЃРЅРѕРІРЅРѕРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
+    // Корректировка основного изображения
     const totalAfterRemove = getTotalImages() - 1;
     console.log("Total after remove:", totalAfterRemove);
 
@@ -249,7 +249,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     const parsedQuantity = formData.quantity.trim() ? Number(formData.quantity) : undefined;
 
     if (parsedPrice !== undefined && (!Number.isFinite(parsedPrice) || parsedPrice <= 0)) {
-      setError("Р¦РµРЅР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ РЅСѓР»СЏ");
+      setError("Цена должна быть больше нуля");
       return;
     }
 
@@ -257,7 +257,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
       parsedQuantity !== undefined &&
       (!Number.isFinite(parsedQuantity) || !Number.isInteger(parsedQuantity) || parsedQuantity < 1)
     ) {
-      setError("РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0");
+      setError("Количество должно быть целым числом больше 0");
       return;
     }
 
@@ -265,10 +265,10 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
       const resolvedCategoryId = Number(formData.categoryId || product?.category?.id || 0);
       const resolvedSubcategoryId = Number(formData.subcategoryId || product?.subCategory?.id || 0);
 
-      // РџРµСЂРµСѓРїРѕСЂСЏРґРѕС‡РёРІР°РµРј РёР·РѕР±СЂР°Р¶РµРЅРёСЏ С‚Р°Рє, С‡С‚РѕР±С‹ РѕСЃРЅРѕРІРЅРѕРµ Р±С‹Р»Рѕ РїРµСЂРІС‹Рј
+      // Переупорядочиваем изображения так, чтобы основное было первым
       let orderedImages = images;
       if (images.length > 0 && mainImageIndex >= existingImages.length) {
-        // РћСЃРЅРѕРІРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ - СЌС‚Рѕ РЅРѕРІРѕРµ С„РѕС‚Рѕ
+        // Основное изображение - это новое фото
         const newImageIndex = mainImageIndex - existingImages.length;
         orderedImages = [...images];
         const [mainImage] = orderedImages.splice(newImageIndex, 1);
@@ -299,17 +299,17 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             router.push("/profile/my-products");
           },
           onError: (error: any) => {
-            console.error("РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РѕР±СЉСЏРІР»РµРЅРёСЏ:", error);
+            console.error("Ошибка обновления объявления:", error);
             const errorMessage =
               error.response?.data?.message ||
               error.response?.data?.error ||
-              "РћС€РёР±РєР° РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё РѕР±СЉСЏРІР»РµРЅРёСЏ";
+              "Ошибка при обновлении объявления";
             const formattedMessage = Array.isArray(errorMessage)
               ? errorMessage.join(", ")
               : errorMessage;
             setError(
-              formattedMessage.includes("РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0")
-                ? "РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0"
+              formattedMessage.includes("Количество должно быть целым числом больше 0")
+                ? "Количество должно быть целым числом больше 0"
                 : getUploadErrorMessage(error, formattedMessage),
             );
           },
@@ -332,29 +332,29 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
       !formData.subcategoryId ||
       !formData.typeId
     ) {
-      setError("РџРѕР¶Р°Р»СѓР№СЃС‚Р°, Р·Р°РїРѕР»РЅРёС‚Рµ РІСЃРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ");
+      setError("Пожалуйста, заполните все обязательные поля");
       return;
     }
 
     const parsedPrice = Number(formData.price);
     if (!Number.isFinite(parsedPrice) || parsedPrice <= 0) {
-      setError("Р¦РµРЅР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ РЅСѓР»СЏ");
+      setError("Цена должна быть больше нуля");
       return;
     }
 
     const parsedQuantity = Number(formData.quantity);
     if (!Number.isInteger(parsedQuantity) || parsedQuantity < 1) {
-      setError("РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј Р±РѕР»СЊС€Рµ 0");
+      setError("Количество должно быть целым числом больше 0");
       return;
     }
 
     if (getTotalImages() === 0) {
-      setError("Р”РѕР±Р°РІСЊС‚Рµ С…РѕС‚СЏ Р±С‹ РѕРґРЅРѕ РёР·РѕР±СЂР°Р¶РµРЅРёРµ");
+      setError("Добавьте хотя бы одно изображение");
       return;
     }
 
     try {
-      // РЎРЅР°С‡Р°Р»Р° СЃРѕС…СЂР°РЅСЏРµРј Р°РєС‚СѓР°Р»СЊРЅС‹Рµ РїСЂР°РІРєРё РІ С‡РµСЂРЅРѕРІРёРє, Р·Р°С‚РµРј РїСѓР±Р»РёРєСѓРµРј.
+      // Сначала сохраняем актуальные правки в черновик, затем публикуем.
       await updateProductMutation.mutateAsync({
         name: formData.name.trim(),
         price: parsedPrice,
@@ -370,17 +370,17 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         videoUrl: formData.videoUrl.trim() || undefined,
       });
       await publishDraftMutation.mutateAsync(Number(productId));
-      toast.success("РћР±СЉСЏРІР»РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ РЅР° РјРѕРґРµСЂР°С†РёСЋ");
+      toast.success("Объявление отправлено на модерацию");
       router.replace("/profile/my-products");
       router.refresh();
     } catch (err) {
       console.error("Publish from draft error:", err);
-      setError("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ РёР· С‡РµСЂРЅРѕРІРёРєР°");
+      setError("Не удалось создать объявление из черновика");
     }
   };
 
   const _handleDelete = async () => {
-    if (!confirm("Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ СЌС‚Рѕ РѕР±СЉСЏРІР»РµРЅРёРµ?")) {
+    if (!confirm("Вы уверены, что хотите удалить это объявление?")) {
       return;
     }
 
@@ -390,8 +390,8 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           router.push("/profile/my-products");
         },
         onError: (error: any) => {
-          console.error("РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РѕР±СЉСЏРІР»РµРЅРёСЏ:", error);
-          setError("РћС€РёР±РєР° РїСЂРё СѓРґР°Р»РµРЅРёРё РѕР±СЉСЏРІР»РµРЅРёСЏ");
+          console.error("Ошибка удаления объявления:", error);
+          setError("Ошибка при удалении объявления");
         },
       });
     } catch (err) {
@@ -402,7 +402,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
   if (loading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <div className="text-lg">Р—Р°РіСЂСѓР·РєР°...</div>
+        <div className="text-lg">Загрузка...</div>
       </div>
     );
   }
@@ -410,7 +410,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
   if (!product) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <div className="text-lg text-red-500">РўРѕРІР°СЂ РЅРµ РЅР°Р№РґРµРЅ</div>
+        <div className="text-lg text-red-500">Товар не найден</div>
       </div>
     );
   }
@@ -427,14 +427,14 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className={styles.wrapper}>
-        <h1 className={styles.purple}>Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РѕР±СЉСЏРІР»РµРЅРёСЏ</h1>
+        <h1 className={styles.purple}>Редактирование объявления</h1>
         <Input
           required={product?.moderateState !== "DRAFT"}
           className="bg-white"
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          placeholder="РќР°Р·РІР°РЅРёРµ РѕР±СЉСЏРІР»РµРЅРёСЏ"
+          placeholder="Название объявления"
         />
         <Input
           required={product?.moderateState !== "DRAFT"}
@@ -445,7 +445,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           value={formData.price}
           inputMode="numeric"
           onChange={handleInputChange}
-          placeholder="Р¦РµРЅР°"
+          placeholder="Цена"
         />
         <Input
           required={product?.moderateState !== "DRAFT"}
@@ -457,18 +457,18 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           value={formData.quantity}
           inputMode="numeric"
           onChange={handleInputChange}
-          placeholder="РљРѕР»РёС‡РµСЃС‚РІРѕ (С€С‚.)"
+          placeholder="Количество (шт.)"
         />
         <Textarea
           className="bg-white"
           name="description"
           value={formData.description}
           onChange={handleInputChange}
-          placeholder="РћРїРёСЃР°РЅРёРµ С‚РѕРІР°СЂР°"
+          placeholder="Описание товара"
           rows={5}
         />
 
-        <p>Р’С‹Р±РµСЂРёС‚Рµ С‚РёРї С‚РѕРІР°СЂР° *</p>
+        <p>Выберите тип товара *</p>
         <div className={styles.checkboxes}>
           <div className={styles.box}>
             <input
@@ -479,7 +479,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
               type="radio"
               onChange={() => handleStateChange("NEW")}
             />
-            <label htmlFor="new">РќРѕРІРѕРµ</label>
+            <label htmlFor="new">Новое</label>
           </div>
           <div className={styles.box}>
             <input
@@ -490,11 +490,11 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
               type="radio"
               onChange={() => handleStateChange("USED")}
             />
-            <label htmlFor="used">Р‘/РЈ</label>
+            <label htmlFor="used">Б/У</label>
           </div>
         </div>
 
-        <h1 className={styles.blue}>РљР°С‚РµРіРѕСЂРёСЏ</h1>
+        <h1 className={styles.blue}>Категория</h1>
         <select
           className="w-full rounded border border-gray-300 bg-white p-2"
           name="categoryId"
@@ -509,7 +509,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             setFieldValues({});
           }}
         >
-          <option value="">Р’С‹Р±РµСЂРёС‚Рµ РєР°С‚РµРіРѕСЂРёСЋ</option>
+          <option value="">Выберите категорию</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -527,7 +527,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             setFieldValues({});
           }}
         >
-          <option value="">Р’С‹Р±РµСЂРёС‚Рµ РїРѕРґРєР°С‚РµРіРѕСЂРёСЋ</option>
+          <option value="">Выберите подкатегорию</option>
           {availableSubcategories.map((subcategory) => (
             <option key={subcategory.id} value={subcategory.id}>
               {subcategory.name}
@@ -545,7 +545,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             setFieldValues({});
           }}
         >
-          <option value="">Р’С‹Р±РµСЂРёС‚Рµ С‚РёРї</option>
+          <option value="">Выберите тип</option>
           {availableTypes.map((type) => (
             <option key={type.id} value={type.id}>
               {type.name}
@@ -569,9 +569,9 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             />
           ))}
 
-        <h1 className={styles.green}>РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё</h1>
+        <h1 className={styles.green}>Подробности</h1>
         <div className="flex flex-wrap gap-3">
-          {/* РЎСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ */}
+          {/* Существующие изображения */}
           {existingImages.map((img, idx) => {
             const globalIndex = idx;
             return (
@@ -594,7 +594,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  alt={`Р¤РѕС‚Рѕ ${idx + 1}`}
+                  alt={`Фото ${idx + 1}`}
                   className="h-full w-full rounded-xl object-cover"
                   src={img}
                 />
@@ -610,13 +610,13 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
                 </button>
                 {globalIndex === mainImageIndex && (
                   <div className="absolute bottom-2 left-2 z-10 rounded bg-emerald-500/90 px-2 py-1 text-xs font-medium text-white">
-                    РћСЃРЅРѕРІРЅРѕРµ
+                    Основное
                   </div>
                 )}
               </div>
             );
           })}
-          {/* РќРѕРІС‹Рµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ */}
+          {/* Новые изображения */}
           {images.map((img, idx) => {
             const globalIndex = existingImages.length + idx;
             const uniqueKey = `new-${globalIndex}-${img.name}-${img.size}-${img.lastModified}`;
@@ -640,7 +640,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  alt={`РќРѕРІРѕРµ С„РѕС‚Рѕ ${idx + 1}`}
+                  alt={`Новое фото ${idx + 1}`}
                   className="h-full w-full rounded-xl object-cover"
                   src={URL.createObjectURL(img)}
                 />
@@ -656,16 +656,16 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
                 </button>
                 {globalIndex === mainImageIndex && (
                   <div className="absolute bottom-2 left-2 z-10 rounded bg-emerald-500/90 px-2 py-1 text-xs font-medium text-white">
-                    РћСЃРЅРѕРІРЅРѕРµ
+                    Основное
                   </div>
                 )}
                 <div className="absolute right-2 bottom-2 z-10 rounded bg-blue-500/90 px-2 py-1 text-xs font-medium text-white">
-                  РќРѕРІРѕРµ
+                  Новое
                 </div>
               </div>
             );
           })}
-          {/* РљРЅРѕРїРєР° РґРѕР±Р°РІР»РµРЅРёСЏ С„РѕС‚Рѕ */}
+          {/* Кнопка добавления фото */}
           {getTotalImages() < 8 && (
             <div
               className="flex h-[150px] w-[150px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 transition-all duration-200 hover:border-gray-400 hover:bg-gray-100 md:h-[200px] md:w-[200px]"
@@ -703,7 +703,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             >
               <div className="text-4xl text-gray-400 md:text-5xl">рџ“·</div>
               <span className="text-center text-xs font-medium text-gray-500 md:text-sm">
-                Р”РѕР±Р°РІРёС‚СЊ С„РѕС‚Рѕ
+                Добавить фото
               </span>
             </div>
           )}
@@ -716,12 +716,12 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           name="videoUrl"
           value={formData.videoUrl}
           onChange={handleInputChange}
-          placeholder="РЎСЃС‹Р»РєР° РЅР° РІРёРґРµРѕ"
+          placeholder="Ссылка на видео"
         />
       </div>
 
       <div className={styles.wrapper}>
-        <h1 className={styles.orange}>РњРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёРµ</h1>
+        <h1 className={styles.orange}>Местоположение</h1>
         <AddressMap
           value={formData.address}
           onChange={(address) => setFormData((prev) => ({ ...prev, address }))}
@@ -738,7 +738,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             disabled={updateProductMutation.isPending || publishDraftMutation.isPending}
             type="submit"
           >
-            {updateProductMutation.isPending ? "РЎРѕС…СЂР°РЅРµРЅРёРµ..." : "РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ"}
+            {updateProductMutation.isPending ? "Сохранение..." : "Сохранить изменения"}
           </Button>
           <Button
             className={styles.button}
@@ -747,7 +747,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             variant="success"
             onClick={handleCreateFromDraft}
           >
-            {publishDraftMutation.isPending ? "РЎРѕР·РґР°РЅРёРµ..." : "РЎРѕР·РґР°С‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ"}
+            {publishDraftMutation.isPending ? "Создание..." : "Создать объявление"}
           </Button>
         </div>
       </div>

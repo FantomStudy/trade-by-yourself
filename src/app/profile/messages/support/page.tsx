@@ -14,6 +14,7 @@ import {
 } from "@/lib/api/requests";
 import type { SupportTicketMessage } from "@/lib/api/requests";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
+import { fixMojibake } from "@/lib/fix-mojibake";
 import { SUPPORT_CENTER_NAME, isSupportStaffRole, supportAuthorLabel } from "@/lib/support-display";
 import {
   createSupportSocket,
@@ -232,7 +233,7 @@ const SupportChatPage = () => {
                     {!isFromUser ? (
                       <p className="mb-1 text-xs font-medium text-purple-700">{authorLabel}</p>
                     ) : null}
-                    <p className={styles.messageContent}>{msg.text}</p>
+                    <p className={styles.messageContent}>{fixMojibake(msg.text)}</p>
                     <span className={styles.messageTime}>
                       {new Date(msg.sentAt).toLocaleTimeString("ru-RU", {
                         hour: "2-digit",
