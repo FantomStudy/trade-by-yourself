@@ -88,93 +88,91 @@ const FILTERS: { value: ModerationFilter; label: string }[] = [
 // ─── Lightbox ─────────────────────────────────────────────────────────────────
 
 const Lightbox = ({
-  src,
+  images,
+  initialIndex,
   alt,
   onClose,
-  onPrev,
-  onNext,
-  hasPrev,
-  hasNext,
-  index,
-  total,
 }: {
-  src: string;
+  images: string[];
+  initialIndex: number;
   alt: string;
   onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
-  hasPrev: boolean;
-  hasNext: boolean;
-  index: number;
-  total: number;
 }) => {
+  const [idx, setIdx] = useState(initialIndex);
+  const total = images.length;
+
+  const prev = useCallback(() => setIdx((i) => (i === 0 ? total - 1 : i - 1)), [total]);
+  const next = useCallback(() => setIdx((i) => (i === total - 1 ? 0 : i + 1)), [total]);
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft" && hasPrev) onPrev();
-      if (e.key === "ArrowRight" && hasNext) onNext();
+      if (e.key === "Escape") { e.stopPropagation(); onClose(); }
+      if (e.key === "ArrowLeft") { e.stopPropagation(); prev(); }
+      if (e.key === "ArrowRight") { e.stopPropagation(); next(); }
     };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose, onPrev, onNext, hasPrev, hasNext]);
+    window.addEventListener("keydown", handleKey, true);
+    return () => window.removeEventListener("keydown", handleKey, true);
+  }, [onClose, prev, next]);
 
   if (typeof document === "undefined") return null;
 
+  const src = images[idx];
+
+  const stopAll = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    (e.nativeEvent as Event).stopImmediatePropagation();
+  };
+
   return createPortal(
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90"
-      onClick={onClose}
+      style={{ position: "fixed", inset: 0, zIndex: 99999, background: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center" }}
+      onPointerDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       {/* Counter */}
       {total > 1 && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-sm text-white">
-          {index + 1} / {total}
+        <div style={{ position: "absolute", top: 16, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", color: "#fff", borderRadius: 999, padding: "4px 12px", fontSize: 14, pointerEvents: "none" }}>
+          {idx + 1} / {total}
         </div>
       )}
 
       {/* Close */}
       <button
-        className="absolute right-4 top-4 rounded-full bg-black/60 p-2 text-white transition hover:bg-black/80"
+        style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 8, cursor: "pointer", color: "#fff", display: "flex", zIndex: 1 }}
         type="button"
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        onPointerDown={(e) => { stopAll(e); onClose(); }}
       >
-        <X className="h-6 w-6" />
+        <X style={{ width: 24, height: 24 }} />
       </button>
 
       {/* Prev */}
-      {hasPrev && (
+      {total > 1 && (
         <button
-          className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 p-3 text-white transition hover:bg-black/80"
+          style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex", zIndex: 1 }}
           type="button"
-          onClick={(e) => { e.stopPropagation(); onPrev(); }}
+          onPointerDown={(e) => { stopAll(e); prev(); }}
         >
-          <ChevronLeft className="h-7 w-7" />
+          <ChevronLeft style={{ width: 28, height: 28 }} />
         </button>
       )}
 
       {/* Next */}
-      {hasNext && (
+      {total > 1 && (
         <button
-          className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 p-3 text-white transition hover:bg-black/80"
+          style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex", zIndex: 1 }}
           type="button"
-          onClick={(e) => { e.stopPropagation(); onNext(); }}
+          onPointerDown={(e) => { stopAll(e); next(); }}
         >
-          <ChevronRight className="h-7 w-7" />
+          <ChevronRight style={{ width: 28, height: 28 }} />
         </button>
       )}
 
       {/* Image */}
-      <div
-        className="relative max-h-[90vh] max-w-[90vw]"
-        style={{ minWidth: 200, minHeight: 200 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <img
-          alt={alt}
-          className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
-          src={src}
-        />
-      </div>
+      <img
+        key={src}
+        alt={alt}
+        style={{ maxHeight: "90vh", maxWidth: "90vw", borderRadius: 8, objectFit: "contain", boxShadow: "0 25px 50px rgba(0,0,0,0.5)", pointerEvents: "none" }}
+        src={src}
+      />
     </div>,
     document.body,
   );
@@ -220,6 +218,8 @@ const ProductDetailDialog = ({
     setCurrentImageIndex((prev) => (prev === imageCount - 1 ? 0 : prev + 1));
   }, [product, imageCount]);
 
+  const [lightboxInitialIndex, setLightboxInitialIndex] = useState(0);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="!max-w-5xl w-[calc(100vw-32px)] p-0 overflow-hidden">
@@ -250,7 +250,7 @@ const ProductDetailDialog = ({
                           fill
                           sizes="272px"
                           src={activeImage!}
-                          onClick={() => setLightboxOpen(true)}
+                          onClick={() => { setLightboxInitialIndex(currentImageIndex); setLightboxOpen(true); }}
                         />
 
                         {/* Fullscreen hint */}
@@ -258,7 +258,7 @@ const ProductDetailDialog = ({
                           aria-label="Открыть на весь экран"
                           className="absolute left-2 top-2 rounded-full bg-black/55 p-1.5 text-white opacity-0 transition hover:bg-black/70 group-hover:opacity-100"
                           type="button"
-                          onClick={() => setLightboxOpen(true)}
+                          onClick={() => { setLightboxInitialIndex(currentImageIndex); setLightboxOpen(true); }}
                         >
                           <Maximize2 className="h-4 w-4" />
                         </button>
@@ -430,17 +430,12 @@ const ProductDetailDialog = ({
         </div>
       </DialogContent>
 
-      {lightboxOpen && activeImage && (
+      {lightboxOpen && product && imageCount > 0 && (
         <Lightbox
-          src={activeImage}
-          alt={product?.name ?? ""}
-          index={currentImageIndex}
-          total={imageCount}
-          hasPrev={imageCount > 1}
-          hasNext={imageCount > 1}
+          images={product.images}
+          initialIndex={lightboxInitialIndex}
+          alt={product.name}
           onClose={() => setLightboxOpen(false)}
-          onPrev={showPrevImage}
-          onNext={showNextImage}
         />
       )}
     </Dialog>
