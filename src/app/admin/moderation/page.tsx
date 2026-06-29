@@ -5,6 +5,7 @@ import type { ModerationFilter, ModerationProduct, ModerationState } from "@/typ
 import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, Maximize2, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 
 import {
@@ -117,9 +118,11 @@ const Lightbox = ({
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose, onPrev, onNext, hasPrev, hasNext]);
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90"
       onClick={onClose}
     >
       {/* Counter */}
@@ -133,7 +136,7 @@ const Lightbox = ({
       <button
         className="absolute right-4 top-4 rounded-full bg-black/60 p-2 text-white transition hover:bg-black/80"
         type="button"
-        onClick={onClose}
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
       >
         <X className="h-6 w-6" />
       </button>
@@ -172,7 +175,8 @@ const Lightbox = ({
           src={src}
         />
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 
@@ -426,7 +430,6 @@ const ProductDetailDialog = ({
         </div>
       </DialogContent>
 
-      {/* Lightbox — rendered outside DialogContent so it covers everything */}
       {lightboxOpen && activeImage && (
         <Lightbox
           src={activeImage}

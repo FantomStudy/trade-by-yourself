@@ -69,12 +69,15 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
     }
   };
 
+  const isDenied =
+    product.moderateState === "DENIED" || product.moderateState === "DENIDED";
+  const isOnModeration =
+    product.moderateState === "MODERATE" || product.moderateState === "AI_REVIEWED";
+
   const getCardClassName = () => {
     if (product.isHide) return `${styles.card} ${styles.hiddenProduct}`;
-    if (product.moderateState === "MODERATE") return `${styles.card} ${styles.moderateProduct}`;
-    if (product.moderateState === "DENIED" || product.moderateState === "DENIDED") {
-      return `${styles.card} ${styles.deniedProduct}`;
-    }
+    if (isOnModeration) return `${styles.card} ${styles.moderateProduct}`;
+    if (isDenied) return `${styles.card} ${styles.deniedProduct}`;
     return styles.card;
   };
 
@@ -101,12 +104,12 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
                 <span className="text-center text-lg font-semibold text-amber-100">Зарезервировано</span>
               </div>
             )}
-            {product.moderateState === "MODERATE" && (
+            {isOnModeration && (
               <div className="absolute inset-0 flex items-center justify-center bg-blue-900/60 backdrop-blur-[2px]">
                 <span className="text-center text-lg font-semibold text-blue-200">На модерации</span>
               </div>
             )}
-            {(product.moderateState === "DENIED" || product.moderateState === "DENIDED") && (
+            {isDenied && (
               <div className="absolute inset-0 flex items-center justify-center bg-red-900/60 backdrop-blur-[2px]">
                 <span className="text-center text-lg font-semibold text-red-200">Не прошел модерацию</span>
               </div>
@@ -172,7 +175,7 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
           {toCurrency(product.price)}
         </Typography>
 
-        {(product.moderateState === "DENIED" || product.moderateState === "DENIDED") && (
+        {isDenied && (
           <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 leading-relaxed">
             <div className="flex items-start gap-1.5">
               <AlertCircle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
@@ -183,6 +186,18 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
                 ) : (
                   <span className="block mt-0.5 text-red-500">Причина не указана</span>
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {product.moderateState === "AI_REVIEWED" && product.moderationRejectionReason && (
+          <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800 leading-relaxed">
+            <div className="flex items-start gap-1.5">
+              <AlertCircle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
+              <div>
+                <span className="font-semibold">Требует проверки.</span>
+                <span className="block mt-0.5">{fixMojibake(product.moderationRejectionReason)}</span>
               </div>
             </div>
           </div>
