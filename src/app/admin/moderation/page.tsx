@@ -116,19 +116,16 @@ const Lightbox = ({
 
   const src = images[idx];
 
-  // DialogPortal renders to document.body → no transform ancestor → position:fixed is fullscreen.
-  // We use onPointerDown (not onClick) on buttons because onPointerDownOutside's e.preventDefault()
-  // suppresses the subsequent click event — onPointerDown fires before that suppression happens.
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 9999 }}>
 
-      {/* Backdrop — onPointerDown fires before Radix suppresses click */}
+      {/* Backdrop */}
       <div
         style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.92)", cursor: "zoom-out" }}
-        onPointerDown={onClose}
+        onClick={onClose}
       />
 
-      {/* Image — pointer-events none, clicks fall through to backdrop */}
+      {/* Image */}
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
         <img
           key={src}
@@ -149,9 +146,9 @@ const Lightbox = ({
       <button
         style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 8, cursor: "pointer", color: "#fff", display: "flex" }}
         type="button"
-        onPointerDown={onClose}
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
       >
-        <X style={{ width: 24, height: 24, pointerEvents: "none" }} />
+        <X style={{ width: 24, height: 24 }} />
       </button>
 
       {/* Prev */}
@@ -159,9 +156,9 @@ const Lightbox = ({
         <button
           style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex" }}
           type="button"
-          onPointerDown={prev}
+          onClick={(e) => { e.stopPropagation(); prev(); }}
         >
-          <ChevronLeft style={{ width: 28, height: 28, pointerEvents: "none" }} />
+          <ChevronLeft style={{ width: 28, height: 28 }} />
         </button>
       )}
 
@@ -170,9 +167,9 @@ const Lightbox = ({
         <button
           style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex" }}
           type="button"
-          onPointerDown={next}
+          onClick={(e) => { e.stopPropagation(); next(); }}
         >
-          <ChevronRight style={{ width: 28, height: 28, pointerEvents: "none" }} />
+          <ChevronRight style={{ width: 28, height: 28 }} />
         </button>
       )}
     </div>
@@ -222,7 +219,7 @@ const ProductDetailDialog = ({
   const [lightboxInitialIndex, setLightboxInitialIndex] = useState(0);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
       <DialogContent
         className="!max-w-5xl w-[calc(100vw-32px)] p-0 overflow-hidden"
         onInteractOutside={(e) => { if (lightboxOpen) e.preventDefault(); }}
