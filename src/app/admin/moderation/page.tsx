@@ -118,61 +118,63 @@ const Lightbox = ({
 
   const src = images[idx];
 
-  const stopAll = (e: React.SyntheticEvent) => {
-    e.stopPropagation();
-    (e.nativeEvent as Event).stopImmediatePropagation();
-  };
-
+  // Outer wrapper: no click handler here — backdrop handles close, buttons are siblings of backdrop
   return createPortal(
-    <div
-      style={{ position: "fixed", inset: 0, zIndex: 99999, background: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center" }}
-      onPointerDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
-    >
-      {/* Counter */}
+    <div style={{ position: "fixed", inset: 0, zIndex: 99999 }}>
+
+      {/* Backdrop — clicking here closes */}
+      <div
+        style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.92)", cursor: "zoom-out" }}
+        onClick={onClose}
+      />
+
+      {/* Centered image — above backdrop, no pointer events so clicks fall to backdrop */}
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+        <img
+          key={src}
+          alt={alt}
+          style={{ maxHeight: "90vh", maxWidth: "90vw", borderRadius: 8, objectFit: "contain", boxShadow: "0 25px 50px rgba(0,0,0,0.5)" }}
+          src={src}
+        />
+      </div>
+
+      {/* Counter — no pointer events */}
       {total > 1 && (
-        <div style={{ position: "absolute", top: 16, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", color: "#fff", borderRadius: 999, padding: "4px 12px", fontSize: 14, pointerEvents: "none" }}>
+        <div style={{ position: "absolute", top: 16, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", color: "#fff", borderRadius: 999, padding: "4px 12px", fontSize: 14, pointerEvents: "none", whiteSpace: "nowrap" }}>
           {idx + 1} / {total}
         </div>
       )}
 
-      {/* Close */}
+      {/* Close button — sibling of backdrop, no event conflict */}
       <button
-        style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 8, cursor: "pointer", color: "#fff", display: "flex", zIndex: 1 }}
+        style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 8, cursor: "pointer", color: "#fff", display: "flex" }}
         type="button"
-        onPointerDown={(e) => { stopAll(e); onClose(); }}
+        onClick={onClose}
       >
-        <X style={{ width: 24, height: 24 }} />
+        <X style={{ width: 24, height: 24, pointerEvents: "none" }} />
       </button>
 
-      {/* Prev */}
+      {/* Prev button — sibling of backdrop, clicks stay here */}
       {total > 1 && (
         <button
-          style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex", zIndex: 1 }}
+          style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex" }}
           type="button"
-          onPointerDown={(e) => { stopAll(e); prev(); }}
+          onClick={prev}
         >
-          <ChevronLeft style={{ width: 28, height: 28 }} />
+          <ChevronLeft style={{ width: 28, height: 28, pointerEvents: "none" }} />
         </button>
       )}
 
-      {/* Next */}
+      {/* Next button — sibling of backdrop, clicks stay here */}
       {total > 1 && (
         <button
-          style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex", zIndex: 1 }}
+          style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex" }}
           type="button"
-          onPointerDown={(e) => { stopAll(e); next(); }}
+          onClick={next}
         >
-          <ChevronRight style={{ width: 28, height: 28 }} />
+          <ChevronRight style={{ width: 28, height: 28, pointerEvents: "none" }} />
         </button>
       )}
-
-      {/* Image */}
-      <img
-        key={src}
-        alt={alt}
-        style={{ maxHeight: "90vh", maxWidth: "90vw", borderRadius: 8, objectFit: "contain", boxShadow: "0 25px 50px rgba(0,0,0,0.5)", pointerEvents: "none" }}
-        src={src}
-      />
     </div>,
     document.body,
   );
@@ -222,7 +224,11 @@ const ProductDetailDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="!max-w-5xl w-[calc(100vw-32px)] p-0 overflow-hidden">
+      <DialogContent
+        className="!max-w-5xl w-[calc(100vw-32px)] p-0 overflow-hidden"
+        onInteractOutside={(e) => { if (lightboxOpen) e.preventDefault(); }}
+        onPointerDownOutside={(e) => { if (lightboxOpen) e.preventDefault(); }}
+      >
         {/* Inner wrapper owns height + flex so it's free from the CSS module's display:grid */}
         <div className="flex flex-col" style={{ height: "90vh" }}>
           {/* Header */}
