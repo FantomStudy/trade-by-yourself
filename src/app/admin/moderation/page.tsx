@@ -5,6 +5,7 @@ import type { ModerationFilter, ModerationProduct, ModerationState } from "@/typ
 import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, Maximize2, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 
 import {
@@ -15,7 +16,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogPortal,
   DialogHeader,
   DialogTitle,
   Textarea,
@@ -99,10 +99,13 @@ const Lightbox = ({
   onClose: () => void;
 }) => {
   const [idx, setIdx] = useState(initialIndex);
+  const [mounted, setMounted] = useState(false);
   const total = images.length;
 
   const prev = useCallback(() => setIdx((i) => (i === 0 ? total - 1 : i - 1)), [total]);
   const next = useCallback(() => setIdx((i) => (i === total - 1 ? 0 : i + 1)), [total]);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -114,12 +117,14 @@ const Lightbox = ({
     return () => window.removeEventListener("keydown", handleKey, true);
   }, [onClose, prev, next]);
 
+  if (!mounted) return null;
+
   const src = images[idx];
 
-  return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 9999 }}>
+  return createPortal(
+    <div style={{ position: "fixed", inset: 0, zIndex: 99999 }}>
 
-      {/* Backdrop */}
+      {/* Backdrop — covers everything including the dialog */}
       <div
         style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.92)", cursor: "zoom-out" }}
         onClick={onClose}
@@ -172,7 +177,8 @@ const Lightbox = ({
           <ChevronRight style={{ width: 28, height: 28 }} />
         </button>
       )}
-    </div>
+    </div>,
+    document.body,
   );
 };
 
@@ -433,17 +439,13 @@ const ProductDetailDialog = ({
 
       </DialogContent>
 
-      {/* Lightbox via DialogPortal — stays inside Radix's portal layer (no aria-hidden),
-          and position:fixed is relative to viewport since there's no transform on ancestors */}
       {lightboxOpen && product && imageCount > 0 && (
-        <DialogPortal>
-          <Lightbox
-            images={product.images}
-            initialIndex={lightboxInitialIndex}
-            alt={product.name}
-            onClose={() => setLightboxOpen(false)}
-          />
-        </DialogPortal>
+        <Lightbox
+          images={product.images}
+          initialIndex={lightboxInitialIndex}
+          alt={product.name}
+          onClose={() => setLightboxOpen(false)}
+        />
       )}
     </Dialog>
   );
