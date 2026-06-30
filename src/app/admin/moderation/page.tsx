@@ -15,6 +15,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogPortal,
   DialogHeader,
   DialogTitle,
   Textarea,
@@ -430,16 +431,20 @@ const ProductDetailDialog = ({
           )}
         </div>
 
-        {/* Lightbox inside DialogContent — stays in Radix's interaction zone */}
-        {lightboxOpen && product && imageCount > 0 && (
+      </DialogContent>
+
+      {/* Lightbox via DialogPortal — stays inside Radix's portal layer (no aria-hidden),
+          and position:fixed is relative to viewport since there's no transform on ancestors */}
+      {lightboxOpen && product && imageCount > 0 && (
+        <DialogPortal>
           <Lightbox
             images={product.images}
             initialIndex={lightboxInitialIndex}
             alt={product.name}
             onClose={() => setLightboxOpen(false)}
           />
-        )}
-      </DialogContent>
+        </DialogPortal>
+      )}
     </Dialog>
   );
 };
