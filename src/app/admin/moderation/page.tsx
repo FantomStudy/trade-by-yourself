@@ -5,7 +5,6 @@ import type { ModerationFilter, ModerationProduct, ModerationState } from "@/typ
 import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, Maximize2, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import { toast } from "sonner";
 
 import {
@@ -114,21 +113,20 @@ const Lightbox = ({
     return () => window.removeEventListener("keydown", handleKey, true);
   }, [onClose, prev, next]);
 
-  if (typeof document === "undefined") return null;
-
   const src = images[idx];
 
-  // Outer wrapper: no click handler here — backdrop handles close, buttons are siblings of backdrop
-  return createPortal(
-    <div style={{ position: "fixed", inset: 0, zIndex: 99999 }}>
+  // Rendered inline inside DialogContent — position:fixed makes it fullscreen visually,
+  // but stays inside Radix's allowed interaction zone (no aria-hidden blocking).
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 9999 }}>
 
-      {/* Backdrop — clicking here closes */}
+      {/* Backdrop — clicking dark area closes */}
       <div
         style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.92)", cursor: "zoom-out" }}
         onClick={onClose}
       />
 
-      {/* Centered image — above backdrop, no pointer events so clicks fall to backdrop */}
+      {/* Centered image — pointer-events none so clicks fall to backdrop */}
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
         <img
           key={src}
@@ -145,7 +143,7 @@ const Lightbox = ({
         </div>
       )}
 
-      {/* Close button — sibling of backdrop, no event conflict */}
+      {/* Buttons — siblings of backdrop, no propagation issues */}
       <button
         style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 8, cursor: "pointer", color: "#fff", display: "flex" }}
         type="button"
@@ -154,7 +152,6 @@ const Lightbox = ({
         <X style={{ width: 24, height: 24, pointerEvents: "none" }} />
       </button>
 
-      {/* Prev button — sibling of backdrop, clicks stay here */}
       {total > 1 && (
         <button
           style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex" }}
@@ -165,7 +162,6 @@ const Lightbox = ({
         </button>
       )}
 
-      {/* Next button — sibling of backdrop, clicks stay here */}
       {total > 1 && (
         <button
           style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex" }}
@@ -175,8 +171,7 @@ const Lightbox = ({
           <ChevronRight style={{ width: 28, height: 28, pointerEvents: "none" }} />
         </button>
       )}
-    </div>,
-    document.body,
+    </div>
   );
 };
 
@@ -434,16 +429,17 @@ const ProductDetailDialog = ({
             </>
           )}
         </div>
-      </DialogContent>
 
-      {lightboxOpen && product && imageCount > 0 && (
-        <Lightbox
-          images={product.images}
-          initialIndex={lightboxInitialIndex}
-          alt={product.name}
-          onClose={() => setLightboxOpen(false)}
-        />
-      )}
+        {/* Lightbox inside DialogContent — stays in Radix's interaction zone */}
+        {lightboxOpen && product && imageCount > 0 && (
+          <Lightbox
+            images={product.images}
+            initialIndex={lightboxInitialIndex}
+            alt={product.name}
+            onClose={() => setLightboxOpen(false)}
+          />
+        )}
+      </DialogContent>
     </Dialog>
   );
 };
