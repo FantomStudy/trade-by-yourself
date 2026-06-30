@@ -116,18 +116,19 @@ const Lightbox = ({
 
   const src = images[idx];
 
-  // Rendered inline inside DialogContent — position:fixed makes it fullscreen visually,
-  // but stays inside Radix's allowed interaction zone (no aria-hidden blocking).
+  // DialogPortal renders to document.body → no transform ancestor → position:fixed is fullscreen.
+  // We use onPointerDown (not onClick) on buttons because onPointerDownOutside's e.preventDefault()
+  // suppresses the subsequent click event — onPointerDown fires before that suppression happens.
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 9999 }}>
 
-      {/* Backdrop — clicking dark area closes */}
+      {/* Backdrop — onPointerDown fires before Radix suppresses click */}
       <div
         style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.92)", cursor: "zoom-out" }}
-        onClick={onClose}
+        onPointerDown={onClose}
       />
 
-      {/* Centered image — pointer-events none so clicks fall to backdrop */}
+      {/* Image — pointer-events none, clicks fall through to backdrop */}
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
         <img
           key={src}
@@ -137,37 +138,39 @@ const Lightbox = ({
         />
       </div>
 
-      {/* Counter — no pointer events */}
+      {/* Counter */}
       {total > 1 && (
         <div style={{ position: "absolute", top: 16, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", color: "#fff", borderRadius: 999, padding: "4px 12px", fontSize: 14, pointerEvents: "none", whiteSpace: "nowrap" }}>
           {idx + 1} / {total}
         </div>
       )}
 
-      {/* Buttons — siblings of backdrop, no propagation issues */}
+      {/* Close */}
       <button
         style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 8, cursor: "pointer", color: "#fff", display: "flex" }}
         type="button"
-        onClick={onClose}
+        onPointerDown={onClose}
       >
         <X style={{ width: 24, height: 24, pointerEvents: "none" }} />
       </button>
 
+      {/* Prev */}
       {total > 1 && (
         <button
           style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex" }}
           type="button"
-          onClick={prev}
+          onPointerDown={prev}
         >
           <ChevronLeft style={{ width: 28, height: 28, pointerEvents: "none" }} />
         </button>
       )}
 
+      {/* Next */}
       {total > 1 && (
         <button
           style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: 999, padding: 12, cursor: "pointer", color: "#fff", display: "flex" }}
           type="button"
-          onClick={next}
+          onPointerDown={next}
         >
           <ChevronRight style={{ width: 28, height: 28, pointerEvents: "none" }} />
         </button>
