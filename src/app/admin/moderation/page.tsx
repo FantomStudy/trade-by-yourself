@@ -223,8 +223,18 @@ const ProductDetailDialog = ({
   }, [product, imageCount]);
 
   const [lightboxInitialIndex, setLightboxInitialIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   return (
+    <>
+      {open && mounted && createPortal(
+        <div
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 49 }}
+          onClick={() => { if (!lightboxOpen) onOpenChange(false); }}
+        />,
+        document.body,
+      )}
     <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
       <DialogContent
         className="!max-w-5xl w-[calc(100vw-32px)] p-0 overflow-hidden"
@@ -448,6 +458,7 @@ const ProductDetailDialog = ({
         />
       )}
     </Dialog>
+    </>
   );
 };
 
