@@ -1,6 +1,7 @@
 import { ProductGrid } from "@/components/ProductGrid";
 import { FeedCard, FeedList } from "./_components/FeedList";
 import { getFeed } from "./_lib/getFeed";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const CatalogPage = async ({ searchParams }: PageProps<"/">) => {
   const filters = await searchParams;
@@ -12,6 +13,7 @@ const CatalogPage = async ({ searchParams }: PageProps<"/">) => {
         <FeedCard key={item.key} item={item} />
       ))}
       <FeedList filters={filters} />
+      <ScrollToTop />
     </ProductGrid>
   );
 };
