@@ -14,7 +14,7 @@ export const useLoginMutation = () => {
       try {
         // Persist session_id in a cookie so it is sent with requests
         // Cookie is accessible client-side; server attaches cookies automatically in api instance
-        document.cookie = `session_id=${data.session_id}; path=/; SameSite=Lax`;
+        // document.cookie = `session_id=${data.session_id}; Path=/; Max-Age=2592000; SameSite=Lax`;
       } catch {}
       queryClient.setQueryData(CURRENT_USER_QUERY_KEY, data.user);
     },

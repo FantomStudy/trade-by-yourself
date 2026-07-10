@@ -14,7 +14,7 @@ export const useVerifyMobileCodeMutation = () => {
     onSuccess: (data) => {
       if (data.session_id) {
         try {
-          document.cookie = `session_id=${data.session_id}; path=/; SameSite=Lax`;
+          // document.cookie = `session_id=${data.session_id}; Path=/; Max-Age=2592000; SameSite=Lax`;
         } catch {}
       }
       if (data.user) {
