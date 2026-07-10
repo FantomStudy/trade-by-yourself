@@ -1,25 +1,25 @@
 import type { NextRequest } from "next/server";
-
 import { NextResponse } from "next/server";
-
-const PROTECTED_PREFIXES = ["/profile", "/admin"];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const isProtected = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-  if (!isProtected) return NextResponse.next();
+  // Защищаем только админку
+  if (pathname.startsWith("/admin")) {
+    const sessionId = req.cookies.get("session_id")?.value;
 
-  const sessionId = req.cookies.get("session_id")?.value;
-  if (sessionId) return NextResponse.next();
+    if (!sessionId) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/";
+      url.searchParams.set("auth", "1");
 
-  // Redirect unauthenticated users to home; optionally trigger auth dialog via query
-  const url = req.nextUrl.clone();
-  url.pathname = "/";
-  url.searchParams.set("auth", "1");
-  return NextResponse.redirect(url);
+      return NextResponse.redirect(url);
+    }
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/profile/:path*", "/admin/:path*"],
+  matcher: ["/admin/:path*"],
 };
