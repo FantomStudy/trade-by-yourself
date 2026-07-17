@@ -212,6 +212,22 @@
   background: #fff;
 }
 
+.barcodeSvg {
+  max-width: min(400px, 100%);
+  width: 100%;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.barcodeSvg svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .cdekHint {
   margin: 0;
   padding: 10px 12px;
