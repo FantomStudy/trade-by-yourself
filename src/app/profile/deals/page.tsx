@@ -125,107 +125,10 @@ function buildCdekQrMedia(
   return null;
 }
 
-// ─── Inline Code 128B barcode renderer (no external deps) ───────────────────
-
-// Each entry encodes widths of 6 alternating bars/spaces (bar, space, bar, space, bar, space)
-// Source: ISO/IEC 15417 Code 128 symbol table (subset B values 0–106 + stop)
-const C128_WIDTHS: readonly number[][] = [
-  [2,1,2,2,2,2],[2,2,2,1,2,2],[2,2,2,2,2,1],[1,2,1,2,2,3],
-  [1,2,1,3,2,2],[1,3,1,2,2,2],[1,2,2,2,1,3],[1,2,2,3,1,2],
-  [1,3,2,2,1,2],[2,2,1,2,1,3],[2,2,1,3,1,2],[2,3,1,2,1,2],
-  [1,1,2,2,3,2],[1,2,2,1,3,2],[1,2,2,2,3,1],[1,1,3,2,2,2],
-  [1,2,3,1,2,2],[1,2,3,2,2,1],[2,2,3,2,1,1],[2,2,1,1,3,2],
-  [2,2,1,2,3,1],[2,1,3,2,1,2],[2,2,3,1,1,2],[3,1,2,1,3,1],
-  [3,1,1,2,2,2],[3,2,1,1,2,2],[3,2,1,2,2,1],[3,1,2,2,1,2],
-  [3,2,2,1,1,2],[3,2,2,2,1,1],[2,1,2,1,2,3],[2,1,2,3,2,1],
-  [2,3,2,1,2,1],[1,1,1,3,2,3],[1,3,1,1,2,3],[1,3,1,3,2,1],
-  [1,1,2,3,1,3],[1,3,2,1,1,3],[1,3,2,3,1,1],[2,1,1,3,1,3],
-  [2,3,1,1,1,3],[2,3,1,3,1,1],[1,1,2,1,3,3],[1,1,2,3,3,1],
-  [1,3,2,1,3,1],[1,1,3,1,2,3],[1,1,3,3,2,1],[1,3,3,1,2,1],
-  [3,1,3,1,2,1],[2,1,1,3,3,1],[2,3,1,1,3,1],[2,1,3,1,1,3],
-  [2,1,3,3,1,1],[2,1,3,1,3,1],[3,1,1,1,2,3],[3,1,1,3,2,1],
-  [3,3,1,1,2,1],[3,1,2,1,1,3],[3,1,2,3,1,1],[3,3,2,1,1,1],
-  [3,1,4,1,1,1],[2,2,1,4,1,1],[4,3,1,1,1,1],[1,1,1,2,2,4],
-  [1,1,1,4,2,2],[1,2,1,1,2,4],[1,2,1,4,2,1],[1,4,1,1,2,2],
-  [1,4,1,2,2,1],[1,1,2,2,1,4],[1,1,2,4,1,2],[1,2,2,1,1,4],
-  [1,2,2,4,1,1],[1,4,2,1,1,2],[1,4,2,2,1,1],[2,4,1,2,1,1],
-  [2,2,1,1,1,4],[4,1,3,1,1,1],[2,4,1,1,1,2],[1,3,4,1,1,1],
-  [1,1,1,2,4,2],[1,2,1,1,4,2],[1,2,1,2,4,1],[1,1,4,2,1,2],
-  [1,2,4,1,1,2],[1,2,4,2,1,1],[4,1,1,2,1,2],[4,2,1,1,1,2],
-  [4,2,1,2,1,1],[2,1,2,1,4,1],[2,1,4,1,2,1],[3,1,1,1,4,1],
-  [4,1,1,1,2,2],[3,1,3,1,1,2],[1,1,2,1,4,2],[1,1,4,1,2,2],
-  [2,1,2,2,4,1],[2,1,4,2,2,1],[1,1,3,4,1,1],[1,1,4,1,3,1], // 96,97,98,99
-  [1,1,4,3,1,1],[1,3,1,1,4,1],[1,4,1,1,3,1],              // 100,101,102
-  [2,1,1,4,1,2],[2,1,1,2,1,4],                             // 103=StartA, 104=StartB
-];
-// Stop character: bars/spaces 2,3,3,1,1,1,2 (13 modules)
-const C128_STOP = [2,3,3,1,1,1,2];
-// Code 128B start symbol value = 104
-const C128_START_B = 104;
-
-function code128ToSvg(text: string): string {
-  // Encode using Code 128 subset B (printable ASCII 32-126)
-  const codes: number[] = [];
-  for (let i = 0; i < text.length; i++) {
-    const c = text.charCodeAt(i);
-    if (c < 32 || c > 126) continue; // skip non-printable
-    codes.push(c - 32); // Code 128B: ASCII 32 = value 0, ASCII 126 = value 94
-  }
-  // Checksum: startValue + sum(code[i] * (i+1)), mod 103
-  let checksum = C128_START_B;
-  for (let i = 0; i < codes.length; i++) {
-    checksum += codes[i] * (i + 1);
-  }
-  checksum %= 103;
-
-  // Build module sequence: quiet(10) + start + data + checksum + stop + quiet(10)
-  const modules: { width: number; isBar: boolean }[] = [];
-  const addWidths = (widths: readonly number[], startIsBar: boolean) => {
-    widths.forEach((w, i) => {
-      modules.push({ width: w, isBar: (i % 2 === 0) === startIsBar });
-    });
-  };
-
-  // Quiet zone left (space)
-  modules.push({ width: 10, isBar: false });
-  // Start B
-  addWidths(C128_WIDTHS[C128_START_B], true);
-  // Data
-  for (const code of codes) {
-    addWidths(C128_WIDTHS[code], true);
-  }
-  // Checksum
-  addWidths(C128_WIDTHS[checksum], true);
-  // Stop
-  C128_STOP.forEach((w, i) => modules.push({ width: w, isBar: i % 2 === 0 }));
-  // Quiet zone right (space)
-  modules.push({ width: 10, isBar: false });
-
-  const totalModules = modules.reduce((s, m) => s + m.width, 0);
-  const barHeight = 80;
-  const textHeight = 16;
-  const svgH = barHeight + textHeight + 4;
-
-  let rects = "";
-  let x = 0;
-  for (const m of modules) {
-    if (m.isBar) {
-      rects += `<rect x="${x}" y="0" width="${m.width}" height="${barHeight}" fill="#000"/>`;
-    }
-    x += m.width;
-  }
-
-  const label = text.replace(/[<>&"']/g, (c) =>
-    c === "<" ? "&lt;" : c === ">" ? "&gt;" : c === "&" ? "&amp;" : c === '"' ? "&quot;" : "&#39;",
-  );
-
-  return [
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalModules} ${svgH}" role="img" aria-label="Штрихкод ${label}">`,
-    `<rect width="${totalModules}" height="${svgH}" fill="#fff"/>`,
-    rects,
-    `<text x="${totalModules / 2}" y="${barHeight + textHeight}" text-anchor="middle" font-family="monospace" font-size="${textHeight - 2}" fill="#000">${label}</text>`,
-    `</svg>`,
-  ].join("");
+function buildBwipBarcodeUrl(value: string): string {
+  // bwipjs-api.metafloor.com — open source, free, generates verified Code 128 barcodes
+  const encoded = encodeURIComponent(value.trim());
+  return `https://bwipjs-api.metafloor.com/?bcid=code128&text=${encoded}&scale=3&height=15&includetext&guardwhitespace`;
 }
 
 function CdekQrImg({ src }: { src: string }) {
@@ -233,13 +136,18 @@ function CdekQrImg({ src }: { src: string }) {
 }
 
 function CdekBarcode1D({ value }: { value: string }) {
-  const svgStr = code128ToSvg(value);
+  const src = buildBwipBarcodeUrl(value);
   return (
-    <div
-      className={styles.barcodeSvg}
-      // eslint-disable-next-line react/no-danger
-      dangerouslySetInnerHTML={{ __html: svgStr }}
-    />
+    <div className={styles.barcodeSvg}>
+      <img
+        alt={`Штрихкод ${value}`}
+        src={src}
+        style={{ width: "100%", height: "auto", display: "block" }}
+      />
+      <span style={{ display: "block", textAlign: "center", fontFamily: "monospace", fontSize: 14, marginTop: 4 }}>
+        {value}
+      </span>
+    </div>
   );
 }
 
@@ -261,7 +169,7 @@ function DealQrContent({ payload }: { payload: DealCdekQrResponse }) {
     );
   }
   if (media.kind === "text") {
-    // Это трек-номер или штрихкод-число от CDEK — рендерим как 1D Code 128
+    // Трек-номер или штрихкод-число от CDEK — рендерим как 1D Code 128
     return <CdekBarcode1D value={media.value} />;
   }
   return <CdekQrImg src={media.src} />;
@@ -766,7 +674,19 @@ const DealsPage = () => {
                 </div>
 
                 <div className={styles.section}>
-                  <Typography variant="h2">Доставка СДЭК</Typography>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+                    <Typography variant="h2">Доставка СДЭК</Typography>
+                    {deal.cdek.orderUuid?.trim() ? (
+                      <Button
+                        disabled={isFetching}
+                        type="button"
+                        variant="success"
+                        onClick={() => refetch()}
+                      >
+                        {isFetching ? "Обновляем..." : "↻ Обновить статус"}
+                      </Button>
+                    ) : null}
+                  </div>
                   <CdekDeliverySteps stages={deal.cdek.deliveryStages} />
                   <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>

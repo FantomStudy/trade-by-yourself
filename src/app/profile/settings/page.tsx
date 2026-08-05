@@ -64,27 +64,33 @@ const ProfileSettingsPage = () => {
     if (!data) return;
     try {
       setSaving(true);
-      // If a new photo file was selected, send multipart/form-data
+      // Backend reads ONLY FormValue — always send multipart/form-data
+      const fd = new FormData();
+      fd.append("fullName", data.fullName || "");
+      fd.append("phoneNumber", data.phoneNumber || "");
+      fd.append("isAnswersCall", String(data.isAnswersCall));
+      fd.append("profileType", data.profileType || "");
       if (selectedFile) {
-        const fd = new FormData();
         fd.append("photo", selectedFile);
-        fd.append("fullName", data.fullName || "");
-        fd.append("phoneNumber", data.phoneNumber || "");
-        fd.append("isAnswersCall", String(data.isAnswersCall));
-        fd.append("profileType", data.profileType || "");
-
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update-settings`, {
-          method: "PATCH",
-          credentials: "include",
-          body: fd,
-        });
-      } else {
-        // Call API to save JSON when no file upload
-        await api("/user/update-settings", { method: "PATCH", body: data });
       }
-      console.log("Profile saved");
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update-settings`, {
+        method: "PATCH",
+        credentials: "include",
+        body: fd,
+      });
+      // Reload profile from server to confirm saved values
+      const fresh = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+        credentials: "include",
+      });
+      if (fresh.ok) {
+        const freshData = await fresh.json();
+        setData(freshData);
+      }
+      setSelectedFile(null);
+      alert("Профиль сохранён");
     } catch (err) {
       console.error("Save failed:", err);
+      alert("Не удалось сохранить профиль");
     } finally {
       setSaving(false);
     }
