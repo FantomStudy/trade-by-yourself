@@ -33,6 +33,8 @@ export interface DealCdekQrResponse {
   trackingUrl?: string | null;
   orderUuid?: string | null;
   trackPending?: boolean;
+  barcodePdfUrl?: string | null;
+  waybillPdfUrl?: string | null;
 }
 
 export interface Deal {

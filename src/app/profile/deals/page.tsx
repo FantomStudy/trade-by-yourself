@@ -22,6 +22,7 @@ import {
   setCdekHandoff,
   syncDealPayment,
 } from "@/lib/api/requests";
+import { API_BASE_URL } from "@/lib/api/instance";
 import { toCurrency } from "@/lib/format";
 import { CdekDeliverySteps } from "./_components/cdek-delivery-steps";
 
@@ -122,6 +123,9 @@ function buildCdekQrMedia(
     }
     return { kind: "img", src: `data:image/png;base64,${rawData}` };
   }
+  if (payload.trackNumber?.trim()) {
+    return { kind: "text", value: payload.trackNumber.trim() };
+  }
   return null;
 }
 
@@ -131,6 +135,7 @@ function buildBwipBarcodeUrl(value: string): string {
   return `https://bwipjs-api.metafloor.com/?bcid=code128&text=${encoded}&scale=3&height=15&includetext&guardwhitespace`;
 }
 
+// Check if string contains base64 image or url
 function CdekQrImg({ src }: { src: string }) {
   return <img alt="CDEK QR code" className={styles.qrImage} src={src} />;
 }
@@ -153,26 +158,59 @@ function CdekBarcode1D({ value }: { value: string }) {
 
 function DealQrContent({ payload }: { payload: DealCdekQrResponse }) {
   const media = buildCdekQrMedia(payload);
-  if (!media) {
-    return <span className={styles.infoValue}>Нет данных изображения</span>;
-  }
-  if (media.kind === "file") {
-    return (
-      <a
-        className={styles.trackingLink}
-        href={media.href}
-        rel="noreferrer"
-        target="_blank"
-      >
-        Открыть штрихкод CDEK (файл)
-      </a>
-    );
-  }
-  if (media.kind === "text") {
-    // Трек-номер или штрихкод-число от CDEK — рендерим как 1D Code 128
-    return <CdekBarcode1D value={media.value} />;
-  }
-  return <CdekQrImg src={media.src} />;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", alignItems: "stretch" }}>
+      {media && (
+        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+          {media.kind === "file" && (
+            <a
+              className={styles.trackingLink}
+              href={media.href}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Открыть штрихкод CDEK (файл)
+            </a>
+          )}
+          {media.kind === "text" && <CdekBarcode1D value={media.value} />}
+          {media.kind === "img" && <CdekQrImg src={media.src} />}
+        </div>
+      )}
+
+      {(payload.barcodePdfUrl || payload.waybillPdfUrl) && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8, justifyContent: "center" }}>
+          {payload.barcodePdfUrl && (
+            <a
+              className={styles.downloadPdfBtn}
+              href={`${API_BASE_URL}${payload.barcodePdfUrl}`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              📄 Штрихкод (PDF)
+            </a>
+          )}
+          {payload.waybillPdfUrl && (
+            <a
+              className={styles.downloadPdfBtn}
+              href={`${API_BASE_URL}${payload.waybillPdfUrl}`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              📄 Квитанция (PDF)
+            </a>
+          )}
+        </div>
+      )}
+
+      <div className={styles.cdekPvzWarning}>
+        <strong>⚠️ Правила СДЭК для получения и отправки:</strong>
+        <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#78350f" }}>
+          Сам по себе штрихкод/QR-код в СДЭК не является достаточным основанием для выдачи или приема посылки. Сотрудник ПВЗ в обязательном порядке потребует ваш <strong>паспорт</strong> или <strong>СМС-код</strong> (при наличии настроенного CDEK ID).
+        </p>
+      </div>
+    </div>
+  );
 }
 
 const DealsPage = () => {
