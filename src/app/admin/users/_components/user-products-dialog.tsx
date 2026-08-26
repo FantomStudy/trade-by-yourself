@@ -94,7 +94,7 @@ export function UserProductsDialog({ user, open, onOpenChange }: UserProductsDia
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-gray-900">{product.name}</span>
-                      {product.hasPromotion || product.promotionLevel > 0 ? (
+                      {product.hasPromotion || (product.promotionLevel ?? 0) > 0 ? (
                         <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
                           Платное ({product.promotionName || "Продвинутое"})
                         </span>
