@@ -395,8 +395,29 @@ const ProductDetailDialog = ({
                         label="Категория"
                         value={`${product.category.name} / ${product.subCategory.name}${product.type ? ` / ${product.type.name}` : ""}`}
                       />
+                      {product.expiresAt && (
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-gray-500 flex-shrink-0">Срок размещения:</span>
+                          <span
+                            className={`font-medium text-right ${
+                              product.isExpired
+                                ? "text-red-600"
+                                : typeof product.daysUntilExpiration === "number" && product.daysUntilExpiration <= 3
+                                  ? "text-orange-500"
+                                  : "text-gray-800"
+                            }`}
+                          >
+                            {product.isExpired
+                              ? "⛔ Истёк"
+                              : typeof product.daysUntilExpiration === "number"
+                                ? `⏱ Осталось ${product.daysUntilExpiration} дн.`
+                                : new Date(product.expiresAt).toLocaleDateString("ru-RU")}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
+
 
                   {/* Description */}
                   <div className="rounded-xl border bg-white p-5 shadow-sm">
