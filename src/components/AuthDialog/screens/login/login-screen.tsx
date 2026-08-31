@@ -3,6 +3,7 @@ import { Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { TIDLoginButton } from "../../tid-login-button";
 import { VkLoginButton } from "../../vk-login-button";
+import { YandexLoginButton } from "../../yandex-login-button";
 import { LoginForm } from "./login-form";
 
 import styles from "../screens.module.css";
@@ -14,6 +15,7 @@ export const LoginScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
 
       <VkLoginButton />
       <TIDLoginButton />
+      <YandexLoginButton />
 
       <div className={styles.linkActions}>
         <Typography>Вы забыли пароль?</Typography>
