@@ -12,15 +12,26 @@ const SellerPage = async ({ params }: PageProps<"/seller/[sellerId]">) => {
   const { sellerId } = await params;
   const userId = Number(sellerId);
 
-  if (Number.isNaN(sellerId)) notFound();
+  if (!userId || Number.isNaN(userId)) {
+    notFound();
+  }
 
-  const [user, products] = await Promise.all([
-    getUser(userId).catch((error) => {
-      if (error.status === 404) notFound();
-      throw error;
-    }),
-    getUserProducts(userId),
-  ]);
+  let user;
+  let products = [];
+  try {
+    const res = await Promise.all([
+      getUser(userId),
+      getUserProducts(userId).catch(() => []),
+    ]);
+    user = res[0];
+    products = Array.isArray(res[1]) ? res[1] : [];
+  } catch {
+    notFound();
+  }
+
+  if (!user || !user.id) {
+    notFound();
+  }
 
   return (
     <div className="global-container">

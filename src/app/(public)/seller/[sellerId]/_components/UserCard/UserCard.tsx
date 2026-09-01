@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { ProductUser } from "@/api/products";
 
@@ -76,8 +76,8 @@ export const UserCard = ({ user, defaultProductId }: UserCardProps) => {
   return (
     <div className={styles.card}>
       <Link href={`/seller/${user.id}`} className={styles.userHeader}>
-        <Avatar size="lg" src={user.photo} fallback={user.fullName[0]} />
-        <Typography variant="h2">{user.fullName}</Typography>
+        <Avatar size="lg" src={user.photo} fallback={user.fullName?.[0] || "П"} />
+        <Typography variant="h2">{user.fullName || "Пользователь"}</Typography>
       </Link>
 
       <div className={styles.userStats}>
