@@ -40,6 +40,7 @@ export interface Product {
   sellerRating?: number | null;
   sellerVerified?: boolean;
   viewsCount?: number;
+  todayViewsCount?: number;
   popularityScore?: number;
   badges?: string[];
   categoryId: number;
@@ -79,6 +80,7 @@ export interface DetailedProduct {
   promotionLevel?: number;
   promotionName?: string | null;
   viewsCount?: number;
+  todayViewsCount?: number;
   seller: ProductUser;
 }
 

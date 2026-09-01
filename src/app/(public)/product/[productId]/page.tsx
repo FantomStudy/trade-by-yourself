@@ -78,7 +78,12 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
               {(isPromo || typeof product.viewsCount === "number") && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">
                   <Eye className="w-3.5 h-3.5 text-slate-400" />
-                  {product.viewsCount ?? 0} просмотров
+                  <span>{product.viewsCount ?? 0} просмотров</span>
+                  {Boolean(product.todayViewsCount && product.todayViewsCount > 0) && (
+                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                      (+{product.todayViewsCount} сегодня)
+                    </span>
+                  )}
                 </span>
               )}
             </div>

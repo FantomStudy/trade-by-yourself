@@ -129,9 +129,12 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
           ) : null}
 
           {typeof product.viewsCount === "number" && (
-            <span className="inline-flex items-center gap-1 rounded-md bg-slate-900/75 backdrop-blur-[2px] px-2 py-0.5 text-[11px] font-medium text-white shadow">
+            <span className="inline-flex items-center gap-1 rounded-md bg-slate-900/80 backdrop-blur-[2px] px-2 py-0.5 text-[11px] font-medium text-white shadow">
               <Eye className="h-3 w-3 text-slate-300" />
-              {product.viewsCount}
+              <span>{product.viewsCount}</span>
+              {Boolean(product.todayViewsCount && product.todayViewsCount > 0) && (
+                <span className="text-emerald-400 font-semibold">(+{product.todayViewsCount})</span>
+              )}
             </span>
           )}
         </div>

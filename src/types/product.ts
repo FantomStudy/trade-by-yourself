@@ -1,4 +1,4 @@
-﻿export interface Product {
+export interface Product {
   id: number;
   name: string;
   address: string;
@@ -23,6 +23,7 @@
   sellerRating?: number | null;
   sellerVerified?: boolean;
   viewsCount?: number;
+  todayViewsCount?: number;
   popularityScore?: number;
   badges?: string[];
 }
