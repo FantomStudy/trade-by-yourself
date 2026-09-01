@@ -19,7 +19,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
     notFound();
   }
 
-  if (!product || !product.id || !product.category || !product.subCategory) {
+  if (!product || !product.id || !product.category || !product.subCategory || !product.seller) {
     notFound();
   }
 
@@ -110,7 +110,7 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
             <Typography>В наличии: {product.quantity ?? 1} шт.</Typography>
           </div>
 
-          <Gallery images={product.images} videoUrl={product.videoUrl} />
+          <Gallery images={product.images || []} videoUrl={product.videoUrl} />
 
           <div className={styles.section}>
             {product.description && (
@@ -128,10 +128,11 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
                 <div className={styles.sectionBlock}>
                   <Typography variant="h2">Характеристики</Typography>
                   <div className={styles.sectionContent}>
-                    {product.fieldValues.map((fieldValue) => {
+                    {product.fieldValues.map((fieldValue, fIdx) => {
+                      if (!fieldValue || typeof fieldValue !== "object") return null;
                       const entries = Object.entries(fieldValue).filter(([key]) => key !== "id");
                       return entries.map(([fieldName, value]) => (
-                        <div key={`${fieldValue.id}-${fieldName}`} className={styles.fieldItem}>
+                        <div key={`${fIdx}-${fieldName}`} className={styles.fieldItem}>
                           {fieldName}: {value}
                         </div>
                       ));
@@ -149,13 +150,16 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
             )}
           </div>
 
-          <ReviewForm sellerId={product.seller.id} sellerName={product.seller.fullName} />
-
-          <ToggleProductButton
-            isHidden={product.isHide ?? false}
-            sellerId={product.seller.id}
-            productId={product.id}
-          />
+          {product.seller && (
+            <>
+              <ReviewForm sellerId={product.seller.id} sellerName={product.seller.fullName} />
+              <ToggleProductButton
+                isHidden={product.isHide ?? false}
+                sellerId={product.seller.id}
+                productId={product.id}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

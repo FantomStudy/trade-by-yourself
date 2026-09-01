@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { MoveLeft, MoveRight, X } from "lucide-react";
 import Image from "next/image";
@@ -76,7 +76,8 @@ export const Gallery = ({ images, videoUrl }: GalleryProps) => {
     return { kind: "iframe", src: url, provider: "other" };
   };
 
-  const slides = videoUrl ? [...images, videoUrl] : images;
+  const validImages = Array.isArray(images) ? images.filter(Boolean) : [];
+  const slides = videoUrl ? [...validImages, videoUrl] : validImages;
   const [currentIndex, setCurrentIndex] = useState(0);
   const resolvedVideo = resolveVideoSource(videoUrl);
 
