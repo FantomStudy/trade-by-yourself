@@ -421,3 +421,214 @@
 .retryButton:hover {
   background-color: #2563eb;
 }
+
+/* Dashboard by ad types & dynamics */
+.dashboardSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 16px;
+}
+
+.dashboardKpiCard {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 18px 20px;
+  gap: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+}
+
+.dashboardKpiLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dashboardKpiValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.dashboardKpiNote {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.dashboardCard {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+}
+
+.dashboardCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dashboardCardTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.dashboardCardSubtitle {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Ratio Bar */
+.ratioBar {
+  display: flex;
+  height: 12px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: #f1f5f9;
+  width: 100%;
+}
+
+.ratioSegmentVip {
+  background-color: #f59e0b;
+  transition: width 0.3s ease;
+}
+
+.ratioSegmentTop {
+  background-color: #ec4899;
+  transition: width 0.3s ease;
+}
+
+.ratioSegmentFree {
+  background-color: #94a3b8;
+  transition: width 0.3s ease;
+}
+
+.ratioLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.ratioLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ratioDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+}
+
+/* Dynamics Chart */
+.chartContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.chartBarsWrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 160px;
+  padding-top: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  overflow-x: auto;
+}
+
+.chartCol {
+  flex: 1;
+  min-width: 18px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  group: true;
+}
+
+.chartColBar {
+  width: 100%;
+  max-width: 24px;
+  border-radius: 4px 4px 0 0;
+  background-color: #3b82f6;
+  min-height: 4px;
+  transition: height 0.3s ease, background-color 0.2s;
+}
+
+.chartColBar:hover {
+  background-color: #2563eb;
+}
+
+.chartColDate {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 6px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Efficiency Comparison */
+.efficiencyGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .efficiencyGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.efficiencyCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.efficiencyTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.efficiencyValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.efficiencySub {
+  font-size: 12px;
+  color: #64748b;
+}
+

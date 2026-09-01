@@ -19,17 +19,18 @@ import { useState } from "react";
 import { useAnalytics } from "@/components/_deprecated/useAnalytics";
 import { Typography } from "@/components/ui";
 import { useCategories, useChats } from "@/lib/api/hooks";
-import { getFavorites, getSearchQueriesStats } from "@/lib/api/requests";
+import { getCabinetDashboard, getFavorites, getSearchQueriesStats } from "@/lib/api/requests";
 
 import styles from "./page.module.css";
 
-type TabType = "overview" | "search-queries";
+type TabType = "overview" | "ads-dashboard" | "search-queries";
 
 const Analytics = () => {
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [selectedPeriod, setSelectedPeriod] = useState("year");
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [searchDays, setSearchDays] = useState(30);
+  const [dashboardDays, setDashboardDays] = useState(30);
 
   // Загружаем категории
   const { categories, isLoading: categoriesLoading, error: categoriesError } = useCategories();
@@ -49,6 +50,15 @@ const Analytics = () => {
   } = useAnalytics({
     period: selectedPeriod,
     categoryId: selectedCategoryId,
+  });
+
+  // Загружаем дашборд по типам объявлений и динамику
+  const {
+    data: cabinetDashboard,
+    isLoading: dashboardLoading,
+  } = useQuery({
+    queryKey: ["cabinet-dashboard", dashboardDays],
+    queryFn: () => getCabinetDashboard(dashboardDays),
   });
 
   // Загружаем поисковую аналитику (PRO)
@@ -98,6 +108,17 @@ const Analytics = () => {
     );
   }
 
+  const adsInfo = cabinetDashboard?.adsTypes;
+  const totalActiveAds = (adsInfo?.vip || 0) + (adsInfo?.top || 0) + (adsInfo?.free || 0);
+  const vipPercent = totalActiveAds > 0 ? Math.round(((adsInfo?.vip || 0) / totalActiveAds) * 100) : 0;
+  const topPercent = totalActiveAds > 0 ? Math.round(((adsInfo?.top || 0) / totalActiveAds) * 100) : 0;
+  const freePercent = totalActiveAds > 0 ? Math.max(0, 100 - vipPercent - topPercent) : 0;
+
+  const maxDynamicCount = Math.max(
+    ...(adsInfo?.dailyDynamics?.map((d) => Math.max(d.createdCount, d.promotedCount)) || [1]),
+    1
+  );
+
   return (
     <div className={styles.page}>
       {/* Заголовок */}
@@ -137,6 +158,20 @@ const Analytics = () => {
           </div>
         )}
 
+        {activeTab === "ads-dashboard" && (
+          <div className={styles.filters}>
+            <select
+              className={styles.filterSelect}
+              value={dashboardDays}
+              onChange={(e) => setDashboardDays(Number(e.target.value))}
+            >
+              <option value={7}>За 7 дней</option>
+              <option value={30}>За 30 дней</option>
+              <option value={90}>За 90 дней</option>
+            </select>
+          </div>
+        )}
+
         {activeTab === "search-queries" && (
           <div className={styles.filters}>
             <select
@@ -160,6 +195,14 @@ const Analytics = () => {
           type="button"
         >
           Сводка активности
+        </button>
+
+        <button
+          className={`${styles.tabBtn} ${activeTab === "ads-dashboard" ? styles.tabBtnActive : ""}`}
+          onClick={() => setActiveTab("ads-dashboard")}
+          type="button"
+        >
+          Дашборд объявлений и динамика
         </button>
 
         <button
@@ -213,7 +256,193 @@ const Analytics = () => {
         </div>
       )}
 
-      {/* ВКЛАДКА 2: Поисковые запросы (Платный доступ) */}
+      {/* ВКЛАДКА 2: Дашборд объявлений и динамика */}
+      {activeTab === "ads-dashboard" && (
+        <div className={styles.dashboardSection}>
+          {dashboardLoading ? (
+            <div className={styles.loading}>
+              <div className={styles.spinner}></div>
+              <p className="text-sm text-slate-500">Загрузка структуры объявлений...</p>
+            </div>
+          ) : (
+            <>
+              {/* Сетка ключевых показателей по типам */}
+              <div className={styles.dashboardGrid}>
+                <div className={styles.dashboardKpiCard}>
+                  <span className={styles.dashboardKpiLabel}>Всего объявлений</span>
+                  <span className={styles.dashboardKpiValue}>{adsInfo?.total ?? 0}</span>
+                  <span className={styles.dashboardKpiNote}>все позиции аккаунта</span>
+                </div>
+
+                <div className={styles.dashboardKpiCard}>
+                  <span className={styles.dashboardKpiLabel} style={{ color: "#d97706" }}>VIP объявления</span>
+                  <span className={styles.dashboardKpiValue} style={{ color: "#b45309" }}>{adsInfo?.vip ?? 0}</span>
+                  <span className={styles.dashboardKpiNote}>максимальный приоритет</span>
+                </div>
+
+                <div className={styles.dashboardKpiCard}>
+                  <span className={styles.dashboardKpiLabel} style={{ color: "#db2777" }}>В топе (Стандарт)</span>
+                  <span className={styles.dashboardKpiValue} style={{ color: "#be185d" }}>{adsInfo?.top ?? 0}</span>
+                  <span className={styles.dashboardKpiNote}>платное поднятие</span>
+                </div>
+
+                <div className={styles.dashboardKpiCard}>
+                  <span className={styles.dashboardKpiLabel}>Бесплатные</span>
+                  <span className={styles.dashboardKpiValue}>{adsInfo?.free ?? 0}</span>
+                  <span className={styles.dashboardKpiNote}>базовые активные</span>
+                </div>
+
+                <div className={styles.dashboardKpiCard}>
+                  <span className={styles.dashboardKpiLabel} style={{ color: "#2563eb" }}>На модерации</span>
+                  <span className={styles.dashboardKpiValue} style={{ color: "#1d4ed8" }}>{adsInfo?.moderation ?? 0}</span>
+                  <span className={styles.dashboardKpiNote}>проверяются системой</span>
+                </div>
+
+                <div className={styles.dashboardKpiCard}>
+                  <span className={styles.dashboardKpiLabel}>Скрытые / Архив</span>
+                  <span className={styles.dashboardKpiValue}>{adsInfo?.hidden ?? 0}</span>
+                  <span className={styles.dashboardKpiNote}>сняты с продажи</span>
+                </div>
+
+                <div className={styles.dashboardKpiCard}>
+                  <span className={styles.dashboardKpiLabel}>Черновики</span>
+                  <span className={styles.dashboardKpiValue}>{adsInfo?.drafts ?? 0}</span>
+                  <span className={styles.dashboardKpiNote}>не опубликованы</span>
+                </div>
+              </div>
+
+              {/* Структура активного портфеля */}
+              <div className={styles.dashboardCard}>
+                <div className={styles.dashboardCardHeader}>
+                  <div>
+                    <h3 className={styles.dashboardCardTitle}>Структура активных объявлений</h3>
+                    <p className={styles.dashboardCardSubtitle}>Соотношение платных и бесплатных форматов размещения</p>
+                  </div>
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700">
+                    Активно: {totalActiveAds} шт.
+                  </span>
+                </div>
+
+                <div className={styles.ratioBar}>
+                  <div
+                    className={styles.ratioSegmentVip}
+                    style={{ width: `${vipPercent}%` }}
+                    title={`VIP: ${adsInfo?.vip ?? 0} (${vipPercent}%)`}
+                  />
+                  <div
+                    className={styles.ratioSegmentTop}
+                    style={{ width: `${topPercent}%` }}
+                    title={`В топе: ${adsInfo?.top ?? 0} (${topPercent}%)`}
+                  />
+                  <div
+                    className={styles.ratioSegmentFree}
+                    style={{ width: `${freePercent}%` }}
+                    title={`Бесплатные: ${adsInfo?.free ?? 0} (${freePercent}%)`}
+                  />
+                </div>
+
+                <div className={styles.ratioLegend}>
+                  <div className={styles.ratioLegendItem}>
+                    <span className={styles.ratioDot} style={{ backgroundColor: "#f59e0b" }}></span>
+                    <span>VIP ({vipPercent}%)</span>
+                  </div>
+                  <div className={styles.ratioLegendItem}>
+                    <span className={styles.ratioDot} style={{ backgroundColor: "#ec4899" }}></span>
+                    <span>В топе ({topPercent}%)</span>
+                  </div>
+                  <div className={styles.ratioLegendItem}>
+                    <span className={styles.ratioDot} style={{ backgroundColor: "#94a3b8" }}></span>
+                    <span>Бесплатные ({freePercent}%)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Сравнение эффективности */}
+              <div className={styles.dashboardCard}>
+                <div className={styles.dashboardCardHeader}>
+                  <div>
+                    <h3 className={styles.dashboardCardTitle}>Эффективность платных объявлений</h3>
+                    <p className={styles.dashboardCardSubtitle}>Среднее число просмотров на одно объявление</p>
+                  </div>
+                </div>
+
+                <div className={styles.efficiencyGrid}>
+                  <div className={styles.efficiencyCard}>
+                    <span className={styles.efficiencyTitle}>Платные (VIP и В топе)</span>
+                    <span className={styles.efficiencyValue}>
+                      {adsInfo?.avgPaidViews ?? 0} <span className="text-xs font-normal text-slate-500">просмотров / товар</span>
+                    </span>
+                    <span className={styles.efficiencySub}>с активным тарифом или продвижением</span>
+                  </div>
+
+                  <div className={styles.efficiencyCard}>
+                    <span className={styles.efficiencyTitle}>Бесплатные объявления</span>
+                    <span className={styles.efficiencyValue}>
+                      {adsInfo?.avgFreeViews ?? 0} <span className="text-xs font-normal text-slate-500">просмотров / товар</span>
+                    </span>
+                    <span className={styles.efficiencySub}>базовое размещение в каталоге</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Динамика публикаций по дням */}
+              <div className={styles.dashboardCard}>
+                <div className={styles.dashboardCardHeader}>
+                  <div>
+                    <h3 className={styles.dashboardCardTitle}>Динамика активности за {dashboardDays} дней</h3>
+                    <p className={styles.dashboardCardSubtitle}>Новые публикации и подключения платных услуг</p>
+                  </div>
+                </div>
+
+                <div className={styles.chartContainer}>
+                  <div className={styles.chartBarsWrapper}>
+                    {adsInfo?.dailyDynamics && adsInfo.dailyDynamics.length > 0 ? (
+                      adsInfo.dailyDynamics.map((item, idx) => {
+                        const heightPct = Math.max((Math.max(item.createdCount, item.promotedCount) / maxDynamicCount) * 100, 5);
+                        const dateLabel = new Date(item.date).toLocaleDateString("ru-RU", {
+                          day: "numeric",
+                          month: "short",
+                        });
+
+                        return (
+                          <div key={item.date + idx} className={styles.chartCol}>
+                            <div
+                              className={styles.chartColBar}
+                              style={{
+                                height: `${heightPct}%`,
+                                backgroundColor: item.promotedCount > 0 ? "#f59e0b" : item.createdCount > 0 ? "#3b82f6" : "#e2e8f0",
+                              }}
+                              title={`${dateLabel}: Публикаций ${item.createdCount}, Продвижений ${item.promotedCount}`}
+                            />
+                            {idx % Math.ceil(adsInfo.dailyDynamics.length / 8) === 0 && (
+                              <span className={styles.chartColDate}>{dateLabel}</span>
+                            )}
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-sm text-slate-400 py-8 text-center w-full">Данных за выбранный период пока нет</p>
+                    )}
+                  </div>
+
+                  <div className={styles.ratioLegend} style={{ marginTop: 8 }}>
+                    <div className={styles.ratioLegendItem}>
+                      <span className={styles.ratioDot} style={{ backgroundColor: "#3b82f6" }}></span>
+                      <span>Новые публикации</span>
+                    </div>
+                    <div className={styles.ratioLegendItem}>
+                      <span className={styles.ratioDot} style={{ backgroundColor: "#f59e0b" }}></span>
+                      <span>Платные продвижения</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ВКЛАДКА 3: Поисковые запросы (Платный доступ) */}
       {activeTab === "search-queries" && (
         <div className="flex flex-col gap-6">
           {/* Баннер блокировки / Paywall, если нет активного продвижения */}

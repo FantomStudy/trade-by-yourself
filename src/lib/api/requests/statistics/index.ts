@@ -16,20 +16,34 @@ export interface SearchQueriesResponse {
   lockMessage?: string;
 }
 
+export interface DailyDynamicItem {
+  date: string;
+  createdCount: number;
+  promotedCount: number;
+}
+
 export interface CabinetDashboardResponse {
   days: number;
   adsTypes: {
-    free: number;
-    paid: number;
     total: number;
+    vip: number;
+    top: number;
+    free: number;
+    moderation: number;
+    hidden: number;
+    drafts: number;
+    expired: number;
+    avgPaidViews: number;
+    avgFreeViews: number;
+    dailyDynamics: DailyDynamicItem[];
   };
-  tariffFunnel: {
+  tariffFunnel?: {
     tariff_view: number;
     tariff_select: number;
     payment: number;
     publication: number;
   };
-  revenueBreakdown: Array<{
+  revenueBreakdown?: Array<{
     promotionType: string;
     category: string;
     revenue: number;
