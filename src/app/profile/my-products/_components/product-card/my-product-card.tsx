@@ -2,7 +2,7 @@
 
 import type { Product } from "@/types";
 
-import { AlertCircle, Edit, Eye, EyeOff, Trash2 } from "lucide-react";
+import { AlertCircle, Edit, Eye, EyeOff, Sparkles, Trash2, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -117,18 +117,8 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
           </div>
         </Link>
 
-        <div className="absolute top-2 left-2 flex flex-col gap-1 z-10 pointer-events-none">
-          {product.promotionLevel && product.promotionLevel >= 100 ? (
-            <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-amber-500 to-amber-600 px-2 py-0.5 text-[11px] font-bold text-white shadow">
-              VIP {product.promotionName ? `• ${product.promotionName}` : ""}
-            </span>
-          ) : (product.promotionLevel && product.promotionLevel > 0) || product.hasPromotion ? (
-            <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-2 py-0.5 text-[11px] font-semibold text-white shadow">
-              В топе {product.promotionName ? `• ${product.promotionName}` : ""}
-            </span>
-          ) : null}
-
-          {typeof product.viewsCount === "number" && (
+        {typeof product.viewsCount === "number" && (
+          <div className="absolute top-2 left-2 z-10 pointer-events-none">
             <span className="inline-flex items-center gap-1 rounded-md bg-slate-900/80 backdrop-blur-[2px] px-2 py-0.5 text-[11px] font-medium text-white shadow">
               <Eye className="h-3 w-3 text-slate-300" />
               <span>{product.viewsCount}</span>
@@ -136,7 +126,21 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
                 <span className="text-emerald-400 font-semibold">(+{product.todayViewsCount})</span>
               )}
             </span>
-          )}
+          </div>
+        )}
+
+        <div className="absolute bottom-2 left-2 flex flex-col gap-1 z-10 pointer-events-none max-w-[85%]">
+          {product.promotionLevel && product.promotionLevel >= 100 ? (
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-amber-500 to-amber-600 px-2.5 py-1 text-[11px] font-bold text-white shadow-lg backdrop-blur-[2px] truncate">
+              <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">VIP {product.promotionName ? `• ${product.promotionName}` : ""}</span>
+            </span>
+          ) : (product.promotionLevel && product.promotionLevel > 0) || product.hasPromotion ? (
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-2.5 py-1 text-[11px] font-semibold text-white shadow-lg backdrop-blur-[2px] truncate">
+              <Zap className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">В топе {product.promotionName ? `• ${product.promotionName}` : ""}</span>
+            </span>
+          ) : null}
         </div>
 
         <div className="absolute top-2 right-2 flex items-start gap-1">
