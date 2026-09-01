@@ -50,6 +50,23 @@ export interface CabinetDashboardResponse {
   }>;
 }
 
+export interface UserAnalyticsResponse {
+  period?: string;
+  totalViews?: number;
+  totalPhoneViews?: number;
+  totalFavorites?: number;
+  views?: number;
+  phone?: number;
+  favorites?: number;
+}
+
+export const getUserAnalytics = async (params: { period: string; categoryId?: number }): Promise<UserAnalyticsResponse> => {
+  const q = new URLSearchParams();
+  q.append("period", params.period);
+  if (params.categoryId) q.append("categoryId", String(params.categoryId));
+  return api<UserAnalyticsResponse>(`/statistics/analytic?${q.toString()}`);
+};
+
 export const getSearchQueriesStats = async (days = 30): Promise<SearchQueriesResponse> => {
   return api<SearchQueriesResponse>(`/statistics/search-queries?days=${days}`);
 };

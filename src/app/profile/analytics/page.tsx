@@ -16,10 +16,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { useAnalytics } from "@/components/_deprecated/useAnalytics";
 import { Typography } from "@/components/ui";
 import { useCategories, useChats } from "@/lib/api/hooks";
-import { getCabinetDashboard, getFavorites, getSearchQueriesStats } from "@/lib/api/requests";
+import {
+  getCabinetDashboard,
+  getFavorites,
+  getSearchQueriesStats,
+  getUserAnalytics,
+} from "@/lib/api/requests";
 
 import styles from "./page.module.css";
 
@@ -33,7 +37,7 @@ const Analytics = () => {
   const [dashboardDays, setDashboardDays] = useState(30);
 
   // Загружаем категории
-  const { categories, isLoading: categoriesLoading, error: categoriesError } = useCategories();
+  const { categories = [] } = useCategories();
 
   // Загружаем чаты и избранное
   const { data: chats } = useChats();
@@ -47,15 +51,16 @@ const Analytics = () => {
     data: analyticsData,
     isLoading: analyticsLoading,
     error: analyticsError,
-  } = useAnalytics({
-    period: selectedPeriod,
-    categoryId: selectedCategoryId,
+  } = useQuery({
+    queryKey: ["user-analytics", selectedPeriod, selectedCategoryId],
+    queryFn: () => getUserAnalytics({ period: selectedPeriod, categoryId: selectedCategoryId }),
   });
 
   // Загружаем дашборд по типам объявлений и динамику
   const {
     data: cabinetDashboard,
     isLoading: dashboardLoading,
+    error: dashboardError,
   } = useQuery({
     queryKey: ["cabinet-dashboard", dashboardDays],
     queryFn: () => getCabinetDashboard(dashboardDays),
@@ -71,9 +76,6 @@ const Analytics = () => {
     queryFn: () => getSearchQueriesStats(searchDays),
   });
 
-  const isLoading = categoriesLoading || analyticsLoading;
-  const error = categoriesError || analyticsError;
-
   const handlePeriodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPeriod(event.target.value);
   };
@@ -82,31 +84,6 @@ const Analytics = () => {
     const value = event.target.value;
     setSelectedCategoryId(value === "" ? undefined : Number.parseInt(value));
   };
-
-  if (isLoading) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.loading}>
-          <div className={styles.spinner}></div>
-          <p>Загрузка аналитики...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.error}>
-          <h2>Ошибка</h2>
-          <p>{error}</p>
-          <button className={styles.retryButton} onClick={() => window.location.reload()}>
-            Попробовать снова
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const adsInfo = cabinetDashboard?.adsTypes;
   const totalActiveAds = (adsInfo?.vip || 0) + (adsInfo?.top || 0) + (adsInfo?.free || 0);
@@ -217,43 +194,54 @@ const Analytics = () => {
 
       {/* ВКЛАДКА 1: Сводка */}
       {activeTab === "overview" && (
-        <div className={styles.metricsGrid}>
-          <div className={styles.metricCard}>
-            <div className={styles.metricContent}>
-              <Typography className={styles.metricLabel}>Просмотры объявлений</Typography>
-              <Typography className={styles.metricValue}>
-                {analyticsData?.views?.toString() || "0"}
-              </Typography>
-              <Typography className={styles.metricPeriod}>за выбранный период</Typography>
+        <>
+          {analyticsLoading ? (
+            <div className={styles.loading}>
+              <div className={styles.spinner}></div>
+              <p className="text-sm text-slate-500">Загрузка сводки...</p>
             </div>
-          </div>
+          ) : (
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCard}>
+                <div className={styles.metricContent}>
+                  <Typography className={styles.metricLabel}>Просмотры объявлений</Typography>
+                  <Typography className={styles.metricValue}>
+                    {(analyticsData?.totalViews ?? analyticsData?.views ?? 0).toString()}
+                  </Typography>
+                  <Typography className={styles.metricPeriod}>за выбранный период</Typography>
+                </div>
+              </div>
 
-          <div className={styles.metricCard}>
-            <div className={styles.metricContent}>
-              <Typography className={styles.metricLabel}>Активные диалоги</Typography>
-              <Typography className={styles.metricValue}>{chats?.length || 0}</Typography>
-              <Typography className={styles.metricPeriod}>всего чатов с покупателями</Typography>
-            </div>
-          </div>
+              <div className={styles.metricCard}>
+                <div className={styles.metricContent}>
+                  <Typography className={styles.metricLabel}>Активные диалоги</Typography>
+                  <Typography className={styles.metricValue}>{chats?.length || 0}</Typography>
+                  <Typography className={styles.metricPeriod}>всего чатов с покупателями</Typography>
+                </div>
+              </div>
 
-          <div className={styles.metricCard}>
-            <div className={styles.metricContent}>
-              <Typography className={styles.metricLabel}>Добавили в избранное</Typography>
-              <Typography className={styles.metricValue}>{favorites?.length || 0}</Typography>
-              <Typography className={styles.metricPeriod}>сохранений ваших товаров</Typography>
-            </div>
-          </div>
+              <div className={styles.metricCard}>
+                <div className={styles.metricContent}>
+                  <Typography className={styles.metricLabel}>Добавили в избранное</Typography>
+                  <Typography className={styles.metricValue}>
+                    {(analyticsData?.totalFavorites ?? favorites?.length ?? 0).toString()}
+                  </Typography>
+                  <Typography className={styles.metricPeriod}>сохранений ваших товаров</Typography>
+                </div>
+              </div>
 
-          <div className={styles.metricCard}>
-            <div className={styles.metricContent}>
-              <Typography className={styles.metricLabel}>Просмотры контактов</Typography>
-              <Typography className={styles.metricValue}>
-                {analyticsData?.phone?.toString() || "0"}
-              </Typography>
-              <Typography className={styles.metricPeriod}>открытий номера телефона</Typography>
+              <div className={styles.metricCard}>
+                <div className={styles.metricContent}>
+                  <Typography className={styles.metricLabel}>Просмотры контактов</Typography>
+                  <Typography className={styles.metricValue}>
+                    {(analyticsData?.totalPhoneViews ?? analyticsData?.phone ?? 0).toString()}
+                  </Typography>
+                  <Typography className={styles.metricPeriod}>открытий номера телефона</Typography>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
 
       {/* ВКЛАДКА 2: Дашборд объявлений и динамика */}
