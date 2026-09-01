@@ -2,7 +2,7 @@
 
 import type { Product } from "@/types";
 
-import { AlertCircle, Edit, Eye, EyeOff, Sparkles, Trash2, Zap } from "lucide-react";
+import { AlertCircle, Edit, Eye, EyeOff, Sparkles, Trash2, TrendingUp, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -152,6 +152,13 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
               {lifetimeLabel}
             </div>
           ) : null}
+          <Link
+            href="/profile/promotion-request"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white text-amber-600 hover:text-amber-700"
+            title="Продвижение / Продлить"
+          >
+            <TrendingUp className="h-4 w-4" />
+          </Link>
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
             disabled={isDeleting || isToggling}

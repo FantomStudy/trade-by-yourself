@@ -150,7 +150,7 @@ const PromotionPage = () => {
       closeModals();
     } catch (error: any) {
       console.error("Ошибка активации продвижения:", error);
-      const errorMessage = error.response?.data?.message || "Не удалось активировать продвижение";
+      const errorMessage = error?.data?.message || error?.message || error?.response?.data?.message || "Не удалось активировать продвижение";
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
