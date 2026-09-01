@@ -117,19 +117,7 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
           </div>
         </Link>
 
-        {typeof product.viewsCount === "number" && (
-          <div className="absolute top-2 left-2 z-10 pointer-events-none">
-            <span className="inline-flex items-center gap-1 rounded-md bg-slate-900/80 backdrop-blur-[2px] px-2 py-0.5 text-[11px] font-medium text-white shadow">
-              <Eye className="h-3 w-3 text-slate-300" />
-              <span>{product.viewsCount}</span>
-              {Boolean(product.todayViewsCount && product.todayViewsCount > 0) && (
-                <span className="text-emerald-400 font-semibold">(+{product.todayViewsCount})</span>
-              )}
-            </span>
-          </div>
-        )}
-
-        <div className="absolute bottom-2 left-2 flex flex-col gap-1 z-10 pointer-events-none max-w-[85%]">
+        <div className="absolute bottom-2 left-2 flex flex-col gap-1 z-10 pointer-events-none max-w-[60%]">
           {product.promotionLevel && product.promotionLevel >= 100 ? (
             <span className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-amber-500 to-amber-600 px-2.5 py-1 text-[11px] font-bold text-white shadow-lg backdrop-blur-[2px] truncate">
               <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
@@ -142,6 +130,18 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
             </span>
           ) : null}
         </div>
+
+        {typeof product.viewsCount === "number" && (
+          <div className="absolute bottom-2 right-2 z-10 pointer-events-none">
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-slate-900/80 backdrop-blur-[2px] px-2.5 py-1 text-[11px] font-medium text-white shadow-md">
+              <Eye className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
+              <span>{product.viewsCount}</span>
+              {Boolean(product.todayViewsCount && product.todayViewsCount > 0) && (
+                <span className="text-emerald-400 font-semibold">(+{product.todayViewsCount})</span>
+              )}
+            </span>
+          </div>
+        )}
 
         <div className="absolute top-2 right-2 flex items-start gap-1">
           {lifetimeLabel ? (
