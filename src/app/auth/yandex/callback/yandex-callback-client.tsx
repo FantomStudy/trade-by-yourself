@@ -43,6 +43,16 @@ export function YandexCallbackClient() {
 
       localStorage.removeItem(YANDEX_OAUTH_STATE_KEY);
       await queryClient.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY });
+
+      try {
+        const { getYandexOnboardingStatus } = await import("@/api/requests");
+        const onboarding = await getYandexOnboardingStatus();
+        if (onboarding.required) {
+          router.replace("/auth/yandex/onboarding");
+          return;
+        }
+      } catch {}
+
       router.replace("/profile/my-products");
     })();
   }, [queryClient, router, search]);
