@@ -143,52 +143,52 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
           </div>
         )}
 
-        {lifetimeLabel ? (
-          <div className="absolute top-2 left-2 z-10 pointer-events-none">
+        <div className="absolute top-2 right-2 z-10 flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-1">
+            <Link
+              href="/profile/promotion-request"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white text-amber-600 hover:text-amber-700"
+              title="Продвижение / Продлить"
+            >
+              <TrendingUp className="h-3.5 w-3.5" />
+            </Link>
+            <button
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
+              disabled={isDeleting || isToggling}
+              title={product.isHide ? "Вернуть в продажу" : "Снять с продажи"}
+              type="button"
+              onClick={handleToggle}
+            >
+              {product.isHide ? <Eye className="h-3.5 w-3.5 text-green-600" /> : <EyeOff className="h-3.5 w-3.5 text-orange-600" />}
+            </button>
+            <button
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
+              disabled={isDeleting || isToggling}
+              title="Редактировать"
+              type="button"
+              onClick={handleEdit}
+            >
+              <Edit className="h-3.5 w-3.5 text-blue-600" />
+            </button>
+            <button
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
+              disabled={isDeleting || isToggling}
+              title={isDeleting ? "Удаление..." : "Удалить"}
+              type="button"
+              onClick={handleDelete}
+            >
+              <Trash2 className="h-3.5 w-3.5 text-red-600" />
+            </button>
+          </div>
+
+          {lifetimeLabel ? (
             <div
               className={`${styles.expirationBadge} ${product.isExpired ? styles.expiredBadge : ""}`}
               title={product.expiresAt ? `Действует до ${product.expiresAt}` : undefined}
             >
               {lifetimeLabel}
             </div>
-          </div>
-        ) : null}
-
-        <div className="absolute top-2 right-2 z-10 flex items-center gap-1">
-          <Link
-            href="/profile/promotion-request"
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white text-amber-600 hover:text-amber-700"
-            title="Продвижение / Продлить"
-          >
-            <TrendingUp className="h-3.5 w-3.5" />
-          </Link>
-          <button
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
-            disabled={isDeleting || isToggling}
-            title={product.isHide ? "Вернуть в продажу" : "Снять с продажи"}
-            type="button"
-            onClick={handleToggle}
-          >
-            {product.isHide ? <Eye className="h-3.5 w-3.5 text-green-600" /> : <EyeOff className="h-3.5 w-3.5 text-orange-600" />}
-          </button>
-          <button
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
-            disabled={isDeleting || isToggling}
-            title="Редактировать"
-            type="button"
-            onClick={handleEdit}
-          >
-            <Edit className="h-3.5 w-3.5 text-blue-600" />
-          </button>
-          <button
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
-            disabled={isDeleting || isToggling}
-            title={isDeleting ? "Удаление..." : "Удалить"}
-            type="button"
-            onClick={handleDelete}
-          >
-            <Trash2 className="h-3.5 w-3.5 text-red-600" />
-          </button>
+          ) : null}
         </div>
       </div>
 
