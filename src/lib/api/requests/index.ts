@@ -14,3 +14,4 @@ export * from "./reservation";
 export * from "./reviews";
 export * from "./support";
 export * from "./user";
+export * from "./statistics";
