@@ -261,7 +261,7 @@ const Analytics = () => {
                   <div className={styles.spinner}></div>
                   <p className="text-sm text-slate-500">Загрузка поисковых запросов...</p>
                 </div>
-              ) : !searchStats?.items || searchStats.items.length === 0 ? (
+              ) : !searchStats?.isLocked && (!searchStats?.items || searchStats.items.length === 0) ? (
                 <div className={styles.emptyState}>
                   <Search className={styles.emptyIcon} />
                   <p className="font-medium text-slate-700">Поисковых запросов пока не зафиксировано</p>
