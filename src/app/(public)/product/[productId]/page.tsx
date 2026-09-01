@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Eye, Sparkles, Zap } from "lucide-react";
 import { getProductById } from "@/api/requests";
 import { LikeButton } from "@/components/LikeButton";
@@ -11,7 +12,17 @@ import styles from "./page.module.css";
 const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
   const { productId } = await params;
 
-  const product = await getProductById(Number(productId));
+  let product;
+  try {
+    product = await getProductById(Number(productId));
+  } catch {
+    notFound();
+  }
+
+  if (!product || !product.id || !product.category || !product.subCategory) {
+    notFound();
+  }
+
   const isVip = Boolean(product.promotionLevel && product.promotionLevel >= 100);
   const isPromo = isVip || Boolean(product.promotionLevel && product.promotionLevel > 0) || Boolean(product.hasPromotion);
 

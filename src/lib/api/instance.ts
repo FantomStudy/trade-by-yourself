@@ -26,9 +26,9 @@ export const api = ofetch.create({
     if (all.length === 0) return;
 
     const cookieHeader = all.map((c) => `${c.name}=${encodeURIComponent(c.value)}`).join("; ");
-    if (options.headers instanceof Headers) {
-      options.headers.set("cookie", cookieHeader);
-    }
+    const headers = new Headers(options.headers);
+    headers.set("cookie", cookieHeader);
+    options.headers = headers;
   },
   onResponse: ({ response }) => {
     updateServerTimeOffset(response.headers.get("date"));
