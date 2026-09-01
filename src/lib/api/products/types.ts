@@ -23,12 +23,25 @@ export interface Product {
   name: string;
   address: string;
   createdAt: string;
+  expiresAt?: string;
+  daysUntilExpiration?: number;
+  isExpired?: boolean;
   price: number;
+  quantity?: number;
+  userId?: number;
   isHide?: boolean;
-  videoUrl: string | null;
+  isReserved?: boolean;
+  videoUrl?: string | null;
   isFavorited: boolean;
   hasPromotion: boolean;
+  isPaid?: boolean;
   promotionLevel: number;
+  promotionName?: string | null;
+  sellerRating?: number | null;
+  sellerVerified?: boolean;
+  viewsCount?: number;
+  popularityScore?: number;
+  badges?: string[];
   categoryId: number;
   categoryName: string;
   categorySlug: string;
@@ -51,6 +64,7 @@ export interface DetailedProduct {
   name: string;
   description: string;
   price: number;
+  quantity?: number;
   isHide: boolean;
   images: string[];
   address: string;
@@ -60,6 +74,11 @@ export interface DetailedProduct {
   type: ProductCategory | null;
   fieldValues: Record<string, string>[];
   isFavorited: boolean;
+  hasPromotion?: boolean;
+  isPaid?: boolean;
+  promotionLevel?: number;
+  promotionName?: string | null;
+  viewsCount?: number;
   seller: ProductUser;
 }
 
