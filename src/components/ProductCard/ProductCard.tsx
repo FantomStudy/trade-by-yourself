@@ -1,7 +1,7 @@
 import type { Route } from "next";
 import type { Product } from "@/api/products";
 import clsx from "clsx";
-import { CircleFadingArrowUpIcon } from "lucide-react";
+import { CircleFadingArrowUpIcon, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "@/components/ui";
 import { toCurrency } from "@/lib/format";
@@ -24,16 +24,31 @@ export const ProductCard = ({
 }: ProductCardProps) => {
   const href = `/product/${product.id}` as Route;
   const preview = <ProductCardPreview images={product.images} />;
-  const isPaidAd = Boolean(product.promotionLevel && product.promotionLevel > 0) || Boolean(product.hasPromotion);
+
+  const isVip = Boolean(product.promotionLevel && product.promotionLevel >= 100);
+  const isPaidAd = isVip || Boolean(product.promotionLevel && product.promotionLevel > 0) || Boolean(product.hasPromotion);
+  const promoLevel = isVip ? "vip" : isPaidAd ? "standard" : "none";
 
   return (
     <article
       className={clsx(styles.card, className)}
-      data-promoted={product.hasPromotion}
-      data-paid={isPaidAd}
+      data-promoted={isPaidAd}
+      data-promo-level={promoLevel}
       {...props}
     >
-      {clickable ? <Link href={href}>{preview}</Link> : preview}
+      <div className={styles.previewContainer}>
+        {clickable ? <Link href={href}>{preview}</Link> : preview}
+
+        {isVip ? (
+          <div className={styles.vipBadge}>
+            <Sparkles /> {product.promotionName || "VIP Топ"}
+          </div>
+        ) : isPaidAd ? (
+          <div className={styles.standardBadge}>
+            <Zap /> {product.promotionName || "В топе"}
+          </div>
+        ) : null}
+      </div>
 
       <div className={styles.content}>
         <Typography className={styles.title}>
@@ -45,9 +60,10 @@ export const ProductCard = ({
         <Typography className={styles.address}>{product.address}</Typography>
         <Typography className={styles.price}>{toCurrency(product.price)}</Typography>
 
-        {product.hasPromotion && (
-          <div className={styles.promotedSign}>
-            <CircleFadingArrowUpIcon /> В топе
+        {isPaidAd && (
+          <div className={isVip ? styles.vipSign : styles.promotedSign}>
+            {isVip ? <Sparkles /> : <CircleFadingArrowUpIcon />}
+            {isVip ? (product.promotionName || "VIP объявление") : (product.promotionName || "В топе")}
           </div>
         )}
       </div>

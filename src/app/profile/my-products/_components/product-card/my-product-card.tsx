@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { Product } from "@/types";
 
@@ -116,6 +116,25 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
             )}
           </div>
         </Link>
+
+        <div className="absolute top-2 left-2 flex flex-col gap-1 z-10 pointer-events-none">
+          {product.promotionLevel && product.promotionLevel >= 100 ? (
+            <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-amber-500 to-amber-600 px-2 py-0.5 text-[11px] font-bold text-white shadow">
+              VIP {product.promotionName ? `• ${product.promotionName}` : ""}
+            </span>
+          ) : (product.promotionLevel && product.promotionLevel > 0) || product.hasPromotion ? (
+            <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-2 py-0.5 text-[11px] font-semibold text-white shadow">
+              В топе {product.promotionName ? `• ${product.promotionName}` : ""}
+            </span>
+          ) : null}
+
+          {typeof product.viewsCount === "number" && (
+            <span className="inline-flex items-center gap-1 rounded-md bg-slate-900/75 backdrop-blur-[2px] px-2 py-0.5 text-[11px] font-medium text-white shadow">
+              <Eye className="h-3 w-3 text-slate-300" />
+              {product.viewsCount}
+            </span>
+          )}
+        </div>
 
         <div className="absolute top-2 right-2 flex items-start gap-1">
           {lifetimeLabel ? (

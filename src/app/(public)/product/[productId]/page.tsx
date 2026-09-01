@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Eye, Sparkles, Zap } from "lucide-react";
 import { getProductById } from "@/api/requests";
 import { LikeButton } from "@/components/LikeButton";
 import { Typography } from "@/components/ui";
@@ -11,6 +12,8 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
   const { productId } = await params;
 
   const product = await getProductById(Number(productId));
+  const isVip = Boolean(product.promotionLevel && product.promotionLevel >= 100);
+  const isPromo = isVip || Boolean(product.promotionLevel && product.promotionLevel > 0) || Boolean(product.hasPromotion);
 
   return (
     <div className="global-container">
@@ -59,6 +62,27 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
 
         <div className={styles.productInfo}>
           <div>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              {isVip ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-1 text-xs font-bold text-white shadow-sm">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  VIP объявление {product.promotionName ? `• ${product.promotionName}` : ""}
+                </span>
+              ) : isPromo ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-pink-500 to-pink-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                  <Zap className="w-3.5 h-3.5" />
+                  В топе {product.promotionName ? `• ${product.promotionName}` : ""}
+                </span>
+              ) : null}
+
+              {(isPromo || typeof product.viewsCount === "number") && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">
+                  <Eye className="w-3.5 h-3.5 text-slate-400" />
+                  {product.viewsCount ?? 0} просмотров
+                </span>
+              )}
+            </div>
+
             <Typography variant="h1">{product.name}</Typography>
             <div className={styles.productMeta}>
               <Typography className={styles.price} variant="h2">
