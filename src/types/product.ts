@@ -73,6 +73,10 @@ export interface ModerationProduct {
   expiresAt?: string;
   daysUntilExpiration?: number;
   isExpired?: boolean;
+  promotionLevel?: number;
+  promotionName?: string;
+  hasPromotion?: boolean;
+  isPaid?: boolean;
   updatedAt: string;
   category: { id: number; name: string };
   subCategory: { id: number; name: string };

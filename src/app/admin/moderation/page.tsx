@@ -392,9 +392,22 @@ const ProductDetailDialog = ({
                       <InfoRow label="Название" value={product.name} />
                       <InfoRow label="Цена" value={`${product.price.toLocaleString("ru-RU")} ₽`} />
                       <InfoRow
+                        label="Тип размещения"
+                        value={
+                          product.promotionLevel && product.promotionLevel >= 100
+                            ? `VIP (${product.promotionName || "Платное"})`
+                            : (product.promotionLevel && product.promotionLevel > 0) || product.hasPromotion
+                              ? `В топе (${product.promotionName || "Платное"})`
+                              : "Бесплатное"
+                        }
+                      />
+                      <InfoRow
                         label="Категория"
                         value={`${product.category.name} / ${product.subCategory.name}${product.type ? ` / ${product.type.name}` : ""}`}
                       />
+                      {product.createdAt && (
+                        <InfoRow label="Дата публикации" value={new Date(product.createdAt).toLocaleDateString("ru-RU")} />
+                      )}
                       {product.expiresAt && (
                         <div className="flex items-center justify-between gap-2">
                           <span className="text-gray-500 flex-shrink-0">Срок размещения:</span>
@@ -572,6 +585,19 @@ const ProductRow = ({
         <div className="flex flex-wrap items-start gap-2">
           <span className="font-medium text-gray-900 truncate">{product.name}</span>
           <ModerateBadge state={product.moderateState} reason={product.moderationRejectionReason} />
+          {product.promotionLevel && product.promotionLevel >= 100 ? (
+            <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
+              VIP {product.promotionName ? `• ${product.promotionName}` : ""}
+            </span>
+          ) : (product.promotionLevel && product.promotionLevel > 0) || product.hasPromotion ? (
+            <span className="rounded bg-pink-100 px-2 py-0.5 text-xs font-semibold text-pink-700">
+              В топе {product.promotionName ? `• ${product.promotionName}` : ""}
+            </span>
+          ) : (
+            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+              Бесплатное
+            </span>
+          )}
         </div>
 
         <p className="text-sm text-gray-500">
@@ -585,6 +611,21 @@ const ProductRow = ({
         <p className="text-xs text-gray-500">
           {product.user.fullName} · {product.user.email}
         </p>
+
+        <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 pt-0.5">
+          {product.createdAt && (
+            <span>Публикация: {new Date(product.createdAt).toLocaleDateString("ru-RU")}</span>
+          )}
+          {product.expiresAt && (
+            <span className={product.isExpired ? "text-red-600 font-semibold" : "text-emerald-700 font-medium"}>
+              {product.isExpired
+                ? "Срок истёк"
+                : typeof product.daysUntilExpiration === "number"
+                  ? `Истекает через ${product.daysUntilExpiration} дн.`
+                  : `До ${new Date(product.expiresAt).toLocaleDateString("ru-RU")}`}
+            </span>
+          )}
+        </div>
 
         {product.moderationRejectionReason && (
           <p className="text-xs text-red-600">
