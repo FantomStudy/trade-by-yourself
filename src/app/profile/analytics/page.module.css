@@ -118,56 +118,44 @@
 
 .metricCard {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
+  flex-direction: column;
   border-radius: 12px;
   background-color: white;
-  padding: 20px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  border: 1px solid #f3f4f6;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+  padding: 20px 24px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .metricCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.metricIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  width: 48px;
-  border-radius: 12px;
-  flex-shrink: 0;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .metricContent {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  flex: 1;
+  gap: 6px;
 }
 
 .metricLabel {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: #6b7280;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
 }
 
 .metricValue {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
-  color: #111827;
-  line-height: 1.2;
+  color: #0f172a;
+  line-height: 1.1;
 }
 
 .metricPeriod {
   font-size: 12px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 /* Paywall banner */

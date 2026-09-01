@@ -159,7 +159,6 @@ const Analytics = () => {
           onClick={() => setActiveTab("overview")}
           type="button"
         >
-          <BarChart3 className="w-4 h-4" />
           Сводка активности
         </button>
 
@@ -168,7 +167,6 @@ const Analytics = () => {
           onClick={() => setActiveTab("search-queries")}
           type="button"
         >
-          <Search className="w-4 h-4" />
           Поисковые запросы и спрос
           <span className={styles.tabProBadge}>PRO</span>
         </button>
@@ -178,11 +176,8 @@ const Analytics = () => {
       {activeTab === "overview" && (
         <div className={styles.metricsGrid}>
           <div className={styles.metricCard}>
-            <div className={styles.metricIcon} style={{ backgroundColor: "#dbeafe" }}>
-              <Eye className="h-6 w-6" style={{ color: "#3b82f6" }} />
-            </div>
             <div className={styles.metricContent}>
-              <Typography className={styles.metricLabel}>Просмотры</Typography>
+              <Typography className={styles.metricLabel}>Просмотры объявлений</Typography>
               <Typography className={styles.metricValue}>
                 {analyticsData?.views?.toString() || "0"}
               </Typography>
@@ -191,37 +186,28 @@ const Analytics = () => {
           </div>
 
           <div className={styles.metricCard}>
-            <div className={styles.metricIcon} style={{ backgroundColor: "#d1fae5" }}>
-              <MessageSquare className="h-6 w-6" style={{ color: "#10b981" }} />
-            </div>
             <div className={styles.metricContent}>
-              <Typography className={styles.metricLabel}>Всего чатов</Typography>
+              <Typography className={styles.metricLabel}>Активные диалоги</Typography>
               <Typography className={styles.metricValue}>{chats?.length || 0}</Typography>
-              <Typography className={styles.metricPeriod}>активных диалогов</Typography>
+              <Typography className={styles.metricPeriod}>всего чатов с покупателями</Typography>
             </div>
           </div>
 
           <div className={styles.metricCard}>
-            <div className={styles.metricIcon} style={{ backgroundColor: "#fce7f3" }}>
-              <Heart className="h-6 w-6" style={{ color: "#ec4899" }} />
-            </div>
             <div className={styles.metricContent}>
-              <Typography className={styles.metricLabel}>В избранном</Typography>
+              <Typography className={styles.metricLabel}>Добавили в избранное</Typography>
               <Typography className={styles.metricValue}>{favorites?.length || 0}</Typography>
-              <Typography className={styles.metricPeriod}>сохраненных товаров</Typography>
+              <Typography className={styles.metricPeriod}>сохранений ваших товаров</Typography>
             </div>
           </div>
 
           <div className={styles.metricCard}>
-            <div className={styles.metricIcon} style={{ backgroundColor: "#e0e7ff" }}>
-              <Phone className="h-6 w-6" style={{ color: "#6366f1" }} />
-            </div>
             <div className={styles.metricContent}>
-              <Typography className={styles.metricLabel}>Контакты</Typography>
+              <Typography className={styles.metricLabel}>Просмотры контактов</Typography>
               <Typography className={styles.metricValue}>
                 {analyticsData?.phone?.toString() || "0"}
               </Typography>
-              <Typography className={styles.metricPeriod}>просмотров номера</Typography>
+              <Typography className={styles.metricPeriod}>открытий номера телефона</Typography>
             </div>
           </div>
         </div>
