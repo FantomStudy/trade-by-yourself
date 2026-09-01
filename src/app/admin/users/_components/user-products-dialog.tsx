@@ -17,11 +17,13 @@ import {
 import { getAdminUserProducts } from "@/lib/api/requests/product/get-admin-user-products";
 import { toCurrency } from "@/lib/format";
 
-type ProductTab = "all" | "active" | "moderation" | "drafts" | "hidden" | "denied";
+type ProductTab = "all" | "active" | "paid" | "free" | "moderation" | "drafts" | "hidden" | "denied";
 
 const TAB_LABELS: Record<ProductTab, string> = {
   all: "Все",
   active: "Активные",
+  paid: "Платные",
+  free: "Бесплатные",
   moderation: "Модерация",
   drafts: "Черновики",
   hidden: "Скрытые",
@@ -30,7 +32,11 @@ const TAB_LABELS: Record<ProductTab, string> = {
 
 function matchTab(product: AdminUserProduct, tab: ProductTab): boolean {
   const state = product.moderateState;
+  const isPaid = Boolean(product.hasPromotion || (product.promotionLevel ?? 0) > 0);
+
   if (tab === "all") return true;
+  if (tab === "paid") return isPaid;
+  if (tab === "free") return !isPaid;
   if (tab === "drafts") return state === "DRAFT";
   if (tab === "moderation") return state === "MODERATE" || state === "AI_REVIEWED";
   if (tab === "denied") return state === "DENIDED" || state === "DENIED";
