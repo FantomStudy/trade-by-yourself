@@ -58,6 +58,21 @@
   text-overflow: ellipsis;
 }
 
+.date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  opacity: 0.75;
+}
+
+.dateIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
 .price {
   font-size: 18px;
   font-weight: 700;

@@ -1,7 +1,7 @@
 import type { Route } from "next";
 import type { Product } from "@/api/products";
 import clsx from "clsx";
-import { CircleFadingArrowUpIcon, Sparkles, Zap } from "lucide-react";
+import { Calendar, CircleFadingArrowUpIcon, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "@/components/ui";
 import { toCurrency } from "@/lib/format";
@@ -58,6 +58,12 @@ export const ProductCard = ({
         {Boolean(action) && <div className={styles.action}>{action}</div>}
 
         <Typography className={styles.address}>{product.address}</Typography>
+        {product.createdAt && (
+          <Typography className={styles.date}>
+            <Calendar className={styles.dateIcon} />
+            {product.createdAt}
+          </Typography>
+        )}
         <Typography className={styles.price}>{toCurrency(product.price)}</Typography>
 
         {isPaidAd && (
