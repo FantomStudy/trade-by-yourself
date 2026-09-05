@@ -21,6 +21,8 @@ export interface User {
     active: number;
     hidden: number;
     denied: number;
+    paid: number;
+    free: number;
   };
   usedFreeAds?: number;
   reviewsCount?: number;
@@ -34,6 +36,7 @@ export interface User {
 
 export interface CurrentUser {
   id: number;
+  email?: string;
   fullName: string;
   phoneNumber: string;
   profileType: string;
@@ -41,4 +44,5 @@ export interface CurrentUser {
   reviewsCount: number;
   balance: number;
   photo: string | null;
+  role?: string;
 }

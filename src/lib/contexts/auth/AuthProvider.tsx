@@ -22,17 +22,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     queryFn: getCurrentUserOrNull,
     refetchOnMount: true,
   });
+  const isSyntheticVk = Boolean(
+    data?.phoneNumber?.toUpperCase().startsWith("VK_") ||
+    data?.email?.toLowerCase().endsWith("@oauth.local")
+  );
+  const isSyntheticYandex = Boolean(
+    data?.phoneNumber?.toUpperCase().startsWith("YANDEX_")
+  );
+
   const { data: onboarding } = useQuery({
     queryKey: ["auth", "vk-onboarding-status", data?.id ?? null],
     queryFn: getVkOnboardingStatus,
-    enabled: Boolean(data?.id),
+    enabled: Boolean(data?.id) && isSyntheticVk,
     retry: false,
     staleTime: 15_000,
   });
   const { data: yandexOnboarding } = useQuery({
     queryKey: ["auth", "yandex-onboarding-status", data?.id ?? null],
     queryFn: getYandexOnboardingStatus,
-    enabled: Boolean(data?.id),
+    enabled: Boolean(data?.id) && isSyntheticYandex,
     retry: false,
     staleTime: 15_000,
   });
@@ -40,17 +48,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     if (!data?.id) return;
     const path = pathname || "/";
-    if (onboarding?.required) {
+    if (onboarding?.required && isSyntheticVk) {
       if (path.startsWith("/auth/vk/onboarding") || path.startsWith("/auth/vk/callback")) return;
       router.replace(`/auth/vk/onboarding?next=${encodeURIComponent(path)}`);
       return;
     }
-    if (yandexOnboarding?.required) {
+    if (yandexOnboarding?.required && isSyntheticYandex) {
       if (path.startsWith("/auth/yandex/onboarding") || path.startsWith("/auth/yandex/callback")) return;
       router.replace(`/auth/yandex/onboarding?next=${encodeURIComponent(path)}`);
       return;
     }
-  }, [data?.id, onboarding?.required, yandexOnboarding?.required, pathname, router]);
+  }, [data?.id, isSyntheticVk, isSyntheticYandex, onboarding?.required, yandexOnboarding?.required, pathname, router]);
 
   const logout = useCallback(() => {
     try {

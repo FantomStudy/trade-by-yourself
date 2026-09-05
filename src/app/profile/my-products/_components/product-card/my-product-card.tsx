@@ -145,13 +145,15 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
 
         <div className="absolute top-2 right-2 z-10 flex flex-col items-end gap-1.5">
           <div className="flex items-center gap-1">
-            <Link
-              href="/profile/promotion-request"
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white text-amber-600 hover:text-amber-700"
-              title="Продвижение / Продлить"
-            >
-              <TrendingUp className="h-3.5 w-3.5" />
-            </Link>
+            {!isOnModeration && !isDenied && !product.isHide && (
+              <Link
+                href="/profile/promotion-request"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white text-amber-600 hover:text-amber-700"
+                title="Продвижение / Продлить"
+              >
+                <TrendingUp className="h-3.5 w-3.5" />
+              </Link>
+            )}
             <button
               className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-50"
               disabled={isDeleting || isToggling}

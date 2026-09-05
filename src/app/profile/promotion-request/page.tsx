@@ -69,9 +69,12 @@ const PromotionPage = () => {
       setSelectedPromotionId(promotionId);
       setShowActivatePromotion(true);
 
-      // Получаем товары пользователя
+      // Получаем только активные и одобренные товары пользователя
       const products = await getCurrentUserProducts(currentUser.id);
-      setUserProducts(products || []);
+      const activeProducts = (products || []).filter(
+        (p) => !p.isHide && (p.moderateState === "APPROVED" || !p.moderateState)
+      );
+      setUserProducts(activeProducts);
     } catch (error: any) {
       console.error("Ошибка загрузки товаров:", error);
       toast.error("Не удалось загрузить список товаров");

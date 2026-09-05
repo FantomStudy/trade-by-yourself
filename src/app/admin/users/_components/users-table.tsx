@@ -229,7 +229,10 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                       черн: {user.productStats?.drafts ?? 0} · скр: {user.productStats?.hidden ?? 0}
                     </div>
                     <div className="text-[10px] text-gray-500">
-                      беспл: {user.adsLimit?.remaining ?? "?"}/{user.adsLimit?.total ?? 6}
+                      плат: {user.productStats?.paid ?? 0} · беспл: {user.productStats?.free ?? 0}
+                    </div>
+                    <div className="text-[10px] text-gray-500">
+                      лимит: {user.adsLimit?.remaining ?? "?"}/{user.adsLimit?.total ?? 6}
                     </div>
                   </button>
                 </td>

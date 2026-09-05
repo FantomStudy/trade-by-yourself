@@ -122,4 +122,10 @@ export interface AdminDealLog {
   id: number;
   userId: number;
   action: string;
+  userName?: string;
+  userEmail?: string;
+  user?: {
+    fullName?: string;
+    email?: string;
+  };
 }

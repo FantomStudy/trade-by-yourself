@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Calendar, CircleFadingArrowUpIcon, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "@/components/ui";
-import { toCurrency } from "@/lib/format";
+import { formatDate, toCurrency } from "@/lib/format";
 import { ProductCardPreview } from "./ProductCardPreview";
 import styles from "./ProductCard.module.css";
 
@@ -61,7 +61,7 @@ export const ProductCard = ({
         {product.createdAt && (
           <Typography className={styles.date}>
             <Calendar className={styles.dateIcon} />
-            {product.createdAt}
+            {formatDate(product.createdAt)}
           </Typography>
         )}
         <Typography className={styles.price}>{toCurrency(product.price)}</Typography>

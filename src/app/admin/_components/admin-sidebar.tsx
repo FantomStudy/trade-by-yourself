@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import {
+  BarChart3,
   FileText,
   FolderTree,
   Handshake,
@@ -23,6 +24,7 @@ import { Typography } from "@/components/ui";
 import styles from "../admin.module.css";
 
 const menuItems = [
+  { href: "/admin/analytics" as const, icon: BarChart3, label: "Аналитика" },
   { href: "/admin/moderation" as const, icon: Package, label: "Модерация товаров" },
   { href: "/admin/reviews" as const, icon: Star, label: "Модерация отзывов" },
   { href: "/admin/users" as const, icon: Users, label: "Пользователи" },

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { Deal } from "@/types";
 
@@ -161,16 +161,41 @@ export default function AdminDealsPage() {
             </Button>
           </div>
 
-          <div className="max-h-[360px] space-y-2 overflow-auto rounded border p-3">
+          <div className="max-h-[400px] space-y-2.5 overflow-auto rounded-lg border bg-gray-50/50 p-3">
             {logs.length === 0 ? (
-              <Typography className="text-sm text-gray-500">Логи по сделке пока отсутствуют</Typography>
+              <Typography className="py-6 text-center text-sm text-gray-500">
+                Логи по сделке пока отсутствуют
+              </Typography>
             ) : (
-              logs.map((log) => (
-                <div key={log.id} className="rounded border bg-gray-50 p-2 text-sm">
-                  <div className="text-xs text-gray-500">log #{log.id} • user #{log.userId}</div>
-                  <div>{log.action}</div>
-                </div>
-              ))
+              logs.map((log) => {
+                const matchEvent = log.action.match(/event=([^\s]+)/i);
+                const eventName = matchEvent ? matchEvent[1] : null;
+                const uName = log.userName || log.user?.fullName;
+                const uEmail = log.userEmail || log.user?.email;
+
+                return (
+                  <div key={log.id} className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-1.5 text-xs text-gray-500">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-700">Запись #{log.id}</span>
+                        {eventName && (
+                          <span className="rounded bg-blue-50 px-2 py-0.5 font-medium text-blue-700">
+                            {eventName}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        Пользователь #{log.userId}
+                        {uName && <span className="ml-1 font-semibold text-gray-700">• {uName}</span>}
+                        {uEmail && <span className="ml-1 text-gray-400">({uEmail})</span>}
+                      </div>
+                    </div>
+                    <div className="mt-1.5 font-mono text-xs text-gray-800 whitespace-pre-wrap">
+                      {log.action}
+                    </div>
+                  </div>
+                );
+              })
             )}
           </div>
         </DialogContent>
