@@ -804,22 +804,22 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
               {deliveryBreakdown ? (
                 <div style={{ borderTop: "1px solid var(--border)", paddingTop: 8, marginTop: 4 }}>
-                  <Typography style={{ fontWeight: 600, marginBottom: 4 }}>Состав доставки:</Typography>
-                  <Typography>
+                  <div style={{ fontWeight: 600, marginBottom: 4, fontSize: "0.9em" }}>Состав доставки:</div>
+                  <div style={{ fontSize: "0.9em" }}>
                     &nbsp;Базовая стоимость: {toCurrency(deliveryBreakdown.base)}
-                  </Typography>
+                  </div>
                   {deliveryBreakdown.services.map((s) => (
-                    <Typography key={s.code}>
+                    <div key={s.code} style={{ fontSize: "0.9em" }}>
                       &nbsp;+ {s.name}: {toCurrency(s.sum)}
-                    </Typography>
+                    </div>
                   ))}
-                  <Typography style={{ fontWeight: 600, marginTop: 4 }}>
+                  <div style={{ fontWeight: 600, marginTop: 4, fontSize: "0.9em" }}>
                     Итого доставка: {toCurrency(deliveryCost ?? 0)}
-                  </Typography>
+                  </div>
                   {deliveryBreakdown.periodMin > 0 && (
-                    <Typography style={{ color: "var(--muted-foreground)", fontSize: "0.85em" }}>
+                    <div style={{ color: "var(--muted-foreground)", fontSize: "0.8em", marginTop: 2 }}>
                       Срок: {deliveryBreakdown.periodMin}–{deliveryBreakdown.periodMax} дн.
-                    </Typography>
+                    </div>
                   )}
                 </div>
               ) : (
