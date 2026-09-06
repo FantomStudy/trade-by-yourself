@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import type { CdekCity, CdekPvz, ExtendedProduct } from "@/types";
+import type { CdekCity, CdekPvz, CdekServiceLine, ExtendedProduct } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { MapPin, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -231,6 +231,12 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
   const [parcelMode, setParcelMode] = useState<ParcelInputMode>("approximate");
   const [selectedPresetId, setSelectedPresetId] = useState<string | null>(null);
   const [deliveryCost, setDeliveryCost] = useState<number | null>(null);
+  const [deliveryBreakdown, setDeliveryBreakdown] = useState<{
+    base: number;
+    services: CdekServiceLine[];
+    periodMin: number;
+    periodMax: number;
+  } | null>(null);
   const citySearchRef = useRef<HTMLDivElement>(null);
   const citySearchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -260,6 +266,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     setParcelMode("approximate");
     setSelectedPresetId(null);
     setDeliveryCost(null);
+    setDeliveryBreakdown(null);
   };
 
   useEffect(() => {
@@ -430,8 +437,15 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
         height: parsedHeight,
       });
 
-      const calculatedCost = result.delivery_sum ?? result.total_sum ?? 0;
+      // total_sum включает все доп. услуги; если нет — берём delivery_sum
+      const calculatedCost = result.total_sum ?? result.delivery_sum ?? 0;
       setDeliveryCost(calculatedCost);
+      setDeliveryBreakdown({
+        base: result.delivery_sum ?? calculatedCost,
+        services: result.services ?? [],
+        periodMin: result.period_min ?? 0,
+        periodMax: result.period_max ?? 0,
+      });
       setTariffName(result.tariff_name || WAREHOUSE_TO_WAREHOUSE_TARIFF_NAME);
       setTariffCode(
         typeof result.tariff_code === "number"
@@ -787,12 +801,36 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
               <Typography>
                 Город получателя (код CDEK): {toCityCode ?? "не выбран"}
               </Typography>
-              <Typography>
-                Доставка:{" "}
-                {deliveryCost === null
-                  ? "не рассчитана"
-                  : toCurrency(deliveryCost)}
-              </Typography>
+
+              {deliveryBreakdown ? (
+                <div style={{ borderTop: "1px solid var(--border)", paddingTop: 8, marginTop: 4 }}>
+                  <Typography style={{ fontWeight: 600, marginBottom: 4 }}>Состав доставки:</Typography>
+                  <Typography>
+                    &nbsp;Базовая стоимость: {toCurrency(deliveryBreakdown.base)}
+                  </Typography>
+                  {deliveryBreakdown.services.map((s) => (
+                    <Typography key={s.code}>
+                      &nbsp;+ {s.name}: {toCurrency(s.sum)}
+                    </Typography>
+                  ))}
+                  <Typography style={{ fontWeight: 600, marginTop: 4 }}>
+                    Итого доставка: {toCurrency(deliveryCost ?? 0)}
+                  </Typography>
+                  {deliveryBreakdown.periodMin > 0 && (
+                    <Typography style={{ color: "var(--muted-foreground)", fontSize: "0.85em" }}>
+                      Срок: {deliveryBreakdown.periodMin}–{deliveryBreakdown.periodMax} дн.
+                    </Typography>
+                  )}
+                </div>
+              ) : (
+                <Typography>
+                  Доставка:{" "}
+                  {deliveryCost === null
+                    ? "не рассчитана"
+                    : toCurrency(deliveryCost)}
+                </Typography>
+              )}
+
               <Typography>
                 Тариф: {tariffName} (код {tariffCode})
               </Typography>

@@ -26,11 +26,20 @@ export interface CdekCalculateRequest {
   height: number;
 }
 
+export interface CdekServiceLine {
+  code: string;
+  name: string;
+  sum: number;
+}
+
 export interface CdekCalculateResponse {
   delivery_sum?: number;
   total_sum?: number;
   period_min?: number;
   period_max?: number;
+  weight_calc?: number;
+  currency?: string;
+  services?: CdekServiceLine[];
   tariff_code?: number;
   tariff_name?: string;
 }
