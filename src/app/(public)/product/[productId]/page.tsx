@@ -126,6 +126,9 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
               <LikeButton size="icon" initLiked={product.isFavorited} productId={product.id} />
             </div>
             <Typography>В наличии: {product.quantity ?? 1} шт.</Typography>
+            <div className="text-red-500">
+              DEBUG createdAt: {String(product.createdAt)}
+            </div>
             {product.createdAt && (
               <Typography className="text-sm text-muted-foreground">
                 Опубликовано: {formatPubDate(product.createdAt)}
