@@ -1,11 +1,13 @@
 "use client";
 
+import type { YandexSignInResponse } from "@/api/requests";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
+
 import { useEffect } from "react";
 
 import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
-import { YANDEX_OAUTH_STATE_KEY } from "@/lib/auth/yandex-oauth";
+import { YANDEX_OAUTH_STATE_KEY, YANDEX_REGISTRATION_TICKET_KEY } from "@/lib/auth/yandex-oauth";
 
 export function YandexCallbackClient() {
   const router = useRouter();
@@ -42,6 +44,16 @@ export function YandexCallbackClient() {
       }
 
       localStorage.removeItem(YANDEX_OAUTH_STATE_KEY);
+
+      const data = (await res.json()) as YandexSignInResponse;
+
+      // Аккаунта ещё нет: сессии тоже нет — сразу отправляем подтверждать телефон по SMS.
+      if (data.requirePhoneRegistration && data.registrationTicket) {
+        sessionStorage.setItem(YANDEX_REGISTRATION_TICKET_KEY, data.registrationTicket);
+        router.replace("/auth/yandex/onboarding");
+        return;
+      }
+
       await queryClient.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY });
 
       try {

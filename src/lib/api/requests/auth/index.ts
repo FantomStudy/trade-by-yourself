@@ -7,3 +7,4 @@ export * from "./verify-mobile-code";
 export * from "./vk-onboarding";
 export * from "./vk-sign-in";
 export * from "./yandex-onboarding";
+export * from "./yandex-registration";
