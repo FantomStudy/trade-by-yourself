@@ -6,6 +6,8 @@ import type { User } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import type { CSSProperties } from "react";
+
 import { useMemo, useState } from "react";
 
 import {
@@ -120,7 +122,10 @@ export function UserProductsDialog({ user, open, onOpenChange }: UserProductsDia
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+      <DialogContent
+        className="max-h-[90vh] overflow-y-auto"
+        style={{ "--dialog-max-width": "1100px" } as CSSProperties}
+      >
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             Объявления пользователя: {user?.fullName || `ID ${user?.id}`}
