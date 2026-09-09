@@ -139,26 +139,26 @@ export function UserProductsDialog({ user, open, onOpenChange }: UserProductsDia
         ) : null}
 
         {/* Сводная статистика */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-xs">
           <div className="rounded-md border p-2 bg-gray-50 text-center">
-            <span className="text-gray-500 block">Всего объявлений</span>
-            <strong className="text-sm text-gray-900">{stats.total}</strong>
+            <span className="text-gray-500 block text-[11px]">Всего</span>
+            <strong className="text-lg leading-tight text-gray-900">{stats.total}</strong>
           </div>
           <div className="rounded-md border p-2 bg-emerald-50 border-emerald-100 text-center">
-            <span className="text-emerald-700 block">Активных</span>
-            <strong className="text-sm text-emerald-900">{stats.active}</strong>
+            <span className="text-emerald-700 block text-[11px]">Активных</span>
+            <strong className="text-lg leading-tight text-emerald-900">{stats.active}</strong>
           </div>
           <div className="rounded-md border p-2 bg-amber-50 border-amber-100 text-center">
-            <span className="text-amber-700 block">Платные / Бесплатные</span>
-            <strong className="text-sm text-amber-900">
-              Платные: {stats.paid} · Бесплатные: {stats.free}
-            </strong>
+            <span className="text-amber-700 block text-[11px]">Платных</span>
+            <strong className="text-lg leading-tight text-amber-900">{stats.paid}</strong>
+          </div>
+          <div className="rounded-md border p-2 bg-sky-50 border-sky-100 text-center">
+            <span className="text-sky-700 block text-[11px]">Бесплатных</span>
+            <strong className="text-lg leading-tight text-sky-900">{stats.free}</strong>
           </div>
           <div className="rounded-md border p-2 bg-indigo-50 border-indigo-100 text-center">
-            <span className="text-indigo-700 block">Модерация / Неактивные</span>
-            <strong className="text-sm text-indigo-900">
-              Модерация: {stats.moderation} · Неактивные: {stats.drafts + stats.hidden + stats.denied}
-            </strong>
+            <span className="text-indigo-700 block text-[11px]">Модерация</span>
+            <strong className="text-lg leading-tight text-indigo-900">{stats.moderation}</strong>
           </div>
         </div>
 

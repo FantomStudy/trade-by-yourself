@@ -9,6 +9,24 @@ import { toCurrency } from "@/lib/format";
 import { Gallery, ProductMap, ReviewForm, SellerCard, ToggleProductButton } from "./_components";
 import styles from "./page.module.css";
 
+function formatPubDate(dateStr: string): string {
+  try {
+    // Если дата уже в формате "03.09.26 в 03:14" — вернём как есть
+    if (/\d{2}\.\d{2}\.\d{2} в \d{2}:\d{2}/.test(dateStr)) return dateStr;
+    const d = new Date(dateStr);
+    if (Number.isNaN(d.getTime())) return dateStr;
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = String(d.getFullYear()).slice(2);
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
+    return `${day}.${month}.${year} в ${hours}:${minutes}`;
+  } catch {
+    return dateStr;
+  }
+}
+
+
 const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
   const { productId } = await params;
 
@@ -108,6 +126,11 @@ const ProductPage = async ({ params }: PageProps<"/product/[productId]">) => {
               <LikeButton size="icon" initLiked={product.isFavorited} productId={product.id} />
             </div>
             <Typography>В наличии: {product.quantity ?? 1} шт.</Typography>
+            {product.createdAt && (
+              <Typography className="text-sm text-muted-foreground">
+                Опубликовано: {formatPubDate(product.createdAt)}
+              </Typography>
+            )}
           </div>
 
           <Gallery images={product.images || []} videoUrl={product.videoUrl} />

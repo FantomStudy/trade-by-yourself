@@ -45,4 +45,5 @@ export interface CurrentUser {
   balance: number;
   photo: string | null;
   role?: string;
+  requireYandexOnboarding?: boolean;
 }

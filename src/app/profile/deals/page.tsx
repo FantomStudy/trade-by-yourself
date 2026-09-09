@@ -48,6 +48,23 @@ function getDealRoleText(role?: Deal["myRole"]) {
   return "Роль не определена";
 }
 
+function getDealStatusHuman(statusCode: string, role: Deal["myRole"]): string {
+  type StatusMap = Record<string, { buyer: string; seller: string }>;
+  const map: StatusMap = {
+    CREATED:   { buyer: "Сделка создана, ожидает оплаты", seller: "Новая сделка, ожидаем оплату" },
+    PAID:      { buyer: "Оплачено, ожидаем отправку", seller: "Получена оплата, отправьте товар" },
+    SHIPPED:   { buyer: "Товар отправлен, едет к вам", seller: "Товар передан в СДЭК" },
+    DELIVERED: { buyer: "Товар доставлен, подтвердите получение", seller: "Товар доставлен покупателю" },
+    COMPLETED: { buyer: "Сделка завершена", seller: "Сделка завершена, выплата ожидается" },
+    CANCELLED: { buyer: "Сделка отменена", seller: "Сделка отменена" },
+    REFUNDED:  { buyer: "Средства возвращены", seller: "Сделка отменена, возврат оформлен" },
+    DISPUTE:   { buyer: "Открыт спор", seller: "Открыт спор" },
+  };
+  const entry = map[statusCode];
+  if (!entry) return statusCode;
+  return role === "buyer" ? entry.buyer : entry.seller;
+}
+
 function formatMoney(value: number | null | undefined) {
   if (typeof value !== "number" || Number.isNaN(value)) return "—";
   return toCurrency(value);
@@ -449,7 +466,7 @@ const DealsPage = () => {
                 </div>
 
                 <div className={styles.topMeta}>
-                  <span className={styles.status}>Статус: {deal.status}</span>
+                  <span className={styles.status}>{getDealStatusHuman(deal.statusCode, deal.myRole)}</span>
                   <span className={styles.date}>
                     Создана: {formatDate(deal.createdAt)}
                   </span>
