@@ -35,6 +35,52 @@ import styles from "./secure-deal-form.module.css";
 type ParcelInputMode = "approximate" | "exact";
 const WAREHOUSE_TO_WAREHOUSE_TARIFF_CODE = 136;
 const WAREHOUSE_TO_WAREHOUSE_TARIFF_NAME = "Посылка склад-склад";
+function normalizeCityName(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/^г\.?\s*/i, "")
+    .replace(/\(.*?\)/g, "")
+    .replace(/\./g, "")
+    .trim();
+}
+
+function pickPreferredCity(cities: CdekCity[]): CdekCity | null {
+  if (!cities.length) return null;
+
+  return cities.reduce<CdekCity | null>((best, current) => {
+    if (!current?.code) return best;
+    if (!best?.code) return current;
+
+    const currentCode = String(current.code);
+    const bestCode = String(best.code);
+
+    // Если у города несколько вариантов, выбираем код с меньшей длиной.
+    if (currentCode.length < bestCode.length) return current;
+    if (currentCode.length > bestCode.length) return best;
+
+    // При одинаковой длине выбираем меньший числовой код.
+    return current.code < best.code ? current : best;
+  }, null);
+}
+
+function filterPreferredCities(cities: CdekCity[]): CdekCity[] {
+  const grouped = new Map<string, CdekCity[]>();
+
+  for (const city of cities) {
+    const name = city.city?.trim();
+    if (!name || !city.code) continue;
+
+    const key = normalizeCityName(name);
+    const variants = grouped.get(key) ?? [];
+    variants.push(city);
+    grouped.set(key, variants);
+  }
+
+  return Array.from(grouped.values())
+    .map((variants) => pickPreferredCity(variants))
+    .filter((city): city is CdekCity => city !== null);
+}
+
 function getCityFromAddress(address?: string | null) {
   if (!address) return "";
 
@@ -98,6 +144,7 @@ function getCityFromAddress(address?: string | null) {
 
   return "";
 }
+
 
 interface ParcelPreset {
   id: string;
@@ -310,8 +357,9 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
     try {
       setIsLoadingCities(true);
       const cities = await getCdekCities(normalizedQuery, 10);
-      setToCities(cities);
-      setShowCitySuggestions(true);
+      const preferredCities = filterPreferredCities(cities);
+      setToCities(preferredCities);
+      setShowCitySuggestions(preferredCities.length > 0);
     } catch (error) {
       console.error("Ошибка поиска городов CDEK:", error);
       toast.error(
@@ -332,19 +380,16 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
 
     try {
       const cities = await getCdekCities(cityCandidate, 10);
-      const normalize = (value: string) =>
-        value
-          .toLowerCase()
-          .replace(/^г\.?\s*/i, "")
-          .replace(/\(.*?\)/g, "")
-          .replace(/\./g, "")
-          .trim();
+      const normalizedCandidate = normalizeCityName(cityCandidate);
 
-      const exact = cities.find(
-        (city) => normalize(city.city ?? "") === normalize(cityCandidate),
+      const exactCities = cities.filter(
+        (city) =>
+          normalizeCityName(city.city ?? "") === normalizedCandidate,
       );
 
-      const picked = exact ?? cities[0];
+      const picked =
+        pickPreferredCity(exactCities) ??
+        pickPreferredCity(cities);
 
       if (!picked?.code) {
         setFromCityCode(null);
@@ -629,9 +674,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
                         onClick={() => handleSelectCity(city.code)}
                       >
                         <MapPin className={styles.suggestionIcon} size={16} />
-                        <span>
-                          {city.city ?? "Город без названия"} ({city.code})
-                        </span>
+                        <span>{city.city ?? "Город без названия"}</span>
                       </button>
                     ))}
                   </div>
@@ -795,11 +838,12 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
             <div className={styles.summary}>
               <Typography>Товар: {toCurrency(product.price)}</Typography>
               <Typography>
-                Город отправителя: {fromCityName || "не определен"} (
-                {fromCityCode ?? "—"})
+                Город отправителя: {fromCityName || "не определен"}
               </Typography>
               <Typography>
-                Город получателя (код CDEK): {toCityCode ?? "не выбран"}
+                Город получателя:{" "}
+                {toCities.find((city) => city.code === toCityCode)?.city ??
+                  "не выбран"}
               </Typography>
 
               {deliveryBreakdown ? (
