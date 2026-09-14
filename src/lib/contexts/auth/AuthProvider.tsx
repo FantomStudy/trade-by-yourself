@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 
 import { CURRENT_USER_QUERY_KEY } from "@/api/hooks";
-import { getCurrentUserOrNull, getVkOnboardingStatus, getYandexOnboardingStatus } from "@/api/requests";
+import { getCurrentUserOrNull, getVkOnboardingStatus } from "@/api/requests";
 
 import { AuthContext } from "./AuthContext";
 
@@ -26,21 +26,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     data?.phoneNumber?.toUpperCase().startsWith("VK_") ||
     data?.email?.toLowerCase().endsWith("@oauth.local")
   );
-  const isSyntheticYandex = Boolean(
-    data?.phoneNumber?.toUpperCase().startsWith("YANDEX_")
-  );
 
   const { data: onboarding } = useQuery({
     queryKey: ["auth", "vk-onboarding-status", data?.id ?? null],
     queryFn: getVkOnboardingStatus,
     enabled: Boolean(data?.id) && isSyntheticVk,
-    retry: false,
-    staleTime: 15_000,
-  });
-  const { data: yandexOnboarding } = useQuery({
-    queryKey: ["auth", "yandex-onboarding-status", data?.id ?? null],
-    queryFn: getYandexOnboardingStatus,
-    enabled: Boolean(data?.id) && isSyntheticYandex,
     retry: false,
     staleTime: 15_000,
   });
@@ -53,12 +43,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       router.replace(`/auth/vk/onboarding?next=${encodeURIComponent(path)}`);
       return;
     }
-    if (yandexOnboarding?.required && isSyntheticYandex) {
+    // Use the requireYandexOnboarding flag from /auth/me directly — it is
+    // computed by the backend based on OAuth identity + phone verification status.
+    // This is more reliable than the isSyntheticYandex heuristic, which breaks
+    // after phone verification (phone prefix changes from YANDEX_xxx to a real number).
+    if (data?.requireYandexOnboarding) {
       if (path.startsWith("/auth/yandex/onboarding") || path.startsWith("/auth/yandex/callback")) return;
       router.replace(`/auth/yandex/onboarding?next=${encodeURIComponent(path)}`);
       return;
     }
-  }, [data?.id, isSyntheticVk, isSyntheticYandex, onboarding?.required, yandexOnboarding?.required, pathname, router]);
+  }, [data?.id, data?.requireYandexOnboarding, isSyntheticVk, onboarding?.required, pathname, router]);
 
   const logout = useCallback(() => {
     try {
