@@ -18,10 +18,6 @@ const nextConfig: NextConfig = {
   output: "standalone",
   typedRoutes: true,
 
-  turbopack: {
-    root: __dirname,
-  },
-
   // Прокси Engine.IO на бэк: браузер бьёт в тот же origin, что Next (меньше боли с CORS/credentials между портами).
   async rewrites() {
     const api = normalizePublicApiUrl();
