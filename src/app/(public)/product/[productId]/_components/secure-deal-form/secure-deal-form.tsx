@@ -86,17 +86,23 @@ function getCityFromAddress(address?: string | null) {
 
   const value = address.trim();
 
-  const patterns = [
-    /(?:^|,\s*)г\.?\s*([А-ЯA-ZЁ][А-ЯA-ZЁа-яa-zё\-\s]+)/i,
-    /(?:^|,\s*)город\s+([А-ЯA-ZЁ][А-ЯA-ZЁа-яa-zё\-\s]+)/i,
-    /городской округ\s+([А-ЯA-ZЁ][А-ЯA-ZЁа-яa-zё\-\s]+)/i,
+  // Сначала ищем явное указание города с префиксом "г." или "город"
+  const explicitPatterns = [
+    /(?:^|,\s*)г\.?\s*([А-ЯA-ZЁ][А-ЯA-ZЁа-яa-zё\-\s]+?)(?:\s*,|$)/i,
+    /(?:^|,\s*)город\s+([А-ЯA-ZЁ][А-ЯA-ZЁа-яa-zё\-\s]+?)(?:\s*,|$)/i,
   ];
 
-  for (const pattern of patterns) {
+  for (const pattern of explicitPatterns) {
     const match = value.match(pattern);
     if (match) {
       return match[1].trim();
     }
+  }
+
+  // Затем "городской округ ..."
+  const roundMatch = value.match(/городской округ\s+([А-ЯA-ZЁ][А-ЯA-ZЁа-яa-zё\-\s]+?)(?:\s*,|$)/i);
+  if (roundMatch) {
+    return roundMatch[1].trim();
   }
 
   const parts = value
@@ -127,6 +133,10 @@ function getCityFromAddress(address?: string | null) {
     "снт",
     "магазин",
     "склад",
+    "округ",
+    "новостройка",
+    "микрорайон",
+    "мкр",
   ];
 
   for (let i = parts.length - 1; i >= 0; i--) {
