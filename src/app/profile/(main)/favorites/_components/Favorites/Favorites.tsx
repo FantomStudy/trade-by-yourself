@@ -7,16 +7,23 @@ import { ProductGrid } from "@/components/ProductGrid";
 import styles from "./Favorites.module.css";
 
 export const Favorites = async () => {
-  const products = await getFavorites();
+  let products;
+  try {
+    products = await getFavorites();
+  } catch {
+    products = null;
+  }
 
   if (!products) {
     return (
       <div className={styles.stateContainer}>
-        <div className={clsx(styles.iconContainer, styles.iconContainerError)}>
-          <HeartIcon className={clsx(styles.icon, styles.iconError)} />
+        <div className={clsx(styles.iconContainer, styles.iconContainerEmpty)}>
+          <HeartIcon className={clsx(styles.icon, styles.iconEmpty)} />
         </div>
-        <h3 className={styles.title}>Ошибка загрузки</h3>
-        <p className={styles.description}>Не удалось загрузить избранные товары</p>
+        <h3 className={styles.title}>Избранное пусто</h3>
+        <p className={styles.description}>
+          Здесь будут отображаться товары, которые вы добавите в избранное
+        </p>
       </div>
     );
   }
