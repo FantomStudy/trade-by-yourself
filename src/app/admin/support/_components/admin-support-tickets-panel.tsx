@@ -72,6 +72,7 @@ export function AdminSupportTicketsPanel() {
   const connectWS = useCallback(() => {
     if (unmountedRef.current) return;
     const ws = createSupportSocket();
+    if (!ws) return;
     wsRef.current = ws;
 
     ws.onopen = () => tryJoin(ws);
@@ -83,6 +84,10 @@ export function AdminSupportTicketsPanel() {
         const payload = packet.data as { ticketId: number; message: SupportTicketMessage };
         if (payload?.message) mergeMessage(payload.message);
       }
+    };
+
+    ws.onerror = () => {
+      try { ws.close(); } catch {}
     };
 
     ws.onclose = () => {

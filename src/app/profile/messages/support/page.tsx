@@ -71,8 +71,8 @@ const SupportChatPage = () => {
   }, []);
 
   // --- WebSocket ---
-  const tryJoinTicket = useCallback((ws: WebSocket) => {
-    if (ws.readyState === WebSocket.OPEN && ticketIdRef.current) {
+  const tryJoinTicket = useCallback((ws: WebSocket | null) => {
+    if (ws && ws.readyState === WebSocket.OPEN && ticketIdRef.current) {
       sendSupportSocketEvent(ws, "joinTicket", { ticketId: ticketIdRef.current });
     }
   }, []);
@@ -80,6 +80,7 @@ const SupportChatPage = () => {
   const connectWS = useCallback(() => {
     if (isUnmountedRef.current) return;
     const ws = createSupportSocket();
+    if (!ws) return;
     wsRef.current = ws;
 
     ws.onopen = () => tryJoinTicket(ws);
@@ -93,14 +94,16 @@ const SupportChatPage = () => {
       }
     };
 
+    ws.onerror = () => {
+      try { ws.close(); } catch {}
+    };
+
     ws.onclose = () => {
       wsRef.current = null;
       if (!isUnmountedRef.current) {
         reconnectTimerRef.current = setTimeout(connectWS, 2500);
       }
     };
-
-    ws.onerror = () => ws.close();
   }, [tryJoinTicket, mergeMessage]);
 
   // WS lifecycle
@@ -119,7 +122,7 @@ const SupportChatPage = () => {
   // тогда сработает onopen после reconnect)
   useEffect(() => {
     if (!ticketId) return;
-    tryJoinTicket(wsRef.current as WebSocket);
+    tryJoinTicket(wsRef.current);
   }, [ticketId, tryJoinTicket]);
 
   // Начальная загрузка
@@ -127,7 +130,7 @@ const SupportChatPage = () => {
     void (async () => {
       try {
         const list = await getMySupportTickets();
-        const open = list.tickets.find((t) => t.status === "OPEN" || t.status === "IN_PROGRESS");
+        const open = list?.tickets?.find((t) => t.status === "OPEN" || t.status === "IN_PROGRESS");
         if (open) await loadTicket(open.id);
       } catch (error) {
         console.warn("Support tickets load:", error);

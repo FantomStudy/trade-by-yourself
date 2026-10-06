@@ -18,15 +18,29 @@ interface WSOutgoing<T = unknown> {
 }
 
 export function getSupportSocketUrl(): string {
-  const httpUrl = new URL(API_BASE_URL);
-  const wsProtocol = httpUrl.protocol === "https:" ? "wss:" : "ws:";
-  const sid = getSessionIdFromCookie();
-  const query = sid ? `?session_id=${encodeURIComponent(sid)}` : "";
-  return `${wsProtocol}//${httpUrl.host}/ws/support${query}`;
+  if (typeof window === "undefined") return "";
+  try {
+    const base = window.location.origin;
+    const httpUrl = new URL(API_BASE_URL, base);
+    const wsProtocol = httpUrl.protocol === "https:" ? "wss:" : "ws:";
+    const sid = getSessionIdFromCookie();
+    const query = sid ? `?session_id=${encodeURIComponent(sid)}` : "";
+    return `${wsProtocol}//${httpUrl.host}/ws/support${query}`;
+  } catch (err) {
+    console.warn("Failed to form support socket URL:", err);
+    return "";
+  }
 }
 
-export function createSupportSocket(): WebSocket {
-  return new WebSocket(getSupportSocketUrl());
+export function createSupportSocket(): WebSocket | null {
+  try {
+    const url = getSupportSocketUrl();
+    if (!url) return null;
+    return new WebSocket(url);
+  } catch (err) {
+    console.warn("Failed to create support socket:", err);
+    return null;
+  }
 }
 
 export function parseSupportSocketMessage(raw: string): WSIncoming | null {
