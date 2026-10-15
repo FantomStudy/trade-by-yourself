@@ -7,10 +7,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { useDeleteProductMutation, useToggleProductMutation } from "@/api/hooks";
+import { useDeleteProductMutation, useToggleProductMutation, useUserInfo } from "@/api/hooks";
 import { Typography } from "@/components/ui";
 import { toCurrency } from "@/lib/format";
 import { fixMojibake } from "@/lib/fix-mojibake";
+import { toast } from "sonner";
+import { useAuth } from "@/lib/contexts";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 
 import { ProductPreview } from "./product-preview/product-preview";
 
@@ -22,6 +25,8 @@ interface MyProductCardProps {
 
 export const MyProductCard = ({ product }: MyProductCardProps) => {
   const router = useRouter();
+  const { user } = useAuth();
+  const { data: userInfo } = useUserInfo(user?.id);
   const deleteProductMutation = useDeleteProductMutation();
   const toggleProductMutation = useToggleProductMutation();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -38,10 +43,11 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
     setIsDeleting(true);
     try {
       await deleteProductMutation.mutateAsync(product.id);
+      toast.success("Объявление удалено");
       router.refresh();
     } catch (error) {
       console.error("Error deleting product:", error);
-      alert("Ошибка при удалении товара");
+      toast.error(fixMojibake(getApiErrorMessage(error, "Ошибка при удалении товара")));
     } finally {
       setIsDeleting(false);
     }
@@ -57,13 +63,38 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
     e.preventDefault();
     e.stopPropagation();
 
+    // Если товар скрыт, действие — вернуть в продажу / продлить
+    if (product.isHide) {
+      const isExpired = Boolean(product.isExpired);
+      const remainingFree = userInfo?.adsLimit?.remaining ?? 0;
+      const costPerAd = userInfo?.adsLimit?.costPerAd ?? 50;
+
+      // Если срок истёк и бесплатный лимит на месяц исчерпан — предупреждаем о списании 50 ₽
+      if (isExpired && remainingFree <= 0) {
+        const userBalance = (userInfo?.balance ?? 0) + (userInfo?.bonusBalance ?? 0);
+        const confirmMsg =
+          userBalance < costPerAd
+            ? `Бесплатный лимит объявлений в этом месяце исчерпан (6 из 6).\nДля продления объявления требуется ${costPerAd} ₽, а на вашем балансе ${userBalance} ₽.\nПополните баланс в профиле.`
+            : `Бесплатный лимит объявлений в этом месяце исчерпан (6 из 6).\nПродление этого объявления на 30 дней стоит ${costPerAd} ₽.\nСписать ${costPerAd} ₽ с баланса и вернуть объявление в продажу?`;
+
+        if (!confirm(confirmMsg)) {
+          return;
+        }
+      }
+    }
+
     setIsToggling(true);
     try {
-      await toggleProductMutation.mutateAsync(product.id);
+      const res = await toggleProductMutation.mutateAsync(product.id);
+      toast.success(
+        res?.message ||
+          (product.isHide ? "Объявление возвращено в продажу" : "Объявление снято с продажи"),
+      );
       router.refresh();
     } catch (error) {
       console.error("Error toggling product:", error);
-      alert("Ошибка при изменении статуса товара");
+      const message = fixMojibake(getApiErrorMessage(error, "Ошибка при изменении статуса товара"));
+      toast.error(message);
     } finally {
       setIsToggling(false);
     }

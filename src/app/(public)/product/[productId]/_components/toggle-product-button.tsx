@@ -4,9 +4,12 @@ import { Eye, EyeOff, PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useToggleProductMutation } from "@/api/hooks";
+import { useToggleProductMutation, useUserInfo } from "@/api/hooks";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
+import { toast } from "sonner";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
+import { fixMojibake } from "@/lib/fix-mojibake";
 
 interface ToggleProductButtonProps {
   isHidden: boolean;
@@ -20,6 +23,7 @@ export const ToggleProductButton = ({
   isHidden,
 }: ToggleProductButtonProps) => {
   const { user } = useAuth();
+  const { data: userInfo } = useUserInfo(user?.id);
   const router = useRouter();
   const toggleProductMutation = useToggleProductMutation();
   const [isToggling, setIsToggling] = useState(false);
@@ -30,13 +34,36 @@ export const ToggleProductButton = ({
   }
 
   const handleToggle = async () => {
+    // Если товар скрыт и возвращается в продажу — проверяем лимит
+    if (isHidden) {
+      const remainingFree = userInfo?.adsLimit?.remaining ?? 0;
+      const costPerAd = userInfo?.adsLimit?.costPerAd ?? 50;
+
+      if (remainingFree <= 0) {
+        const userBalance = (userInfo?.balance ?? 0) + (userInfo?.bonusBalance ?? 0);
+        const confirmMsg =
+          userBalance < costPerAd
+            ? `Бесплатный лимит объявлений в этом месяце исчерпан (6 из 6).\nДля продления объявления требуется ${costPerAd} ₽, а на вашем балансе ${userBalance} ₽.\nПополните баланс в профиле.`
+            : `Бесплатный лимит объявлений в этом месяце исчерпан (6 из 6).\nПродление этого объявления на 30 дней стоит ${costPerAd} ₽.\nСписать ${costPerAd} ₽ с баланса и вернуть объявление в продажу?`;
+
+        if (!confirm(confirmMsg)) {
+          return;
+        }
+      }
+    }
+
     setIsToggling(true);
     try {
-      await toggleProductMutation.mutateAsync(productId);
+      const res = await toggleProductMutation.mutateAsync(productId);
+      toast.success(
+        res?.message ||
+          (isHidden ? "Объявление возвращено в продажу" : "Объявление снято с продажи"),
+      );
       router.refresh();
     } catch (error) {
       console.error("Error toggling product:", error);
-      alert("Ошибка при изменении статуса товара");
+      const message = fixMojibake(getApiErrorMessage(error, "Ошибка при изменении статуса товара"));
+      toast.error(message);
     } finally {
       setIsToggling(false);
     }
