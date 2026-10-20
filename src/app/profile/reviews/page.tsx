@@ -1,13 +1,13 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Star, MessageSquareQuote, ShieldAlert } from "lucide-react";
-import { useState } from "react";
-import { getUserReviews, type Review } from "@/lib/api/requests/reviews";
-import { useAuth } from "@/lib/contexts";
+import { MessageSquareQuote, Star } from "lucide-react";
+
 import { useUserInfo } from "@/api/hooks";
-import { Typography, Avatar } from "@/components/ui";
-import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui";
+import { Avatar } from "@/components/ui/Avatar";
+import { getUserReviews } from "@/lib/api/requests/reviews";
+import { useAuth } from "@/lib/contexts";
 
 export default function ProfileReviewsPage() {
   const { user } = useAuth();

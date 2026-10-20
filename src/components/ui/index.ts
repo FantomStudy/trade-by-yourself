@@ -1,5 +1,7 @@
 export * from "./address-map-wrapper";
+export * from "./Avatar";
 export * from "./badge/badge";
+export * from "./Button";
 export * from "./dialog/dialog";
 export * from "./field/field";
 export * from "./image-upload";
