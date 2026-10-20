@@ -459,7 +459,12 @@ const DealsPage = () => {
             return (
               <div key={deal.id} className={styles.card}>
                 <div className={styles.cardRow}>
-                  <Typography variant="h2">Сделка #{deal.id}</Typography>
+                  <Typography variant="h2">
+                    Безопасная сделка{" "}
+                    <span style={{ fontSize: "14px", fontWeight: "normal", color: "#6b7280" }}>
+                      № {deal.id}
+                    </span>
+                  </Typography>
                   <span className={styles.badge}>
                     {getDealRoleText(deal.myRole)}
                   </span>

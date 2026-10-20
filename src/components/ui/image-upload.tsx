@@ -10,6 +10,8 @@ import {
   validateImageFiles,
 } from "@/lib/media-validation";
 
+import { toast } from "sonner";
+
 interface ImageUploadProps {
   maxImages?: number;
   onImagesChange?: (images: File[]) => void;
@@ -17,11 +19,12 @@ interface ImageUploadProps {
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
-  maxImages = 6,
+  maxImages = 8,
   onImagesChange,
   onValidationError,
 }) => {
   const [images, setImages] = useState<File[]>([]);
+  const [maxAllowed, setMaxAllowed] = useState<number>(Math.max(maxImages, 8));
   const [mainImageIndex, setMainImageIndex] = useState<number>(0);
   const [localError, setLocalError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +43,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     const validationError = await validateImageFiles(files, {
       currentCount: images.length,
       currentTotalBytes: images.reduce((sum, file) => sum + file.size, 0),
-      maxFiles: maxImages,
+      maxFiles: maxAllowed,
     });
 
     if (validationError) {
@@ -52,7 +55,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
     setLocalError(null);
     onValidationError?.(null);
-    const newImages = [...images, ...files].slice(0, maxImages);
+    const newImages = [...images, ...files].slice(0, maxAllowed);
     const reordered = reorderImagesWithMain(newImages, mainImageIndex);
     setImages(reordered);
     onImagesChange?.(reordered);
@@ -136,7 +139,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           ))}
 
           {/* Add new image placeholder */}
-          {images.length < maxImages && (
+          {images.length < maxAllowed && (
             <div
               className="flex h-[150px] w-[150px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 transition-all duration-200 hover:border-gray-400 hover:bg-gray-100 md:h-[200px] md:w-[200px]"
               tabIndex={0}
@@ -151,7 +154,35 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             >
               <div className="text-4xl text-gray-400 md:text-5xl">📷</div>
               <span className="text-center text-xs font-medium text-gray-500 md:text-sm">
-                Добавить фото
+                Добавить фото ({images.length}/{maxAllowed})
+              </span>
+            </div>
+          )}
+
+          {/* Кнопка / слот платного расширения до 15 фото */}
+          {images.length >= 8 && maxAllowed < 15 && (
+            <div
+              className="flex h-[150px] w-[150px] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-amber-400 bg-amber-50/70 p-3 text-center transition-all duration-200 hover:border-amber-500 hover:bg-amber-100 md:h-[200px] md:w-[200px]"
+              tabIndex={0}
+              onClick={() => {
+                setMaxAllowed(15);
+                toast.success("Лимит расширен до 15 фотографий!");
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setMaxAllowed(15);
+                  toast.success("Лимит расширен до 15 фотографий!");
+                }
+              }}
+              role="button"
+            >
+              <span className="text-2xl md:text-3xl">✨</span>
+              <span className="text-xs font-bold text-amber-900 md:text-sm">
+                + До 15 фото
+              </span>
+              <span className="text-[10px] text-amber-700 leading-tight">
+                Платный пакет: расширить лимит фото
               </span>
             </div>
           )}
@@ -166,7 +197,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           onChange={handleFileSelect}
         />
         <div className="mt-3 space-y-1 text-sm text-gray-500">
-          <p>Фото: JPG, PNG или WebP.</p>
+          <p>
+            Фото: JPG, PNG или WebP (до 8 фото бесплатно, до 15 фото в расширенном режиме).
+          </p>
           <p>
             Размер: до {MAX_IMAGE_FILE_SIZE_MB} МБ на одно фото, общий размер до{" "}
             {MAX_TOTAL_IMAGE_SIZE_MB} МБ.

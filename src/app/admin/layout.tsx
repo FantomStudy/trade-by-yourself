@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { checkIsAdmin } from "@/lib/api";
 
@@ -10,11 +10,11 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
     const { isAdmin } = await checkIsAdmin();
 
     if (!isAdmin) {
-      notFound();
+      redirect("/?auth=1");
     }
   } catch (error) {
     console.error("Admin check failed:", error);
-    notFound();
+    redirect("/?auth=1");
   }
 
   return (

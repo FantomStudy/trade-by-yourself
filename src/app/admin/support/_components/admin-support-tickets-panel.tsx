@@ -110,12 +110,16 @@ export function AdminSupportTicketsPanel() {
   }, [connectWS]);
 
   // Скролл вниз при новых сообщениях (только контейнер, не вся страница)
-  useEffect(() => {
+  const scrollToBottom = useCallback(() => {
     requestAnimationFrame(() => {
       const el = messagesContainerRef.current;
       if (el) el.scrollTop = el.scrollHeight;
     });
-  }, [messages]);
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, selectedId, scrollToBottom]);
 
   // Начальная загрузка
   useEffect(() => {
@@ -155,6 +159,7 @@ export function AdminSupportTicketsPanel() {
     if (wsRef.current) tryJoin(wsRef.current);
     try {
       await loadMessages(ticketId);
+      scrollToBottom();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось открыть обращение"));
     }
@@ -169,6 +174,7 @@ export function AdminSupportTicketsPanel() {
       await sendSupportTicketMessage(selectedId, text);
       // Мгновенная перезагрузка после отправки
       await loadMessages(selectedId);
+      scrollToBottom();
       await refreshTickets();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось отправить ответ"));
@@ -190,17 +196,17 @@ export function AdminSupportTicketsPanel() {
   }
 
   return (
-    <div className="rounded-lg border border-purple-200 bg-white shadow-sm">
-      <div className="border-b p-4">
+    <div className="flex h-[calc(100vh-220px)] min-h-[520px] flex-col overflow-hidden rounded-lg border border-purple-200 bg-white shadow-sm">
+      <div className="flex-shrink-0 border-b p-4">
         <Typography className="text-lg font-semibold">Техническая поддержка</Typography>
         <Typography className="text-sm text-gray-500">
           Пользователь видит ответы как «{SUPPORT_CENTER_NAME}». Слева — реальные имена для работы оператора.
         </Typography>
       </div>
 
-      <div className="grid gap-0 md:grid-cols-[280px_1fr]">
+      <div className="grid flex-1 min-h-0 overflow-hidden md:grid-cols-[280px_1fr]">
         {/* Список тикетов */}
-        <div className="max-h-[480px] overflow-y-auto border-r">
+        <div className="h-full overflow-y-auto border-r">
           {tickets.length === 0 ? (
             <p className="p-4 text-sm text-gray-500">Обращений пока нет</p>
           ) : (
@@ -225,12 +231,12 @@ export function AdminSupportTicketsPanel() {
         </div>
 
         {/* Переписка */}
-        <div className="flex min-h-[320px] flex-col">
+        <div className="flex h-full min-h-0 flex-col overflow-hidden">
           {selectedId == null ? (
             <p className="p-6 text-sm text-gray-500">Выберите обращение слева</p>
           ) : (
             <>
-              <div ref={messagesContainerRef} className={`${styles.messagesContainer} flex-1`}>
+              <div ref={messagesContainerRef} className={`${styles.messagesContainer} min-h-0 flex-1 overflow-y-auto`}>
                 <div className={styles.messagesList}>
                   {messages.map((msg) => {
                     const fromStaff = isSupportStaff(msg.author?.role?.name);

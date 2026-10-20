@@ -75,6 +75,12 @@ const PromotionPage = () => {
         (p) => !p.isHide && (p.moderateState === "APPROVED" || !p.moderateState)
       );
       setUserProducts(activeProducts);
+      if (activeProducts.length === 1) {
+        setSelectedProductId(activeProducts[0].id);
+      }
+      if (!days) {
+        setDays("3");
+      }
     } catch (error: any) {
       console.error("Ошибка загрузки товаров:", error);
       toast.error("Не удалось загрузить список товаров");
@@ -85,14 +91,31 @@ const PromotionPage = () => {
   };
 
   const handleActivatePromotion = async () => {
-    if (!selectedProductId || !selectedPromotionId || !days.trim()) {
-      toast.error("Заполните все поля");
+    if (!selectedProductId) {
+      toast.error("Пожалуйста, выберите товар для продвижения (нажмите на карточку товара)");
+      return;
+    }
+    if (!selectedPromotionId) {
+      toast.error("Тариф продвижения не выбран");
+      return;
+    }
+    if (!days.trim()) {
+      toast.error("Укажите количество дней продвижения");
       return;
     }
 
     const daysNum = Number.parseInt(days, 10);
     if (isNaN(daysNum) || daysNum < 1) {
       toast.error("Введите корректное количество дней (минимум 1)");
+      return;
+    }
+
+    const promo = promotions.find((p) => p.id === selectedPromotionId);
+    const requiredCost = (promo?.pricePerDay || 0) * daysNum;
+    const availableBal = (currentUser?.balance || 0) + (currentUser?.bonusBalance || 0);
+
+    if (requiredCost > availableBal) {
+      toast.error(`Недостаточно средств. Требуется: ${requiredCost} ₽, доступно: ${availableBal} ₽. Пополните баланс в профиле.`);
       return;
     }
 
@@ -103,7 +126,7 @@ const PromotionPage = () => {
         promotionId: selectedPromotionId,
         days: daysNum,
       });
-      toast.success("Продвижение успешно активировано");
+      toast.success("Продвижение успешно активировано!");
       closeModals();
     } catch (error: any) {
       console.error("Ошибка активации продвижения:", error);
@@ -244,16 +267,36 @@ const PromotionPage = () => {
                     placeholder="Например: 7"
                   />
                   {selectedPromotionId && days && (
-                    <p className="mt-2 text-sm text-gray-600">
-                      Итого:{" "}
-                      <span className="font-semibold text-blue-600">
-                        {(
-                          (promotions.find((p) => p.id === selectedPromotionId)?.pricePerDay || 0) *
-                          Number.parseInt(days, 10)
-                        ).toFixed(0)}{" "}
-                        ₽
-                      </span>
-                    </p>
+                    <div className="mt-2 text-sm text-gray-600 space-y-1">
+                      <p>
+                        Итого к оплате:{" "}
+                        <span className="font-semibold text-blue-600">
+                          {(
+                            (promotions.find((p) => p.id === selectedPromotionId)?.pricePerDay || 0) *
+                            Number.parseInt(days, 10)
+                          ).toFixed(0)}{" "}
+                          ₽
+                        </span>
+                        {currentUser && (
+                          <span className="ml-2 text-gray-500">
+                            (Доступно на балансе: {(currentUser.balance || 0) + (currentUser.bonusBalance || 0)} ₽)
+                          </span>
+                        )}
+                      </p>
+                      {(() => {
+                        const promo = promotions.find((p) => p.id === selectedPromotionId);
+                        const cost = (promo?.pricePerDay || 0) * (Number.parseInt(days, 10) || 0);
+                        const avail = (currentUser?.balance || 0) + (currentUser?.bonusBalance || 0);
+                        if (cost > avail) {
+                          return (
+                            <p className="text-xs text-red-600 font-medium">
+                              ⚠️ Недостаточно средств на балансе. Для активации пополните баланс в профиле.
+                            </p>
+                          );
+                        }
+                        return null;
+                      })()}
+                    </div>
                   )}
                 </div>
               </div>
@@ -265,7 +308,7 @@ const PromotionPage = () => {
               </Button>
               <Button
                 className="bg-green-500 hover:bg-green-600"
-                disabled={isSubmitting || !selectedProductId || !selectedPromotionId || !days}
+                disabled={isSubmitting}
                 onClick={handleActivatePromotion}
               >
                 {isSubmitting ? "Активация..." : "Активировать"}

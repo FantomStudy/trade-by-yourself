@@ -64,7 +64,8 @@ const MessagesPage = () => {
         const list = await getMySupportTickets();
         const open = list.tickets.find((t) => t.status === "OPEN" || t.status === "IN_PROGRESS");
         const last = open?.lastMessage;
-        const hasStaffReply = Boolean(last && last.authorId !== open?.userId);
+        const lastReadId = typeof window !== "undefined" && open ? localStorage.getItem(`support_last_read_${open.id}`) : null;
+        const hasStaffReply = Boolean(last && last.authorId !== open?.userId && String(last.id) !== lastReadId);
         setSupportPreview({
           text: last?.text,
           hasStaffReply,

@@ -100,6 +100,22 @@
   flex-shrink: 0;
 }
 
+.navBadge {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 9999px;
+  background: #ef4444;
+  color: #ffffff;
+  line-height: 1;
+}
+
 /* Footer сайдбара */
 .sidebarFooter {
   padding: 16px;

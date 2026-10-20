@@ -31,13 +31,15 @@
 
 .title {
   font-size: 14px;
+  line-height: 1.35;
   font-weight: 500;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
+  word-break: break-word;
 }
 .title a {
   transition: color 0.2s;

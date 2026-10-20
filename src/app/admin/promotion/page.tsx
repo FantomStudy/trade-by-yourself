@@ -118,6 +118,12 @@ const PromotionPage = () => {
       // Получаем товары пользователя
       const products = await getCurrentUserProducts(currentUser.id);
       setUserProducts(products || []);
+      if (products && products.length === 1) {
+        setSelectedProductId(products[0].id);
+      }
+      if (!days) {
+        setDays("3");
+      }
     } catch (error: any) {
       console.error("Ошибка загрузки товаров:", error);
       toast.error("Не удалось загрузить список товаров");
@@ -128,8 +134,16 @@ const PromotionPage = () => {
   };
 
   const handleActivatePromotion = async () => {
-    if (!selectedProductId || !selectedPromotionId || !days.trim()) {
-      toast.error("Заполните все поля");
+    if (!selectedProductId) {
+      toast.error("Пожалуйста, выберите товар для продвижения");
+      return;
+    }
+    if (!selectedPromotionId) {
+      toast.error("Тариф продвижения не выбран");
+      return;
+    }
+    if (!days.trim()) {
+      toast.error("Укажите количество дней продвижения");
       return;
     }
 
@@ -318,7 +332,7 @@ const PromotionPage = () => {
               </Button>
               <Button
                 className="bg-green-500 hover:bg-green-600"
-                disabled={isSubmitting || !selectedProductId || !selectedPromotionId || !days}
+                disabled={isSubmitting}
                 onClick={handleActivatePromotion}
               >
                 {isSubmitting ? "Активация..." : "Активировать"}

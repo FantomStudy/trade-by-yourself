@@ -35,6 +35,10 @@ export const LINKS: SidebarLinkGroup[] = [
         label: "Избранное",
       },
       {
+        href: "/profile/reviews",
+        label: "Отзывы",
+      },
+      {
         // href: "/profile/settings",
         href: "/profile/settings",
         label: "Настройки",

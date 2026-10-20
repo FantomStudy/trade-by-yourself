@@ -3,7 +3,7 @@
 import L from "leaflet";
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
 import { Input } from "@/components/ui";
 import { getAddressSuggestions, validateAddress } from "@/lib/api/requests/address";
@@ -19,8 +19,8 @@ L.Icon.Default.mergeOptions({
 });
 
 interface AddressSuggestion {
-  lat?: string;
-  lon?: string;
+  lat?: string | number | null;
+  lon?: string | number | null;
   value: string;
 }
 
@@ -28,6 +28,17 @@ interface AddressMapProps {
   value?: string;
   onChange?: (address: string) => void;
   onCoordinatesChange?: (lat: number, lng: number) => void;
+}
+
+// Компонент для центрирования карты при смене позиции
+function MapRecenter({ center }: { center: [number, number] | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (center && !isNaN(center[0]) && !isNaN(center[1])) {
+      map.setView(center, Math.max(map.getZoom(), 14), { animate: true });
+    }
+  }, [center, map]);
+  return null;
 }
 
 // Компонент для обработки кликов по карте
@@ -104,32 +115,61 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
     }
   };
 
+  // Синхронизация с внешним значением value и геокодирование начального адреса
+  useEffect(() => {
+    if (value && value !== address) {
+      setAddress(value);
+      if (!markerPosition) {
+        fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&limit=1`,
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (data && data.length > 0) {
+              const lat = Number.parseFloat(data[0].lat);
+              const lng = Number.parseFloat(data[0].lon);
+              if (!isNaN(lat) && !isNaN(lng)) {
+                setMarkerPosition([lat, lng]);
+                onCoordinatesChange?.(lat, lng);
+              }
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  }, [value]);
+
   // Проверяем разрешения на геолокацию и автоматически определяем местоположение при монтировании
   useEffect(() => {
     const initializeLocation = async () => {
+      // Если адрес уже передан (например, редактирование), не перезаписываем его по GPS
+      if (value) {
+        return;
+      }
+
       if ("permissions" in navigator) {
-        const result = await navigator.permissions.query({
-          name: "geolocation",
-        });
-        setLocationPermission(result.state);
-        console.log("Статус разрешения геолокации:", result.state);
-
-        result.onchange = () => {
+        try {
+          const result = await navigator.permissions.query({
+            name: "geolocation",
+          });
           setLocationPermission(result.state);
-        };
+          console.log("Статус разрешения геолокации:", result.state);
 
-        // Автоматически определяем местоположение если разрешение есть или не установлено
-        if (result.state === "granted" || result.state === "prompt") {
-          await getCurrentLocation();
+          result.onchange = () => {
+            setLocationPermission(result.state);
+          };
+
+          if (result.state === "granted") {
+            await getCurrentLocation();
+          }
+        } catch {
+          // Игнорируем ошибку permissions API
         }
-      } else {
-        // Если API разрешений не поддерживается, пробуем сразу получить геолокацию
-        await getCurrentLocation();
       }
     };
 
     initializeLocation();
-  }, []);
+  }, [value]);
 
   // Функция для получения адреса по координатам (обратное геокодирование)
   const getAddressFromCoordinates = async (lat: number, lng: number) => {
@@ -287,34 +327,55 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
                   onChange?.(suggestion.value);
                   setShowSuggestions(false);
 
-                  // Используем координаты из API suggestions
-                  if (suggestion.lat && suggestion.lon) {
-                    const lat = Number.parseFloat(suggestion.lat);
-                    const lng = Number.parseFloat(suggestion.lon);
-                    setMarkerPosition([lat, lng]);
-                    onCoordinatesChange?.(lat, lng);
-                    console.log("Marker set from suggestion at:", lat, lng);
+                  let coordsFound = false;
+
+                  // Используем координаты из API suggestions, если они есть
+                  if (suggestion.lat != null && suggestion.lon != null) {
+                    const lat = Number.parseFloat(String(suggestion.lat));
+                    const lng = Number.parseFloat(String(suggestion.lon));
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                      setMarkerPosition([lat, lng]);
+                      onCoordinatesChange?.(lat, lng);
+                      coordsFound = true;
+                    }
+                  }
+
+                  // Если координат от DaData нет, пробуем получить через Nominatim
+                  if (!coordsFound) {
+                    try {
+                      const geoResp = await fetch(
+                        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(suggestion.value)}&limit=1`,
+                      );
+                      const geoData = await geoResp.json();
+                      if (geoData && geoData.length > 0) {
+                        const lat = Number.parseFloat(geoData[0].lat);
+                        const lng = Number.parseFloat(geoData[0].lon);
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                          setMarkerPosition([lat, lng]);
+                          onCoordinatesChange?.(lat, lng);
+                        }
+                      }
+                    } catch (err) {
+                      console.error("Geocoding suggestion error:", err);
+                    }
                   }
 
                   // Валидация адреса после установки координат
                   try {
                     setValidationError(null);
-                    console.log("Validating address:", suggestion.value);
                     const validationResult = await validateAddress({
                       address: suggestion.value,
                       addressDetails: {},
                     });
-                    console.log("Address validation result:", validationResult);
 
                     if (!validationResult.valid) {
                       setValidationError(validationResult.message || "Адрес не прошел валидацию");
-                      console.warn("Address is not valid:", validationResult.message);
                     }
-                  } catch (error) {
-                    console.error("Error validating address:", error);
-                    setValidationError(
-                      "Указанный адрес не найден. Пожалуйста, выберите адрес из предложенных вариантов.",
-                    );
+                  } catch (error: any) {
+                    const msg =
+                      error?.data?.message ||
+                      "Указанный адрес не найден. Пожалуйста, выберите адрес из предложенных вариантов.";
+                    setValidationError(msg);
                   }
                 }}
               >
@@ -333,7 +394,7 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
       {/* Карта */}
       <div className="h-80 w-full overflow-hidden rounded-lg border border-gray-200">
         <MapContainer
-          center={ORENBURG_CENTER}
+          center={markerPosition || ORENBURG_CENTER}
           className="z-0 [&_.leaflet-control-attribution]:hidden"
           style={{ height: "100%", width: "100%" }}
           zoom={12}
@@ -342,6 +403,9 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
+
+          {/* Центрирование карты при изменении markerPosition */}
+          <MapRecenter center={markerPosition} />
 
           {/* Обработчик кликов по карте */}
           <MapClickHandler onLocationSelect={handleMapClick} />

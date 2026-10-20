@@ -19,6 +19,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createContext, use, useCallback, useEffect, useState } from "react";
 
+import { useQuery } from "@tanstack/react-query";
+import { getAdminDeals } from "@/api/requests";
+import { getAllSupportTickets } from "@/lib/api/requests";
+import { useProductsToModerate } from "@/api/hooks";
+import { api } from "@/lib/api/instance";
 import { Typography } from "@/components/ui";
 
 import styles from "../admin.module.css";
@@ -73,6 +78,37 @@ export const AdminSidebar = () => {
   const pathname = usePathname();
   const { isOpen, close } = useSidebar();
 
+  const { data: supportTicketsData } = useQuery({
+    queryKey: ["admin-sidebar-support"],
+    queryFn: getAllSupportTickets,
+    refetchInterval: 10000,
+  });
+
+  const { data: dealsData } = useQuery({
+    queryKey: ["admin-sidebar-deals"],
+    queryFn: getAdminDeals,
+    refetchInterval: 15000,
+  });
+
+  const { data: productsData } = useProductsToModerate("MODERATE", 1);
+
+  const { data: bannersData } = useQuery({
+    queryKey: ["admin-sidebar-banners"],
+    queryFn: () => api<any[]>("/banner/all-banners-to-moderate"),
+    refetchInterval: 20000,
+  });
+
+  const supportCount = (supportTicketsData?.tickets ?? []).filter(
+    (t) => t.status === "OPEN" || t.status === "IN_PROGRESS",
+  ).length;
+
+  const dealsCount = (dealsData ?? []).filter(
+    (d) => d.status === "CREATED" || d.status === "DISPUTE",
+  ).length;
+
+  const moderationCount = productsData?.total ?? 0;
+  const bannerCount = bannersData?.length ?? 0;
+
   return (
     <>
       <div className={`${styles.overlay} ${isOpen ? styles.overlayVisible : ""}`} onClick={close} />
@@ -88,6 +124,12 @@ export const AdminSidebar = () => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
 
+            let badge = 0;
+            if (item.href === "/admin/support") badge = supportCount;
+            else if (item.href === "/admin/deals") badge = dealsCount;
+            else if (item.href === "/admin/moderation") badge = moderationCount;
+            else if (item.href === "/admin/advertising") badge = bannerCount;
+
             return (
               <Link
                 href={item.href as any}
@@ -96,7 +138,10 @@ export const AdminSidebar = () => {
                 onClick={close}
               >
                 <Icon className={styles.navIcon} />
-                {item.label}
+                <span>{item.label}</span>
+                {badge > 0 ? (
+                  <span className={styles.navBadge}>{badge > 99 ? "99+" : badge}</span>
+                ) : null}
               </Link>
             );
           })}

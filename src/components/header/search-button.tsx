@@ -56,7 +56,7 @@ export const SearchButton = () => {
               type="text"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Поиск объявлений..."
+              placeholder="Поиск по каталогу..."
             />
             <Button
               aria-label="Закрыть поиск"

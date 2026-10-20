@@ -3,6 +3,7 @@
 import type { CdekCity, CdekPvz, CdekServiceLine, ExtendedProduct } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { MapPin, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -256,6 +257,7 @@ interface SecureDealFormProps {
 }
 
 export const SecureDealForm = ({ product }: SecureDealFormProps) => {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -560,7 +562,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
         cdekRecipientMode: "pvz",
       });
 
-      toast.success(`Сделка #${deal.id} создана`);
+      toast.success("Безопасная сделка оформлена! Переходим в раздел сделок для оплаты...");
       queryClient.invalidateQueries({ queryKey: MY_RESERVATIONS_QUERY_KEY });
       queryClient.invalidateQueries({
         queryKey: PRODUCT_RESERVATION_QUERY_KEY(product.id),
@@ -569,6 +571,7 @@ export const SecureDealForm = ({ product }: SecureDealFormProps) => {
       queryClient.invalidateQueries({ queryKey: ["chat"] });
       setOpen(false);
       resetState();
+      router.push(`/profile/deals?dealId=${deal.id}`);
     } catch (error) {
       const msg = getApiErrorMessage(error, "Не удалось создать сделку");
       console.error("Ошибка создания сделки:", msg, error);

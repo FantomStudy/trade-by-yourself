@@ -59,13 +59,22 @@ const SupportChatPage = () => {
     if (isUnmountedRef.current) return;
     setTicketId(ticket.id);
     ticketIdRef.current = ticket.id;
-    setMessages(ticket.messages ?? []);
+    const msgs = ticket.messages ?? [];
+    setMessages(msgs);
+    if (msgs.length > 0) {
+      try {
+        localStorage.setItem(`support_last_read_${ticket.id}`, String(msgs[msgs.length - 1].id));
+      } catch {}
+    }
   }, []);
 
   // Мёрж новых WS-сообщений без полной перезаписи
   const mergeMessage = useCallback((msg: SupportTicketMessage) => {
     setMessages((prev) => {
       if (prev.some((m) => m.id === msg.id)) return prev;
+      try {
+        localStorage.setItem(`support_last_read_${msg.ticketId}`, String(msg.id));
+      } catch {}
       return [...prev, msg];
     });
   }, []);

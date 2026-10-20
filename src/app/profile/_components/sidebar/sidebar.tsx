@@ -56,14 +56,14 @@ export const Sidebar = () => {
           </div>
 
           <div className={styles.stats}>
-            <div className={styles.ratingSection}>
+            <Link href="/profile/reviews" className={styles.ratingSection} title="Посмотреть отзывы">
               <Typography className={styles.rating}>
                 {(userInfo?.rating ?? 0).toFixed(1)}
                 <StarIcon fill="currentColor" />
               </Typography>
 
               <Typography className={styles.reviews}>{userInfo?.reviewsCount ?? 0} отзывов</Typography>
-            </div>
+            </Link>
 
             <div className={isLegalEntity ? styles.profileTypeLegal : styles.profileTypePhysical}>
               <div

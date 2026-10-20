@@ -130,7 +130,7 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
           }
         }
 
-        if (packet.event === "newChatMessage") {
+        if (packet.event === "newChatMessage" || packet.event === "messagesRead") {
           void queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
         }
 
@@ -177,9 +177,12 @@ export const ChatSocketProvider = ({ children }: PropsWithChildren) => {
 
   const markAsRead = useCallback((chatId: number) => {
     const ws = wsRef.current;
-    if (!ws) return;
-    sendChatSocketEvent(ws, "markAsRead", { chatId });
-  }, []);
+    if (ws) {
+      sendChatSocketEvent(ws, "markAsRead", { chatId });
+    }
+    // Сразу сбрасываем локальный кэш чатов, чтобы счетчики в шапке обновились
+    void queryClient.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
+  }, [queryClient]);
 
   const value: ChatSocketContextType = useMemo(
     () => ({

@@ -3,10 +3,11 @@
 import type { Message as SocketMessage } from "@/lib/contexts/chat";
 import type { Message } from "@/types";
 
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, ImageIcon, Send } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/Button";
 import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
@@ -24,6 +25,7 @@ const ChatPage = () => {
   const [otherUserTyping, setOtherUserTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: currentUser } = useCurrentUser();
   const { data: chat, isLoading: isChatLoading } = useChat(chatIdNum);
@@ -37,6 +39,23 @@ const ChatPage = () => {
     sendTyping,
     socket,
   } = useChatSocket();
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Изображение не должно превышать 5 МБ");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        sendSocketMessage(chatIdNum, reader.result);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Используем messagesData напрямую и обновляем с помощью useState для новых сообщений
   const [newMessages, setNewMessages] = useState<Message[]>([]);
@@ -267,7 +286,14 @@ const ChatPage = () => {
                     isCurrentUser ? "bg-blue-400 text-white" : "bg-white text-gray-800"
                   }`}
                 >
-                  <p className="text-sm">{messageText}</p>
+                  {/^(https?:\/\/|\/uploads\/).*\.(png|jpg|jpeg|webp|gif)(\?.*)?$/i.test(messageText.trim()) ||
+                  messageText.trim().startsWith("data:image/") ? (
+                    <a href={messageText} target="_blank" rel="noreferrer" className="block max-w-xs overflow-hidden rounded-lg">
+                      <img src={messageText} alt="Вложение" className="max-h-60 rounded-lg object-contain" />
+                    </a>
+                  ) : (
+                    <p className="text-sm whitespace-pre-line">{messageText}</p>
+                  )}
                 </div>
 
                 {/* Время и статус */}
@@ -302,6 +328,21 @@ const ChatPage = () => {
       {/* Поле ввода */}
       <div className="bg-white p-4 shadow-sm">
         <div className="flex items-end gap-3">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageUpload}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="flex h-12 w-12 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+            title="Прикрепить изображение"
+          >
+            <ImageIcon className="h-5 w-5" />
+          </button>
           <textarea
             className="flex-1 resize-none rounded-lg bg-gray-50 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value={message}
