@@ -43,6 +43,7 @@ export interface CurrentUser {
   rating: number;
   reviewsCount: number;
   balance: number;
+  bonusBalance?: number;
   photo: string | null;
   role?: string;
   requireYandexOnboarding?: boolean;
