@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MobileTabs } from "@/components/layout/MobileTabs";
 import { Sonner } from "@/components/ui/Sonner";
 import { Providers } from "./providers";
 import "./globals.css";
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  weight: ["400", "500", "600", "700"],
-  subsets: ["cyrillic"],
-});
 
 export const metadata: Metadata = {
   title: "Торгуй сам",
@@ -21,7 +14,7 @@ export const metadata: Metadata = {
 const RootLayout = async ({ children }: LayoutProps<"/">) => {
   return (
     <html lang="ru">
-      <body className={montserrat.variable} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Providers>
           <Header />
           <main>{children}</main>

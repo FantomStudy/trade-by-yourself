@@ -1,10 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "leaflet/dist/leaflet.css";
 
 @theme inline {
   --color-pink: var(--pink);
-  --font-montserrat: var(--font-montserrat);
+  --font-montserrat: "Montserrat", sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
