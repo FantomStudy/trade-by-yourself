@@ -90,7 +90,7 @@ export const AdminSidebar = () => {
     refetchInterval: 15000,
   });
 
-  const { data: productsData } = useProductsToModerate("MODERATE", 1);
+  const { data: productsData } = useProductsToModerate("MANUAL", 1);
 
   const { data: bannersData } = useQuery({
     queryKey: ["admin-sidebar-banners"],
