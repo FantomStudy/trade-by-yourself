@@ -462,7 +462,6 @@ const DealsPage = () => {
                   <Typography variant="h2">
                     Безопасная сделка{" "}
                     <span style={{ fontSize: "14px", fontWeight: "normal", color: "#6b7280" }}>
-                      № {deal.id}
                     </span>
                   </Typography>
                   <span className={styles.badge}>
