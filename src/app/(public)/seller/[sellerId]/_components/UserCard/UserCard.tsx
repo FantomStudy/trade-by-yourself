@@ -2,7 +2,7 @@
 
 import type { ProductUser } from "@/api/products";
 
-import { CircleSmallIcon, MessageSquare, StarIcon } from "lucide-react";
+import { CircleSmallIcon, Flag, MessageSquare, StarIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import { useAuth } from "@/lib/contexts";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui";
 import { ReviewForm } from "@/app/(public)/product/[productId]/_components/review-form";
 import { getUserReviews, type Review } from "@/lib/api/requests/reviews";
+import { ReportUserDialog } from "@/components/ReportUserDialog";
 import { useQuery } from "@tanstack/react-query";
 
 import { PhoneButton } from "./PhoneButton";
@@ -35,6 +36,7 @@ export const UserCard = ({ user, defaultProductId }: UserCardProps) => {
   const [shareLabel, setShareLabel] = useState("Поделиться профилем");
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isReviewsListOpen, setIsReviewsListOpen] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   const { data: reviews = [] } = useQuery({
     queryKey: ["seller-reviews", user.id],
@@ -144,6 +146,14 @@ export const UserCard = ({ user, defaultProductId }: UserCardProps) => {
           <Button variant="outline" onClick={handleShare}>
             {shareLabel}
           </Button>
+          <Button
+            variant="ghost"
+            className="text-gray-500 hover:text-red-600 hover:bg-red-50 text-xs py-2 h-auto flex items-center justify-center gap-1.5"
+            onClick={() => setIsReportOpen(true)}
+          >
+            <Flag className="h-3.5 w-3.5" />
+            Пожаловаться на пользователя
+          </Button>
         </div>
       </div>
 
@@ -187,6 +197,15 @@ export const UserCard = ({ user, defaultProductId }: UserCardProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Диалог жалобы на пользователя */}
+      <ReportUserDialog
+        targetUserId={user.id}
+        targetUserName={user.fullName}
+        productId={defaultProductId}
+        open={isReportOpen}
+        onOpenChange={setIsReportOpen}
+      />
     </>
   );
 };

@@ -2,13 +2,18 @@ import { api } from "../../instance";
 
 import type { SupportTicket } from "./get-my-tickets";
 
-export const createSupportTicket = async (message: string, subject = "Обращение в поддержку") =>
+export const createSupportTicket = async (
+  message: string,
+  subject = "Обращение в поддержку",
+  theme = "OTHER",
+  priority = "MEDIUM"
+) =>
   api<SupportTicket>("/support/tickets", {
     body: {
-      theme: "OTHER",
+      theme,
       subject,
       message,
-      priority: "MEDIUM",
+      priority,
     },
     method: "POST",
   });

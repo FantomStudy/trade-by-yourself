@@ -3,7 +3,7 @@
 import type { Message as SocketMessage } from "@/lib/contexts/chat";
 import type { Message } from "@/types";
 
-import { ArrowLeft, ImageIcon, Send } from "lucide-react";
+import { ArrowLeft, Flag, ImageIcon, Send } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -15,6 +15,7 @@ import { useChatSocket } from "@/lib/contexts";
 import { MODERATION_CENTER_NAME, SUPPORT_CENTER_NAME } from "@/lib/support-display";
 import { resolveChatTitle } from "@/lib/chat-title";
 import { toCurrency } from "@/lib/format";
+import { ReportUserDialog } from "@/components/ReportUserDialog";
 
 const ChatPage = () => {
   const params = useParams<{ chatId: string }>();
@@ -23,6 +24,7 @@ const ChatPage = () => {
   const [message, setMessage] = useState("");
   const [showPhone, setShowPhone] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -231,10 +233,21 @@ const ChatPage = () => {
         </div>
 
         {!isModerationChat ? (
-          <div className="ml-auto">
-            <Button className="bg-blue-500 px-6 hover:bg-blue-600" onClick={handleShowPhone}>
+          <div className="ml-auto flex items-center gap-2">
+            <Button className="bg-blue-500 px-4 hover:bg-blue-600" onClick={handleShowPhone}>
               {showPhone && otherUser?.phoneNumber ? otherUser.phoneNumber : "Показать номер"}
             </Button>
+            {otherUser && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-gray-500 hover:text-red-600 hover:bg-red-50 border-gray-200"
+                title="Пожаловаться на пользователя"
+                onClick={() => setIsReportOpen(true)}
+              >
+                <Flag className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         ) : (
           <div className="ml-auto text-right">
@@ -360,6 +373,16 @@ const ChatPage = () => {
           </Button>
         </div>
       </div>
+
+      {otherUser && (
+        <ReportUserDialog
+          targetUserId={otherUser.id}
+          targetUserName={otherUser.fullName}
+          productId={chat.product?.id}
+          open={isReportOpen}
+          onOpenChange={setIsReportOpen}
+        />
+      )}
     </div>
   );
 };

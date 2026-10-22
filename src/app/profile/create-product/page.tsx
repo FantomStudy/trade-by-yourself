@@ -2,6 +2,7 @@
 
 import type { Category } from "@/types";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -109,6 +110,28 @@ const CreateProductPage = () => {
       return;
     }
 
+    const isExtraPhotos = images.length > 8;
+    const isExtraDesc = (formData.description || "").length > 2000;
+    const isPaidAd = Boolean(
+      (userInfo?.adsLimit && userInfo.adsLimit.remaining <= 0) ||
+        isExtraPhotos ||
+        isExtraDesc
+    );
+    const costPerAd = userInfo?.adsLimit?.costPerAd ?? 50;
+    const totalAvailable = (userInfo?.balance ?? 0) + (userInfo?.bonusBalance ?? 0);
+
+    if (isPaidAd && totalAvailable < costPerAd) {
+      const reason = isExtraPhotos
+        ? "загружено более 8 фото"
+        : isExtraDesc
+        ? "описание более 2000 символов"
+        : "исчерпан бесплатный лимит объявлений";
+      const msg = `Недостаточно средств для платного размещения (${reason}). Требуется: ${costPerAd} ₽, доступно: ${totalAvailable} ₽ (баланс: ${userInfo?.balance ?? 0} ₽, бонусы: ${userInfo?.bonusBalance ?? 0} ₽). Пополните баланс в профиле.`;
+      setError(msg);
+      toast.error(`Недостаточно средств: требуется ${costPerAd} ₽, доступно ${totalAvailable} ₽. Пополните баланс в профиле.`);
+      return;
+    }
+
     try {
       const data = (await createProductMutation.mutateAsync({
         name: formData.name,
@@ -136,9 +159,9 @@ const CreateProductPage = () => {
       }
 
       const limit = userInfo?.adsLimit;
-      if (limit && limit.remaining <= 0) {
+      if (isPaidAd) {
         toast.success(
-          `Объявление отправлено на модерацию. Списано ${limit.costPerAd} ₽ (сначала бонусы, затем баланс).`,
+          `Объявление отправлено на модерацию. Списано ${costPerAd} ₽ (сначала бонусы, затем баланс).`,
         );
       } else if (limit && limit.remaining === 1) {
         toast.success("Объявление отправлено на модерацию. Это последнее бесплатное объявление в этом месяце.");
@@ -274,20 +297,51 @@ const CreateProductPage = () => {
       <div className={styles.wrapper}>
         <h1 className={styles.purple}>Создание объявления</h1>
         {userInfo?.adsLimit ? (
-          <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-            Бесплатных объявлений в этом месяце:{" "}
-            <strong>
-              {userInfo.adsLimit.remaining}/{userInfo.adsLimit.total}
-            </strong>
-            {userInfo.adsLimit.remaining <= 0 ? (
-              <>
-                {" "}
-                — следующее объявление стоит <strong>{userInfo.adsLimit.costPerAd} ₽</strong> (списание
-                сначала с бонусов, затем с баланса).
-              </>
-            ) : userInfo.adsLimit.remaining === 1 ? (
-              <> — после этого объявления платные размещения по {userInfo.adsLimit.costPerAd} ₽.</>
-            ) : null}
+          <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 space-y-1.5">
+            <div>
+              Бесплатных объявлений в этом месяце:{" "}
+              <strong>
+                {userInfo.adsLimit.remaining}/{userInfo.adsLimit.total}
+              </strong>
+              {userInfo.adsLimit.remaining <= 0 ? (
+                <>
+                  {" "}
+                  — следующее объявление стоит <strong>{userInfo.adsLimit.costPerAd} ₽</strong> (списание
+                  сначала с бонусов, затем с баланса).
+                </>
+              ) : userInfo.adsLimit.remaining === 1 ? (
+                <> — после этого объявления платные размещения по {userInfo.adsLimit.costPerAd} ₽.</>
+              ) : null}
+            </div>
+            {images.length > 8 && (
+              <div className="text-amber-800 font-medium pt-1">
+                📸 Загружено {images.length} фото (более 8 фото — платное размещение{" "}
+                <strong>{userInfo.adsLimit.costPerAd} ₽</strong>, списывается с бонусов или баланса).
+              </div>
+            )}
+            {formData.description.length > 2000 && (
+              <div className="text-amber-800 font-medium pt-1">
+                📝 Описание длиннее 2000 символов ({formData.description.length} знаков) — платное размещение{" "}
+                <strong>{userInfo.adsLimit.costPerAd} ₽</strong>.
+              </div>
+            )}
+            {((userInfo.adsLimit.remaining <= 0) || images.length > 8 || formData.description.length > 2000) && (
+              <div
+                className={`pt-1 text-xs ${
+                  (userInfo.balance ?? 0) + (userInfo.bonusBalance ?? 0) < userInfo.adsLimit.costPerAd
+                    ? "text-red-600 font-semibold"
+                    : "text-gray-600"
+                }`}
+              >
+                Доступно: {(userInfo.balance ?? 0) + (userInfo.bonusBalance ?? 0)} ₽ (баланс:{" "}
+                {userInfo.balance ?? 0} ₽, бонусы: {userInfo.bonusBalance ?? 0} ₽).
+                {(userInfo.balance ?? 0) + (userInfo.bonusBalance ?? 0) < userInfo.adsLimit.costPerAd && (
+                  <Link href="/profile/balance" className="ml-2 font-bold underline text-blue-600 hover:text-blue-800">
+                    Пополнить баланс →
+                  </Link>
+                )}
+              </div>
+            )}
           </div>
         ) : null}
         <label className={styles.fieldLabel} htmlFor="name">
@@ -511,6 +565,19 @@ const CreateProductPage = () => {
       </div>
 
       {error && <div className={styles.error}>{error}</div>}
+
+      {((userInfo?.adsLimit && userInfo.adsLimit.remaining <= 0) || images.length > 8 || formData.description.length > 2000) &&
+        (userInfo?.balance ?? 0) + (userInfo?.bonusBalance ?? 0) < (userInfo?.adsLimit?.costPerAd ?? 50) && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 flex items-center justify-between">
+            <span>
+              ⚠️ Недостаточно средств для платного размещения (доступно:{" "}
+              {(userInfo?.balance ?? 0) + (userInfo?.bonusBalance ?? 0)} ₽ из {userInfo?.adsLimit?.costPerAd ?? 50} ₽).
+            </span>
+            <Link href="/profile/balance" className="font-semibold underline text-red-900 hover:text-red-700">
+              Пополнить баланс →
+            </Link>
+          </div>
+        )}
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button

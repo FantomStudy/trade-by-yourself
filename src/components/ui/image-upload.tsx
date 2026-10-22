@@ -166,13 +166,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               tabIndex={0}
               onClick={() => {
                 setMaxAllowed(15);
-                toast.success("Лимит расширен до 15 фотографий!");
+                toast.success("Лимит расширен до 15 фото. Размещение свыше 8 фото стоит 50 ₽ (списание с бонусов или баланса).");
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
                   setMaxAllowed(15);
-                  toast.success("Лимит расширен до 15 фотографий!");
+                  toast.success("Лимит расширен до 15 фото. Размещение свыше 8 фото стоит 50 ₽ (списание с бонусов или баланса).");
                 }
               }}
               role="button"
@@ -182,7 +182,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 + До 15 фото
               </span>
               <span className="text-[10px] text-amber-700 leading-tight">
-                Платный пакет: расширить лимит фото
+                50 ₽ при публикации (с бонусов / баланса)
               </span>
             </div>
           )}

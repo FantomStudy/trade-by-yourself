@@ -7,7 +7,8 @@ import { toast } from "sonner";
 import { Input, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { addPromotion, getCurrentUserProducts } from "@/lib/api";
-import { useCurrentUser } from "@/lib/api/hooks/queries";
+import { useCurrentUser, useUserInfo } from "@/lib/api/hooks/queries";
+import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api/instance";
 
 import { ProductSelector } from "./_components";
@@ -19,7 +20,13 @@ interface Promotion {
 }
 
 const PromotionPage = () => {
+  const queryClient = useQueryClient();
   const { data: currentUser } = useCurrentUser();
+  const { data: userInfo } = useUserInfo(currentUser?.id);
+
+  const mainBalance = userInfo?.balance ?? currentUser?.balance ?? 0;
+  const bonusBalance = userInfo?.bonusBalance ?? currentUser?.bonusBalance ?? 0;
+  const totalAvailable = mainBalance + bonusBalance;
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -112,10 +119,9 @@ const PromotionPage = () => {
 
     const promo = promotions.find((p) => p.id === selectedPromotionId);
     const requiredCost = (promo?.pricePerDay || 0) * daysNum;
-    const availableBal = (currentUser?.balance || 0) + (currentUser?.bonusBalance || 0);
 
-    if (requiredCost > availableBal) {
-      toast.error(`Недостаточно средств. Требуется: ${requiredCost} ₽, доступно: ${availableBal} ₽. Пополните баланс в профиле.`);
+    if (requiredCost > totalAvailable) {
+      toast.error(`Недостаточно средств. Требуется: ${requiredCost} ₽, доступно: ${totalAvailable} ₽ (баланс: ${mainBalance} ₽, бонусы: ${bonusBalance} ₽). Пополните баланс в профиле.`);
       return;
     }
 
@@ -127,6 +133,7 @@ const PromotionPage = () => {
         days: daysNum,
       });
       toast.success("Продвижение успешно активировано!");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       closeModals();
     } catch (error: any) {
       console.error("Ошибка активации продвижения:", error);
@@ -279,15 +286,15 @@ const PromotionPage = () => {
                         </span>
                         {currentUser && (
                           <span className="ml-2 text-gray-500">
-                            (Доступно на балансе: {(currentUser.balance || 0) + (currentUser.bonusBalance || 0)} ₽)
+                            (Доступно на балансе: {totalAvailable} ₽
+                            {bonusBalance > 0 ? ` · в т.ч. бонусы: ${bonusBalance} ₽` : ""})
                           </span>
                         )}
                       </p>
                       {(() => {
                         const promo = promotions.find((p) => p.id === selectedPromotionId);
                         const cost = (promo?.pricePerDay || 0) * (Number.parseInt(days, 10) || 0);
-                        const avail = (currentUser?.balance || 0) + (currentUser?.bonusBalance || 0);
-                        if (cost > avail) {
+                        if (cost > totalAvailable) {
                           return (
                             <p className="text-xs text-red-600 font-medium">
                               ⚠️ Недостаточно средств на балансе. Для активации пополните баланс в профиле.
