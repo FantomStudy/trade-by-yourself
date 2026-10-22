@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Check, Star, X } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -60,8 +60,10 @@ const ReviewsPage = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "";
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
     return date.toLocaleDateString("ru-RU", {
       day: "2-digit",
       month: "2-digit",
@@ -117,11 +119,11 @@ const ReviewsPage = () => {
                 <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
                   <div>
                     <Typography className="mb-1 text-sm text-gray-500">Автор</Typography>
-                    <Typography className="font-semibold">{review.reviewedBy.fullName}</Typography>
+                    <Typography className="font-semibold">{review.reviewedBy?.fullName || "—"}</Typography>
                   </div>
                   <div>
                     <Typography className="mb-1 text-sm text-gray-500">Получатель</Typography>
-                    <Typography className="font-semibold">{review.reviewedUser.fullName}</Typography>
+                    <Typography className="font-semibold">{review.reviewedUser?.fullName || "—"}</Typography>
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <Typography className="mb-1 text-xs text-gray-400">{formatDate(review.createdAt)}</Typography>

@@ -99,7 +99,7 @@ export const AdminSidebar = () => {
   });
 
   const supportCount = (supportTicketsData?.tickets ?? []).filter(
-    (t) => t.status === "OPEN" || t.status === "IN_PROGRESS",
+    (t) => (t.unreadCount ?? 0) > 0 || t.status === "OPEN",
   ).length;
 
   const dealsCount = (dealsData ?? []).filter(

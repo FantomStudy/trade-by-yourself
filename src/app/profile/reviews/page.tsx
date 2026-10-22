@@ -13,11 +13,15 @@ export default function ProfileReviewsPage() {
   const { user } = useAuth();
   const { data: userInfo } = useUserInfo(user?.id);
 
-  const { data: reviews = [], isLoading } = useQuery({
+  const { data: rawReviews, isLoading } = useQuery({
     queryKey: ["user-reviews", user?.id],
     queryFn: () => (user?.id ? getUserReviews(user.id) : Promise.resolve([])),
     enabled: Boolean(user?.id),
   });
+
+  const reviews = Array.isArray(rawReviews)
+    ? rawReviews
+    : ((rawReviews as any)?.reviews as typeof rawReviews) ?? [];
 
   return (
     <div className="space-y-6">
@@ -69,48 +73,54 @@ export default function ProfileReviewsPage() {
             </p>
           </div>
         ) : (
-          reviews.map((review) => (
-            <div
-              key={review.id}
-              className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm space-y-3 transition-shadow hover:shadow-md"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar
-                    src={review.reviewer?.photo ?? ""}
-                    fallback={review.reviewer?.fullName?.[0] || "П"}
-                  />
-                  <div>
-                    <p className="font-semibold text-gray-900">
-                      {review.reviewer?.fullName || "Пользователь"}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      {new Date(review.createdAt).toLocaleDateString("ru-RU", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </p>
+          reviews.map((review, idx) => {
+            const reviewerName = review.reviewer?.fullName || (review as any).fullName || "Пользователь";
+            const d = review.createdAt ? new Date(review.createdAt) : null;
+            const dateStr = d && !isNaN(d.getTime())
+              ? d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })
+              : ((review as any).date || "");
+
+            return (
+              <div
+                key={review.id ?? `review-${idx}`}
+                className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm space-y-3 transition-shadow hover:shadow-md"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar
+                      src={review.reviewer?.photo ?? ""}
+                      fallback={reviewerName[0] || "П"}
+                    />
+                    <div>
+                      <p className="font-semibold text-gray-900">
+                        {reviewerName}
+                      </p>
+                      {dateStr ? (
+                        <p className="text-xs text-gray-400">
+                          {dateStr}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1 text-amber-400">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`h-4 w-4 ${
+                          star <= review.rating ? "fill-current text-amber-400" : "text-gray-200"
+                        }`}
+                      />
+                    ))}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 text-amber-400">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`h-4 w-4 ${
-                        star <= review.rating ? "fill-current text-amber-400" : "text-gray-200"
-                      }`}
-                    />
-                  ))}
-                </div>
+                <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+                  {review.text}
+                </p>
               </div>
-
-              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
-                {review.text}
-              </p>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

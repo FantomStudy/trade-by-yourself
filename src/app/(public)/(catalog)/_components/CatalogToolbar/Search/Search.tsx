@@ -2,19 +2,24 @@
 
 import type { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/lab/Input";
 import styles from "./Search.module.css";
 
 export const Search = () => {
-  const [search, setSearch] = useState("");
-
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const urlQuery = searchParams.get("search") ?? "";
+  const [search, setSearch] = useState(urlQuery);
+
+  useEffect(() => {
+    setSearch(searchParams.get("search") ?? "");
+  }, [searchParams]);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const params = new URLSearchParams(searchParams.toString());

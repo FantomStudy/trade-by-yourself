@@ -32,6 +32,7 @@ export interface SupportTicket {
     authorId: number;
     author: SupportTicketUser;
   } | null;
+  unreadCount?: number;
   messages?: SupportTicketMessage[];
 }
 

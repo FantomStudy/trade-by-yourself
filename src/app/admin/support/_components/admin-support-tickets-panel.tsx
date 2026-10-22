@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, Send } from "lucide-react";
+import { CheckCheck, MessageSquare, Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -34,6 +34,7 @@ export function AdminSupportTicketsPanel() {
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [messages, setMessages] = useState<SupportTicketMessage[]>([]);
+  const [readTicketIds, setReadTicketIds] = useState<Set<number>>(new Set());
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -154,6 +155,7 @@ export function AdminSupportTicketsPanel() {
   const openTicket = async (ticketId: number) => {
     selectedIdRef.current = ticketId;
     setSelectedId(ticketId);
+    setReadTicketIds((prev) => new Set(prev).add(ticketId));
     setMessages([]);
     // Джойним WS-рум
     if (wsRef.current) tryJoin(wsRef.current);
@@ -210,23 +212,48 @@ export function AdminSupportTicketsPanel() {
           {tickets.length === 0 ? (
             <p className="p-4 text-sm text-gray-500">Обращений пока нет</p>
           ) : (
-            tickets.map((ticket) => (
-              <button
-                key={ticket.id}
-                type="button"
-                className={`block w-full border-b p-3 text-left hover:bg-gray-50 ${
-                  selectedId === ticket.id ? "bg-purple-50" : ""
-                }`}
-                onClick={() => void openTicket(ticket.id)}
-              >
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4 text-purple-600" />
-                  <span className="truncate font-medium">{ticket.user?.fullName ?? "Пользователь"}</span>
-                </div>
-                <p className="mt-1 truncate text-xs text-gray-500">{fixMojibake(ticket.subject)}</p>
-                <p className="text-xs text-gray-400">{ticket.status}</p>
-              </button>
-            ))
+            tickets.map((ticket) => {
+              const unread = readTicketIds.has(ticket.id) ? 0 : (ticket.unreadCount ?? 0);
+              const lastMsgIsStaff = ticket.lastMessage
+                ? isSupportStaff(ticket.lastMessage.author?.role?.name) || ticket.lastMessage.authorId !== ticket.userId
+                : false;
+
+              return (
+                <button
+                  key={ticket.id}
+                  type="button"
+                  className={`block w-full border-b p-3 text-left transition-colors hover:bg-gray-50 ${
+                    selectedId === ticket.id ? "bg-purple-50" : ""
+                  }`}
+                  onClick={() => void openTicket(ticket.id)}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <MessageSquare className="h-4 w-4 shrink-0 text-purple-600" />
+                      <span className="truncate font-medium text-sm text-gray-900">
+                        {ticket.user?.fullName ?? "Пользователь"}
+                      </span>
+                    </div>
+                    {unread > 0 && (
+                      <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-purple-600 px-1.5 text-[11px] font-bold text-white shadow-sm">
+                        {unread}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-1 flex items-center justify-between gap-1 text-xs text-gray-500">
+                    <p className="truncate flex items-center gap-1 min-w-0 flex-1">
+                      {lastMsgIsStaff && (
+                        <CheckCheck className="inline h-3.5 w-3.5 shrink-0 text-blue-500" />
+                      )}
+                      <span className="truncate">{fixMojibake(ticket.lastMessage?.text || ticket.subject)}</span>
+                    </p>
+                    <span className="shrink-0 text-[10px] text-gray-400">
+                      {ticket.status}
+                    </span>
+                  </div>
+                </button>
+              );
+            })
           )}
         </div>
 
@@ -248,12 +275,17 @@ export function AdminSupportTicketsPanel() {
                         <div className={styles.message}>
                           <p className="text-xs text-gray-500">{msg.author?.fullName}</p>
                           <p className={styles.messageContent}>{fixMojibake(msg.text)}</p>
-                          <span className={styles.messageTime}>
-                            {new Date(msg.sentAt).toLocaleTimeString("ru-RU", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </span>
+                          <div className={styles.messageTime}>
+                            <span>
+                              {new Date(msg.sentAt).toLocaleTimeString("ru-RU", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                            {fromStaff && (
+                              <CheckCheck className="inline h-3.5 w-3.5 shrink-0 text-white/90" />
+                            )}
+                          </div>
                         </div>
                       </div>
                     );

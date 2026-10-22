@@ -51,8 +51,9 @@ export const BannerModerationList = () => {
     try {
       setActionId(id);
       await api(`/banner/moderate/${id}`, {
-        method: "PATCH",
-        body: { status },
+        method: "PUT",
+        query: { status },
+        body: JSON.stringify({ status }),
       });
       toast.success(status === "APPROVED" ? "Баннер одобрен и опубликован!" : "Баннер отклонён");
       await loadQueue();

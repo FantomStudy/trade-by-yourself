@@ -25,8 +25,12 @@ export interface Review {
 
 export const getReviews = async () => api<Review[]>("/review/all-reviews");
 
-export const getUserReviews = async (userId: number) =>
-  api<Review[]>(`/review/user-reviews/${userId}`);
+export const getUserReviews = async (userId: number): Promise<Review[]> => {
+  const res = await api<any>(`/review/user-reviews/${userId}`);
+  if (Array.isArray(res)) return res;
+  if (res && Array.isArray(res.reviews)) return res.reviews;
+  return [];
+};
 
 export const sendReview = async (data: SendReviewDto) =>
   api<Review>("/review/send-review", {

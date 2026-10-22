@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { Category } from "@/types";
 
@@ -481,10 +481,6 @@ const CreateProductPage = () => {
         onImagesChange={handleImagesChange}
         onValidationError={setError}
       />
-      <p className={styles.fieldHint}>Бесплатно: до 8 фото, платное: до 15 фото</p>
-      <p className={styles.fieldHint}>
-        Не загружайте слишком узкие вертикальные фото и слишком широкие панорамы.
-      </p>
       {submitAttempted && requiredValidation.images ? (
         <div className={styles.invalidHint}>Добавьте хотя бы одно изображение</div>
       ) : null}
