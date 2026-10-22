@@ -32,7 +32,8 @@
 }
 
 .fieldLabel {
-  margin-bottom: -12px;
+  display: block;
+  margin-bottom: 6px;
   font-size: 14px;
   font-weight: 500;
   color: #374151;
@@ -78,11 +79,12 @@
 .invalidHint {
   font-size: 13px;
   color: #dc2626;
-  margin-top: -8px;
+  margin-top: 6px;
 }
 
 .fieldHint {
   font-size: 13px;
   color: #6b7280;
-  margin-top: -10px;
+  margin-top: 6px;
+  line-height: 1.4;
 }
