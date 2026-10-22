@@ -39,7 +39,7 @@ export const formatCardAddress = (address?: string | null): string => {
   const trimmed = address.trim();
   if (!trimmed) return "";
 
-  const isRegionWord = /(?:область|обл\.|край|республика|респ\.|автономный округ)\b/i;
+  const isRegionWord = /(?:область|обл\b|обл\.|край|республик|автономн)/i;
   const cleanRegion = (val: string) => val.replace(/^(?:г\.?|город)\s*/i, "").trim();
 
   const parts = trimmed
@@ -56,12 +56,12 @@ export const formatCardAddress = (address?: string | null): string => {
     return single;
   }
 
-  const isHouseOrNumber = /^(\d+|д\.|дом\b|двлд\b|вл\b|влад\b|корп\b|к\.|стр\b|строение\b|кв\.|помещение|литер)/i;
+  const isHouseOrNumber = /^(\d+|д\.|дом|двлд|вл|влад|корп|к\.|стр|строение|кв\.|помещение|литер)/i;
   const isPostcode = /^\d{5,6}$/;
   const isCountry = /^(россия|рф|российская федерация|russia|соединённые штаты америки|usa)$/i;
   const isStreet =
-    /(?:^|\s)(ул\.|улица|просп\.|проспект|пр-кт|пр\.|пер\.|переулок|проезд|шоссе|ш\.|тупик|наб\.|набережная|бульвар|бул\.|б-р|тракт|аллея|линия|квартал|микрорайон|мкр-н|мкр)\b/i;
-  const isDistrictOnly = /(?:район|р-н|поселение|федеральный округ)$/i;
+    /(?:^|\s)(ул\.|улица|просп\.|проспект|пр-кт|пр\.|пер\.|переулок|проезд|шоссе|ш\.|тупик|наб\.|набережная|бульвар|бул\.|б-р|тракт|аллея|линия|квартал|микрорайон|мкр-н|мкр)(?:\s|[.,]|$)/i;
+  const isDistrictOnly = /(?:район|р-н|поселение|федеральный округ)(?:\s|[.,]|$)/i;
 
   // 1. Прямой поиск префикса города: "г Самара", "г. Оренбург", "город Уфа"
   for (const part of parts) {
