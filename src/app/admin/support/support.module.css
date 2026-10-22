@@ -112,6 +112,33 @@
   background-color: white;
   border-top: 1px solid #e5e7eb;
   flex-shrink: 0;
+  align-items: flex-end;
+}
+
+.attachButton {
+  flex-shrink: 0;
+  height: 2.5rem;
+  width: 2.5rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.attachButton:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.attachButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .textarea {

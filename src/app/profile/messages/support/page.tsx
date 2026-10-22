@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Headphones, Send } from "lucide-react";
+import { ArrowLeft, Headphones, Image as ImageIcon, Send } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -15,7 +15,12 @@ import {
 import type { SupportTicketMessage } from "@/lib/api/requests";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { fixMojibake } from "@/lib/fix-mojibake";
-import { SUPPORT_CENTER_NAME, isSupportStaffRole, supportAuthorLabel } from "@/lib/support-display";
+import {
+  SUPPORT_CENTER_NAME,
+  isImageMessage,
+  isSupportStaffRole,
+  supportAuthorLabel,
+} from "@/lib/support-display";
 import {
   createSupportSocket,
   parseSupportSocketMessage,
@@ -34,11 +39,43 @@ const SupportChatPage = () => {
   const [sending, setSending] = useState(false);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ticketIdRef = useRef<number | null>(null);
   const isUnmountedRef = useRef(false);
   const lastMsgCountRef = useRef(0);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Изображение не должно превышать 5 МБ");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async () => {
+      if (typeof reader.result === "string") {
+        const dataUrl = reader.result;
+        setSending(true);
+        try {
+          if (ticketId == null) {
+            const created = await createSupportTicket(dataUrl);
+            await loadTicket(created.id);
+          } else {
+            await sendSupportTicketMessage(ticketId, dataUrl);
+            await loadTicket(ticketId);
+          }
+        } catch (error) {
+          toast.error(getApiErrorMessage(error, "Не удалось отправить изображение"));
+        } finally {
+          setSending(false);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Скролл контейнера сообщений. force=true — всегда (при первой загрузке).
   const scrollToBottom = useCallback((force = false) => {
@@ -236,6 +273,7 @@ const SupportChatPage = () => {
               const fromStaff = isSupportStaffRole(msg.author?.role?.name);
               const isFromUser = !fromStaff;
               const authorLabel = supportAuthorLabel(msg.author?.role?.name, msg.author?.fullName);
+              const isImg = isImageMessage(msg.text);
               return (
                 <div
                   key={msg.id}
@@ -245,7 +283,22 @@ const SupportChatPage = () => {
                     {!isFromUser ? (
                       <p className="mb-1 text-xs font-medium text-purple-700">{authorLabel}</p>
                     ) : null}
-                    <p className={styles.messageContent}>{fixMojibake(msg.text)}</p>
+                    {isImg ? (
+                      <a
+                        href={msg.text}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block max-w-xs overflow-hidden rounded-lg my-1"
+                      >
+                        <img
+                          src={msg.text}
+                          alt="Вложение"
+                          className="max-h-60 rounded-lg object-contain bg-black/5"
+                        />
+                      </a>
+                    ) : (
+                      <p className={styles.messageContent}>{fixMojibake(msg.text)}</p>
+                    )}
                     <span className={styles.messageTime}>
                       {new Date(msg.sentAt).toLocaleTimeString("ru-RU", {
                         hour: "2-digit",
@@ -261,6 +314,22 @@ const SupportChatPage = () => {
       </div>
 
       <div className={styles.inputContainer}>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleImageUpload}
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={sending}
+          className={styles.attachButton}
+          title="Прикрепить изображение"
+        >
+          <ImageIcon className="h-5 w-5" />
+        </button>
         <textarea
           className={styles.textarea}
           value={message}
