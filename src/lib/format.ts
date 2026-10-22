@@ -39,13 +39,22 @@ export const formatCardAddress = (address?: string | null): string => {
   const trimmed = address.trim();
   if (!trimmed) return "";
 
+  const isRegionWord = /(?:область|обл\.|край|республика|респ\.|автономный округ)\b/i;
+  const cleanRegion = (val: string) => val.replace(/^(?:г\.?|город)\s*/i, "").trim();
+
   const parts = trimmed
     .split(",")
     .map((p) => p.trim())
     .filter(Boolean);
 
   if (parts.length === 0) return "";
-  if (parts.length === 1) return parts[0];
+  if (parts.length === 1) {
+    const single = parts[0];
+    if (isRegionWord.test(single)) {
+      return cleanRegion(single);
+    }
+    return single;
+  }
 
   const isHouseOrNumber = /^(\d+|д\.|дом\b|двлд\b|вл\b|влад\b|корп\b|к\.|стр\b|строение\b|кв\.|помещение|литер)/i;
   const isPostcode = /^\d{5,6}$/;
@@ -58,7 +67,11 @@ export const formatCardAddress = (address?: string | null): string => {
   for (const part of parts) {
     const cityMatch = part.match(/^(?:г\.?|город)\s+([А-Яа-яA-Za-z0-9\-–\s]+)$/i);
     if (cityMatch) {
-      return `г. ${cityMatch[1].trim()}`;
+      const name = cityMatch[1].trim();
+      if (isRegionWord.test(name)) {
+        return cleanRegion(name);
+      }
+      return `г. ${name}`;
     }
   }
 
@@ -79,7 +92,7 @@ export const formatCardAddress = (address?: string | null): string => {
     }
   }
 
-  // 4. Анализ длинных адресов (Nominatim / DaData) с конца к началу (от уровня региона/города к улице)
+  // 4. Анализ длинных адресов (Nominatim / DaData) с конца к началу
   let cityCandidate = "";
   let regionCandidate = "";
 
@@ -96,9 +109,9 @@ export const formatCardAddress = (address?: string | null): string => {
       continue;
     }
 
-    if (/(?:область|обл\.|край|республика|респ\.|автономный округ)\b/i.test(part)) {
+    if (isRegionWord.test(part)) {
       if (!regionCandidate) {
-        regionCandidate = part;
+        regionCandidate = cleanRegion(part);
       }
       continue;
     }
@@ -115,18 +128,30 @@ export const formatCardAddress = (address?: string | null): string => {
     }
 
     if (!cityCandidate && /^[А-Яа-яA-Za-z0-9\-–\s]+$/.test(part)) {
-      cityCandidate = part.replace(/^г\.?\s*/i, "").trim();
+      const candidate = part.replace(/^г\.?\s*/i, "").trim();
+      if (isRegionWord.test(candidate)) {
+        if (!regionCandidate) regionCandidate = cleanRegion(candidate);
+      } else {
+        cityCandidate = candidate;
+      }
     }
   }
 
   if (cityCandidate) {
+    if (isRegionWord.test(cityCandidate)) {
+      return cleanRegion(cityCandidate);
+    }
     return `г. ${cityCandidate}`;
   }
 
   if (regionCandidate) {
-    return regionCandidate;
+    return cleanRegion(regionCandidate);
   }
 
   const fallback = parts.find((p) => !isHouseOrNumber.test(p) && !isPostcode.test(p) && !isCountry.test(p));
-  return fallback || parts[0];
+  const res = fallback || parts[0];
+  if (isRegionWord.test(res)) {
+    return cleanRegion(res);
+  }
+  return res;
 };

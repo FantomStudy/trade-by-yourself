@@ -156,16 +156,17 @@ export const MyProductsTabs = ({
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-2">
+      {/* Вкладки на всю ширину */}
+      <div className="border-b border-gray-200">
         <div
-          className="flex flex-wrap gap-2"
+          className="flex flex-wrap items-center gap-1 sm:gap-2"
           role="tablist"
           aria-label="Мои объявления"
         >
           {(Object.keys(TAB_LABELS) as MyProductsTab[]).map((key) => (
             <button
               key={key}
-              className={`px-3 py-2 text-sm font-medium transition-colors ${
+              className={`px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap ${
                 tab === key
                   ? "border-b-2 border-blue-600 text-blue-600 font-semibold"
                   : "text-gray-600 hover:text-gray-900"
@@ -184,10 +185,13 @@ export const MyProductsTabs = ({
             </button>
           ))}
         </div>
+      </div>
 
-        <div className="flex items-center gap-2">
-          {tab === "hidden" && filtered.length > 0 && (
-            <div className="flex items-center gap-2">
+      {/* Панель действий: кнопки реактивации и поиск */}
+      {((tab === "hidden" && filtered.length > 0) || current.length > 0 || searchQuery) && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {tab === "hidden" && filtered.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 size="sm"
                 variant="outline"
@@ -221,16 +225,18 @@ export const MyProductsTabs = ({
                 </Button>
               )}
             </div>
+          ) : (
+            <div />
           )}
 
           {(current.length > 0 || searchQuery) && (
-            <div className="relative min-w-[200px] max-w-xs">
+            <div className="relative min-w-[200px] max-w-xs ml-auto">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Поиск по объявлениям..."
-                className="w-full rounded-md border border-gray-300 px-3 py-1 text-xs focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-xs focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {searchQuery && (
                 <button
@@ -244,7 +250,7 @@ export const MyProductsTabs = ({
             </div>
           )}
         </div>
-      </div>
+      )}
 
       {current.length === 0 ? (
         <div className="flex min-h-[320px] flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-sm">
