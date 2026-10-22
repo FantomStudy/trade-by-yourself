@@ -10,6 +10,18 @@ import { resolveChatTitle } from "@/lib/chat-title";
 import { toCurrency } from "@/lib/format";
 import { MODERATION_CENTER_NAME, SUPPORT_CENTER_NAME } from "@/lib/support-display";
 
+function formatLastMessage(content?: string | null): string {
+  if (!content) return "";
+  const trimmed = content.trim();
+  if (
+    trimmed.startsWith("data:image/") ||
+    /^(https?:\/\/|\/uploads\/).*\.(png|jpg|jpeg|webp|gif)(\?.*)?$/i.test(trimmed)
+  ) {
+    return "📷 Изображение";
+  }
+  return trimmed;
+}
+
 function SupportPreviewCard({
   lastMessage,
   hasStaffReply,
@@ -20,30 +32,30 @@ function SupportPreviewCard({
   return (
     <Link
       href="/profile/messages/support"
-      className="block rounded-lg border-2 border-purple-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+      className="block rounded-lg border-2 border-purple-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md overflow-hidden"
     >
       <div className="mb-2 flex items-start gap-3">
         <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-md bg-purple-100">
           <MessageSquare className="h-8 w-8 text-purple-600" />
         </div>
-        <div className="flex-1">
-          <h3 className="font-semibold">{SUPPORT_CENTER_NAME}</h3>
-          <p className="text-sm text-purple-600">Единый центр обращений — не личная переписка</p>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold truncate">{SUPPORT_CENTER_NAME}</h3>
+          <p className="text-sm text-purple-600 truncate">Единый центр обращений — не личная переписка</p>
         </div>
       </div>
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2 min-w-0">
         <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-purple-500 text-xs font-medium text-white">
           ТП
         </div>
         {lastMessage ? (
-          <p className="flex-1 text-sm text-gray-600">
-            <span className="line-clamp-2">{lastMessage}</span>
+          <p className="flex-1 min-w-0 text-sm text-gray-600 truncate break-all">
+            <span>{formatLastMessage(lastMessage)}</span>
           </p>
         ) : (
-          <p className="flex-1 text-sm text-gray-400">Напишите вопрос — ответит {SUPPORT_CENTER_NAME}</p>
+          <p className="flex-1 min-w-0 text-sm text-gray-400">Напишите вопрос — ответит {SUPPORT_CENTER_NAME}</p>
         )}
         {hasStaffReply ? (
-          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-500 text-xs text-white">
+          <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-purple-500 text-xs text-white">
             1
           </div>
         ) : null}
@@ -88,12 +100,12 @@ const MessagesPage = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-full overflow-hidden">
       <h1 className="text-2xl font-bold">Сообщения</h1>
 
       <BannerSlot place="CHATS" />
 
-      <div className="space-y-2">
+      <div className="space-y-2 max-w-full">
         <SupportPreviewCard
           hasStaffReply={supportPreview.hasStaffReply}
           lastMessage={supportPreview.text}
@@ -103,19 +115,21 @@ const MessagesPage = () => {
           <Link
             key={chat.id}
             href={`/profile/messages/${chat.id}` as "/profile/messages/1"}
-            className="block rounded-lg border border-amber-200 bg-amber-50/40 p-4 shadow-sm transition-shadow hover:shadow-md"
+            className="block rounded-lg border border-amber-200 bg-amber-50/40 p-4 shadow-sm transition-shadow hover:shadow-md overflow-hidden"
           >
             <div className="mb-2 flex items-start gap-3">
               <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md bg-amber-100">
                 <MessageSquare className="h-8 w-8 text-amber-700" />
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold">{MODERATION_CENTER_NAME}</h3>
-                <p className="text-sm text-amber-800">Уведомления по объявлениям</p>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold truncate">{MODERATION_CENTER_NAME}</h3>
+                <p className="text-sm text-amber-800 truncate">Уведомления по объявлениям</p>
               </div>
             </div>
             {chat.lastMessage ? (
-              <p className="line-clamp-2 text-sm text-gray-700">{chat.lastMessage.content}</p>
+              <p className="line-clamp-2 min-w-0 break-all text-sm text-gray-700">
+                {formatLastMessage(chat.lastMessage.content)}
+              </p>
             ) : null}
           </Link>
         ))}
@@ -152,7 +166,7 @@ const MessagesPage = () => {
               <Link
                 href={`/profile/messages/${chat.id}` as "/profile/messages/1"}
                 key={chat.id}
-                className="block rounded-lg bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+                className="block rounded-lg bg-white p-4 shadow-sm transition-shadow hover:shadow-md overflow-hidden"
               >
                 <div className="mb-2 flex items-start gap-3">
                   {chat.product?.image ? (
@@ -164,8 +178,8 @@ const MessagesPage = () => {
                       />
                     </div>
                   ) : null}
-                  <div className="flex-1">
-                    <h3 className="font-semibold">{chatTitle}</h3>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold truncate">{chatTitle}</h3>
                     {chat.product?.price != null ? (
                       <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
                     ) : null}
@@ -182,20 +196,20 @@ const MessagesPage = () => {
                     ) : null}
                   </div>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2 min-w-0">
                   <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-500 text-xs font-medium text-white">
                     {initials}
                   </div>
                   {chat.lastMessage ? (
-                    <p className="flex-1 text-sm text-gray-600">
-                      <span className="font-medium text-gray-800">{companion.fullName}:</span>{" "}
-                      <span className="line-clamp-2">{chat.lastMessage.content}</span>
+                    <p className="flex-1 min-w-0 text-sm text-gray-600 truncate break-all">
+                      <span className="font-medium text-gray-800 shrink-0">{companion.fullName}:</span>{" "}
+                      <span>{formatLastMessage(chat.lastMessage.content)}</span>
                     </p>
                   ) : (
-                    <p className="flex-1 text-sm text-gray-400">Нет сообщений</p>
+                    <p className="flex-1 min-w-0 text-sm text-gray-400">Нет сообщений</p>
                   )}
                   {chat.unreadCount && chat.unreadCount > 0 ? (
-                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-xs text-white">
+                    <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs text-white">
                       {chat.unreadCount}
                     </div>
                   ) : null}

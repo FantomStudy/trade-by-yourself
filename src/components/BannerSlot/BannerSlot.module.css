@@ -3,6 +3,7 @@
   display: block;
   overflow: hidden;
   border-radius: var(--radius);
+  background-color: #f3f4f6;
 }
 
 .banner[data-place="FAVORITES"] {
