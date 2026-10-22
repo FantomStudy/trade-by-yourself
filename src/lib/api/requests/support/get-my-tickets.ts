@@ -30,7 +30,7 @@ export interface SupportTicket {
     text: string;
     sentAt: string;
     authorId: number;
-    author: SupportTicketUser;
+    author: SupportTicketUser & { role?: { name: string } | null };
   } | null;
   unreadCount?: number;
   messages?: SupportTicketMessage[];

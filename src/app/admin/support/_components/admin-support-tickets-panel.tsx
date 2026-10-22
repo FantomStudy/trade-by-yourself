@@ -215,7 +215,8 @@ export function AdminSupportTicketsPanel() {
             tickets.map((ticket) => {
               const unread = readTicketIds.has(ticket.id) ? 0 : (ticket.unreadCount ?? 0);
               const lastMsgIsStaff = ticket.lastMessage
-                ? isSupportStaff(ticket.lastMessage.author?.role?.name) || ticket.lastMessage.authorId !== ticket.userId
+                ? isSupportStaff((ticket.lastMessage.author as any)?.role?.name) ||
+                  ticket.lastMessage.authorId !== ticket.userId
                 : false;
 
               return (
