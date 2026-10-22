@@ -91,7 +91,7 @@ export const Sidebar = () => {
           </div>
           {userInfo?.adsLimit ? (
             <p className="text-sm text-gray-600">
-              Бесплатных объявлений: {userInfo.adsLimit.remaining}/{userInfo.adsLimit.total} · платное:{" "}
+              Бесплатных объявлений осталось: {userInfo.adsLimit.remaining}/{userInfo.adsLimit.total} · платное:{" "}
               {userInfo.adsLimit.costPerAd} ₽
             </p>
           ) : null}

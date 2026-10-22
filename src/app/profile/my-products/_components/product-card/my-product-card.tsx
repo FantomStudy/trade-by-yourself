@@ -9,7 +9,7 @@ import { useState } from "react";
 
 import { useDeleteProductMutation, useToggleProductMutation, useUserInfo } from "@/api/hooks";
 import { Typography } from "@/components/ui";
-import { toCurrency } from "@/lib/format";
+import { formatCardAddress, toCurrency } from "@/lib/format";
 import { fixMojibake } from "@/lib/fix-mojibake";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/contexts";
@@ -21,9 +21,17 @@ import styles from "./product-card.module.css";
 
 interface MyProductCardProps {
   product: Product;
+  selectable?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: () => void;
 }
 
-export const MyProductCard = ({ product }: MyProductCardProps) => {
+export const MyProductCard = ({
+  product,
+  selectable = false,
+  isSelected = false,
+  onToggleSelect,
+}: MyProductCardProps) => {
   const router = useRouter();
   const { user } = useAuth();
   const { data: userInfo } = useUserInfo(user?.id);
@@ -120,8 +128,26 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
       : null;
 
   return (
-    <article className={getCardClassName()}>
+    <article className={`${getCardClassName()} ${isSelected ? "ring-2 ring-blue-500 shadow-md" : ""}`}>
       <div className="relative">
+        {selectable && (
+          <div
+            className="absolute top-2 left-2 z-20 flex items-center justify-center p-1.5 rounded-lg bg-white/90 hover:bg-white text-blue-600 shadow-md cursor-pointer transition-transform hover:scale-110"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onToggleSelect?.();
+            }}
+            title={isSelected ? "Снять выбор" : "Выбрать объявление"}
+          >
+            <input
+              type="checkbox"
+              checked={isSelected}
+              readOnly
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer pointer-events-none"
+            />
+          </div>
+        )}
         <Link href={`/product/${product.id}`}>
           <div className="relative">
             <ProductPreview images={product.images} />
@@ -233,7 +259,9 @@ export const MyProductCard = ({ product }: MyProductCardProps) => {
         </Link>
 
         <div className={styles.meta}>
-          <Typography className={product.isHide ? styles.hiddenText : ""}>{product.address}</Typography>
+          <Typography className={product.isHide ? styles.hiddenText : ""}>
+            {formatCardAddress(product.address)}
+          </Typography>
           <Typography className={product.isHide ? styles.hiddenText : ""}>{product.createdAt}</Typography>
           <Typography className={product.isHide ? styles.hiddenText : ""}>
             В наличии: {product.quantity ?? 1} шт.

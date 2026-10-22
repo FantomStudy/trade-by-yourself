@@ -47,6 +47,7 @@ export const MyProductsTabs = ({
   const [tab, setTab] = useState<MyProductsTab>(initialTab);
   const toggleProductMutation = useToggleProductMutation();
   const [isReactivatingAll, setIsReactivatingAll] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const counts: Record<MyProductsTab, number> = {
     active: active.length,
@@ -66,6 +67,7 @@ export const MyProductsTabs = ({
 
   const go = (next: MyProductsTab) => {
     setTab(next);
+    setSelectedIds([]);
     router.replace(myProductsTabHref(next) as "/profile/my-products", { scroll: false });
   };
 
@@ -80,6 +82,52 @@ export const MyProductsTabs = ({
       String(p.id).includes(q)
     );
   });
+
+  const isAllSelected = filtered.length > 0 && filtered.every((p) => selectedIds.includes(p.id));
+
+  const handleToggleSelect = (id: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filtered.map((p) => p.id));
+    }
+  };
+
+  const handleReactivateSelected = async () => {
+    if (selectedIds.length === 0) return;
+    if (
+      !confirm(
+        `Реактивировать и вернуть в продажу выбранные объявления (${selectedIds.length} шт.)?`,
+      )
+    ) {
+      return;
+    }
+    setIsReactivatingAll(true);
+    let successCount = 0;
+    try {
+      for (const id of selectedIds) {
+        try {
+          await toggleProductMutation.mutateAsync(id);
+          successCount++;
+        } catch (e) {
+          console.warn("Failed to reactivate product", id, e);
+        }
+      }
+      toast.success(`Успешно реактивировано: ${successCount} объявлений`);
+      setSelectedIds([]);
+      router.refresh();
+    } catch {
+      toast.error("Ошибка при реактивации выбранных объявлений");
+    } finally {
+      setIsReactivatingAll(false);
+    }
+  };
 
   const handleReactivateAll = async () => {
     if (!confirm(`Реактивировать и вернуть в продажу все объявления из этой вкладки (${filtered.length} шт.)?`)) {
@@ -97,6 +145,7 @@ export const MyProductsTabs = ({
         }
       }
       toast.success(`Успешно отправлено на реактивацию: ${successCount} объявлений`);
+      setSelectedIds([]);
       router.refresh();
     } catch {
       toast.error("Ошибка при массовой реактивации");
@@ -138,15 +187,40 @@ export const MyProductsTabs = ({
 
         <div className="flex items-center gap-2">
           {tab === "hidden" && filtered.length > 0 && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-green-600 text-green-700 hover:bg-green-50 text-xs h-8"
-              disabled={isReactivatingAll}
-              onClick={handleReactivateAll}
-            >
-              {isReactivatingAll ? "Реактивация..." : `⚡ Реактивировать все (${filtered.length})`}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 text-xs h-8"
+                onClick={handleSelectAll}
+              >
+                {isAllSelected ? "Снять выделение" : "Выбрать все"}
+              </Button>
+
+              {selectedIds.length > 0 ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-green-600 bg-green-50 text-green-700 hover:bg-green-100 text-xs h-8 font-semibold shadow-sm"
+                  disabled={isReactivatingAll}
+                  onClick={handleReactivateSelected}
+                >
+                  {isReactivatingAll
+                    ? "Реактивация..."
+                    : `⚡ Реактивировать выбранные (${selectedIds.length})`}
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-green-600 text-green-700 hover:bg-green-50 text-xs h-8"
+                  disabled={isReactivatingAll}
+                  onClick={handleReactivateAll}
+                >
+                  {isReactivatingAll ? "Реактивация..." : `⚡ Реактивировать все (${filtered.length})`}
+                </Button>
+              )}
+            </div>
           )}
 
           {(current.length > 0 || searchQuery) && (
@@ -211,7 +285,13 @@ export const MyProductsTabs = ({
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((product) => (
-            <MyProductCard key={product.id} product={product} />
+            <MyProductCard
+              key={product.id}
+              product={product}
+              selectable={tab === "hidden"}
+              isSelected={selectedIds.includes(product.id)}
+              onToggleSelect={() => handleToggleSelect(product.id)}
+            />
           ))}
         </div>
       )}

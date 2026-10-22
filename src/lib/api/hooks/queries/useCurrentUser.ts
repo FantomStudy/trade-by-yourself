@@ -11,9 +11,10 @@ export const useCurrentUser = (options?: QueryHookOptions<CurrentUser | null>) =
   return useQuery({
     queryKey: CURRENT_USER_QUERY_KEY,
     queryFn: getCurrentUserOrNull,
-    retry: false,
+    retry: 1,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };
