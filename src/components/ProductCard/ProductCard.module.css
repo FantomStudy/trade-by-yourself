@@ -32,6 +32,8 @@
 .title {
   font-size: 14px;
   line-height: 1.35;
+  height: calc(1.35em * 2);
+  min-height: calc(1.35em * 2);
   font-weight: 500;
   overflow: hidden;
   display: -webkit-box;
@@ -49,12 +51,12 @@
 }
 
 .address {
-  flex: 1;
+  margin-top: auto;
   font-size: 12px;
   color: var(--muted-foreground);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

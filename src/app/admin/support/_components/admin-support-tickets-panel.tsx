@@ -49,6 +49,7 @@ export function AdminSupportTicketsPanel() {
   const reconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedIdRef = useRef<number | null>(null);
   const unmountedRef = useRef(false);
+  const lastMsgCountRef = useRef(0);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!selectedId) return;
@@ -66,7 +67,7 @@ export function AdminSupportTicketsPanel() {
         try {
           await sendSupportTicketMessage(selectedId, dataUrl);
           await loadMessages(selectedId);
-          scrollToBottom();
+          scrollToBottom(true);
           await refreshTickets();
         } catch (error) {
           toast.error(getApiErrorMessage(error, "Не удалось отправить изображение"));
@@ -144,17 +145,25 @@ export function AdminSupportTicketsPanel() {
     };
   }, [connectWS]);
 
-  // Скролл вниз при новых сообщениях (только контейнер, не вся страница)
-  const scrollToBottom = useCallback(() => {
+  // Скролл вниз (force=true — всегда принудительно, иначе только если пользователь уже внизу)
+  const scrollToBottom = useCallback((force = false) => {
     requestAnimationFrame(() => {
       const el = messagesContainerRef.current;
-      if (el) el.scrollTop = el.scrollHeight;
+      if (!el) return;
+      const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+      if (force || isAtBottom) {
+        el.scrollTop = el.scrollHeight;
+      }
     });
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, selectedId, scrollToBottom]);
+    const isFirst = lastMsgCountRef.current === 0 && messages.length > 0;
+    if (messages.length !== lastMsgCountRef.current) {
+      lastMsgCountRef.current = messages.length;
+      scrollToBottom(isFirst);
+    }
+  }, [messages, scrollToBottom]);
 
   // Начальная загрузка
   useEffect(() => {
@@ -190,12 +199,13 @@ export function AdminSupportTicketsPanel() {
     selectedIdRef.current = ticketId;
     setSelectedId(ticketId);
     setReadTicketIds((prev) => new Set(prev).add(ticketId));
+    lastMsgCountRef.current = 0;
     setMessages([]);
     // Джойним WS-рум
     if (wsRef.current) tryJoin(wsRef.current);
     try {
       await loadMessages(ticketId);
-      scrollToBottom();
+      scrollToBottom(true);
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось открыть обращение"));
     }
@@ -210,7 +220,7 @@ export function AdminSupportTicketsPanel() {
       await sendSupportTicketMessage(selectedId, text);
       // Мгновенная перезагрузка после отправки
       await loadMessages(selectedId);
-      scrollToBottom();
+      scrollToBottom(true);
       await refreshTickets();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Не удалось отправить ответ"));

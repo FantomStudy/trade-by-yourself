@@ -1,13 +1,12 @@
-"use client";
-
 import type { SendReviewDto } from "@/api/requests";
-
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { sendReview } from "@/api/requests";
+import { sendReview, updateReview } from "@/lib/api/requests/reviews";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
+import { fixMojibake } from "@/lib/fix-mojibake";
 import { Textarea, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/contexts";
@@ -15,26 +14,59 @@ import { useAuth } from "@/lib/contexts";
 interface ReviewFormProps {
   sellerId: number;
   sellerName: string;
+  reviewId?: number;
+  initialRating?: number;
+  initialText?: string;
+  onSuccess?: () => void;
 }
 
-export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
+export const ReviewForm = ({
+  sellerId,
+  sellerName,
+  reviewId,
+  initialRating = 0,
+  initialText = "",
+  onSuccess,
+}: ReviewFormProps) => {
   const { user } = useAuth();
-  const [rating, setRating] = useState(0);
+  const queryClient = useQueryClient();
+  const [rating, setRating] = useState(initialRating);
   const [hoveredRating, setHoveredRating] = useState(0);
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initialText);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
+  const isEditing = Boolean(reviewId && reviewId > 0);
+
   const mutation = useMutation({
-    mutationFn: (data: SendReviewDto) => sendReview(data),
+    mutationFn: (data: { text: string; rating: number }) => {
+      if (isEditing && reviewId) {
+        return updateReview({ id: reviewId, rating: data.rating, text: data.text });
+      }
+      return sendReview({
+        text: data.text,
+        rating: data.rating,
+        reviewedUserId: sellerId,
+      });
+    },
     onSuccess: () => {
-      toast.success("Отзыв отправлен на модерацию. После проверки он будет опубликован.");
+      toast.success(
+        isEditing
+          ? "Отзыв успешно обновлен и отправлен на повторную модерацию."
+          : "Отзыв отправлен на модерацию. После проверки он будет опубликован.",
+      );
+      void queryClient.invalidateQueries({ queryKey: ["seller-reviews", sellerId] });
+      void queryClient.invalidateQueries({ queryKey: ["user-reviews"] });
       setRating(0);
       setText("");
       setHasSubmitted(true);
+      if (onSuccess) onSuccess();
     },
-    onError: () => {
-      toast.error("Вы уже оставили отзыв об этом продавце");
-      setHasSubmitted(true);
+    onError: (error) => {
+      const message = fixMojibake(getApiErrorMessage(error, "Ошибка при сохранении отзыва"));
+      toast.error(message);
+      if (message.includes("уже оставили")) {
+        setHasSubmitted(true);
+      }
     },
   });
 
@@ -54,7 +86,6 @@ export const ReviewForm = ({ sellerId, sellerName }: ReviewFormProps) => {
     mutation.mutate({
       text: text.trim(),
       rating,
-      reviewedUserId: sellerId,
     });
   };
 

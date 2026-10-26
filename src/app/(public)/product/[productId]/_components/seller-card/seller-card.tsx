@@ -20,7 +20,7 @@ import {
 } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/lib/contexts";
-import { getUserReviews } from "@/lib/api/requests/reviews";
+import { getUserReviews, type Review } from "@/lib/api/requests/reviews";
 import { ReportUserDialog } from "@/components/ReportUserDialog";
 
 import { ReservationForm } from "../reservation-form/reservation-form";
@@ -39,6 +39,7 @@ export const SellerCard = ({ product }: SellerCardProps) => {
   const [shareLabel, setShareLabel] = useState("Поделиться профилем");
   const [isReviewsListOpen, setIsReviewsListOpen] = useState(false);
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const startChatMutation = useStartChatMutation();
 
@@ -201,20 +202,46 @@ export const SellerCard = ({ product }: SellerCardProps) => {
                 У этого продавца пока нет отзывов. Будьте первым!
               </p>
             ) : (
-              reviews.map((rev) => (
-                <div key={rev.id} className="rounded-lg border border-gray-100 bg-gray-50/50 p-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-sm">{rev.reviewer?.fullName || "Покупатель"}</span>
-                    <span className="text-xs text-amber-600 font-bold flex items-center gap-1">
-                      {rev.rating} <StarIcon className="size-3 fill-amber-500" />
-                    </span>
+              reviews.map((rev) => {
+                const isAuthor = Boolean(currentUser?.id && rev.reviewer?.id === currentUser.id);
+                const createdTime = new Date(rev.createdAt).getTime();
+                const isWithin30Days =
+                  !Number.isNaN(createdTime) && Date.now() - createdTime <= 30 * 24 * 60 * 60 * 1000;
+
+                return (
+                  <div key={rev.id} className="rounded-lg border border-gray-100 bg-gray-50/50 p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-sm">{rev.reviewer?.fullName || "Покупатель"}</span>
+                      <span className="text-xs text-amber-600 font-bold flex items-center gap-1">
+                        {rev.rating} <StarIcon className="size-3 fill-amber-500" />
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-700 whitespace-pre-line">{rev.text}</p>
+                    <div className="flex items-center justify-between pt-1 text-xs">
+                      <span className="text-gray-400">
+                        {new Date(rev.createdAt).toLocaleDateString("ru-RU")}
+                      </span>
+                      {isAuthor ? (
+                        isWithin30Days ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingReview(rev);
+                              setIsReviewsListOpen(false);
+                              setIsReviewFormOpen(true);
+                            }}
+                            className="text-blue-600 hover:underline font-medium"
+                          >
+                            Редактировать
+                          </button>
+                        ) : (
+                          <span className="text-gray-400">Редактирование недоступно (&gt;30 дней)</span>
+                        )
+                      ) : null}
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-700 whitespace-pre-line">{rev.text}</p>
-                  <p className="text-xs text-gray-400">
-                    {new Date(rev.createdAt).toLocaleDateString("ru-RU")}
-                  </p>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
 
@@ -229,13 +256,31 @@ export const SellerCard = ({ product }: SellerCardProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Модальное окно написания отзыва */}
-      <Dialog open={isReviewFormOpen} onOpenChange={setIsReviewFormOpen}>
+      {/* Модальное окно написания/редактирования отзыва */}
+      <Dialog
+        open={isReviewFormOpen}
+        onOpenChange={(open) => {
+          setIsReviewFormOpen(open);
+          if (!open) setEditingReview(null);
+        }}
+      >
         <DialogContent className="max-w-md p-6">
           <DialogHeader>
-            <DialogTitle>Отзыв о продавце {product.seller.fullName}</DialogTitle>
+            <DialogTitle>
+              {editingReview ? "Редактировать отзыв" : `Отзыв о продавце ${product.seller.fullName}`}
+            </DialogTitle>
           </DialogHeader>
-          <ReviewForm sellerId={product.seller.id} sellerName={product.seller.fullName} />
+          <ReviewForm
+            sellerId={product.seller.id}
+            sellerName={product.seller.fullName}
+            reviewId={editingReview?.id}
+            initialRating={editingReview?.rating}
+            initialText={editingReview?.text}
+            onSuccess={() => {
+              setIsReviewFormOpen(false);
+              setEditingReview(null);
+            }}
+          />
         </DialogContent>
       </Dialog>
 

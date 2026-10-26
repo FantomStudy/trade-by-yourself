@@ -24,40 +24,82 @@ function formatDate(value?: string | null) {
   return date.toLocaleString("ru-RU");
 }
 
-function reservationStatusLabel(status: string) {
-  const normalizedStatus = status.trim().toUpperCase();
-  const map: Record<string, string> = {
-    ACTIVE: "Активен",
-    RESERVED: "Активен",
-    CANCELLED_BY_BUYER: "Отменён покупателем",
-    CANCELLED_BY_SELLER: "Отменён продавцом",
-    DEAL_CREATED: "Оформлена сделка",
-    EXPIRED: "Истёк",
-  };
-  return map[normalizedStatus] ?? status;
+function normalizedReservationStatus(status?: string | null) {
+  return (status ?? "").trim().toUpperCase();
 }
 
-function normalizedReservationStatus(status: string) {
-  return status.trim().toUpperCase();
-}
-
-function isCancelledStatus(status: string) {
-  const normalizedStatus = normalizedReservationStatus(status);
+function isCancelledStatus(reservation: Reservation) {
+  const code = normalizedReservationStatus(reservation.statusCode);
+  const status = normalizedReservationStatus(reservation.status);
   return (
-    normalizedStatus.includes("CANCELLED") ||
-    normalizedStatus.includes("CANCELED") ||
-    normalizedStatus.includes("ОТМЕН")
+    code.includes("CANCELLED") ||
+    code.includes("CANCELED") ||
+    status.includes("CANCELLED") ||
+    status.includes("CANCELED") ||
+    status.includes("ОТМЕН")
   );
 }
 
+function isReservationExpired(reservation: Reservation) {
+  const code = normalizedReservationStatus(reservation.statusCode);
+  const status = normalizedReservationStatus(reservation.status);
+  if (code === "EXPIRED" || status === "EXPIRED" || status.includes("ИСТЕК")) {
+    return true;
+  }
+  const until = reservation.expiresAt ?? reservation.reservedUntil;
+  if (until) {
+    const untilMs = new Date(until).getTime();
+    if (!Number.isNaN(untilMs) && untilMs <= Date.now()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isDealCreated(reservation: Reservation) {
+  const code = normalizedReservationStatus(reservation.statusCode);
+  const status = normalizedReservationStatus(reservation.status);
+  return code === "DEAL_CREATED" || status === "DEAL_CREATED" || status.includes("СДЕЛКА");
+}
+
 function isReservationActive(reservation: Reservation) {
-  const normalizedStatus = normalizedReservationStatus(reservation.status);
-  if (isCancelledStatus(normalizedStatus)) return false;
-  return normalizedStatus !== "DEAL_CREATED" && normalizedStatus !== "EXPIRED";
+  if (isCancelledStatus(reservation)) return false;
+  if (isDealCreated(reservation)) return false;
+  if (isReservationExpired(reservation)) return false;
+  const code = normalizedReservationStatus(reservation.statusCode);
+  const status = normalizedReservationStatus(reservation.status);
+  if (code === "COMPLETED" || status.includes("ЗАВЕРШ")) return false;
+  return true;
 }
 
 function isReservationCancelled(reservation: Reservation) {
-  return isCancelledStatus(reservation.status);
+  return isCancelledStatus(reservation);
+}
+
+function reservationStatusLabel(reservation: Reservation) {
+  if (isCancelledStatus(reservation)) {
+    const code = normalizedReservationStatus(reservation.statusCode);
+    const status = normalizedReservationStatus(reservation.status);
+    if (code.includes("BUYER") || status.includes("ПОКУПАТЕЛ")) {
+      return "Отменён покупателем";
+    }
+    if (code.includes("SELLER") || status.includes("ПРОДАВЦ")) {
+      return "Отменён продавцом";
+    }
+    return "Отменён";
+  }
+  if (isDealCreated(reservation)) {
+    return "Сделка создана";
+  }
+  if (isReservationExpired(reservation)) {
+    return "Истёк";
+  }
+  const code = normalizedReservationStatus(reservation.statusCode);
+  const status = normalizedReservationStatus(reservation.status);
+  if (code === "COMPLETED" || status.includes("ЗАВЕРШ")) {
+    return "Завершён";
+  }
+  return "Активен";
 }
 
 /** Непустые URL картинок из ответа резерва */
@@ -162,6 +204,8 @@ const ReservationsPage = () => {
       : (reservation.buyer?.fullName ?? reservation.buyerName ?? "—");
     const canCancel = isReservationActive(reservation);
     const isCancelled = isReservationCancelled(reservation);
+    const isExpired = !canCancel && !isCancelled && isReservationExpired(reservation);
+    const isDeal = !canCancel && !isCancelled && isDealCreated(reservation);
 
     const cardInner = (
       <>
@@ -190,7 +234,7 @@ const ReservationsPage = () => {
             )}
           </div>
           <span className={styles.title}>{name}</span>
-          <span className={styles.badge}>{reservationStatusLabel(reservation.status)}</span>
+          <span className={styles.badge}>{reservationStatusLabel(reservation)}</span>
           <p className={styles.meta}>
             <span className={styles.metaStrong}>До:</span> {formatDate(until)}
             <br />
@@ -215,14 +259,34 @@ const ReservationsPage = () => {
         {isCancelled ? (
           <div className={styles.cardFooter}>
             <div className={styles.actionsRow}>
-              <Button disabled type="button" variant="success">
-                Резерв уже отменён
+              <Button disabled type="button" variant="secondary">
+                Резерв отменён
               </Button>
             </div>
           </div>
         ) : null}
 
-        {canCancel && !isCancelled ? (
+        {isDeal ? (
+          <div className={styles.cardFooter}>
+            <div className={styles.actionsRow}>
+              <Button disabled type="button" variant="secondary">
+                Сделка создана
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
+        {isExpired ? (
+          <div className={styles.cardFooter}>
+            <div className={styles.actionsRow}>
+              <Button disabled type="button" variant="secondary">
+                Срок резерва истёк
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
+        {canCancel && !isCancelled && !isExpired && !isDeal ? (
           <div className={styles.cardFooter}>
             {isBuyer ? (
               <div className={styles.actionsRow}>

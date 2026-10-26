@@ -38,6 +38,18 @@ export const sendReview = async (data: SendReviewDto) =>
     body: JSON.stringify(data),
   });
 
+export interface UpdateReviewDto {
+  id: number;
+  text: string;
+  rating: number;
+}
+
+export const updateReview = async ({ id, text, rating }: UpdateReviewDto) =>
+  api<{ message: string }>(`/review/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ text, rating }),
+  });
+
 // Получить список отзывов на модерации (для админа)
 export const getAllReviewsToModerate = async () =>
   api<ReviewToModerate[]>("/review/all-reviews-to-moderate");
