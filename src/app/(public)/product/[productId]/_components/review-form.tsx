@@ -39,7 +39,7 @@ export const ReviewForm = ({
 
   const isEditing = Boolean(reviewId && reviewId > 0);
 
-  const mutation = useMutation({
+  const mutation = useMutation<unknown, Error, { text: string; rating: number }>({
     mutationFn: (data: { text: string; rating: number }) => {
       if (isEditing && reviewId) {
         return updateReview({ id: reviewId, rating: data.rating, text: data.text });
