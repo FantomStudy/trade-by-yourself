@@ -3,12 +3,13 @@
 import type { AdminUserProduct } from "@/lib/api/requests/product/get-admin-user-products";
 import type { User } from "@/types";
 
-import { useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
+import { ExternalLink, Loader2, Power, PowerOff, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -16,8 +17,9 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
-  Typography,
 } from "@/components/ui";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
+import { deleteProduct, toggleProduct } from "@/lib/api/requests/product";
 import { getAdminUserProducts } from "@/lib/api/requests/product/get-admin-user-products";
 import { toCurrency } from "@/lib/format";
 
@@ -74,16 +76,57 @@ interface UserProductsDialogProps {
 }
 
 export function UserProductsDialog({ user, open, onOpenChange }: UserProductsDialogProps) {
+  const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [paymentFilter, setPaymentFilter] = useState<PaymentFilter>("all");
   const [sortOption, setSortOption] = useState<SortOption>("newest");
   const [searchQuery, setSearchQuery] = useState("");
+  const [processingId, setProcessingId] = useState<number | null>(null);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["admin-user-products", user?.id],
     queryFn: () => getAdminUserProducts(user!.id),
     enabled: open && user != null,
   });
+
+  const handleToggleProduct = async (product: AdminUserProduct) => {
+    try {
+      setProcessingId(product.id);
+      const res = await toggleProduct(product.id);
+      toast.success(
+        res?.message || (product.isHide ? "Объявление возвращено в продажу" : "Объявление снято с продажи")
+      );
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["admin-user-products", user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ["admin-users"] }),
+      ]);
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Не удалось изменить статус объявления"));
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleDeleteProduct = async (product: AdminUserProduct) => {
+    const confirmed = window.confirm(
+      `Вы действительно хотите удалить объявление «${product.name}» (ID: ${product.id}) пользователя ${user?.fullName || user?.id}?\n\nДействие необратимо. Товар и связанные фото будут удалены.`
+    );
+    if (!confirmed) return;
+
+    try {
+      setProcessingId(product.id);
+      await deleteProduct(product.id);
+      toast.success(`Объявление «${product.name}» успешно удалено`);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["admin-user-products", user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ["admin-users"] }),
+      ]);
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Не удалось удалить объявление"));
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   const stats = useMemo(() => {
     const active = products.filter((p) => matchStatus(p, "active")).length;
@@ -241,25 +284,45 @@ export function UserProductsDialog({ user, open, onOpenChange }: UserProductsDia
           <ul className="space-y-2">
             {filteredAndSorted.map((product) => {
               const isPaid = isPaidProduct(product);
+              const isHidden = Boolean(product.isHide);
+              const isBusy = processingId === product.id;
+
               return (
-                <li key={product.id} className="rounded-lg border bg-white p-3 shadow-sm hover:border-blue-200">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-900">{product.name}</span>
+                <li
+                  key={product.id}
+                  className={clsx(
+                    "rounded-lg border p-3 shadow-sm transition-all",
+                    isHidden ? "bg-gray-50/80 border-gray-200 opacity-90" : "bg-white border-gray-200 hover:border-blue-200"
+                  )}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-semibold text-gray-900 break-words">{product.name}</span>
                         {isPaid ? (
-                          <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 border border-amber-200">
+                          <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 border border-amber-200 shrink-0">
                             Платное ({product.promotionName || "Продвинутое"})
                           </span>
                         ) : (
-                          <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                          <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 shrink-0">
                             Бесплатное
                           </span>
                         )}
+                        {isHidden ? (
+                          <span className="rounded bg-rose-50 px-2 py-0.5 text-xs font-medium text-rose-700 border border-rose-200 shrink-0">
+                            Снято с продажи
+                          </span>
+                        ) : product.moderateState === "APPROVED" ? (
+                          <span className="rounded bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 border border-emerald-200 shrink-0">
+                            Активно
+                          </span>
+                        ) : null}
                       </div>
+
                       <div className="text-xs text-gray-600">
                         {toCurrency(product.price)} · ID: {product.id}
                       </div>
+
                       <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
                         <span>
                           Статус:{" "}
@@ -279,13 +342,57 @@ export function UserProductsDialog({ user, open, onOpenChange }: UserProductsDia
                         )}
                       </div>
                     </div>
-                    <Link
-                      className="rounded-md bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-100 transition-colors"
-                      href={`/product/${product.id}`}
-                      target="_blank"
-                    >
-                      Открыть карточку
-                    </Link>
+
+                    <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                      {/* Кнопка Отключить / Включить */}
+                      <button
+                        type="button"
+                        disabled={isBusy}
+                        onClick={() => handleToggleProduct(product)}
+                        className={clsx(
+                          "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+                          isHidden
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
+                            : "bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100"
+                        )}
+                        title={isHidden ? "Вернуть объявление в продажу" : "Снять объявление с продажи (отключить)"}
+                      >
+                        {isBusy ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : isHidden ? (
+                          <Power className="h-3.5 w-3.5 text-emerald-600" />
+                        ) : (
+                          <PowerOff className="h-3.5 w-3.5 text-amber-600" />
+                        )}
+                        <span>{isHidden ? "Включить" : "Отключить"}</span>
+                      </button>
+
+                      {/* Кнопка Удалить */}
+                      <button
+                        type="button"
+                        disabled={isBusy}
+                        onClick={() => handleDeleteProduct(product)}
+                        className="inline-flex items-center gap-1.5 rounded-md bg-red-50 border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 hover:text-red-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                        title="Удалить объявление навсегда"
+                      >
+                        {isBusy ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-3.5 w-3.5 text-red-500" />
+                        )}
+                        <span>Удалить</span>
+                      </button>
+
+                      {/* Ссылка на просмотр */}
+                      <Link
+                        className="inline-flex items-center gap-1 rounded-md bg-blue-50 border border-blue-200 px-2.5 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-100 transition-colors"
+                        href={`/product/${product.id}`}
+                        target="_blank"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5 text-blue-500" />
+                        <span>Открыть</span>
+                      </Link>
+                    </div>
                   </div>
                 </li>
               );
