@@ -264,9 +264,7 @@ const ReservationsPage = () => {
               </Button>
             </div>
           </div>
-        ) : null}
-
-        {isDeal ? (
+        ) : isDeal ? (
           <div className={styles.cardFooter}>
             <div className={styles.actionsRow}>
               <Button disabled type="button" variant="outline">
@@ -274,9 +272,7 @@ const ReservationsPage = () => {
               </Button>
             </div>
           </div>
-        ) : null}
-
-        {isExpired ? (
+        ) : isExpired ? (
           <div className={styles.cardFooter}>
             <div className={styles.actionsRow}>
               <Button disabled type="button" variant="outline">
@@ -284,9 +280,7 @@ const ReservationsPage = () => {
               </Button>
             </div>
           </div>
-        ) : null}
-
-        {canCancel && !isCancelled && !isExpired && !isDeal ? (
+        ) : canCancel ? (
           <div className={styles.cardFooter}>
             {isBuyer ? (
               <div className={styles.actionsRow}>

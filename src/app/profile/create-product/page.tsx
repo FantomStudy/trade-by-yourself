@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 import { useCreateDraftMutation, useCreateProductMutation, useUserInfo } from "@/api/hooks";
 import { useAuth } from "@/lib/contexts";
-import { AddressMap, ImageUpload, Input, Textarea } from "@/components/ui";
+import { AddressMap, Dialog, DialogContent, DialogHeader, DialogTitle, ImageUpload, Input, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
@@ -42,6 +42,8 @@ const CreateProductPage = () => {
   const [images, setImages] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [isPaymentConfirmOpen, setIsPaymentConfirmOpen] = useState(false);
+  const [paidAdReason, setPaidAdReason] = useState<string>("");
   const [coordinates, setCoordinates] = useState<{
     lat: number;
     lng: number;
@@ -73,6 +75,70 @@ const CreateProductPage = () => {
   };
   const handleImagesChange = (newImages: File[]) => {
     setImages(newImages);
+  };
+
+  const executeCreateProduct = async (isPaid: boolean) => {
+    setIsPaymentConfirmOpen(false);
+    const parsedQuantity = Number(formData.quantity || "1");
+    const costPerAd = userInfo?.adsLimit?.costPerAd ?? 50;
+
+    try {
+      const data = (await createProductMutation.mutateAsync({
+        name: formData.name,
+        price: Number(formData.price),
+        quantity: parsedQuantity,
+        state: formData.state as "NEW" | "USED",
+        categoryId: Number(formData.categoryId),
+        subcategoryId: Number(formData.subcategoryId),
+        typeId: Number(formData.typeId),
+        description: formData.description,
+        address: formData.address,
+        images,
+        fieldValues,
+        videoUrl: formData.videoUrl,
+        ...(coordinates && {
+          latitude: coordinates.lat,
+          longitude: coordinates.lng,
+        }),
+      })) as { isDraft?: boolean };
+
+      if (data?.isDraft) {
+        toast.message("Объявление сохранено как черновик — оплата не списана");
+        router.push("/profile/my-products");
+        return;
+      }
+
+      const limit = userInfo?.adsLimit;
+      if (isPaid) {
+        toast.success(
+          `Объявление отправлено на модерацию. Списано ${costPerAd} ₽ (сначала бонусы, затем баланс).`,
+        );
+      } else if (limit && limit.remaining === 1) {
+        toast.success("Объявление отправлено на модерацию. Это последнее бесплатное объявление в этом месяце.");
+      } else {
+        toast.success("Объявление отправлено на модерацию.");
+      }
+      router.push("/profile/my-products");
+    } catch (error) {
+      console.error("Ошибка создания объявления:", error);
+      let message = fixMojibake(getApiErrorMessage(error, ""));
+
+      if (
+        userInfo?.adsLimit &&
+        userInfo.adsLimit.remaining <= 0 &&
+        error instanceof FetchError &&
+        error.statusCode === 400 &&
+        (!message ||
+          /валидац|validation/i.test(message) ||
+          /недостаточно|средств|баланс/i.test(message))
+      ) {
+        if (!/недостаточно|средств/i.test(message)) {
+          message = `Бесплатный лимит исчерпан. Для размещения нужно ${userInfo.adsLimit.costPerAd} ₽ на балансе или бонусах. Пополните баланс в профиле.`;
+        }
+      }
+
+      setError(message || getUploadErrorMessage(error, "Ошибка при создании объявления"));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -112,11 +178,8 @@ const CreateProductPage = () => {
 
     const isExtraPhotos = images.length > 8;
     const isExtraDesc = (formData.description || "").length > 2000;
-    const isPaidAd = Boolean(
-      (userInfo?.adsLimit && userInfo.adsLimit.remaining <= 0) ||
-        isExtraPhotos ||
-        isExtraDesc
-    );
+    const isLimitExceeded = Boolean(userInfo?.adsLimit && userInfo.adsLimit.remaining <= 0);
+    const isPaidAd = Boolean(isLimitExceeded || isExtraPhotos || isExtraDesc);
     const costPerAd = userInfo?.adsLimit?.costPerAd ?? 50;
     const totalAvailable = (userInfo?.balance ?? 0) + (userInfo?.bonusBalance ?? 0);
 
@@ -132,63 +195,23 @@ const CreateProductPage = () => {
       return;
     }
 
-    try {
-      const data = (await createProductMutation.mutateAsync({
-        name: formData.name,
-        price: Number(formData.price),
-        quantity: parsedQuantity,
-        state: formData.state as "NEW" | "USED",
-        categoryId: Number(formData.categoryId),
-        subcategoryId: Number(formData.subcategoryId),
-        typeId: Number(formData.typeId),
-        description: formData.description,
-        address: formData.address,
-        images,
-        fieldValues,
-        videoUrl: formData.videoUrl,
-        ...(coordinates && {
-          latitude: coordinates.lat,
-          longitude: coordinates.lng,
-        }),
-      })) as { isDraft?: boolean };
-
-      if (data?.isDraft) {
-        toast.message("Объявление сохранено как черновик — оплата не списана");
-        router.push("/profile/my-products");
-        return;
+    if (isPaidAd) {
+      const reasons: string[] = [];
+      if (isLimitExceeded) {
+        reasons.push("исчерпан бесплатный лимит объявлений в этом месяце");
       }
-
-      const limit = userInfo?.adsLimit;
-      if (isPaidAd) {
-        toast.success(
-          `Объявление отправлено на модерацию. Списано ${costPerAd} ₽ (сначала бонусы, затем баланс).`,
-        );
-      } else if (limit && limit.remaining === 1) {
-        toast.success("Объявление отправлено на модерацию. Это последнее бесплатное объявление в этом месяце.");
-      } else {
-        toast.success("Объявление отправлено на модерацию.");
+      if (isExtraPhotos) {
+        reasons.push(`загружено более 8 фото (${images.length} шт.)`);
       }
-      router.push("/profile/my-products");
-    } catch (error) {
-      console.error("Ошибка создания объявления:", error);
-      let message = fixMojibake(getApiErrorMessage(error, ""));
-
-      if (
-        userInfo?.adsLimit &&
-        userInfo.adsLimit.remaining <= 0 &&
-        error instanceof FetchError &&
-        error.statusCode === 400 &&
-        (!message ||
-          /валидац|validation/i.test(message) ||
-          /недостаточно|средств|баланс/i.test(message))
-      ) {
-        if (!/недостаточно|средств/i.test(message)) {
-          message = `Бесплатный лимит исчерпан. Для размещения нужно ${userInfo.adsLimit.costPerAd} ₽ на балансе или бонусах. Пополните баланс в профиле.`;
-        }
+      if (isExtraDesc) {
+        reasons.push(`описание превышает 2000 символов (${formData.description.length} знаков)`);
       }
-
-      setError(message || getUploadErrorMessage(error, "Ошибка при создании объявления"));
+      setPaidAdReason(reasons.join(", "));
+      setIsPaymentConfirmOpen(true);
+      return;
     }
+
+    await executeCreateProduct(false);
   };
 
   /** Черновик: те же поля, но без обязательных фото (multipart как у create). */
@@ -597,6 +620,52 @@ const CreateProductPage = () => {
           {createDraftMutation.isPending ? "Сохранение..." : "Сохранить черновик"}
         </Button>
       </div>
+
+      {/* Модальное окно подтверждения списания за платное размещение */}
+      <Dialog open={isPaymentConfirmOpen} onOpenChange={setIsPaymentConfirmOpen}>
+        <DialogContent className="max-w-md p-6">
+          <DialogHeader>
+            <DialogTitle>Платное размещение объявления</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-gray-700">
+              Это объявление является платным, так как {paidAdReason}.
+            </p>
+            <div className="rounded-lg bg-blue-50/70 p-4 border border-blue-100 space-y-2 text-sm">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Стоимость размещения:</span>
+                <span className="font-bold text-gray-900">{userInfo?.adsLimit?.costPerAd ?? 50} ₽</span>
+              </div>
+              <div className="flex justify-between items-center text-xs text-gray-500">
+                <span>Доступно на счёте:</span>
+                <span>
+                  {userInfo?.balance ?? 0} ₽ (бонусы: {userInfo?.bonusBalance ?? 0} ₽)
+                </span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500">
+              Средства будут списаны автоматически: сначала с бонусного счёта, затем с основного баланса.
+            </p>
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsPaymentConfirmOpen(false)}
+            >
+              Отмена
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              disabled={createProductMutation.isPending}
+              onClick={() => executeCreateProduct(true)}
+            >
+              {createProductMutation.isPending ? "Публикация..." : "Согласен, списать 50 ₽"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </form>
   );
 };
