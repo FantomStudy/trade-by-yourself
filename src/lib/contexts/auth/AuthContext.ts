@@ -1,3 +1,5 @@
+"use client";
+
 import type { CurrentUser } from "@/types";
 
 import { createContext } from "react";

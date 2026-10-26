@@ -1,3 +1,5 @@
+"use client";
+
 import type { SendReviewDto } from "@/api/requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Star } from "lucide-react";
