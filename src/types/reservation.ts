@@ -1,6 +1,7 @@
 export interface Reservation {
   id: number;
   status: string;
+  statusCode?: string;
   myRole?: "buyer" | "seller";
   createdAt: string;
   updatedAt: string;
