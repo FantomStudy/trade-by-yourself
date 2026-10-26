@@ -1,6 +1,18 @@
 "use client";
 
-import { CheckCircle2, Clock, Image as ImageIcon, Send, Upload, X, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  Edit2,
+  Image as ImageIcon,
+  Power,
+  PowerOff,
+  Send,
+  Trash2,
+  Upload,
+  X,
+  XCircle,
+} from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -10,27 +22,28 @@ import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 import { Input, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 
-interface UserBannerItem {
-  id: number;
-  name: string;
-  place: string;
-  photoUrl?: string;
-  navigateToUrl?: string;
-  moderateState?: "MODERATE" | "APPROVED" | "DENIDED" | string;
-  totalViews?: number;
-  createdAt: string;
-}
+import {
+  BANNER_PLACE_LABELS,
+  BannerPreviewMockup,
+} from "./_components/banner-preview-mockup";
+import {
+  EditBannerDialog,
+  type UserBannerItem,
+} from "./_components/edit-banner-dialog";
 
 const BannerRequestPage = () => {
   const [bannerName, setBannerName] = useState("");
   const [targetUrl, setTargetUrl] = useState("");
-  const [bannerPlace, setBannerPlace] = useState("");
+  const [bannerPlace, setBannerPlace] = useState("PRODUCT_FEED");
   const [days, setDays] = useState("");
   const [comment, setComment] = useState("");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [myBanners, setMyBanners] = useState<UserBannerItem[]>([]);
   const [isLoadingBanners, setIsLoadingBanners] = useState(false);
+  const [editingBanner, setEditingBanner] = useState<UserBannerItem | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [actionBannerId, setActionBannerId] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const bannerPlaces = [
@@ -69,6 +82,42 @@ const BannerRequestPage = () => {
       console.warn("Ошибка загрузки баннеров:", err);
     } finally {
       setIsLoadingBanners(false);
+    }
+  const handleToggleBanner = async (banner: UserBannerItem) => {
+    try {
+      setActionBannerId(banner.id);
+      await api(`/banner/${banner.id}/toggle`, {
+        method: "PATCH",
+      });
+      if (banner.moderateState === "DENIDED") {
+        toast.success("Баннер включен и отправлен на модерацию!");
+      } else {
+        toast.success("Баннер отключен");
+      }
+      await loadMyBanners();
+    } catch (err) {
+      const msg = getApiErrorMessage(err, "Не удалось изменить статус баннера");
+      toast.error(msg);
+    } finally {
+      setActionBannerId(null);
+    }
+  };
+
+  const handleDeleteBanner = async (bannerId: number) => {
+    if (!confirm("Вы уверены, что хотите удалить этот баннер?")) return;
+
+    try {
+      setActionBannerId(bannerId);
+      await api(`/banner/${bannerId}`, {
+        method: "DELETE",
+      });
+      toast.success("Баннер удален");
+      await loadMyBanners();
+    } catch (err) {
+      const msg = getApiErrorMessage(err, "Не удалось удалить баннер");
+      toast.error(msg);
+    } finally {
+      setActionBannerId(null);
     }
   };
 
@@ -273,6 +322,14 @@ const BannerRequestPage = () => {
                   </button>
                 ))}
               </div>
+
+              {/* Интерактивный пример (мокап) того, как баннер будет выглядеть на платформе */}
+              <BannerPreviewMockup
+                place={bannerPlace || "PRODUCT_FEED"}
+                imageUrl={previewImage}
+                bannerName={bannerName}
+                targetUrl={targetUrl}
+              />
             </div>
 
             <div>
@@ -354,7 +411,9 @@ const BannerRequestPage = () => {
                   <h4 className="font-semibold text-gray-900 truncate">{banner.name}</h4>
                   {renderStatusBadge(banner.moderateState)}
                 </div>
-                <p className="text-xs text-gray-500">Место: {banner.place}</p>
+                <p className="text-xs text-gray-600 font-medium">
+                  Место: <span className="text-purple-700">{BANNER_PLACE_LABELS[banner.place] || banner.place}</span>
+                </p>
                 {banner.navigateToUrl && (
                   <p className="text-xs text-blue-600 truncate">{banner.navigateToUrl}</p>
                 )}
@@ -362,11 +421,67 @@ const BannerRequestPage = () => {
                   <span>Просмотры: {banner.totalViews || 0}</span>
                   <span>{new Date(banner.createdAt).toLocaleDateString("ru-RU")}</span>
                 </div>
+
+                {/* Действия с баннером: отключение, редактирование, удаление */}
+                <div className="flex items-center gap-1.5 border-t border-gray-200 pt-2">
+                  <button
+                    type="button"
+                    disabled={actionBannerId === banner.id}
+                    onClick={() => handleToggleBanner(banner)}
+                    className={`flex flex-1 items-center justify-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors ${
+                      banner.moderateState === "DENIDED"
+                        ? "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100"
+                        : "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
+                    }`}
+                  >
+                    {banner.moderateState === "DENIDED" ? (
+                      <>
+                        <Power className="h-3 w-3" /> Включить
+                      </>
+                    ) : (
+                      <>
+                        <PowerOff className="h-3 w-3" /> Отключить
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingBanner(banner);
+                      setIsEditDialogOpen(true);
+                    }}
+                    className="flex flex-1 items-center justify-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
+                  >
+                    <Edit2 className="h-3 w-3" /> Изменить
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={actionBannerId === banner.id}
+                    onClick={() => handleDeleteBanner(banner.id)}
+                    className="flex h-7 w-7 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:bg-red-100"
+                    title="Удалить баннер"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Модальное окно редактирования баннера пользователем */}
+      <EditBannerDialog
+        banner={editingBanner}
+        isOpen={isEditDialogOpen}
+        onClose={() => {
+          setIsEditDialogOpen(false);
+          setEditingBanner(null);
+        }}
+        onSuccess={loadMyBanners}
+      />
 
       {/* Информационный блок */}
       <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">

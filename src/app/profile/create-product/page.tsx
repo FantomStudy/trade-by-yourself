@@ -44,6 +44,7 @@ const CreateProductPage = () => {
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [isPaymentConfirmOpen, setIsPaymentConfirmOpen] = useState(false);
   const [paidAdReason, setPaidAdReason] = useState<string>("");
+  const [paidAdCost, setPaidAdCost] = useState<number>(50);
   const [coordinates, setCoordinates] = useState<{
     lat: number;
     lng: number;
@@ -80,7 +81,6 @@ const CreateProductPage = () => {
   const executeCreateProduct = async (isPaid: boolean) => {
     setIsPaymentConfirmOpen(false);
     const parsedQuantity = Number(formData.quantity || "1");
-    const costPerAd = userInfo?.adsLimit?.costPerAd ?? 50;
 
     try {
       const data = (await createProductMutation.mutateAsync({
@@ -111,7 +111,7 @@ const CreateProductPage = () => {
       const limit = userInfo?.adsLimit;
       if (isPaid) {
         toast.success(
-          `Объявление отправлено на модерацию. Списано ${costPerAd} ₽ (сначала бонусы, затем баланс).`,
+          `Объявление отправлено на модерацию. Списано ${paidAdCost} ₽ (сначала бонусы, затем баланс).`,
         );
       } else if (limit && limit.remaining === 1) {
         toast.success("Объявление отправлено на модерацию. Это последнее бесплатное объявление в этом месяце.");
@@ -133,7 +133,7 @@ const CreateProductPage = () => {
           /недостаточно|средств|баланс/i.test(message))
       ) {
         if (!/недостаточно|средств/i.test(message)) {
-          message = `Бесплатный лимит исчерпан. Для размещения нужно ${userInfo.adsLimit.costPerAd} ₽ на балансе или бонусах. Пополните баланс в профиле.`;
+          message = `Бесплатный лимит исчерпан. Для размещения нужно ${paidAdCost} ₽ на балансе или бонусах. Пополните баланс в профиле.`;
         }
       }
 
@@ -179,33 +179,35 @@ const CreateProductPage = () => {
     const isExtraPhotos = images.length > 8;
     const isExtraDesc = (formData.description || "").length > 2000;
     const isLimitExceeded = Boolean(userInfo?.adsLimit && userInfo.adsLimit.remaining <= 0);
-    const isPaidAd = Boolean(isLimitExceeded || isExtraPhotos || isExtraDesc);
-    const costPerAd = userInfo?.adsLimit?.costPerAd ?? 50;
+    const costPerUnit = userInfo?.adsLimit?.costPerAd ?? 50;
+
+    let totalCost = 0;
+    const reasons: string[] = [];
+    if (isLimitExceeded) {
+      totalCost += costPerUnit;
+      reasons.push("исчерпан бесплатный лимит объявлений в этом месяце (6 шт.)");
+    }
+    if (isExtraPhotos) {
+      totalCost += costPerUnit;
+      reasons.push(`загружено более 8 фото (${images.length} шт.)`);
+    }
+    if (isExtraDesc) {
+      totalCost += costPerUnit;
+      reasons.push(`описание превышает 2000 символов (${formData.description.length} знаков)`);
+    }
+
+    const isPaidAd = totalCost > 0;
+    setPaidAdCost(totalCost);
     const totalAvailable = (userInfo?.balance ?? 0) + (userInfo?.bonusBalance ?? 0);
 
-    if (isPaidAd && totalAvailable < costPerAd) {
-      const reason = isExtraPhotos
-        ? "загружено более 8 фото"
-        : isExtraDesc
-        ? "описание более 2000 символов"
-        : "исчерпан бесплатный лимит объявлений";
-      const msg = `Недостаточно средств для платного размещения (${reason}). Требуется: ${costPerAd} ₽, доступно: ${totalAvailable} ₽ (баланс: ${userInfo?.balance ?? 0} ₽, бонусы: ${userInfo?.bonusBalance ?? 0} ₽). Пополните баланс в профиле.`;
+    if (isPaidAd && totalAvailable < totalCost) {
+      const msg = `Недостаточно средств для платного размещения (${reasons.join(", ")}). Требуется: ${totalCost} ₽, доступно: ${totalAvailable} ₽ (баланс: ${userInfo?.balance ?? 0} ₽, бонусы: ${userInfo?.bonusBalance ?? 0} ₽). Пополните баланс в профиле.`;
       setError(msg);
-      toast.error(`Недостаточно средств: требуется ${costPerAd} ₽, доступно ${totalAvailable} ₽. Пополните баланс в профиле.`);
+      toast.error(`Недостаточно средств: требуется ${totalCost} ₽, доступно ${totalAvailable} ₽. Пополните баланс в профиле.`);
       return;
     }
 
     if (isPaidAd) {
-      const reasons: string[] = [];
-      if (isLimitExceeded) {
-        reasons.push("исчерпан бесплатный лимит объявлений в этом месяце");
-      }
-      if (isExtraPhotos) {
-        reasons.push(`загружено более 8 фото (${images.length} шт.)`);
-      }
-      if (isExtraDesc) {
-        reasons.push(`описание превышает 2000 символов (${formData.description.length} знаков)`);
-      }
       setPaidAdReason(reasons.join(", "));
       setIsPaymentConfirmOpen(true);
       return;
@@ -348,23 +350,26 @@ const CreateProductPage = () => {
                 <strong>{userInfo.adsLimit.costPerAd} ₽</strong>.
               </div>
             )}
-            {((userInfo.adsLimit.remaining <= 0) || images.length > 8 || formData.description.length > 2000) && (
-              <div
-                className={`pt-1 text-xs ${
-                  (userInfo.balance ?? 0) + (userInfo.bonusBalance ?? 0) < userInfo.adsLimit.costPerAd
-                    ? "text-red-600 font-semibold"
-                    : "text-gray-600"
-                }`}
-              >
-                Доступно: {(userInfo.balance ?? 0) + (userInfo.bonusBalance ?? 0)} ₽ (баланс:{" "}
-                {userInfo.balance ?? 0} ₽, бонусы: {userInfo.bonusBalance ?? 0} ₽).
-                {(userInfo.balance ?? 0) + (userInfo.bonusBalance ?? 0) < userInfo.adsLimit.costPerAd && (
-                  <Link href="/profile/balance" className="ml-2 font-bold underline text-blue-600 hover:text-blue-800">
-                    Пополнить баланс →
-                  </Link>
-                )}
-              </div>
-            )}
+            {((userInfo.adsLimit.remaining <= 0) || images.length > 8 || formData.description.length > 2000) && (() => {
+              const unit = userInfo.adsLimit.costPerAd || 50;
+              const curCost =
+                (userInfo.adsLimit.remaining <= 0 ? unit : 0) +
+                (images.length > 8 ? unit : 0) +
+                (formData.description.length > 2000 ? unit : 0);
+              const available = (userInfo.balance ?? 0) + (userInfo.bonusBalance ?? 0);
+              const isNotEnough = available < curCost;
+              return (
+                <div className={`pt-2 text-xs border-t border-amber-200 mt-2 ${isNotEnough ? "text-red-600 font-semibold" : "text-gray-700"}`}>
+                  Итого к списанию за это объявление: <strong>{curCost} ₽</strong> (условия суммируются).
+                  {" "}Доступно: {available} ₽ (баланс: {userInfo.balance ?? 0} ₽, бонусы: {userInfo.bonusBalance ?? 0} ₽).
+                  {isNotEnough && (
+                    <Link href="/profile/balance" className="ml-2 font-bold underline text-blue-600 hover:text-blue-800">
+                      Пополнить баланс →
+                    </Link>
+                  )}
+                </div>
+              );
+            })()}
           </div>
         ) : null}
         <label className={styles.fieldLabel} htmlFor="name">
@@ -634,7 +639,7 @@ const CreateProductPage = () => {
             <div className="rounded-lg bg-blue-50/70 p-4 border border-blue-100 space-y-2 text-sm">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Стоимость размещения:</span>
-                <span className="font-bold text-gray-900">{userInfo?.adsLimit?.costPerAd ?? 50} ₽</span>
+                <span className="font-bold text-gray-900">{paidAdCost} ₽</span>
               </div>
               <div className="flex justify-between items-center text-xs text-gray-500">
                 <span>Доступно на счёте:</span>
@@ -644,7 +649,7 @@ const CreateProductPage = () => {
               </div>
             </div>
             <p className="text-xs text-gray-500">
-              Средства будут списаны автоматически: сначала с бонусного счёта, затем с основного баланса.
+              Каждое платное условие (лимит, более 8 фото, длинное описание) составляет 50 ₽ и суммируется. Средства будут списаны автоматически: сначала с бонусного счёта, затем с основного баланса.
             </p>
           </div>
           <div className="flex justify-end gap-3 pt-2">

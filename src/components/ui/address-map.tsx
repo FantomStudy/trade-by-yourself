@@ -115,27 +115,111 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
     }
   };
 
-  // Синхронизация с внешним значением value и геокодирование начального адреса
-  useEffect(() => {
-    if (value && value !== address) {
-      setAddress(value);
-      if (!markerPosition) {
-        fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&limit=1`,
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            if (data && data.length > 0) {
-              const lat = Number.parseFloat(data[0].lat);
-              const lng = Number.parseFloat(data[0].lon);
-              if (!isNaN(lat) && !isNaN(lng)) {
-                setMarkerPosition([lat, lng]);
-                onCoordinatesChange?.(lat, lng);
-              }
-            }
-          })
-          .catch(() => {});
+  const lastGeocodedAddressRef = useRef<string>("");
+
+  // Надежная функция геокодирования адреса в координаты [lat, lng]
+  const geocodeAddress = async (rawAddress: string): Promise<[number, number] | null> => {
+    if (!rawAddress || !rawAddress.trim()) return null;
+    const cleanStr = rawAddress.trim();
+
+    // 1. Пробуем DaData suggestions
+    try {
+      const data = await getAddressSuggestions(cleanStr);
+      if (data && data.length > 0 && data[0].lat != null && data[0].lon != null) {
+        const lat = Number.parseFloat(String(data[0].lat));
+        const lng = Number.parseFloat(String(data[0].lon));
+        if (!isNaN(lat) && !isNaN(lng)) {
+          return [lat, lng];
+        }
       }
+    } catch (e) {
+      console.warn("DaData geocoding skipped:", e);
+    }
+
+    // 2. Многоступенчатый поиск через OpenStreetMap Nominatim с очисткой
+    const queriesToTry: string[] = [];
+
+    // Вариант 1: Исходная строка
+    queriesToTry.push(cleanStr);
+
+    // Вариант 2: Очистка от служебных префиксов DaData/КЛАДР
+    const stripped = cleanStr
+      .replace(/Россия,?\s*/gi, "")
+      .replace(/\b\d{6}\b,?\s*/g, "") // почтовые индексы
+      .replace(/\b(обл|область|край|респ|республика)\.?\s*/gi, "")
+      .replace(/\b(г|город|п|поселок|посёлок|с|село|дер|деревня|пгт)\.?\s+/gi, "")
+      .replace(/\b(ул|улица|пр-кт|проспект|пер|переулок|проезд|б-р|бульвар|тракт|наб|набережная|ш|шоссе)\.?\s+/gi, "")
+      .replace(/\b(д|дом|корп|корпус|строение|стр|кв|квартира)\.?\s*/gi, "")
+      .replace(/[,;]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (stripped && stripped !== cleanStr) {
+      queriesToTry.push(stripped);
+    }
+
+    // Вариант 3: Город + улица + номер
+    const parts = cleanStr.split(",").map((p) => p.trim()).filter(Boolean);
+    if (parts.length >= 2) {
+      const filteredParts = parts
+        .filter((p) => !/россия|индекс|\d{6}|обл|район|край/i.test(p))
+        .map((p) => p.replace(/\b(г|ул|д|дом)\.?\s*/gi, "").trim())
+        .filter(Boolean);
+      if (filteredParts.length > 0) {
+        queriesToTry.push(filteredParts.join(" "));
+      }
+    }
+
+    for (const q of queriesToTry) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`,
+          {
+            signal: controller.signal,
+            headers: {
+              Accept: "application/json",
+            },
+          },
+        );
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list) && list.length > 0 && list[0].lat && list[0].lon) {
+            const lat = Number.parseFloat(list[0].lat);
+            const lng = Number.parseFloat(list[0].lon);
+            if (!isNaN(lat) && !isNaN(lng)) {
+              return [lat, lng];
+            }
+          }
+        }
+      } catch {
+        // пробуем следующий вариант
+      }
+    }
+
+    return null;
+  };
+
+  // Синхронизация с внешним значением value и геокодирование адреса
+  useEffect(() => {
+    if (!value || !value.trim()) return;
+
+    if (value !== address) {
+      setAddress(value);
+    }
+
+    if (lastGeocodedAddressRef.current !== value) {
+      lastGeocodedAddressRef.current = value;
+      (async () => {
+        const coords = await geocodeAddress(value);
+        if (coords) {
+          setMarkerPosition(coords);
+          onCoordinatesChange?.(coords[0], coords[1]);
+        }
+      })();
     }
   }, [value]);
 
@@ -327,37 +411,11 @@ export const AddressMap = ({ value = "", onChange, onCoordinatesChange }: Addres
                   onChange?.(suggestion.value);
                   setShowSuggestions(false);
 
-                  let coordsFound = false;
-
-                  // Используем координаты из API suggestions, если они есть
-                  if (suggestion.lat != null && suggestion.lon != null) {
-                    const lat = Number.parseFloat(String(suggestion.lat));
-                    const lng = Number.parseFloat(String(suggestion.lon));
-                    if (!isNaN(lat) && !isNaN(lng)) {
-                      setMarkerPosition([lat, lng]);
-                      onCoordinatesChange?.(lat, lng);
-                      coordsFound = true;
-                    }
-                  }
-
-                  // Если координат от DaData нет, пробуем получить через Nominatim
-                  if (!coordsFound) {
-                    try {
-                      const geoResp = await fetch(
-                        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(suggestion.value)}&limit=1`,
-                      );
-                      const geoData = await geoResp.json();
-                      if (geoData && geoData.length > 0) {
-                        const lat = Number.parseFloat(geoData[0].lat);
-                        const lng = Number.parseFloat(geoData[0].lon);
-                        if (!isNaN(lat) && !isNaN(lng)) {
-                          setMarkerPosition([lat, lng]);
-                          onCoordinatesChange?.(lat, lng);
-                        }
-                      }
-                    } catch (err) {
-                      console.error("Geocoding suggestion error:", err);
-                    }
+                  lastGeocodedAddressRef.current = suggestion.value;
+                  const coords = await geocodeAddress(suggestion.value);
+                  if (coords) {
+                    setMarkerPosition(coords);
+                    onCoordinatesChange?.(coords[0], coords[1]);
                   }
 
                   // Валидация адреса после установки координат
