@@ -83,6 +83,8 @@ const BannerRequestPage = () => {
     } finally {
       setIsLoadingBanners(false);
     }
+  };
+
   const handleToggleBanner = async (banner: UserBannerItem) => {
     try {
       setActionBannerId(banner.id);
