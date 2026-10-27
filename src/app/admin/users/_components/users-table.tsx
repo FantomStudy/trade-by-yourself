@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/Button";
 
 import { UserProductsDialog } from "./user-products-dialog";
+import { UserReviewsDialog } from "./user-reviews-dialog";
 
 interface UsersTableProps {
   searchQuery: string;
@@ -223,17 +224,17 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                       setProductsOpen(true);
                     }}
                   >
-                    <div title="всего">Всего: {user.productStats?.total ?? user.products ?? 0}</div>
-                    <div className="text-[10px] text-gray-500">
-                      акт: {user.productStats?.active ?? 0} · мод: {user.productStats?.moderation ?? 0} ·
-                      черн: {user.productStats?.drafts ?? 0} · скр: {user.productStats?.hidden ?? 0}
-                    </div>
-                    <div className="text-[10px] text-gray-500">
-                      плат: {user.productStats?.paid ?? 0} · беспл: {user.productStats?.free ?? 0}
-                    </div>
-                    <div className="text-[10px] text-gray-500">
-                      лимит: {user.adsLimit?.remaining ?? "?"}/{user.adsLimit?.total ?? 6}
-                    </div>
+                    <div title="всего">Объявлений: {user.productStats?.total ?? user.products ?? 0}</div>
+                  </button>
+                  <button
+                    type="button"
+                    className="text-left hover:text-blue-600 hover:underline block mt-1"
+                    onClick={() => {
+                      setReviewsUser(user);
+                      setReviewsOpen(true);
+                    }}
+                  >
+                    <div title="всего">Отзывов: {user.reviewsCount ?? 0}</div>
                   </button>
                 </td>
                 <td className="px-2 py-2 text-xs">
