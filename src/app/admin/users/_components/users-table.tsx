@@ -32,8 +32,10 @@ interface UsersTableProps {
 export const UsersTable = ({ searchQuery }: UsersTableProps) => {
   const queryClient = useQueryClient();
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [productsUser, setProductsUser] = useState<User | null>(null);
   const [productsOpen, setProductsOpen] = useState(false);
+  const [reviewsOpen, setReviewsOpen] = useState(false);
+  const [productsUser, setProductsUser] = useState<User | null>(null);
+  const [reviewsUser, setReviewsUser] = useState<User | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [editForm, setEditForm] = useState<UpdateUserDto>({});
@@ -397,6 +399,7 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
       </Dialog>
 
       <UserProductsDialog open={productsOpen} user={productsUser} onOpenChange={setProductsOpen} />
+      <UserReviewsDialog open={reviewsOpen} user={reviewsUser} onOpenChange={setReviewsOpen} />
     </>
   );
 };
