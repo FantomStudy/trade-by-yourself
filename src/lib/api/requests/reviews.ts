@@ -12,18 +12,43 @@ export interface Review {
   text: string;
   rating: number;
   createdAt: string;
+  date?: string;
+  moderateState?: string;
   reviewer: {
     id: number;
     fullName: string;
-    photo: string | null;
+    photo?: string | null;
+    phoneNumber?: string;
   };
   reviewedUser: {
     id: number;
     fullName: string;
+    phoneNumber?: string;
   };
 }
 
-export const getReviews = async () => api<Review[]>("/review/all-reviews");
+export interface AdminReviewsResponse {
+  reviews: Review[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export const getReviews = async () => api<AdminReviewsResponse>("/review/all-reviews");
+
+export const getAllReviewsAdmin = async (params?: { userId?: number; page?: number; limit?: number }) =>
+  api<AdminReviewsResponse>("/review/all-reviews", {
+    query: {
+      ...(params?.userId ? { userId: params.userId } : {}),
+      ...(params?.page ? { page: params.page } : {}),
+      ...(params?.limit ? { limit: params.limit } : {}),
+    },
+  });
+
+export const deleteReview = async (id: number) =>
+  api<{ message: string }>(`/review/${id}`, {
+    method: "DELETE",
+  });
 
 export const getUserReviews = async (userId: number): Promise<Review[]> => {
   const res = await api<any>(`/review/user-reviews/${userId}`);
@@ -60,6 +85,7 @@ export const moderateReview = async ({ reviewId, status }: ModerateReviewData) =
     method: "PUT",
     query: { status },
   });
+
 
 export interface ReviewAppeal {
   id: number;

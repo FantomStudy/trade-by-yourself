@@ -180,26 +180,19 @@ const ProfileSettingsPage = () => {
   const photoSrc = useMemo(() => {
     const p = data?.photo;
     if (!p) return null;
-    const trimmed = String(p).trim();
+    let trimmed = String(p).trim();
     if (!trimmed) return null;
 
-    // Try to build a URL; allow relative URLs by using window.location as base
-    try {
-      const base = typeof window !== "undefined" ? window.location.href : "http://localhost";
-      const _ = new URL(trimmed, base);
-      return trimmed;
-    } catch {
-      try {
-        const encoded = encodeURI(trimmed);
-        const _2 = new URL(
-          encoded,
-          typeof window !== "undefined" ? window.location.href : "http://localhost",
-        );
-        return encoded;
-      } catch {
-        return null;
-      }
+    // Fix: If it's already an absolute URL (starts with https://), 
+    // it might have been incorrectly prepended with API URL.
+    // Let's strip the API prefix if found within the string,
+    // but only if it's already an absolute URL.
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://torguisam.ru/api";
+    if (trimmed.startsWith("https://") && trimmed.includes(apiBase)) {
+        trimmed = trimmed.replace(apiBase, "");
     }
+
+    return trimmed;
   }, [data?.photo]);
 
   if (loading) return <div>Загрузка настроек...</div>;

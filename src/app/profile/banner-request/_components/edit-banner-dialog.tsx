@@ -172,11 +172,10 @@ export const EditBannerDialog: React.FC<EditBannerDialogProps> = ({
                   key={p.id}
                   type="button"
                   onClick={() => setPlace(p.id)}
-                  className={`rounded-lg border p-2 text-left transition-colors ${
-                    place === p.id
+                  className={`rounded-lg border p-2 text-left transition-colors ${place === p.id
                       ? "border-purple-600 bg-purple-50 text-purple-900 ring-1 ring-purple-500"
                       : "border-gray-200 hover:border-gray-300 text-gray-800"
-                  }`}
+                    }`}
                 >
                   <p className="text-xs font-bold">{p.name}</p>
                   <p className="text-[10px] text-gray-500">{p.size} px</p>
