@@ -4,7 +4,7 @@ import type { UpdateUserDto } from "@/api/requests";
 import type { User } from "@/types";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Ban, Edit, Trash2 } from "lucide-react";
+import { Ban, Edit, MessageSquare, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -226,17 +226,28 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                       setProductsOpen(true);
                     }}
                   >
-                    <div title="всего">Объявлений: {user.productStats?.total ?? user.products ?? 0}</div>
+                    <div title="всего">Всего: {user.productStats?.total ?? user.products ?? 0}</div>
+                    <div className="text-[10px] text-gray-500">
+                      акт: {user.productStats?.active ?? 0} · мод: {user.productStats?.moderation ?? 0} ·
+                      черн: {user.productStats?.drafts ?? 0} · скр: {user.productStats?.hidden ?? 0}
+                    </div>
+                    <div className="text-[10px] text-gray-500">
+                      плат: {user.productStats?.paid ?? 0} · беспл: {user.productStats?.free ?? 0}
+                    </div>
+                    <div className="text-[10px] text-gray-500">
+                      лимит: {user.adsLimit?.remaining ?? "?"}/{user.adsLimit?.total ?? 6}
+                    </div>
                   </button>
                   <button
                     type="button"
-                    className="text-left hover:text-blue-600 hover:underline block mt-1"
+                    className="mt-1.5 flex items-center gap-1 text-left text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
                     onClick={() => {
                       setReviewsUser(user);
                       setReviewsOpen(true);
                     }}
                   >
-                    <div title="всего">Отзывов: {user.reviewsCount ?? 0}</div>
+                    <MessageSquare className="h-3.5 w-3.5" />
+                    <span>Отзывы{user.reviewsCount !== undefined ? ` (${user.reviewsCount})` : ""}</span>
                   </button>
                 </td>
                 <td className="px-2 py-2 text-xs">
@@ -250,6 +261,16 @@ export const UsersTable = ({ searchQuery }: UsersTableProps) => {
                 </td>
                 <td className="px-2 py-2 text-xs">
                   <div className="flex items-center gap-1">
+                    <Button
+                      title="Отзывы пользователя"
+                      variant="success"
+                      onClick={() => {
+                        setReviewsUser(user);
+                        setReviewsOpen(true);
+                      }}
+                    >
+                      <MessageSquare className="h-3.5 w-3.5" />
+                    </Button>
                     <Button
                       title="Редактировать"
                       variant="success"
