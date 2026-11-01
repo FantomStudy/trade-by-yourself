@@ -10,7 +10,12 @@ export const ActiveLink = ({ href, ...props }: React.ComponentProps<typeof Link>
   const isActive =
     hrefStr === "/"
       ? pathname === "/"
-      : pathname === hrefStr || pathname.startsWith(`${hrefStr}/`);
+      : hrefStr === "/profile/settings"
+        ? pathname.startsWith("/profile") &&
+          !["/profile/favorites", "/profile/my-products", "/profile/messages"].some((p) =>
+            pathname.startsWith(p),
+          )
+        : pathname === hrefStr || pathname.startsWith(`${hrefStr}/`);
 
   return <Link href={href} className={styles.link} data-active={isActive} {...props} />;
 };

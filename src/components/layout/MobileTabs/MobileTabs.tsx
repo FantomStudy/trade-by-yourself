@@ -36,7 +36,7 @@ export const MobileTabs = async () => {
         <span>Сообщения</span>
       </ActiveLink>
 
-      <ActiveLink href="/profile">
+      <ActiveLink href="/profile/settings">
         {user?.photo ? (
           <Avatar size="sm" src={user.photo} fallback={user.fullName} className={styles.avatar} />
         ) : (
