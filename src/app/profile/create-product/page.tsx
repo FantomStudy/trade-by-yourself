@@ -160,8 +160,8 @@ const CreateProductPage = () => {
       return;
     }
 
-    if (Number(formData.price) <= 0) {
-      setError("Цена должна быть больше нуля");
+    if (Number(formData.price) <= 0 || Number(formData.price) > 1_000_000_000) {
+      setError("Цена должна быть от 1 до 1 000 000 000 ₽");
       return;
     }
 
@@ -305,7 +305,10 @@ const CreateProductPage = () => {
   const fields = selectedType?.fields || [];
   const requiredValidation = {
     name: !formData.name.trim(),
-    price: !formData.price.trim() || Number(formData.price) <= 0,
+    price:
+      !formData.price.trim() ||
+      Number(formData.price) <= 0 ||
+      Number(formData.price) > 1_000_000_000,
     quantity:
       !formData.quantity.trim() ||
       !Number.isInteger(Number(formData.quantity)) ||

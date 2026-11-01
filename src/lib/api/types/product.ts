@@ -8,7 +8,10 @@ export const createProductSchema = z.object({
   images: z.array(z.instanceof(File)).optional(),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
-  price: z.number().min(0, "Цена должна быть положительным числом"),
+  price: z
+    .number()
+    .min(1, "Цена должна быть от 1 до 1 000 000 000 ₽")
+    .max(1_000_000_000, "Цена не может превышать 1 000 000 000 ₽"),
   quantity: z.number().int().min(1, "Количество должно быть целым числом больше 0"),
   state: z.enum(["NEW", "USED"]),
   subcategoryId: z.number(),
@@ -21,7 +24,11 @@ export type CreateProductData = z.infer<typeof createProductSchema>;
 
 export const updateProductSchema = z.object({
   name: z.string().optional(),
-  price: z.number().optional(),
+  price: z
+    .number()
+    .min(1, "Цена должна быть от 1 до 1 000 000 000 ₽")
+    .max(1_000_000_000, "Цена не может превышать 1 000 000 000 ₽")
+    .optional(),
   quantity: z.number().int().min(1).optional(),
   state: z.enum(["NEW", "USED"]).optional(),
   categoryId: z.number().optional(),

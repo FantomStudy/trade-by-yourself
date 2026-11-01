@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/Button";
+import { Lightbox } from "@/components/ui/Lightbox";
 import {
   createSupportTicket,
   getMySupportTickets,
@@ -37,6 +38,7 @@ const SupportChatPage = () => {
   const [messages, setMessages] = useState<SupportTicketMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -284,23 +286,24 @@ const SupportChatPage = () => {
                       <p className="mb-1 text-xs font-medium text-purple-700">{authorLabel}</p>
                     ) : null}
                     {isImg ? (
-                      <a
-                        href={msg.text}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="block max-w-xs overflow-hidden rounded-lg my-1"
+                      <button
+                        type="button"
+                        onClick={() => setActiveImage(msg.text)}
+                        className="block max-w-xs overflow-hidden rounded-lg my-1 cursor-pointer transition-transform hover:opacity-95 text-left p-0 border-0 bg-transparent"
+                        title="Нажмите, чтобы открыть фото"
                       >
                         <img
                           src={msg.text}
                           alt="Вложение"
                           className="max-h-60 rounded-lg object-contain bg-black/5"
                         />
-                      </a>
+                      </button>
                     ) : (
                       <p className={styles.messageContent}>{fixMojibake(msg.text)}</p>
                     )}
                     <span className={styles.messageTime}>
                       {new Date(msg.sentAt).toLocaleTimeString("ru-RU", {
+                        timeZone: "Europe/Moscow",
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
@@ -346,6 +349,10 @@ const SupportChatPage = () => {
           <Send className="h-5 w-5" />
         </Button>
       </div>
+
+      {activeImage && (
+        <Lightbox image={activeImage} onClose={() => setActiveImage(null)} />
+      )}
     </div>
   );
 };

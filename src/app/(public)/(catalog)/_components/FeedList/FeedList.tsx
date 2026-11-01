@@ -52,7 +52,13 @@ export const FeedList = ({ filters }: FeedListProps) => {
       {items.map((item) => (
         <FeedCard key={item.key} item={item} />
       ))}
-      {hasNextPage ? <div ref={loadMoreRef} aria-hidden="true" /> : null}
+      {hasNextPage ? (
+        <div
+          ref={loadMoreRef}
+          aria-hidden="true"
+          className="col-span-full h-0 w-0 p-0 m-0 pointer-events-none"
+        />
+      ) : null}
     </>
   );
 };

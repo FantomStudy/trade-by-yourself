@@ -22,7 +22,6 @@ export const FilterMenu = () => {
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") ?? "");
   const [state, setState] = useState(searchParams.get("state") ?? "");
   const [profileType, setProfileType] = useState(searchParams.get("profileType") ?? "");
-  const [hasSecureDeal, setHasSecureDeal] = useState(searchParams.get("hasSecureDeal") ?? "");
   const [minRating, setMinRating] = useState(searchParams.get("minRating") ?? "");
   const [maxRating, setMaxRating] = useState(searchParams.get("maxRating") ?? "");
   const [sortBy, setSortBy] = useState(searchParams.get("sortBy") ?? "");
@@ -53,7 +52,6 @@ export const FilterMenu = () => {
     setMaxPrice(searchParams.get("maxPrice") ?? "");
     setState(searchParams.get("state") ?? "");
     setProfileType(searchParams.get("profileType") ?? "");
-    setHasSecureDeal(searchParams.get("hasSecureDeal") ?? "");
     setMinRating(searchParams.get("minRating") ?? "");
     setMaxRating(searchParams.get("maxRating") ?? "");
     setSortBy(searchParams.get("sortBy") ?? "");
@@ -82,7 +80,7 @@ export const FilterMenu = () => {
     setOrDelete("maxPrice", maxPrice);
     setOrDelete("state", state);
     setOrDelete("profileType", profileType);
-    setOrDelete("hasSecureDeal", hasSecureDeal);
+    setOrDelete("hasSecureDeal", "");
     setOrDelete("minRating", minRating);
     setOrDelete("maxRating", maxRating);
     setOrDelete("sortBy", sortBy);
@@ -103,7 +101,6 @@ export const FilterMenu = () => {
     setMaxPrice("");
     setState("");
     setProfileType("");
-    setHasSecureDeal("");
     setMinRating("");
     setMaxRating("");
     setSortBy("");
@@ -166,17 +163,6 @@ export const FilterMenu = () => {
               </Select>
             </div>
           )}
-
-          <div className={styles.group}>
-            <label>Безопасная сделка</label>
-            <Select value={hasSecureDeal} onValueChange={(v) => setHasSecureDeal(v ?? "")}>
-              <Select.Trigger className={styles.selectTrigger}><Select.Value placeholder="Все" /></Select.Trigger>
-              <Select.Content>
-                <Select.Item value="true">Только с безопасной сделкой</Select.Item>
-                <Select.Item value="false">Только без безопасной сделки</Select.Item>
-              </Select.Content>
-            </Select>
-          </div>
 
           <div className={styles.group}>
             <label>Рейтинг продавца</label>

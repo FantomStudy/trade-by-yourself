@@ -10,6 +10,7 @@ export interface Message {
   chatId: number;
   content: string;
   createdAt: string;
+  timeString?: string;
   senderId: number;
   product?: {
     id: number;

@@ -9,7 +9,7 @@
   align-items: center;
   gap: 8px;
   white-space: nowrap;
-  max-width: 200px;
+  max-width: 260px;
 }
 
 .icon {
@@ -27,7 +27,7 @@
 
 @media (max-width: 768px) {
   .button {
-    max-width: 150px;
+    max-width: 220px;
     padding: 8px 12px;
     font-size: 13px;
   }
@@ -40,12 +40,12 @@
 
 @media (max-width: 480px) {
   .button {
-    max-width: 120px;
+    max-width: 200px;
     padding: 6px 10px;
     gap: 4px;
   }
 
   .text {
-    font-size: 12px;
+    font-size: 13px;
   }
 }

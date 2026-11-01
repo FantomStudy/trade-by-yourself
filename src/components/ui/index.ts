@@ -6,6 +6,7 @@ export * from "./dialog/dialog";
 export * from "./field/field";
 export * from "./image-upload";
 export * from "./input/input";
+export * from "./Lightbox";
 export * from "./logo/logo";
 export * from "./phone-field";
 export * from "./textarea/textarea";

@@ -249,8 +249,11 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     const parsedPrice = formData.price.trim() ? Number(formData.price) : undefined;
     const parsedQuantity = formData.quantity.trim() ? Number(formData.quantity) : undefined;
 
-    if (parsedPrice !== undefined && (!Number.isFinite(parsedPrice) || parsedPrice <= 0)) {
-      setError("Цена должна быть больше нуля");
+    if (
+      parsedPrice !== undefined &&
+      (!Number.isFinite(parsedPrice) || parsedPrice <= 0 || parsedPrice > 1_000_000_000)
+    ) {
+      setError("Цена должна быть от 1 до 1 000 000 000 ₽");
       return;
     }
 
@@ -338,8 +341,8 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     }
 
     const parsedPrice = Number(formData.price);
-    if (!Number.isFinite(parsedPrice) || parsedPrice <= 0) {
-      setError("Цена должна быть больше нуля");
+    if (!Number.isFinite(parsedPrice) || parsedPrice <= 0 || parsedPrice > 1_000_000_000) {
+      setError("Цена должна быть от 1 до 1 000 000 000 ₽");
       return;
     }
 

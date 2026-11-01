@@ -9,13 +9,14 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/Button";
-import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
-import { useChatSocket } from "@/lib/contexts";
-import { MODERATION_CENTER_NAME, SUPPORT_CENTER_NAME } from "@/lib/support-display";
-import { resolveChatTitle } from "@/lib/chat-title";
-import { toCurrency } from "@/lib/format";
 import { ReportUserDialog } from "@/components/ReportUserDialog";
+import { Button } from "@/components/ui/Button";
+import { Lightbox } from "@/components/ui/Lightbox";
+import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
+import { resolveChatTitle } from "@/lib/chat-title";
+import { useChatSocket } from "@/lib/contexts";
+import { toCurrency } from "@/lib/format";
+import { MODERATION_CENTER_NAME, SUPPORT_CENTER_NAME } from "@/lib/support-display";
 
 const ChatPage = () => {
   const params = useParams<{ chatId: string }>();
@@ -25,6 +26,7 @@ const ChatPage = () => {
   const [showPhone, setShowPhone] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -86,6 +88,7 @@ const ChatPage = () => {
           id: data.id,
           isRead: false, // false означает "не прочитано получателем"
           senderId: data.senderId,
+          timeString: data.timeString,
         };
         console.log("Adding new message to state:", newMessage);
         setNewMessages((prev) => [...prev, newMessage]);
@@ -209,31 +212,70 @@ const ChatPage = () => {
           </Button>
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           {!isModerationChat && chat.product?.image ? (
-            <div className="h-12 w-12 overflow-hidden rounded-lg bg-gray-200">
+            <Link
+              href={`/product/${chat.product.id}` as any}
+              className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-200 hover:opacity-90 transition-opacity"
+              title="Перейти к товару"
+            >
               <img
                 alt={chat.product.name}
                 className="h-full w-full object-cover"
                 src={chat.product.image}
               />
-            </div>
+            </Link>
           ) : null}
-          <div>
-            <h1 className="text-base font-semibold">{headerTitle}</h1>
+          <div className="min-w-0">
+            {chat.product?.id ? (
+              <Link
+                href={`/product/${chat.product.id}` as any}
+                className="text-base font-semibold hover:text-blue-600 hover:underline block truncate max-w-xs sm:max-w-md"
+                title={headerTitle}
+              >
+                {headerTitle}
+              </Link>
+            ) : otherUser?.id ? (
+              <Link
+                href={`/seller/${otherUser.id}`}
+                className="text-base font-semibold hover:text-blue-600 hover:underline block truncate max-w-xs sm:max-w-md"
+                title={headerTitle}
+              >
+                {headerTitle}
+              </Link>
+            ) : (
+              <h1 className="text-base font-semibold truncate max-w-xs sm:max-w-md">{headerTitle}</h1>
+            )}
             {isModerationChat ? (
               <p className="text-sm text-amber-700">Уведомления по объявлениям — не техподдержка</p>
             ) : chat.product?.price != null ? (
               <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
             ) : null}
             {!isModerationChat && companionName ? (
-              <p className="text-xs text-gray-500">{companionName}</p>
+              otherUser?.id ? (
+                <Link
+                  href={`/seller/${otherUser.id}`}
+                  className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 font-medium mt-0.5"
+                  title="Перейти в профиль пользователя"
+                >
+                  <span>Профиль: {companionName}</span>
+                </Link>
+              ) : (
+                <p className="text-xs text-gray-500">{companionName}</p>
+              )
             ) : null}
           </div>
         </div>
 
         {!isModerationChat ? (
           <div className="ml-auto flex items-center gap-2">
+            {otherUser?.id && (
+              <Link href={`/seller/${otherUser.id}`}>
+                <Button variant="outline" size="sm" className="hidden sm:inline-flex border-gray-200 text-gray-700 hover:bg-gray-50">
+                  Профиль
+                </Button>
+              </Link>
+            )}
             <Button className="bg-blue-500 px-4 hover:bg-blue-600" onClick={handleShowPhone}>
               {showPhone && otherUser?.phoneNumber ? otherUser.phoneNumber : "Показать номер"}
             </Button>
@@ -281,10 +323,27 @@ const ChatPage = () => {
                 {/* Аватар и имя отправителя для чужих сообщений */}
                 {!isCurrentUser && (
                   <div className="mb-1 flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-medium text-white">
-                      {senderInitials}
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">{sender?.fullName}</span>
+                    {sender?.id ? (
+                      <Link
+                        href={`/seller/${sender.id}`}
+                        className="flex items-center gap-2 group cursor-pointer"
+                        title="Перейти в профиль пользователя"
+                      >
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-medium text-white transition-opacity group-hover:opacity-85">
+                          {senderInitials}
+                        </div>
+                        <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 group-hover:underline">
+                          {sender?.fullName}
+                        </span>
+                      </Link>
+                    ) : (
+                      <>
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-medium text-white">
+                          {senderInitials}
+                        </div>
+                        <span className="text-sm font-medium text-gray-700">{sender?.fullName}</span>
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -301,9 +360,14 @@ const ChatPage = () => {
                 >
                   {/^(https?:\/\/|\/uploads\/).*\.(png|jpg|jpeg|webp|gif)(\?.*)?$/i.test(messageText.trim()) ||
                   messageText.trim().startsWith("data:image/") ? (
-                    <a href={messageText} target="_blank" rel="noreferrer" className="block max-w-xs overflow-hidden rounded-lg">
+                    <button
+                      type="button"
+                      onClick={() => setActiveImage(messageText)}
+                      className="block max-w-xs overflow-hidden rounded-lg cursor-pointer transition-transform hover:opacity-95 text-left p-0 border-0 bg-transparent"
+                      title="Нажмите, чтобы открыть фото"
+                    >
                       <img src={messageText} alt="Вложение" className="max-h-60 rounded-lg object-contain" />
-                    </a>
+                    </button>
                   ) : (
                     <p className="text-sm whitespace-pre-line">{messageText}</p>
                   )}
@@ -316,6 +380,7 @@ const ChatPage = () => {
                   <span>
                     {msg.timeString ||
                       new Date(msg.createdAt).toLocaleString("ru-RU", {
+                        timeZone: "Europe/Moscow",
                         day: "2-digit",
                         hour: "2-digit",
                         minute: "2-digit",
@@ -382,6 +447,10 @@ const ChatPage = () => {
           open={isReportOpen}
           onOpenChange={setIsReportOpen}
         />
+      )}
+
+      {activeImage && (
+        <Lightbox image={activeImage} onClose={() => setActiveImage(null)} />
       )}
     </div>
   );

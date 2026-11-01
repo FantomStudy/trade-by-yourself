@@ -24,7 +24,6 @@ export const FILTER_KEYS = [
   "maxPrice",
   "state",
   "profileType",
-  "hasSecureDeal",
   "minRating",
   "maxRating",
   "sortBy",

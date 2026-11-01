@@ -186,6 +186,7 @@ const MessagesPage = () => {
                     {chat.lastMessage ? (
                       <span className="text-xs text-gray-500">
                         {new Date(chat.lastMessage.createdAt).toLocaleString("ru-RU", {
+                          timeZone: "Europe/Moscow",
                           day: "2-digit",
                           hour: "2-digit",
                           minute: "2-digit",

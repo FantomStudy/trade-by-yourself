@@ -8,13 +8,15 @@ const CatalogPage = async ({ searchParams }: PageProps<"/">) => {
   const initialItems = await getFeed({ ...filters, page: 1 });
 
   return (
-    <ProductGrid>
-      {initialItems.map((item) => (
-        <FeedCard key={item.key} item={item} />
-      ))}
-      <FeedList filters={filters} />
+    <>
+      <ProductGrid>
+        {initialItems.map((item) => (
+          <FeedCard key={item.key} item={item} />
+        ))}
+        <FeedList filters={filters} />
+      </ProductGrid>
       <ScrollToTop />
-    </ProductGrid>
+    </>
   );
 };
 
