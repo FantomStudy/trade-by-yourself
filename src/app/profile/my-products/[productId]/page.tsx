@@ -3,6 +3,7 @@
 import type { Category } from "@/types";
 import type { ExtendedProduct } from "@/types/product";
 
+import { Camera, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -336,8 +337,15 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     const isDraft = product?.moderateState === "DRAFT";
     if (!isDraft) {
       const totalPhotos = getTotalImages();
-      const isExtraPhotos = totalPhotos > 8 && !product?.hasPaidExtraPhotos;
-      const isExtraDesc = formData.description.trim().length > 2000 && !product?.hasPaidExtraDesc;
+      const isAlreadyPaidPhotos = Boolean(
+        product?.hasPaidExtraPhotos || (product?.images && product.images.length > 8)
+      );
+      const isExtraPhotos = totalPhotos > 8 && !isAlreadyPaidPhotos;
+
+      const isAlreadyPaidDesc = Boolean(
+        product?.hasPaidExtraDesc || (product?.description && product.description.length > 2000)
+      );
+      const isExtraDesc = formData.description.trim().length > 2000 && !isAlreadyPaidDesc;
       let totalCost = 0;
       const reasons: string[] = [];
       if (isExtraPhotos) {
@@ -653,7 +661,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
                     removeImage(globalIndex);
                   }}
                 >
-                  рџ—‘пёЏ
+                  <Trash2 className="h-3.5 w-3.5 text-white" />
                 </button>
                 {globalIndex === mainImageIndex && (
                   <div className="absolute bottom-2 left-2 z-10 rounded bg-emerald-500/90 px-2 py-1 text-xs font-medium text-white">
@@ -699,7 +707,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
                     removeImage(globalIndex);
                   }}
                 >
-                  рџ—‘пёЏ
+                  <Trash2 className="h-3.5 w-3.5 text-white" />
                 </button>
                 {globalIndex === mainImageIndex && (
                   <div className="absolute bottom-2 left-2 z-10 rounded bg-emerald-500/90 px-2 py-1 text-xs font-medium text-white">
@@ -748,7 +756,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
               }}
               role="button"
             >
-              <div className="text-4xl text-gray-400 md:text-5xl">рџ“·</div>
+              <Camera className="h-9 w-9 text-gray-400 md:h-11 md:w-11" />
               <span className="text-center text-xs font-medium text-gray-500 md:text-sm">
                 Добавить фото
               </span>

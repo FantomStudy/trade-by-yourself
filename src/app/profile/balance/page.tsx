@@ -337,9 +337,10 @@ const BalancePage = () => {
                 <div className={styles["payment-right"]}>
                   <Typography className={styles["payment-amount"]}>+{payment.amount} ₽</Typography>
                   {payment.status === "PENDING" && (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       {payment.paymentUrl && (
                         <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => {
                             const isMobile =
@@ -361,6 +362,7 @@ const BalancePage = () => {
                         </Button>
                       )}
                       <Button
+                        size="sm"
                         disabled={checkStatusMutation.isPending}
                         variant="success"
                         onClick={() => handleCheckStatus(payment.paymentId)}

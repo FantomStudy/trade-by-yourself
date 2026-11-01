@@ -1,20 +1,25 @@
 .layout {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 320px minmax(0, 1fr);
   align-items: start;
   gap: var(--space-md);
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (max-width: 1024px) {
   .layout {
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 280px minmax(0, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
     padding-bottom: 80px;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 }
