@@ -76,6 +76,8 @@ export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>
     return handleClose;
   }, [screen, completeAuthFlow, handleClose]);
 
+  const ScreenComponent = AUTH_SCREENS[screen].component;
+
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
       <DialogContent>
@@ -83,15 +85,15 @@ export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>
           <DialogTitle>{AUTH_SCREENS[screen].title}</DialogTitle>
         </DialogHeader>
 
-        {AUTH_SCREENS[screen].component({
-          onChangeScreen: setScreen,
-          onClose: getOnCloseHandler(),
-          phoneNumber,
-          onPhoneNumberChange: setPhoneNumber,
-          email,
-          onEmailChange: setEmail,
-          onAuthComplete: completeAuthFlow,
-        })}
+        <ScreenComponent
+          onChangeScreen={setScreen}
+          onClose={getOnCloseHandler()}
+          phoneNumber={phoneNumber}
+          onPhoneNumberChange={setPhoneNumber}
+          email={email}
+          onEmailChange={setEmail}
+          onAuthComplete={completeAuthFlow}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -488,9 +488,9 @@ const ProfileSettingsPage = () => {
           </DialogHeader>
 
           <div className="space-y-4 pt-2">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 text-center">
               Код подтверждения отправлен по SMS на номер{" "}
-              <b>{data.phoneNumber}</b>. Введите 6-значный код ниже:
+              <b className="whitespace-nowrap">{data.phoneNumber}</b>. Введите 6-значный код ниже:
             </p>
 
             <div>
@@ -510,7 +510,7 @@ const ProfileSettingsPage = () => {
               )}
             </div>
 
-            <div className="flex flex-col gap-2 pt-2">
+            <div className="flex flex-col gap-3 pt-2">
               <Button
                 type="button"
                 variant="success"
@@ -521,13 +521,13 @@ const ProfileSettingsPage = () => {
                 {isConfirmingPhone ? "Проверка кода..." : "Подтвердить новый номер"}
               </Button>
 
-              <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
+              <div className="flex flex-col items-center gap-2 pt-1 text-center">
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="link"
                   disabled={phoneTimer > 0 || isSendingPhoneCode}
                   onClick={handleSendPhoneCode}
-                  className="p-0 h-auto text-xs font-normal underline"
+                  className="p-0 h-auto text-xs font-normal"
                 >
                   {phoneTimer > 0
                     ? `Повторить через ${phoneTimer} сек.`

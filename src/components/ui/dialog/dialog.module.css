@@ -28,6 +28,7 @@
   max-height: calc(100vh - 32px);
   max-height: calc(100dvh - 32px);
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   background-color: var(--background);
@@ -95,6 +96,13 @@
   flex-direction: column;
   gap: 8px;
   text-align: center;
+  padding: 0 28px;
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 0 20px;
+  }
 }
 
 .footer {
@@ -105,13 +113,15 @@
 }
 
 .title {
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: break-word;
 }
 
 @media (max-width: 640px) {
   .title {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
