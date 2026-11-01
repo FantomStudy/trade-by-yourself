@@ -58,3 +58,8 @@ export const getAllSupportTickets = async () =>
 
 export const getSupportTicket = async (ticketId: number) =>
   api<SupportTicket>(`/support/tickets/${ticketId}`, { cache: "no-store" });
+
+export const markSupportTicketRead = async (ticketId: number) =>
+  api<{ ok: boolean }>(`/support/tickets/${ticketId}/read`, {
+    method: "POST",
+  });

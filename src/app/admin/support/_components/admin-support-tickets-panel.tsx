@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import {
   getAllSupportTickets,
   getSupportTicket,
+  markSupportTicketRead,
   sendSupportTicketMessage,
 } from "@/lib/api/requests";
 import type { SupportTicket, SupportTicketMessage } from "@/lib/api/requests";
@@ -87,7 +88,12 @@ export function AdminSupportTicketsPanel() {
 
   const loadMessages = useCallback(async (ticketId: number) => {
     const ticket = await getSupportTicket(ticketId);
-    if (!unmountedRef.current) setMessages(ticket.messages ?? []);
+    if (!unmountedRef.current) {
+      setMessages(ticket.messages ?? []);
+      setTickets((prev) =>
+        prev.map((t) => (t.id === ticketId ? { ...t, unreadCount: 0 } : t))
+      );
+    }
   }, []);
 
   // Мёрж новых WS-сообщений
@@ -199,11 +205,15 @@ export function AdminSupportTicketsPanel() {
     selectedIdRef.current = ticketId;
     setSelectedId(ticketId);
     setReadTicketIds((prev) => new Set(prev).add(ticketId));
+    setTickets((prev) =>
+      prev.map((t) => (t.id === ticketId ? { ...t, unreadCount: 0 } : t))
+    );
     lastMsgCountRef.current = 0;
     setMessages([]);
     // Джойним WS-рум
     if (wsRef.current) tryJoin(wsRef.current);
     try {
+      void markSupportTicketRead(ticketId).catch(() => {});
       await loadMessages(ticketId);
       scrollToBottom(true);
     } catch (error) {
@@ -257,7 +267,7 @@ export function AdminSupportTicketsPanel() {
             <p className="p-4 text-sm text-gray-500">Обращений пока нет</p>
           ) : (
             tickets.map((ticket) => {
-              const unread = readTicketIds.has(ticket.id) ? 0 : (ticket.unreadCount ?? 0);
+              const unread = (selectedId === ticket.id || readTicketIds.has(ticket.id)) ? 0 : (ticket.unreadCount ?? 0);
               const lastMsgIsStaff = ticket.lastMessage
                 ? isSupportStaff((ticket.lastMessage.author as any)?.role?.name) ||
                   ticket.lastMessage.authorId !== ticket.userId

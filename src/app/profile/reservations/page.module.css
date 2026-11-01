@@ -161,16 +161,28 @@
 }
 
 .cardFooter {
-  padding: 0 12px 12px;
+  padding: 0 10px 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 }
 
 .actionsRow {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  width: 100%;
+}
+
+.actionsRow button {
+  width: 100%;
+  font-size: 11px;
+  line-height: 1.25;
+  white-space: normal;
+  text-align: center;
+  padding: 6px 4px;
+  height: auto;
+  min-height: 36px;
+  justify-content: center;
 }
 
 .actionsColumn {

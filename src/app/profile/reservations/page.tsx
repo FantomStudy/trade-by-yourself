@@ -265,7 +265,7 @@ const ReservationsPage = () => {
         {isCancelled ? (
           <div className={styles.cardFooter}>
             <div className={styles.actionsRow}>
-              <Button disabled type="button" variant="outline">
+              <Button size="sm" disabled type="button" variant="outline" className="w-full text-xs text-center leading-tight py-1.5 px-1 h-auto min-h-[34px]">
                 Резерв отменён
               </Button>
             </div>
@@ -273,7 +273,7 @@ const ReservationsPage = () => {
         ) : isDeal ? (
           <div className={styles.cardFooter}>
             <div className={styles.actionsRow}>
-              <Button disabled type="button" variant="outline">
+              <Button size="sm" disabled type="button" variant="outline" className="w-full text-xs text-center leading-tight py-1.5 px-1 h-auto min-h-[34px]">
                 Сделка создана
               </Button>
             </div>
@@ -281,7 +281,7 @@ const ReservationsPage = () => {
         ) : isExpired ? (
           <div className={styles.cardFooter}>
             <div className={styles.actionsRow}>
-              <Button disabled type="button" variant="outline">
+              <Button size="sm" disabled type="button" variant="outline" className="w-full text-xs text-center leading-tight py-1.5 px-1 h-auto min-h-[34px]">
                 Срок резерва истёк
               </Button>
             </div>
@@ -291,9 +291,11 @@ const ReservationsPage = () => {
             {isBuyer ? (
               <div className={styles.actionsRow}>
                 <Button
+                  size="sm"
                   disabled={cancelMutation.isPending}
                   type="button"
                   variant="destructive"
+                  className="w-full text-xs text-center leading-tight py-1.5 px-1 h-auto min-h-[34px]"
                   onClick={() => handleCancel(reservation.id)}
                 >
                   Отменить резерв

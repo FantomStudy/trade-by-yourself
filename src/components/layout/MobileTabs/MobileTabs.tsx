@@ -7,7 +7,6 @@ import {
   UserRoundIcon,
 } from "lucide-react";
 import { getCurrentUser } from "@/api/requests";
-import { Avatar } from "@/components/ui/Avatar";
 import { ActiveLink } from "./ActiveLink";
 import styles from "./MobileTabs.module.css";
 
@@ -38,7 +37,13 @@ export const MobileTabs = async () => {
 
       <ActiveLink href="/profile/settings">
         {user?.photo ? (
-          <Avatar size="sm" src={user.photo} fallback={user.fullName} className={styles.avatar} />
+          <span className={clsx(styles.avatar, "relative flex h-6 w-6 shrink-0 overflow-hidden rounded-full")}>
+            <img
+              src={user.photo}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          </span>
         ) : (
           <UserRoundIcon fill="currentColor" />
         )}
