@@ -9,6 +9,6 @@ export const sendVerifyEmail = async (): Promise<{ message: string }> => {
 export const verifyEmailCode = async (code: string): Promise<{ message: string }> => {
   return api<{ message: string }>(`/user/verify-code?code=${encodeURIComponent(code)}`, {
     method: "POST",
-    data: { code },
+    body: { code },
   });
 };
