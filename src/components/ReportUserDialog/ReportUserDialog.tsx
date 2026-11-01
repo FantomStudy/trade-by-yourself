@@ -103,7 +103,7 @@ export const ReportUserDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-6">
+      <DialogContent className="max-w-md p-4 sm:p-6 max-h-[85dvh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-2 text-red-600">
             <Flag className="h-5 w-5" />
@@ -162,11 +162,12 @@ export const ReportUserDialog = ({
             </span>
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2 border-t">
             <Button
               type="button"
               variant="outline"
               disabled={isSubmitting}
+              className="w-full sm:w-auto"
               onClick={() => onOpenChange(false)}
             >
               Отмена
@@ -174,7 +175,7 @@ export const ReportUserDialog = ({
             <Button
               type="submit"
               disabled={isSubmitting || !details.trim()}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white"
             >
               {isSubmitting ? "Отправка..." : "Отправить жалобу"}
             </Button>

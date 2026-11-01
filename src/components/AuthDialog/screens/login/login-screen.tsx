@@ -13,9 +13,14 @@ export const LoginScreen = ({ onClose, onChangeScreen }: AuthScreenProps) => {
     <>
       <LoginForm onSuccess={onClose} />
 
-      <VkLoginButton />
-      <TIDLoginButton />
-      <YandexLoginButton />
+      <div className={styles.oauthSection}>
+        <span className={styles.oauthLabel}>или</span>
+        <div className={styles.oauthButtons}>
+          <VkLoginButton />
+          <TIDLoginButton />
+          <YandexLoginButton />
+        </div>
+      </div>
 
       <div className={styles.linkActions}>
         <Typography>Вы забыли пароль?</Typography>

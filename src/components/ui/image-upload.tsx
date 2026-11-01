@@ -40,10 +40,16 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     const files = Array.from(event.target.files || []);
     if (files.length === 0) return;
 
+    let targetMax = maxAllowed;
+    if (images.length + files.length > targetMax && targetMax < 15) {
+      targetMax = 15;
+      setMaxAllowed(15);
+    }
+
     const validationError = await validateImageFiles(files, {
       currentCount: images.length,
       currentTotalBytes: images.reduce((sum, file) => sum + file.size, 0),
-      maxFiles: maxAllowed,
+      maxFiles: targetMax,
     });
 
     if (validationError) {
@@ -55,7 +61,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
     setLocalError(null);
     onValidationError?.(null);
-    const newImages = [...images, ...files].slice(0, maxAllowed);
+    const newImages = [...images, ...files].slice(0, targetMax);
     const reordered = reorderImagesWithMain(newImages, mainImageIndex);
     setImages(reordered);
     onImagesChange?.(reordered);

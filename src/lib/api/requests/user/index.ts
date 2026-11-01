@@ -6,3 +6,5 @@ export * from "./set-balance";
 export * from "./set-user-role";
 export * from "./toggle-banned";
 export * from "./update-user";
+export * from "./verify-email";
+export * from "./change-phone";

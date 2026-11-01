@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Input } from "@/components/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, Input, PhoneField } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
+import { confirmPhoneChange, requestPhoneChange } from "@/lib/api/requests/user";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 
 import { toast } from "sonner";
 import { AvatarEditor } from "./_components/avatar-editor";
@@ -26,13 +28,25 @@ interface ProfileSettings {
   legalAddress?: string;
 }
 
+const cleanPhoneDigits = (p?: string) => (p || "").replace(/\D/g, "");
+
 const ProfileSettingsPage = () => {
   const [data, setData] = useState<ProfileSettings | null>(null);
+  const [initialPhone, setInitialPhone] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [rawImageUrl, setRawImageUrl] = useState<string | null>(null);
   const [showEditor, setShowEditor] = useState(false);
+
+  // Состояние подтверждения нового номера телефона
+  const [showPhoneVerifyDialog, setShowPhoneVerifyDialog] = useState(false);
+  const [phoneCode, setPhoneCode] = useState("");
+  const [phoneTimer, setPhoneTimer] = useState(0);
+  const [phoneError, setPhoneError] = useState<string>();
+  const [isSendingPhoneCode, setIsSendingPhoneCode] = useState(false);
+  const [isConfirmingPhone, setIsConfirmingPhone] = useState(false);
+
   const previewUrl = useMemo(() => {
     if (!selectedFile) return null;
     try {
@@ -43,11 +57,27 @@ const ProfileSettingsPage = () => {
   }, [selectedFile]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const isPhoneChanged = useMemo(() => {
+    if (!data?.phoneNumber && !initialPhone) return false;
+    return cleanPhoneDigits(data?.phoneNumber) !== cleanPhoneDigits(initialPhone);
+  }, [data?.phoneNumber, initialPhone]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (phoneTimer > 0) {
+      interval = setInterval(() => {
+        setPhoneTimer((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [phoneTimer]);
+
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
         const res = await api<ProfileSettings>("/auth/me");
+        setInitialPhone(res.phoneNumber || "");
         // Загружаем локально сохранённые реквизиты компании, если есть
         let companyExtras = {};
         try {
@@ -71,12 +101,64 @@ const ProfileSettingsPage = () => {
     setData((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
 
+  const handleSendPhoneCode = async () => {
+    if (!data?.phoneNumber) return;
+    try {
+      setIsSendingPhoneCode(true);
+      setPhoneError(undefined);
+      await requestPhoneChange(data.phoneNumber);
+      toast.success("Код подтверждения отправлен по SMS на новый номер");
+      setPhoneTimer(60);
+      setShowPhoneVerifyDialog(true);
+    } catch (err) {
+      setPhoneError(getApiErrorMessage(err, "Не удалось отправить код"));
+      toast.error(getApiErrorMessage(err, "Не удалось отправить код"));
+    } finally {
+      setIsSendingPhoneCode(false);
+    }
+  };
+
+  const handleConfirmPhone = async () => {
+    if (!phoneCode || phoneCode.trim().length !== 6) {
+      setPhoneError("Введите 6-значный код из SMS");
+      return;
+    }
+    try {
+      setIsConfirmingPhone(true);
+      setPhoneError(undefined);
+      const res = await confirmPhoneChange(phoneCode.trim());
+      toast.success("Номер телефона успешно подтверждён!");
+      setInitialPhone(res.phoneNumber);
+      setData((prev) => (prev ? { ...prev, phoneNumber: res.phoneNumber } : prev));
+      setShowPhoneVerifyDialog(false);
+      setPhoneCode("");
+    } catch (err) {
+      setPhoneError(getApiErrorMessage(err, "Неверный код подтверждения"));
+    } finally {
+      setIsConfirmingPhone(false);
+    }
+  };
+
+  const handleCancelPhoneChange = () => {
+    // Если не подтвердил, возвращается старый номер
+    setData((prev) => (prev ? { ...prev, phoneNumber: initialPhone } : prev));
+    setShowPhoneVerifyDialog(false);
+    setPhoneCode("");
+    setPhoneError(undefined);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!data) return;
+
+    // Если номер был изменён, его необходимо подтвердить через SMS
+    if (isPhoneChanged) {
+      await handleSendPhoneCode();
+      return;
+    }
+
     try {
       setSaving(true);
-      // Backend reads ONLY FormValue — always send multipart/form-data
       const fd = new FormData();
       fd.append("fullName", data.fullName || "");
       fd.append("phoneNumber", data.phoneNumber || "");
@@ -113,6 +195,7 @@ const ProfileSettingsPage = () => {
       });
       if (fresh.ok) {
         const freshData = await fresh.json();
+        setInitialPhone(freshData.phoneNumber || "");
         setData((prev) => ({ ...freshData, companyName: prev?.companyName, inn: prev?.inn, ogrn: prev?.ogrn, legalAddress: prev?.legalAddress }));
       }
       setSelectedFile(null);
@@ -249,12 +332,26 @@ const ProfileSettingsPage = () => {
         <label className="mb-1 block text-sm text-gray-600" htmlFor="phoneNumber">
           Номер телефона
         </label>
-        <Input
-          className="bg-white"
-          id="phoneNumber"
+        <PhoneField
           value={data.phoneNumber || ""}
-          onChange={(e) => handleChange("phoneNumber", e.target.value)}
+          onChange={(val) => handleChange("phoneNumber", val)}
+          placeholder="+7 (___) ___-__-__"
         />
+        {isPhoneChanged && (
+          <div className="mt-2 flex flex-col gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-amber-800">
+              Вы указали новый номер. Для его сохранения необходимо подтверждение по SMS.
+            </p>
+            <Button
+              type="button"
+              variant="success"
+              onClick={handleSendPhoneCode}
+              disabled={isSendingPhoneCode}
+            >
+              {isSendingPhoneCode ? "Отправка..." : "Подтвердить номер"}
+            </Button>
+          </div>
+        )}
       </div>
 
       <div>
@@ -378,9 +475,80 @@ const ProfileSettingsPage = () => {
 
       <div>
         <Button disabled={saving} type="submit">
-          {saving ? "Сохранение..." : "Сохранить"}
+          {saving ? "Сохранение..." : isPhoneChanged ? "Подтвердить номер и сохранить" : "Сохранить"}
         </Button>
       </div>
+
+      <Dialog open={showPhoneVerifyDialog} onOpenChange={(open) => {
+        if (!open) handleCancelPhoneChange();
+      }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Подтверждение нового номера телефона</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 pt-2">
+            <p className="text-sm text-gray-600">
+              Код подтверждения отправлен по SMS на номер{" "}
+              <b>{data.phoneNumber}</b>. Введите 6-значный код ниже:
+            </p>
+
+            <div>
+              <Input
+                type="text"
+                maxLength={6}
+                value={phoneCode}
+                onChange={(e) => {
+                  setPhoneCode(e.target.value.replace(/\D/g, ""));
+                  setPhoneError(undefined);
+                }}
+                placeholder="Код из SMS (6 цифр)"
+                className="bg-white text-center text-lg tracking-widest font-mono"
+              />
+              {phoneError && (
+                <p className="mt-1 text-xs text-red-500">{phoneError}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-2 pt-2">
+              <Button
+                type="button"
+                variant="success"
+                disabled={isConfirmingPhone || phoneCode.trim().length !== 6}
+                onClick={handleConfirmPhone}
+                className="w-full"
+              >
+                {isConfirmingPhone ? "Проверка кода..." : "Подтвердить новый номер"}
+              </Button>
+
+              <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={phoneTimer > 0 || isSendingPhoneCode}
+                  onClick={handleSendPhoneCode}
+                  className="p-0 h-auto text-xs font-normal underline"
+                >
+                  {phoneTimer > 0
+                    ? `Повторить через ${phoneTimer} сек.`
+                    : isSendingPhoneCode
+                      ? "Отправка..."
+                      : "Отправить код повторно"}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handleCancelPhoneChange}
+                  className="p-0 h-auto text-xs font-normal text-gray-400 hover:text-gray-600"
+                >
+                  Отмена (оставить старый номер)
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </form>
   );
 };

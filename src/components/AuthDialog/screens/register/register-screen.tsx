@@ -7,10 +7,13 @@ import { RegisterForm } from "./register-form";
 
 import styles from "../screens.module.css";
 
-export const RegisterScreen = ({ onChangeScreen, onPhoneNumberChange }: AuthScreenProps) => {
-  // sign-up шлёт SMS; сессия обычно выдаётся после verify-mobile-code (см. useVerifyMobileCodeMutation)
-  const handleRegisterSuccess = (phoneNumber: string) => {
+export const RegisterScreen = ({ onChangeScreen, onPhoneNumberChange, onEmailChange }: AuthScreenProps) => {
+  // sign-up шлёт SMS; сессия выдаётся после verify-mobile-code, затем подтверждаем email
+  const handleRegisterSuccess = (phoneNumber: string, email?: string) => {
     onPhoneNumberChange?.(phoneNumber);
+    if (email) {
+      onEmailChange?.(email);
+    }
     onChangeScreen("verify-code");
   };
 

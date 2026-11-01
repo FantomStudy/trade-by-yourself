@@ -41,16 +41,13 @@ export const VkLoginButton = () => {
   };
 
   return (
-    <div className={styles.oauth}>
-      <span className={styles.oauthLabel}>или</span>
-      <Button
-        className={styles.oauthButton}
-        type="button"
-        variant="success"
-        onClick={() => void onLogin()}
-      >
-        Войти через VK
-      </Button>
-    </div>
+    <Button
+      className={styles.oauthButton}
+      type="button"
+      variant="success"
+      onClick={() => void onLogin()}
+    >
+      Войти через VK
+    </Button>
   );
 };

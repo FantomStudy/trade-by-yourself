@@ -7,14 +7,18 @@ import { VerifyCodeForm } from "./verify-code-form";
 
 import styles from "../screens.module.css";
 
-export const VerifyCodeScreen = ({ onClose, onChangeScreen, phoneNumber }: AuthScreenProps) => {
+export const VerifyCodeScreen = ({ onChangeScreen, phoneNumber }: AuthScreenProps) => {
+  const handlePhoneVerified = () => {
+    onChangeScreen("verify-email");
+  };
+
   return (
     <>
       <Typography className={styles.description}>
         Код подтверждения отправлен на ваш номер телефона. Введите его ниже.
       </Typography>
 
-      <VerifyCodeForm phoneNumber={phoneNumber || ""} onSuccess={onClose} />
+      <VerifyCodeForm phoneNumber={phoneNumber || ""} onSuccess={handlePhoneVerified} />
 
       <div className={styles.actions}>
         <Typography>Не получили код?</Typography>

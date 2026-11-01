@@ -3,8 +3,15 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MobileTabs } from "@/components/layout/MobileTabs";
 import { Sonner } from "@/components/ui/Sonner";
+import { SupportHelpWidget } from "@/components/support-help-modal";
 import { Providers } from "./providers";
 import "./globals.css";
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   title: "Торгуй сам",
@@ -20,6 +27,7 @@ const RootLayout = async ({ children }: LayoutProps<"/">) => {
           <main>{children}</main>
           <Footer />
           <MobileTabs />
+          <SupportHelpWidget />
           <Sonner />
         </Providers>
       </body>

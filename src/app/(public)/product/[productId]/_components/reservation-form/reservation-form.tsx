@@ -205,6 +205,21 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
                   : `Осталось: ${formatRemainingTime(remainingMs)}`}
               </Typography>
             )}
+            {reservation?.note && (isBuyerOnReservation || isSellerOnReservation) ? (
+              <Typography
+                style={{
+                  fontSize: "14px",
+                  color: "#6b7280",
+                  textAlign: "center",
+                  padding: "4px 8px",
+                  backgroundColor: "#f9fafb",
+                  borderRadius: "6px",
+                  border: "1px solid #e5e7eb",
+                }}
+              >
+                <strong>Комментарий:</strong> {reservation.note}
+              </Typography>
+            ) : null}
           </>
         )}
         {showCancelledReservationState ? (

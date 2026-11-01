@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui";
 import { CURRENT_USER_QUERY_KEY } from "@/lib/api/hooks/queries/useCurrentUser";
 
-import { LoginScreen, RecoverScreen, RegisterScreen, VerifyCodeScreen } from "./screens";
+import { LoginScreen, RecoverScreen, RegisterScreen, VerifyCodeScreen, VerifyEmailScreen } from "./screens";
 
 const AUTH_SCREENS = {
   login: {
@@ -34,18 +34,25 @@ const AUTH_SCREENS = {
     title: "Подтверждение номера",
     component: VerifyCodeScreen,
   },
+  "verify-email": {
+    id: "verify-email",
+    title: "Подтверждение почты",
+    component: VerifyEmailScreen,
+  },
 };
 
 export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>) => {
   const queryClient = useQueryClient();
   const [screen, setScreen] = useState<AuthScreen>("login");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   const handleOpenChange = useCallback(
     (isOpen: boolean) => {
       if (!isOpen) {
         setScreen("login");
         setPhoneNumber("");
+        setEmail("");
       }
       onOpenChange?.(isOpen);
     },
@@ -63,7 +70,7 @@ export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>
   }, [queryClient, handleOpenChange]);
 
   const getOnCloseHandler = useCallback(() => {
-    if (screen === "verify-code") {
+    if (screen === "verify-code" || screen === "verify-email") {
       return completeAuthFlow;
     }
     return handleClose;
@@ -81,6 +88,8 @@ export const AuthDialog = ({ open, onOpenChange }: ComponentProps<typeof Dialog>
           onClose: getOnCloseHandler(),
           phoneNumber,
           onPhoneNumberChange: setPhoneNumber,
+          email,
+          onEmailChange: setEmail,
           onAuthComplete: completeAuthFlow,
         })}
       </DialogContent>

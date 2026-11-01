@@ -1,26 +1,40 @@
 .actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-xs, 4px);
   color: var(--muted-foreground);
   text-align: center;
 }
 .linkActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs, 4px);
   text-align: center;
   color: var(--muted-foreground);
+}
+
+.oauthSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .oauth {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm, 8px);
-  margin-top: var(--space-md, 12px);
 }
 
 .oauthLabel {
   text-align: center;
   font-size: 0.875rem;
   color: var(--muted-foreground);
+}
+
+.oauthButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .oauthButton {

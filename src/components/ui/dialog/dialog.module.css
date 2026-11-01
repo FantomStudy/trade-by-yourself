@@ -20,17 +20,42 @@
   left: 50%;
   z-index: 50;
   display: grid;
-  gap: 32px;
+  gap: 24px;
   width: calc(100% - 32px);
   /* Переопределяется через --dialog-max-width: утилиты Tailwind
      лежат в @layer utilities и проигрывают этому правилу CSS-модуля. */
   max-width: var(--dialog-max-width, 448px);
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   background-color: var(--background);
   border-radius: 12px;
   border: 1px solid #e0e0e0;
   padding: 24px;
   transform: translate(-50%, -50%);
   animation-duration: 200ms;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+@media (max-width: 640px) {
+  .content {
+    gap: 16px;
+    padding: 20px 16px;
+    width: calc(100% - 24px);
+    max-height: calc(100dvh - 24px);
+  }
 }
 
 .contentOpen {
@@ -51,6 +76,14 @@
   background: none;
   border: none;
   cursor: pointer;
+  z-index: 10;
+}
+
+@media (max-width: 640px) {
+  .closeButton {
+    top: 12px;
+    right: 12px;
+  }
 }
 
 .closeButton:hover {
@@ -72,8 +105,14 @@
 }
 
 .title {
-  font-size: 24;
+  font-size: 24px;
   font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 20px;
+  }
 }
 
 .description {

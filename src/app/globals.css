@@ -94,6 +94,9 @@
   }
 
   @media (max-width: 768px) {
+    body {
+      padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    }
     .global-container {
       padding: 0 16px;
     }

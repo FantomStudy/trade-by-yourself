@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { Category } from "@/types";
 import type { ExtendedProduct } from "@/types/product";
@@ -137,10 +137,11 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
   };
 
   const handleImagesChange = async (newImages: File[]) => {
+    const maxFiles = 15;
     const validationError = await validateImageFiles(newImages, {
       currentCount: existingImages.length + images.length,
       currentTotalBytes: images.reduce((sum, file) => sum + file.size, 0),
-      maxFiles: 8,
+      maxFiles,
     });
     if (validationError) {
       setError(validationError);
@@ -666,7 +667,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
             );
           })}
           {/* Кнопка добавления фото */}
-          {getTotalImages() < 8 && (
+          {getTotalImages() < 15 && (
             <div
               className="flex h-[150px] w-[150px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 transition-all duration-200 hover:border-gray-400 hover:bg-gray-100 md:h-[200px] md:w-[200px]"
               tabIndex={0}

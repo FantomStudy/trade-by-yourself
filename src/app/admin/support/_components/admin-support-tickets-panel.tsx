@@ -252,7 +252,7 @@ export function AdminSupportTicketsPanel() {
 
       <div className="grid flex-1 min-h-0 overflow-hidden md:grid-cols-[280px_1fr]">
         {/* Список тикетов */}
-        <div className="h-full overflow-y-auto border-r">
+        <div className={`h-full overflow-y-auto border-r ${selectedId != null ? "hidden md:block" : "block"}`}>
           {tickets.length === 0 ? (
             <p className="p-4 text-sm text-gray-500">Обращений пока нет</p>
           ) : (
@@ -305,7 +305,18 @@ export function AdminSupportTicketsPanel() {
         </div>
 
         {/* Переписка */}
-        <div className="flex h-full min-h-0 flex-col overflow-hidden">
+        <div className={`flex h-full min-h-0 flex-col overflow-hidden ${selectedId == null ? "hidden md:flex" : "flex"}`}>
+          {selectedId != null && (
+            <div className="flex md:hidden items-center gap-2 border-b p-2 bg-gray-50">
+              <button
+                type="button"
+                onClick={() => setSelectedId(null)}
+                className="flex items-center gap-1 text-sm font-semibold text-purple-700 hover:text-purple-900"
+              >
+                ← Назад к обращениям
+              </button>
+            </div>
+          )}
           {selectedId == null ? (
             <p className="p-6 text-sm text-gray-500">Выберите обращение слева</p>
           ) : (

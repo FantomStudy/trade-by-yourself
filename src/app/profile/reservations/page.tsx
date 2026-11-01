@@ -241,6 +241,12 @@ const ReservationsPage = () => {
             <span className={styles.metaStrong}>{counterpartyLabel}:</span> {counterpartyName}
             <br />
             <span className={styles.metaStrong}>Создан:</span> {formatDate(reservation.createdAt)}
+            {reservation.note ? (
+              <>
+                <br />
+                <span className={styles.metaStrong}>Комментарий:</span> {reservation.note}
+              </>
+            ) : null}
           </p>
         </div>
       </>

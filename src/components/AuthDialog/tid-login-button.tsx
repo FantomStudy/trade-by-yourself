@@ -41,15 +41,13 @@ export const TIDLoginButton = () => {
   };
 
   return (
-    <div className={styles.oauth}>
-      <Button
-        className={styles.oauthButton}
-        type="button"
-        variant="success"
-        onClick={() => void onLogin()}
-      >
-        Войти через T-ID
-      </Button>
-    </div>
+    <Button
+      className={styles.oauthButton}
+      type="button"
+      variant="success"
+      onClick={() => void onLogin()}
+    >
+      Войти через T-ID
+    </Button>
   );
 };

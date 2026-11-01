@@ -17,8 +17,8 @@ import { registerSchema } from "@/lib/api";
 import styles from "../forms.module.css";
 
 interface RegisterFormProps {
-  /** После sign-up переходим на ввод SMS — передаём номер в форму кода */
-  onSuccess?: (phoneNumber: string) => void;
+  /** После sign-up переходим на ввод SMS — передаём номер и почту в форму кода */
+  onSuccess?: (phoneNumber: string, email?: string) => void;
 }
 
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
@@ -48,7 +48,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const onSubmit: SubmitHandler<RegisterData> = async (formData) => {
     registerMutation.mutate(formData, {
       onSuccess: () => {
-        onSuccess?.(formData.phoneNumber);
+        onSuccess?.(formData.phoneNumber, formData.email);
         setError(undefined);
       },
       onError: (err) => {

@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { getAllReviewAppeals, resolveReviewAppeal } from "@/api/requests/reviews";
 import { useModerateReviewMutation, useReviewsToModerate } from "@/api/hooks";
-import { Dialog, Typography } from "@/components/ui";
+import { Dialog, DialogContent, Typography } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 
 import { MobileHeader } from "../_components/admin-sidebar";
@@ -184,14 +184,16 @@ const ReviewsPage = () => {
       </div>
 
       <Dialog onOpenChange={setShowRejectDialog} open={showRejectDialog}>
-        <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-          <Typography className="text-lg font-semibold">Подтверждение отклонения</Typography>
-          <Typography className="text-gray-600">Вы уверены, что хотите отклонить этот отзыв?</Typography>
-          <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
-            <Button onClick={() => setShowRejectDialog(false)}>Отмена</Button>
-            <Button onClick={handleRejectConfirm}>Отклонить</Button>
+        <DialogContent className="max-w-md p-6">
+          <div className="flex flex-col gap-4">
+            <Typography className="text-lg font-semibold">Подтверждение отклонения</Typography>
+            <Typography className="text-gray-600">Вы уверены, что хотите отклонить этот отзыв?</Typography>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setShowRejectDialog(false)}>Отмена</Button>
+              <Button onClick={handleRejectConfirm}>Отклонить</Button>
+            </div>
           </div>
-        </div>
+        </DialogContent>
       </Dialog>
     </>
   );
