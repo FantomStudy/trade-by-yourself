@@ -92,10 +92,28 @@ const BalancePage = () => {
       console.log("[BALANCE PAGE] Payment ID:", result.paymentId);
       console.log("[BALANCE PAGE] Order ID:", result.orderId);
 
-      // Открываем ссылку на оплату в новой вкладке
-      window.open(result.paymentUrl, "_blank");
+      if (!result?.paymentUrl) {
+        toast.error("Не удалось получить ссылку на оплату");
+        return;
+      }
+
       toast.success("Перенаправление на страницу оплаты...");
       setAmount("");
+
+      const isMobile =
+        typeof window !== "undefined" &&
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
+
+      if (isMobile) {
+        window.location.href = result.paymentUrl;
+      } else {
+        const popup = window.open(result.paymentUrl, "_blank");
+        if (!popup || popup.closed || typeof popup.closed === "undefined") {
+          window.location.href = result.paymentUrl;
+        }
+      }
     } catch (error) {
       console.error("[BALANCE PAGE] Error creating payment:", error);
       toast.error("Ошибка при создании платежа");
@@ -319,13 +337,37 @@ const BalancePage = () => {
                 <div className={styles["payment-right"]}>
                   <Typography className={styles["payment-amount"]}>+{payment.amount} ₽</Typography>
                   {payment.status === "PENDING" && (
-                    <Button
-                      disabled={checkStatusMutation.isPending}
-                      variant="success"
-                      onClick={() => handleCheckStatus(payment.paymentId)}
-                    >
-                      {checkStatusMutation.isPending ? "Проверка..." : "Проверить"}
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      {payment.paymentUrl && (
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            const isMobile =
+                              typeof window !== "undefined" &&
+                              /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                                navigator.userAgent,
+                              );
+                            if (isMobile) {
+                              window.location.href = payment.paymentUrl;
+                            } else {
+                              const popup = window.open(payment.paymentUrl, "_blank");
+                              if (!popup || popup.closed || typeof popup.closed === "undefined") {
+                                window.location.href = payment.paymentUrl;
+                              }
+                            }
+                          }}
+                        >
+                          Оплатить
+                        </Button>
+                      )}
+                      <Button
+                        disabled={checkStatusMutation.isPending}
+                        variant="success"
+                        onClick={() => handleCheckStatus(payment.paymentId)}
+                      >
+                        {checkStatusMutation.isPending ? "Проверка..." : "Проверить"}
+                      </Button>
+                    </div>
                   )}
                 </div>
               </div>

@@ -282,11 +282,11 @@ const ProfileSettingsPage = () => {
   if (!data) return <div>Не удалось загрузить настройки</div>;
 
   return (
-    <form className="space-y-6" onSubmit={handleSave}>
+    <form className="space-y-6 pb-20 sm:pb-8" onSubmit={handleSave}>
       <h1 className="text-2xl font-bold">Настройки профиля</h1>
 
-      <div className="flex items-center gap-6">
-        <div className="relative h-32 w-32 overflow-hidden rounded-full bg-gray-100">
+      <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-6">
+        <div className="relative h-28 w-28 sm:h-32 sm:w-32 shrink-0 overflow-hidden rounded-full bg-gray-100 shadow-sm">
           {previewUrl || photoSrc ? (
             <Image fill alt="avatar" className="object-cover" src={previewUrl ?? photoSrc!} />
           ) : (
@@ -303,6 +303,7 @@ const ProfileSettingsPage = () => {
           />
           <Button
             type="button"
+            variant="outline"
             onClick={() => {
               inputRef.current?.click();
             }}
@@ -482,13 +483,15 @@ const ProfileSettingsPage = () => {
       <Dialog open={showPhoneVerifyDialog} onOpenChange={(open) => {
         if (!open) handleCancelPhoneChange();
       }}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Подтверждение нового номера телефона</DialogTitle>
+        <DialogContent className="max-w-md w-[calc(100%-32px)]">
+          <DialogHeader className="px-6 sm:px-8">
+            <DialogTitle className="text-base sm:text-lg text-center leading-snug">
+              Подтверждение нового номера телефона
+            </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 pt-2">
-            <p className="text-sm text-gray-600 text-center">
+          <div className="space-y-4 pt-1">
+            <p className="text-sm text-gray-600 text-center leading-relaxed">
               Код подтверждения отправлен по SMS на номер{" "}
               <b className="whitespace-nowrap">{data.phoneNumber}</b>. Введите 6-значный код ниже:
             </p>
@@ -499,14 +502,14 @@ const ProfileSettingsPage = () => {
                 maxLength={6}
                 value={phoneCode}
                 onChange={(e) => {
-                  setPhoneCode(e.target.value.replace(/\D/g, ""));
+                  setPhoneCode(e.target.value.replace(/D/g, ""));
                   setPhoneError(undefined);
                 }}
                 placeholder="Код из SMS (6 цифр)"
                 className="bg-white text-center text-lg tracking-widest font-mono"
               />
               {phoneError && (
-                <p className="mt-1 text-xs text-red-500">{phoneError}</p>
+                <p className="mt-1 text-xs text-red-500 text-center">{phoneError}</p>
               )}
             </div>
 
@@ -521,29 +524,27 @@ const ProfileSettingsPage = () => {
                 {isConfirmingPhone ? "Проверка кода..." : "Подтвердить новый номер"}
               </Button>
 
-              <div className="flex flex-col items-center gap-2 pt-1 text-center">
-                <Button
+              <div className="flex flex-col items-center gap-2 pt-2 text-center">
+                <button
                   type="button"
-                  variant="link"
                   disabled={phoneTimer > 0 || isSendingPhoneCode}
                   onClick={handleSendPhoneCode}
-                  className="p-0 h-auto text-xs font-normal"
+                  className="text-xs text-blue-600 hover:underline disabled:text-gray-400 disabled:no-underline cursor-pointer disabled:cursor-not-allowed bg-transparent border-none p-1 transition-colors"
                 >
                   {phoneTimer > 0
                     ? `Повторить через ${phoneTimer} сек.`
                     : isSendingPhoneCode
                       ? "Отправка..."
                       : "Отправить код повторно"}
-                </Button>
+                </button>
 
-                <Button
+                <button
                   type="button"
-                  variant="ghost"
                   onClick={handleCancelPhoneChange}
-                  className="p-0 h-auto text-xs font-normal text-gray-400 hover:text-gray-600"
+                  className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer bg-transparent border-none p-1 transition-colors"
                 >
                   Отмена (оставить старый номер)
-                </Button>
+                </button>
               </div>
             </div>
           </div>

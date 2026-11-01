@@ -368,7 +368,20 @@ const DealsPage = () => {
     try {
       const result = await payDealMutation.mutateAsync(dealId);
       if (result?.paymentUrl?.trim()) {
-        window.open(result.paymentUrl, "_blank");
+        const isMobile =
+          typeof window !== "undefined" &&
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent,
+          );
+
+        if (isMobile) {
+          window.location.href = result.paymentUrl;
+        } else {
+          const popup = window.open(result.paymentUrl, "_blank");
+          if (!popup || popup.closed || typeof popup.closed === "undefined") {
+            window.location.href = result.paymentUrl;
+          }
+        }
       }
       toast.success("Счёт на оплату сделки создан");
       await refetch();

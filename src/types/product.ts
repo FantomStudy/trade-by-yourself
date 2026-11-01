@@ -26,6 +26,8 @@ export interface Product {
   todayViewsCount?: number;
   popularityScore?: number;
   badges?: string[];
+  hasPaidExtraPhotos?: boolean;
+  hasPaidExtraDesc?: boolean;
 }
 
 export interface ExtendedProduct extends Product {

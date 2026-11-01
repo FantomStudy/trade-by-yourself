@@ -10,6 +10,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { ReportUserDialog } from "@/components/ReportUserDialog";
+import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { Lightbox } from "@/components/ui/Lightbox";
 import { useChat, useChatMessages, useCurrentUser } from "@/lib/api/hooks";
@@ -203,20 +204,20 @@ const ChatPage = () => {
   const companionName = isModerationChat ? MODERATION_CENTER_NAME : otherUser?.fullName;
 
   return (
-    <div className="flex h-[calc(100vh-110px)] flex-col overflow-hidden rounded-lg bg-white shadow-sm">
+    <div className="flex h-[calc(100dvh-170px)] sm:h-[calc(100dvh-110px)] flex-col overflow-hidden rounded-lg bg-white shadow-sm">
       {/* Хедер чата */}
-      <div className="flex flex-shrink-0 items-center gap-4 bg-white px-4 py-3 shadow-sm">
+      <div className="flex flex-shrink-0 items-center gap-2 sm:gap-4 bg-white px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm border-b border-gray-100">
         <Link href={"/profile/messages" as "/profile/messages"}>
-          <Button className="h-10 w-10 p-0" variant="ghost">
+          <Button className="h-9 w-9 sm:h-10 sm:w-10 p-0 shrink-0" variant="ghost">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
 
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
           {!isModerationChat && chat.product?.image ? (
             <Link
               href={`/product/${chat.product.id}` as any}
-              className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-200 hover:opacity-90 transition-opacity"
+              className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-lg bg-gray-200 hover:opacity-90 transition-opacity"
               title="Перейти к товару"
             >
               <img
@@ -225,12 +226,21 @@ const ChatPage = () => {
                 src={chat.product.image}
               />
             </Link>
+          ) : !isModerationChat && otherUser?.id ? (
+            <Link
+              href={`/seller/${otherUser.id}`}
+              className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 overflow-hidden rounded-full bg-gray-100 hover:opacity-90 transition-opacity"
+              title={`Перейти в профиль ${companionName}`}
+            >
+              <Avatar size="sm" src={(otherUser as any)?.photo ?? ""} fallback={companionName} />
+            </Link>
           ) : null}
-          <div className="min-w-0">
+
+          <div className="min-w-0 flex-1">
             {chat.product?.id ? (
               <Link
                 href={`/product/${chat.product.id}` as any}
-                className="text-base font-semibold hover:text-blue-600 hover:underline block truncate max-w-xs sm:max-w-md"
+                className="text-sm sm:text-base font-semibold hover:text-blue-600 hover:underline block truncate"
                 title={headerTitle}
               >
                 {headerTitle}
@@ -238,52 +248,53 @@ const ChatPage = () => {
             ) : otherUser?.id ? (
               <Link
                 href={`/seller/${otherUser.id}`}
-                className="text-base font-semibold hover:text-blue-600 hover:underline block truncate max-w-xs sm:max-w-md"
-                title={headerTitle}
+                className="text-sm sm:text-base font-semibold text-gray-900 hover:text-blue-600 hover:underline block truncate"
+                title={`Перейти в профиль ${companionName}`}
               >
                 {headerTitle}
               </Link>
             ) : (
-              <h1 className="text-base font-semibold truncate max-w-xs sm:max-w-md">{headerTitle}</h1>
+              <h1 className="text-sm sm:text-base font-semibold truncate text-gray-900">{headerTitle}</h1>
             )}
+
             {isModerationChat ? (
-              <p className="text-sm text-amber-700">Уведомления по объявлениям — не техподдержка</p>
+              <p className="text-xs text-amber-700 truncate">Уведомления по объявлениям</p>
             ) : chat.product?.price != null ? (
-              <p className="text-sm text-blue-600">{toCurrency(chat.product.price)}</p>
+              <p className="text-xs sm:text-sm font-medium text-blue-600">{toCurrency(chat.product.price)}</p>
             ) : null}
-            {!isModerationChat && companionName ? (
+
+            {!isModerationChat && chat.product?.id && companionName ? (
               otherUser?.id ? (
                 <Link
                   href={`/seller/${otherUser.id}`}
-                  className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 font-medium mt-0.5"
+                  className="text-xs text-gray-500 hover:text-blue-600 hover:underline block truncate mt-0.5"
                   title="Перейти в профиль пользователя"
                 >
-                  <span>Профиль: {companionName}</span>
+                  {companionName}
                 </Link>
               ) : (
-                <p className="text-xs text-gray-500">{companionName}</p>
+                <p className="text-xs text-gray-500 truncate">{companionName}</p>
               )
             ) : null}
           </div>
         </div>
 
         {!isModerationChat ? (
-          <div className="ml-auto flex items-center gap-2">
-            {otherUser?.id && (
-              <Link href={`/seller/${otherUser.id}`}>
-                <Button variant="outline" size="sm" className="hidden sm:inline-flex border-gray-200 text-gray-700 hover:bg-gray-50">
-                  Профиль
-                </Button>
-              </Link>
-            )}
-            <Button className="bg-blue-500 px-4 hover:bg-blue-600" onClick={handleShowPhone}>
-              {showPhone && otherUser?.phoneNumber ? otherUser.phoneNumber : "Показать номер"}
-            </Button>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            {otherUser?.phoneNumber ? (
+              <Button
+                size="sm"
+                className="bg-blue-500 hover:bg-blue-600 text-xs sm:text-sm px-2.5 py-1 sm:px-3 h-8 sm:h-9"
+                onClick={handleShowPhone}
+              >
+                {showPhone ? otherUser.phoneNumber : "Номер"}
+              </Button>
+            ) : null}
             {otherUser && (
               <Button
-                variant="outline"
-                size="sm"
-                className="text-gray-500 hover:text-red-600 hover:bg-red-50 border-gray-200"
+                variant="ghost"
+                size="icon-sm"
+                className="h-8 w-8 sm:h-9 sm:w-9 text-gray-400 hover:text-red-600 hover:bg-red-50 p-0 shrink-0"
                 title="Пожаловаться на пользователя"
                 onClick={() => setIsReportOpen(true)}
               >
@@ -292,9 +303,9 @@ const ChatPage = () => {
             )}
           </div>
         ) : (
-          <div className="ml-auto text-right">
-            <Link href="/profile/messages/support" className="text-sm text-purple-600 hover:underline">
-              Нужна {SUPPORT_CENTER_NAME}? →
+          <div className="text-right shrink-0">
+            <Link href="/profile/messages/support" className="text-xs sm:text-sm text-purple-600 hover:underline">
+              Поддержка →
             </Link>
           </div>
         )}

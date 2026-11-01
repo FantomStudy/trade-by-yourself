@@ -17,28 +17,32 @@ export const MobileTabs = async () => {
   return (
     <nav className={clsx(styles.nav, "mobile-only")}>
       <ActiveLink href="/">
-        <LayoutGridIcon fill="currentColor" /> Поиск
+        <LayoutGridIcon fill="currentColor" />
+        <span>Поиск</span>
       </ActiveLink>
 
       <ActiveLink href="/profile/favorites">
-        <HeartIcon fill="currentColor" /> Избранное
+        <HeartIcon fill="currentColor" />
+        <span>Избранное</span>
       </ActiveLink>
 
       <ActiveLink href="/profile/my-products">
-        <PlusIcon /> Объявления
+        <PlusIcon />
+        <span>Объявления</span>
       </ActiveLink>
 
       <ActiveLink href="/profile/messages">
-        <MessageCircleIcon fill="currentColor" /> Сообщения
+        <MessageCircleIcon fill="currentColor" />
+        <span>Сообщения</span>
       </ActiveLink>
 
-      <ActiveLink href="/profile/settings">
-        {user ? (
+      <ActiveLink href="/profile">
+        {user?.photo ? (
           <Avatar size="sm" src={user.photo} fallback={user.fullName} className={styles.avatar} />
         ) : (
           <UserRoundIcon fill="currentColor" />
         )}
-        Профиль
+        <span>Профиль</span>
       </ActiveLink>
     </nav>
   );

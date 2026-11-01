@@ -11,10 +11,12 @@ import {
   useDeleteProductMutation,
   usePublishDraftMutation,
   useUpdateProductMutation,
+  useUserInfo,
 } from "@/api/hooks";
 import { getProductById } from "@/api/requests";
-import { AddressMap, Input, Textarea } from "@/components/ui";
+import { AddressMap, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/lib/contexts";
 import { api } from "@/lib/api/instance";
 import { getUploadErrorMessage, validateImageFiles } from "@/lib/media-validation";
 
@@ -27,9 +29,14 @@ interface EditProductPageProps {
 const EditProductPage = ({ params }: EditProductPageProps) => {
   const { productId } = use(params);
   const router = useRouter();
+  const { user } = useAuth();
+  const { data: userInfo } = useUserInfo(user?.id);
   const [categories, setCategories] = useState<Category[]>([]);
   const [product, setProduct] = useState<ExtendedProduct | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isPaymentConfirmOpen, setIsPaymentConfirmOpen] = useState(false);
+  const [paidAdCost, setPaidAdCost] = useState(0);
+  const [paidAdReason, setPaidAdReason] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -243,8 +250,7 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     console.log("=== removeImage END ===\n");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const executeUpdateProduct = async () => {
     setError(null);
     const parsedPrice = formData.price.trim() ? Number(formData.price) : undefined;
     const parsedQuantity = formData.quantity.trim() ? Number(formData.quantity) : undefined;
@@ -277,10 +283,6 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         orderedImages = [...images];
         const [mainImage] = orderedImages.splice(newImageIndex, 1);
         orderedImages = [mainImage, ...orderedImages];
-        console.log(
-          "Reordered new images, main at index 0:",
-          orderedImages.map((f) => f.name),
-        );
       }
 
       await updateProductMutation.mutateAsync(
@@ -300,9 +302,12 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
         },
         {
           onSuccess: () => {
+            setIsPaymentConfirmOpen(false);
+            toast.success("Объявление успешно обновлено");
             router.push("/profile/my-products");
           },
           onError: (error: any) => {
+            setIsPaymentConfirmOpen(false);
             console.error("Ошибка обновления объявления:", error);
             const errorMessage =
               error.response?.data?.message ||
@@ -322,6 +327,44 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
     } catch (err) {
       console.error("Submit error:", err);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    const isDraft = product?.moderateState === "DRAFT";
+    if (!isDraft) {
+      const totalPhotos = getTotalImages();
+      const isExtraPhotos = totalPhotos > 8 && !product?.hasPaidExtraPhotos;
+      const isExtraDesc = formData.description.trim().length > 2000 && !product?.hasPaidExtraDesc;
+      let totalCost = 0;
+      const reasons: string[] = [];
+      if (isExtraPhotos) {
+        totalCost += 50;
+        reasons.push(`загружено более 8 фото (${totalPhotos} шт.)`);
+      }
+      if (isExtraDesc) {
+        totalCost += 50;
+        reasons.push(`описание превышает 2000 символов (${formData.description.trim().length} знаков)`);
+      }
+
+      if (totalCost > 0) {
+        setPaidAdCost(totalCost);
+        setPaidAdReason(reasons.join(", "));
+        const totalAvailable = (userInfo?.balance ?? 0) + (userInfo?.bonusBalance ?? 0);
+        if (totalAvailable < totalCost) {
+          const msg = `Недостаточно средств для сохранения изменений (${reasons.join(", ")}). Требуется: ${totalCost} ₽, доступно: ${totalAvailable} ₽ (баланс: ${userInfo?.balance ?? 0} ₽, бонусы: ${userInfo?.bonusBalance ?? 0} ₽). Пополните баланс в профиле.`;
+          setError(msg);
+          toast.error(`Недостаточно средств: требуется ${totalCost} ₽, доступно ${totalAvailable} ₽. Пополните баланс.`);
+          return;
+        }
+        setIsPaymentConfirmOpen(true);
+        return;
+      }
+    }
+
+    await executeUpdateProduct();
   };
 
   const handleCreateFromDraft = async () => {
@@ -744,17 +787,68 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
           >
             {updateProductMutation.isPending ? "Сохранение..." : "Сохранить изменения"}
           </Button>
-          <Button
-            className={styles.button}
-            disabled={updateProductMutation.isPending || publishDraftMutation.isPending}
-            type="button"
-            variant="success"
-            onClick={handleCreateFromDraft}
-          >
-            {publishDraftMutation.isPending ? "Создание..." : "Создать объявление"}
-          </Button>
+          {product?.moderateState === "DRAFT" && (
+            <Button
+              className={styles.button}
+              disabled={updateProductMutation.isPending || publishDraftMutation.isPending}
+              type="button"
+              variant="success"
+              onClick={handleCreateFromDraft}
+            >
+              {publishDraftMutation.isPending ? "Создание..." : "Опубликовать объявление"}
+            </Button>
+          )}
         </div>
       </div>
+
+      <Dialog
+        open={isPaymentConfirmOpen}
+        onOpenChange={(open) => !updateProductMutation.isPending && setIsPaymentConfirmOpen(open)}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Платное сохранение изменений</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <p className="text-sm text-gray-600">
+              Для сохранения изменений требуется списание средств, так как {paidAdReason}.
+            </p>
+            <div className="rounded-lg bg-blue-50/70 p-4 border border-blue-100 space-y-2 text-sm">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Стоимость:</span>
+                <span className="font-bold text-gray-900">{paidAdCost} ₽</span>
+              </div>
+              <div className="flex justify-between items-center text-xs text-gray-500">
+                <span>Доступно на счёте:</span>
+                <span>
+                  {userInfo?.balance ?? 0} ₽ (бонусы: {userInfo?.bonusBalance ?? 0} ₽)
+                </span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500">
+              Средства будут списаны автоматически: сначала с бонусного счёта, затем с основного баланса.
+            </p>
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={updateProductMutation.isPending}
+              onClick={() => setIsPaymentConfirmOpen(false)}
+            >
+              Отмена
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              disabled={updateProductMutation.isPending}
+              onClick={() => executeUpdateProduct()}
+            >
+              {updateProductMutation.isPending ? "Сохранение..." : `Согласен, списать ${paidAdCost} ₽`}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </form>
   );
 };

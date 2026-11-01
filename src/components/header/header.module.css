@@ -4,6 +4,7 @@
 }
 
 .wrapper {
+  position: relative;
   display: flex;
   height: 72px;
   align-items: center;
