@@ -206,17 +206,7 @@ export const ReservationForm = ({ product }: ReservationFormProps) => {
               </Typography>
             )}
             {reservation?.note && (isBuyerOnReservation || isSellerOnReservation) ? (
-              <Typography
-                style={{
-                  fontSize: "14px",
-                  color: "#6b7280",
-                  textAlign: "center",
-                  padding: "4px 8px",
-                  backgroundColor: "#f9fafb",
-                  borderRadius: "6px",
-                  border: "1px solid #e5e7eb",
-                }}
-              >
+              <Typography className="text-sm text-gray-500 text-center px-2 py-1 bg-gray-50 rounded-md border border-gray-200">
                 <strong>Комментарий:</strong> {reservation.note}
               </Typography>
             ) : null}

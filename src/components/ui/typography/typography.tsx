@@ -1,10 +1,10 @@
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 import clsx from "clsx";
 
 import styles from "./typography.module.css";
 
-interface TypographyProps {
+export interface TypographyProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
   className?: string;
   variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span";
