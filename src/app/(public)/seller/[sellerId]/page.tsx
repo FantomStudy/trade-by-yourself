@@ -26,7 +26,10 @@ const SellerPage = async ({ params }: PageProps<"/seller/[sellerId]">) => {
     user = res[0];
     const rawProducts = Array.isArray(res[1]) ? res[1] : [];
     products = rawProducts.filter(
-      (product) => product.moderateState === "APPROVED" && !product.isHide && !product.isExpired
+      (product) =>
+        (product.moderateState == null || product.moderateState === "APPROVED") &&
+        !product.isHide &&
+        !product.isExpired,
     );
   } catch {
     notFound();

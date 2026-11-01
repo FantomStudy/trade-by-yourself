@@ -31,6 +31,7 @@ export interface Product {
   userId?: number;
   isHide?: boolean;
   isReserved?: boolean;
+  moderateState?: "APPROVED" | "DENIDED" | "DENIED" | "MODERATE" | "AI_REVIEWED" | "DRAFT" | string;
   videoUrl?: string | null;
   isFavorited: boolean;
   hasPromotion: boolean;
