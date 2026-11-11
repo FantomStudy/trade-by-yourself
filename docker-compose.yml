@@ -4,5 +4,8 @@ services:
     restart: always
     env_file:
       - .env
+    dns:
+      - 77.88.8.8
+      - 8.8.8.8
     ports:
       - "3001:3000"

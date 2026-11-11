@@ -128,7 +128,7 @@ export function YandexOnboardingClient() {
   }
 
   return (
-    <div className="mx-auto my-12 max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <div className="mx-4 my-8 max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:mx-auto sm:my-12 sm:p-8">
       <div className="mb-6 text-center">
         <Typography variant="h1" className="text-2xl font-bold text-slate-900">
           {stage === "phone_code" ? "Подтверждение телефона" : "Завершение регистрации"}
@@ -205,12 +205,12 @@ export function YandexOnboardingClient() {
       )}
 
       {msg && (
-        <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-center text-sm font-medium text-emerald-700">
+        <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-center text-sm font-medium text-emerald-700 break-words [overflow-wrap:anywhere]">
           {msg}
         </div>
       )}
       {err && (
-        <div className="mt-4 rounded-lg bg-rose-50 p-3 text-center text-sm font-medium text-rose-700">
+        <div className="mt-4 rounded-lg bg-rose-50 p-3 text-center text-sm font-medium text-rose-700 break-words [overflow-wrap:anywhere]">
           {err}
         </div>
       )}
