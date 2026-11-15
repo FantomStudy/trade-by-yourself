@@ -5,7 +5,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 
 const CatalogPage = async ({ searchParams }: PageProps<"/">) => {
   const filters = await searchParams;
-  const initialItems = await getFeed({ ...filters, page: 1 });
+  const initialItems = (await getFeed({ ...filters, page: 1 })) ?? [];
 
   return (
     <>

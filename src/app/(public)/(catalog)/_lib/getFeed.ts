@@ -18,15 +18,18 @@ export type FeedItem =
   | { type: "banner"; key: string; banner: Banner; size: "narrow" | "wide" };
 
 const mergeFeed = ({
-  products,
-  narrowBanners,
-  wideBanners,
+  products = [],
+  narrowBanners = [],
+  wideBanners = [],
   startIndex = 0,
 }: MergeFeedParams): FeedItem[] => {
   const items: FeedItem[] = [];
+  const safeProducts = Array.isArray(products) ? products : [];
+  const safeNarrow = Array.isArray(narrowBanners) ? narrowBanners : [];
+  const safeWide = Array.isArray(wideBanners) ? wideBanners : [];
 
-  for (let i = 0; i < products.length; i++) {
-    const product = products[i];
+  for (let i = 0; i < safeProducts.length; i++) {
+    const product = safeProducts[i];
     const globalIndex = startIndex + i + 1;
 
     items.push({
@@ -36,11 +39,11 @@ const mergeFeed = ({
     });
 
     const shouldRenderWideBanner =
-      wideBanners.length > 0 && globalIndex % WIDE_BANNER_INTERVAL === 0;
+      safeWide.length > 0 && globalIndex % WIDE_BANNER_INTERVAL === 0;
 
     if (shouldRenderWideBanner) {
       const wideSlotIndex = Math.floor(globalIndex / WIDE_BANNER_INTERVAL) - 1;
-      const banner = wideBanners[wideSlotIndex % wideBanners.length];
+      const banner = safeWide[wideSlotIndex % safeWide.length];
 
       items.push({
         type: "banner",
@@ -53,11 +56,11 @@ const mergeFeed = ({
     }
 
     const shouldRenderNarrowBanner =
-      narrowBanners.length > 0 && globalIndex % NARROW_BANNER_INTERVAL === 0;
+      safeNarrow.length > 0 && globalIndex % NARROW_BANNER_INTERVAL === 0;
 
     if (shouldRenderNarrowBanner) {
       const narrowSlotIndex = Math.floor(globalIndex / NARROW_BANNER_INTERVAL) - 1;
-      const banner = narrowBanners[narrowSlotIndex % narrowBanners.length];
+      const banner = safeNarrow[narrowSlotIndex % safeNarrow.length];
 
       items.push({
         type: "banner",
@@ -78,9 +81,14 @@ interface GetFeedParams extends ProductFilters {
 export const getFeed = async ({ page, limit = 40, ...filters }: GetFeedParams) => {
   const [products, narrowBanners, wideBanners] = await Promise.all([
     getProducts({ ...filters, page, limit }),
-    getBanners({ place: "PRODUCT_FEED" }).catch(() => []),
-    getBanners({ place: "PROFILE" }).catch(() => []),
+    getBanners({ place: "PRODUCT_FEED" }),
+    getBanners({ place: "PROFILE" }),
   ]);
 
-  return mergeFeed({ products, narrowBanners, wideBanners, startIndex: (page - 1) * limit });
+  return mergeFeed({
+    products: Array.isArray(products) ? products : [],
+    narrowBanners: Array.isArray(narrowBanners) ? narrowBanners : [],
+    wideBanners: Array.isArray(wideBanners) ? wideBanners : [],
+    startIndex: (page - 1) * limit,
+  });
 };
