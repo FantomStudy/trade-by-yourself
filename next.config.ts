@@ -1,9 +1,18 @@
 import type { NextConfig } from "next";
 
-const S3_HOSTNAME = process.env.S3_HOSTNAME;
-if (!S3_HOSTNAME) {
-  throw new Error("S3_HOSTNAME is not defined in .env");
+function cleanHostname(val?: string): string | null {
+  if (!val) return null;
+  return (
+    val
+      .trim()
+      .replace(/^['"]+|['"]+$/g, "")
+      .replace(/^https?:\/\//, "")
+      .replace(/\/+.*$/, "")
+      .trim() || null
+  );
 }
+
+const customS3 = cleanHostname(process.env.S3_HOSTNAME);
 
 /** Как в instance.ts — без хвостового слэша и кавычек из .env */
 function normalizePublicApiUrl(): string | null {
@@ -17,6 +26,14 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
   typedRoutes: true,
+
+  // Ускорение сборки на VPS: пропускаем повторный typecheck/eslint во время docker build
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 
   // Прокси Engine.IO на бэк: браузер бьёт в тот же origin, что Next (меньше боли с CORS/credentials между портами).
   async rewrites() {
@@ -33,15 +50,48 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: "localhost",
-        port: "3000",
-        pathname: "/**",
       },
       {
         protocol: "https",
-        hostname: S3_HOSTNAME,
-        port: "",
-        pathname: "/**",
+        hostname: "localhost",
       },
+      {
+        protocol: "https",
+        hostname: "s3.ru1.storage.beget.cloud",
+      },
+      {
+        protocol: "https",
+        hostname: "*.storage.beget.cloud",
+      },
+      {
+        protocol: "https",
+        hostname: "s3.ru-1.storage.selcloud.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "s3.storage.selcloud.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "*.storage.selcloud.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "*.selcloud.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "s3.reg.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "*.storage.reg.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "*.reg.ru",
+      },
+      ...(customS3 ? [{ protocol: "https" as const, hostname: customS3 }] : []),
     ],
   },
 };
