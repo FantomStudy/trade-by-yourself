@@ -81,6 +81,14 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "s3.regru.cloud",
+      },
+      {
+        protocol: "https",
+        hostname: "*.regru.cloud",
+      },
+      {
+        protocol: "https",
         hostname: "s3.reg.ru",
       },
       {
