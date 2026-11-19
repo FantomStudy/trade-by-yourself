@@ -63,3 +63,14 @@ export const markSupportTicketRead = async (ticketId: number) =>
   api<{ ok: boolean }>(`/support/tickets/${ticketId}/read`, {
     method: "POST",
   });
+
+export const startAdminSupportTicket = async (data: {
+  userId: number;
+  subject?: string;
+  message?: string;
+}) =>
+  api<SupportTicket>("/support/tickets/admin/start", {
+    method: "POST",
+    body: data,
+  });
+
