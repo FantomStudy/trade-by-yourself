@@ -12,4 +12,7 @@ export interface Payment {
   updatedAt: string;
 }
 
-export const getPaymentHistory = async () => api<Payment[]>("/payment/history");
+export const getPaymentHistory = async () => {
+  const data = await api<Payment[]>("/payment/history");
+  return Array.isArray(data) ? data : [];
+};

@@ -28,7 +28,8 @@ const BalancePage = () => {
   const { user } = useAuth();
   const { data: userInfo } = useUserInfo(user?.id);
   const [amount, setAmount] = useState("");
-  const { data: payments = [], isLoading, refetch } = usePaymentHistory();
+  const { data: rawPayments, isLoading, refetch } = usePaymentHistory();
+  const payments = Array.isArray(rawPayments) ? rawPayments : [];
   const createPaymentMutation = useCreatePaymentMutation();
   const checkStatusMutation = useCheckPaymentStatusMutation(user?.id);
 
@@ -192,16 +193,16 @@ const BalancePage = () => {
         <div className={styles["balance-content"]}>
           <Typography className={styles["balance-label"]}>Текущий баланс</Typography>
           <Typography className={styles["balance-amount"]}>
-            {userInfo?.balance?.toFixed(2) || "0.00"} ₽
+            {Number(userInfo?.balance ?? 0).toFixed(2)} ₽
           </Typography>
 
           <div className={styles["balance-info"]}>
             <CreditCard />
             <span>Доступно для использования</span>
           </div>
-          {userInfo?.bonusBalance != null && userInfo.bonusBalance > 0 ? (
+          {userInfo?.bonusBalance != null && Number(userInfo.bonusBalance) > 0 ? (
             <Typography className="mt-2 text-sm text-white/90">
-              Бонусы: {userInfo.bonusBalance.toFixed(2)} ₽ (списываются первыми при платных объявлениях)
+              Бонусы: {Number(userInfo.bonusBalance).toFixed(2)} ₽ (списываются первыми при платных объявлениях)
             </Typography>
           ) : null}
           {userInfo?.adsLimit ? (
