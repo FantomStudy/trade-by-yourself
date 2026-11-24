@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     retry: 2,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
   const isSyntheticVk = Boolean(
     data?.phoneNumber?.toUpperCase().startsWith("VK_") ||
