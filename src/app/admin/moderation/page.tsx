@@ -2,11 +2,13 @@
 
 import type { ModerationFilter, ModerationProduct, ModerationState } from "@/types";
 
-import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, Maximize2, X } from "lucide-react";
+import { AlertCircle, Check, ChevronLeft, ChevronRight, Clock, Eye, Maximize2, Sparkles, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api/instance";
 
 import {
   useModerateProductMutation,
@@ -680,6 +682,28 @@ const ModerationPage = () => {
 
   const { data, isLoading } = useProductsToModerate(filter, page);
   const moderateMutation = useModerateProductMutation();
+  const queryClient = useQueryClient();
+  const [isRechecking, setIsRechecking] = useState(false);
+
+  const handleRecheckAI = async () => {
+    setIsRechecking(true);
+    try {
+      const res = await api<{ ok: boolean; count: number }>("/admin/moderation/recheck-ai", {
+        method: "POST",
+      });
+      const count = res?.count ?? 0;
+      toast.success(
+        count > 0
+          ? `Отправлено на проверку ИИ: ${count} товаров. Они будут проверены автоматически.`
+          : "Нет товаров для повторной проверки ИИ",
+      );
+      queryClient.invalidateQueries({ queryKey: ["productsToModerate"] });
+    } catch {
+      toast.error("Ошибка при отправке товаров на проверку ИИ");
+    } finally {
+      setIsRechecking(false);
+    }
+  };
 
   const handleApprove = async (productId: number) => {
     setActingId(productId);
@@ -724,11 +748,23 @@ const ModerationPage = () => {
     <div className="space-y-6">
       <MobileHeader title="Модерация товаров" />
 
-      <div>
-        <Typography className="text-2xl font-bold sm:text-3xl">Модерация товаров</Typography>
-        <Typography className="mt-1 text-sm text-gray-600">
-          {data ? `Всего: ${data.total}` : "Управление товарами на проверке"}
-        </Typography>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <Typography className="text-2xl font-bold sm:text-3xl">Модерация товаров</Typography>
+          <Typography className="mt-1 text-sm text-gray-600">
+            {data ? `Всего: ${data.total}` : "Управление товарами на проверке"}
+          </Typography>
+        </div>
+        <button
+          type="button"
+          onClick={handleRecheckAI}
+          disabled={isRechecking}
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition disabled:opacity-50 w-fit"
+          title="Сбросить ошибки и отправить товары на проверку ИИ заново"
+        >
+          <Sparkles className="h-4 w-4" />
+          {isRechecking ? "Отправка..." : "Отправить на проверку ИИ"}
+        </button>
       </div>
 
       {/* Filter tabs */}
