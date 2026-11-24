@@ -120,8 +120,9 @@ export const MyProductCard = ({
     return styles.card;
   };
 
+  const showLifetimeBadge = !isOnModeration && !isDenied;
   const lifetimeLabel =
-    typeof product.daysUntilExpiration === "number"
+    showLifetimeBadge && typeof product.daysUntilExpiration === "number"
       ? product.isExpired
         ? "Срок истек"
         : `Осталось ${product.daysUntilExpiration} дн.`
