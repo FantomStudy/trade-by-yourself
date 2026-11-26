@@ -6,6 +6,7 @@ import { Edit, FileUp, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 
 import { useDeleteProductMutation, usePublishDraftMutation } from "@/api/hooks";
 import { Typography } from "@/components/ui";
@@ -56,8 +57,8 @@ export const DraftProductCard = ({ product }: DraftProductCardProps) => {
       toast.success("На модерации");
       router.replace("/profile/my-products");
       router.refresh();
-    } catch {
-      toast.error("Не удалось опубликовать черновик");
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Не удалось опубликовать черновик"));
     } finally {
       setIsBusy(false);
     }

@@ -48,6 +48,7 @@ export interface ExtendedProduct extends Product {
     id: number;
     fullName: string;
     phoneNumber: string;
+    isHidePhone?: boolean;
     profileType: string;
     photo: string | null;
     rating: number;

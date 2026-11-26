@@ -13,3 +13,4 @@ export const confirmEmailChange = async (code: string): Promise<{ message: strin
     body: { code },
   });
 };
+

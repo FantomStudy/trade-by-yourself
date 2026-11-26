@@ -33,14 +33,18 @@ export const api = ofetch.create({
   onResponse: ({ response }) => {
     updateServerTimeOffset(response.headers.get("date"));
   },
-  onResponseError: async ({ response }) => {
+  onResponseError: async ({ request, response }) => {
     if (typeof window === "undefined") return;
     const isBanned = response.status === 403 && response._data?.code === "USER_BANNED";
-    if (response.status === 401 || isBanned) {
-      try {
-        document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-        document.cookie = "ws_session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-      } catch {}
+    const reqUrl = typeof request === "string" ? request : request?.url || "";
+    const isAuthMe = reqUrl.includes("/auth/me");
+    if ((response.status === 401 && isAuthMe) || isBanned) {
+      if (isBanned) {
+        try {
+          document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+          document.cookie = "ws_session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        } catch {}
+      }
       try {
         const { getQueryClient } = await import("@/lib/get-query-client");
         const { CURRENT_USER_QUERY_KEY } = await import("@/lib/api/hooks/queries/useCurrentUser");

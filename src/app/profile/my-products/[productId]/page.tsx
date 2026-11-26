@@ -430,7 +430,9 @@ const EditProductPage = ({ params }: EditProductPageProps) => {
       router.refresh();
     } catch (err) {
       console.error("Publish from draft error:", err);
-      setError("Не удалось создать объявление из черновика");
+      const msg = getApiErrorMessage(err, "Не удалось создать объявление из черновика");
+      setError(msg);
+      toast.error(msg);
     }
   };
 

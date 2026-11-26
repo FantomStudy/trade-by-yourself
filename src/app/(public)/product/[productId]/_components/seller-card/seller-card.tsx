@@ -144,10 +144,12 @@ export const SellerCard = ({ product }: SellerCardProps) => {
             {startChatMutation.isPending ? "Загрузка..." : "Написать продавцу"}
           </Button>
 
-          <Button onClick={handleShowPhone}>
-            <Phone className={styles.icon} />
-            {showPhone && product.seller.phoneNumber ? product.seller.phoneNumber : "Показать номер"}
-          </Button>
+          {!product.seller?.isHidePhone && (
+            <Button onClick={handleShowPhone}>
+              <Phone className={styles.icon} />
+              {showPhone && product.seller.phoneNumber ? product.seller.phoneNumber : "Показать номер"}
+            </Button>
+          )}
 
           <Button variant="outline" onClick={handleOpenReviewDialog}>
             <StarIcon className="mr-2 h-4 w-4 text-amber-500 fill-amber-500" />

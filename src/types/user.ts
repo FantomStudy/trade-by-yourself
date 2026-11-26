@@ -12,6 +12,7 @@ export interface User {
   bonusBalance?: number;
   products?: number;
   isBanned?: boolean;
+  isHidePhone?: boolean;
   isEmailVerified?: boolean;
   isPhoneVerified?: boolean;
   productStats?: {

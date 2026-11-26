@@ -135,7 +135,7 @@ export const UserCard = ({ user, defaultProductId }: UserCardProps) => {
         </div>
 
         <div className={styles.userActions}>
-          <PhoneButton phoneNumber={user.phoneNumber} />
+          {!user.isHidePhone && <PhoneButton phoneNumber={user.phoneNumber} />}
           <Button disabled={startChatMutation.isPending} type="button" onClick={() => void handleWriteSeller()}>
             <MessageSquare className="mr-2 h-4 w-4" />
             {startChatMutation.isPending ? "Открываем..." : "Написать продавцу"}

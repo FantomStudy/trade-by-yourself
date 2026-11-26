@@ -6,9 +6,10 @@ import { Typography } from "@/components/ui";
 import { MobileHeader } from "../_components/admin-sidebar";
 import { BannerSelector } from "./_components/banner-selector";
 import { BannerModerationList } from "./_components/banner-moderation-list";
+import { BannerHistoryList } from "./_components/banner-history-list";
 
 const AdvertisingPage = () => {
-  const [activeTab, setActiveTab] = useState<"site" | "moderate">("site");
+  const [activeTab, setActiveTab] = useState<"site" | "moderate" | "history">("site");
 
   return (
     <div className="space-y-6">
@@ -43,10 +44,27 @@ const AdvertisingPage = () => {
         >
           Заявки на модерацию
         </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("history")}
+          className={`pb-3 text-sm font-medium transition-colors border-b-2 ${
+            activeTab === "history"
+              ? "border-blue-600 text-blue-600 font-semibold"
+              : "border-transparent text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          История баннеров
+        </button>
       </div>
 
       <div className="rounded-lg bg-white p-4 shadow-sm sm:p-6">
-        {activeTab === "site" ? <BannerSelector /> : <BannerModerationList />}
+        {activeTab === "site" ? (
+          <BannerSelector />
+        ) : activeTab === "moderate" ? (
+          <BannerModerationList />
+        ) : (
+          <BannerHistoryList />
+        )}
       </div>
     </div>
   );

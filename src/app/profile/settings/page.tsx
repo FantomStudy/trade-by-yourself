@@ -21,6 +21,7 @@ interface ProfileSettings {
   photo: string | null;
   rating: number | null;
   isAnswersCall: boolean;
+  isHidePhone?: boolean;
   role?: string;
   companyName?: string;
   inn?: string;
@@ -243,6 +244,7 @@ const ProfileSettingsPage = () => {
       fd.append("phoneNumber", data.phoneNumber || "");
       fd.append("email", data.email || "");
       fd.append("isAnswersCall", String(data.isAnswersCall));
+      fd.append("isHidePhone", String(Boolean(data.isHidePhone)));
       fd.append("profileType", data.profileType || "");
       if (selectedFile) {
         fd.append("photo", selectedFile);
@@ -477,6 +479,23 @@ const ProfileSettingsPage = () => {
           </label>
         </div>
       </fieldset>
+
+      <div className="mb-4">
+        <label className="inline-flex items-center gap-2.5 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={Boolean(data.isHidePhone)}
+            onChange={(e) => handleChange("isHidePhone", e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          <span className="text-sm text-gray-700 font-medium">
+            Скрывать номер телефона в профиле, объявлениях и чатах
+          </span>
+        </label>
+        <p className="mt-1 text-xs text-gray-500">
+          Если включено, кнопка «Показать номер» не будет отображаться другим пользователям.
+        </p>
+      </div>
 
       <div>
         <label className="mb-1 block text-sm text-gray-600" htmlFor="profileType">
