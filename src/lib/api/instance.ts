@@ -33,15 +33,29 @@ export const api = ofetch.create({
   onResponse: ({ response }) => {
     updateServerTimeOffset(response.headers.get("date"));
   },
-  // onResponseError: async ({ response }) => {
-  //   if (response.status === 401 && !isServer()) {
-  //     try {
-  //       document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-  //     } catch {}
-  //     const { getQueryClient } = await import("@/lib/get-query-client");
-  //     const { CURRENT_USER_QUERY_KEY } = await import("@/lib/api/hooks/queries/useCurrentUser");
-  //     const queryClient = getQueryClient();
-  //     queryClient.setQueryData(CURRENT_USER_QUERY_KEY, null);
-  //   }
-  // },
+  onResponseError: async ({ response }) => {
+    if (typeof window === "undefined") return;
+    const isBanned = response.status === 403 && response._data?.code === "USER_BANNED";
+    if (response.status === 401 || isBanned) {
+      try {
+        document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        document.cookie = "ws_session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      } catch {}
+      try {
+        const { getQueryClient } = await import("@/lib/get-query-client");
+        const { CURRENT_USER_QUERY_KEY } = await import("@/lib/api/hooks/queries/useCurrentUser");
+        const queryClient = getQueryClient();
+        queryClient.setQueryData(CURRENT_USER_QUERY_KEY, null);
+      } catch {}
+      if (isBanned) {
+        try {
+          const { toast } = await import("sonner");
+          toast.error("Ваш аккаунт заблокирован");
+        } catch {}
+        if (window.location.pathname !== "/") {
+          window.location.href = "/";
+        }
+      }
+    }
+  },
 });

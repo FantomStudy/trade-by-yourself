@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, Input, PhoneField } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api/instance";
-import { confirmPhoneChange, requestPhoneChange } from "@/lib/api/requests/user";
+import { confirmEmailChange, confirmPhoneChange, requestEmailChange, requestPhoneChange } from "@/lib/api/requests/user";
 import { getApiErrorMessage } from "@/lib/api/get-api-error-message";
 
 import { toast } from "sonner";
@@ -33,6 +33,7 @@ const cleanPhoneDigits = (p?: string) => (p || "").replace(/\D/g, "");
 const ProfileSettingsPage = () => {
   const [data, setData] = useState<ProfileSettings | null>(null);
   const [initialPhone, setInitialPhone] = useState<string>("");
+  const [initialEmail, setInitialEmail] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -46,6 +47,14 @@ const ProfileSettingsPage = () => {
   const [phoneError, setPhoneError] = useState<string>();
   const [isSendingPhoneCode, setIsSendingPhoneCode] = useState(false);
   const [isConfirmingPhone, setIsConfirmingPhone] = useState(false);
+
+  // Состояние подтверждения новой почты
+  const [showEmailVerifyDialog, setShowEmailVerifyDialog] = useState(false);
+  const [emailCode, setEmailCode] = useState("");
+  const [emailTimer, setEmailTimer] = useState(0);
+  const [emailError, setEmailError] = useState<string>();
+  const [isSendingEmailCode, setIsSendingEmailCode] = useState(false);
+  const [isConfirmingEmail, setIsConfirmingEmail] = useState(false);
 
   const previewUrl = useMemo(() => {
     if (!selectedFile) return null;
@@ -62,6 +71,13 @@ const ProfileSettingsPage = () => {
     return cleanPhoneDigits(data?.phoneNumber) !== cleanPhoneDigits(initialPhone);
   }, [data?.phoneNumber, initialPhone]);
 
+  const isEmailChanged = useMemo(() => {
+    const cur = (data?.email || "").trim().toLowerCase();
+    const init = (initialEmail || "").trim().toLowerCase();
+    if (!cur && !init) return false;
+    return cur !== init;
+  }, [data?.email, initialEmail]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (phoneTimer > 0) {
@@ -73,11 +89,22 @@ const ProfileSettingsPage = () => {
   }, [phoneTimer]);
 
   useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (emailTimer > 0) {
+      interval = setInterval(() => {
+        setEmailTimer((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [emailTimer]);
+
+  useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
         const res = await api<ProfileSettings>("/auth/me");
         setInitialPhone(res.phoneNumber || "");
+        setInitialEmail(res.email || "");
         // Загружаем локально сохранённые реквизиты компании, если есть
         let companyExtras = {};
         try {
@@ -147,6 +174,52 @@ const ProfileSettingsPage = () => {
     setPhoneError(undefined);
   };
 
+  const handleSendEmailCode = async () => {
+    if (!data?.email) return;
+    try {
+      setIsSendingEmailCode(true);
+      setEmailError(undefined);
+      await requestEmailChange(data.email.trim());
+      toast.success("Код подтверждения отправлен на новую почту");
+      setEmailTimer(60);
+      setShowEmailVerifyDialog(true);
+    } catch (err) {
+      setEmailError(getApiErrorMessage(err, "Не удалось отправить письмо с кодом"));
+      toast.error(getApiErrorMessage(err, "Не удалось отправить письмо с кодом"));
+    } finally {
+      setIsSendingEmailCode(false);
+    }
+  };
+
+  const handleConfirmEmail = async () => {
+    if (!emailCode || emailCode.trim().length !== 6) {
+      setEmailError("Введите 6-значный код из письма");
+      return;
+    }
+    try {
+      setIsConfirmingEmail(true);
+      setEmailError(undefined);
+      const res = await confirmEmailChange(emailCode.trim());
+      toast.success("Почта успешно подтверждена!");
+      setInitialEmail(res.email);
+      setData((prev) => (prev ? { ...prev, email: res.email } : prev));
+      setShowEmailVerifyDialog(false);
+      setEmailCode("");
+    } catch (err) {
+      setEmailError(getApiErrorMessage(err, "Неверный код подтверждения"));
+    } finally {
+      setIsConfirmingEmail(false);
+    }
+  };
+
+  const handleCancelEmailChange = () => {
+    // Если не подтвердил, остаётся старая почта
+    setData((prev) => (prev ? { ...prev, email: initialEmail } : prev));
+    setShowEmailVerifyDialog(false);
+    setEmailCode("");
+    setEmailError(undefined);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!data) return;
@@ -154,6 +227,12 @@ const ProfileSettingsPage = () => {
     // Если номер был изменён, его необходимо подтвердить через SMS
     if (isPhoneChanged) {
       await handleSendPhoneCode();
+      return;
+    }
+
+    // Если почта была изменена, её необходимо подтвердить через письмо
+    if (isEmailChanged) {
+      await handleSendEmailCode();
       return;
     }
 
@@ -196,6 +275,7 @@ const ProfileSettingsPage = () => {
       if (fresh.ok) {
         const freshData = await fresh.json();
         setInitialPhone(freshData.phoneNumber || "");
+        setInitialEmail(freshData.email || "");
         setData((prev) => ({ ...freshData, companyName: prev?.companyName, inn: prev?.inn, ogrn: prev?.ogrn, legalAddress: prev?.legalAddress }));
       }
       setSelectedFile(null);
@@ -476,7 +556,13 @@ const ProfileSettingsPage = () => {
 
       <div>
         <Button disabled={saving} type="submit">
-          {saving ? "Сохранение..." : isPhoneChanged ? "Подтвердить номер и сохранить" : "Сохранить"}
+          {saving
+            ? "Сохранение..."
+            : isPhoneChanged
+              ? "Подтвердить номер и сохранить"
+              : isEmailChanged
+                ? "Подтвердить почту и сохранить"
+                : "Сохранить"}
         </Button>
       </div>
 
@@ -544,6 +630,77 @@ const ProfileSettingsPage = () => {
                   className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer bg-transparent border-none p-1 transition-colors"
                 >
                   Отмена (оставить старый номер)
+                </button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showEmailVerifyDialog} onOpenChange={(open) => {
+        if (!open) handleCancelEmailChange();
+      }}>
+        <DialogContent className="max-w-md w-[calc(100%-32px)]">
+          <DialogHeader className="px-6 sm:px-8">
+            <DialogTitle className="text-base sm:text-lg text-center leading-snug">
+              Подтверждение новой электронной почты
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 pt-1">
+            <p className="text-sm text-gray-600 text-center leading-relaxed">
+              Код подтверждения отправлен на почту{" "}
+              <b className="break-all">{data.email}</b>. Введите 6-значный код из письма ниже:
+            </p>
+
+            <div>
+              <Input
+                type="text"
+                maxLength={6}
+                value={emailCode}
+                onChange={(e) => {
+                  setEmailCode(e.target.value.replace(/\D/g, ""));
+                  setEmailError(undefined);
+                }}
+                placeholder="Код из письма (6 цифр)"
+                className="bg-white text-center text-lg tracking-widest font-mono"
+              />
+              {emailError && (
+                <p className="mt-1 text-xs text-red-500 text-center">{emailError}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-3 pt-2">
+              <Button
+                type="button"
+                variant="success"
+                disabled={isConfirmingEmail || emailCode.trim().length !== 6}
+                onClick={handleConfirmEmail}
+                className="w-full"
+              >
+                {isConfirmingEmail ? "Проверка кода..." : "Подтвердить новую почту"}
+              </Button>
+
+              <div className="flex flex-col items-center gap-2 pt-2 text-center">
+                <button
+                  type="button"
+                  disabled={emailTimer > 0 || isSendingEmailCode}
+                  onClick={handleSendEmailCode}
+                  className="text-xs text-blue-600 hover:underline disabled:text-gray-400 disabled:no-underline cursor-pointer disabled:cursor-not-allowed bg-transparent border-none p-1 transition-colors"
+                >
+                  {emailTimer > 0
+                    ? `Повторить через ${emailTimer} сек.`
+                    : isSendingEmailCode
+                      ? "Отправка..."
+                      : "Отправить код повторно"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCancelEmailChange}
+                  className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer bg-transparent border-none p-1 transition-colors"
+                >
+                  Отмена (оставить старую почту)
                 </button>
               </div>
             </div>

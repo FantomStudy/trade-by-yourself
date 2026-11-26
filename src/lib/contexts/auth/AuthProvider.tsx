@@ -61,9 +61,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = useCallback(() => {
     try {
       document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      document.cookie = "ws_session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
     } catch {}
     queryClient.setQueryData(CURRENT_USER_QUERY_KEY, null);
   }, [queryClient]);
+
+  useEffect(() => {
+    if (data?.isBanned) {
+      logout();
+      if (pathname && pathname !== "/") {
+        router.replace("/");
+      }
+    }
+  }, [data?.isBanned, logout, pathname, router]);
 
   const value = useMemo(
     () => ({

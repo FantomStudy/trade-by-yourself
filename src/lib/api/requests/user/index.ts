@@ -8,3 +8,4 @@ export * from "./toggle-banned";
 export * from "./update-user";
 export * from "./verify-email";
 export * from "./change-phone";
+export * from "./change-email";
