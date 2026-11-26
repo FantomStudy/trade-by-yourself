@@ -213,3 +213,4 @@ export const BannerHistoryList = () => {
     </div>
   );
 };
+

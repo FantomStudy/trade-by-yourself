@@ -1,15 +1,28 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef } from "react";
+import { trackBannerView } from "@/api/banners";
 import { BannerBadge } from "@/components/BannerSlot";
 import styles from "./FeedBanner.module.css";
 
 interface FeedBannerProps {
+  bannerId: number;
   href: string;
   src: string;
   name: string;
   size: "wide" | "narrow";
 }
 
-export const FeedBanner = ({ href, src, name, size }: FeedBannerProps) => {
+export const FeedBanner = ({ bannerId, href, src, name, size }: FeedBannerProps) => {
+  const trackedRef = useRef(false);
+
+  useEffect(() => {
+    if (!bannerId || trackedRef.current) return;
+    trackedRef.current = true;
+    void trackBannerView(bannerId);
+  }, [bannerId]);
+
   return (
     <a
       href={href}

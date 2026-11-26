@@ -272,9 +272,11 @@ const SupportChatPage = () => {
         ) : (
           <div className={styles.messagesList}>
             {messages.map((msg) => {
-              const fromStaff = isSupportStaffRole(msg.author?.role?.name);
+              const fromStaff =
+                isSupportStaffRole(msg.author?.role?.name) ||
+                Boolean(user?.id && msg.authorId && msg.authorId !== user.id);
               const isFromUser = !fromStaff;
-              const authorLabel = supportAuthorLabel(msg.author?.role?.name, msg.author?.fullName);
+              const authorLabel = fromStaff ? SUPPORT_CENTER_NAME : supportAuthorLabel(msg.author?.role?.name, msg.author?.fullName);
               const isImg = isImageMessage(msg.text);
               return (
                 <div

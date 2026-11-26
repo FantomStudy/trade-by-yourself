@@ -19,6 +19,7 @@ export const FeedCard = ({ item }: FeedCardProps) => {
 
   return (
     <FeedBanner
+      bannerId={item.banner.id}
       href={item.banner.navigateToUrl}
       src={item.banner.photoUrl}
       name={item.banner.name}
